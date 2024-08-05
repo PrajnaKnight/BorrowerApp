@@ -1,21 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider as ReduxProvider } from 'react-redux';
+import store from './src/PersonalLoan/services/Utils/Redux/Store';
+import { AppProvider } from './src/PersonalLoan/components/appContext'; // Make sure this import path is correct
+import DashboardNavigator from './src/Dashboard/navigations/DashboardNavigator';
+import PersonalLoanNavigator from './src/PersonalLoan/navigations/PersonalLoanNavigator';
+
+const RootStack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ReduxProvider store={store}>
+      <AppProvider>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <RootStack.Navigator screenOptions={{ headerShown: false }}>
+              <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />
+              <RootStack.Screen
+                name="Dashboard"
+                component={DashboardNavigator}
+              />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </AppProvider>
+    </ReduxProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

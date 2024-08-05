@@ -8,7 +8,7 @@ buildscript {
         targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
         kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.23'
 
-        ndkVersion = "26.1.10909125"
+        ndkVersion = "27.0.11902837"
     }
     repositories {
         google()
@@ -33,7 +33,10 @@ allprojects {
             // Android JSC is installed from npm
             url(new File(['node', '--print', "require.resolve('jsc-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), '../dist'))
         }
-
+        
+    maven {
+            url "$rootDir/../node_modules/expo-camera/android/maven"
+        }   
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
