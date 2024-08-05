@@ -141,6 +141,10 @@ const LoanSliderItem = ({ item, navigation }) => {
   const nextEmiDate = moment(item.nextEmiDate, 'DD MMM YYYY');
   const isOverdue = nextEmiDate.isBefore(currentDate);
 
+  const handleContinue = () => {
+    navigation.navigate('PersonalLoan', { screen: 'QLA' });
+  };
+
   const stageStatusStyles = {
     'completed': { backgroundColor: '#32CD32' },
     'inprocess': { backgroundColor: '#FF8800' },
@@ -217,7 +221,7 @@ const LoanSliderItem = ({ item, navigation }) => {
           </View>
           <TouchableOpacity
             style={styles.availNowButton}
-            onPress={() => navigation.navigate("LoanApplication")}>
+            onPress={handleContinue}>
             <Text style={styles.avaialNowText}>{item.buttonLabel}</Text>
           </TouchableOpacity>
         </View>

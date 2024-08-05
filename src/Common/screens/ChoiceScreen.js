@@ -8,13 +8,10 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-// Assuming you have actions to set the user's choice
-import { setUserChoice } from '../../PersonalLoan/store/actions/userActions';
+import Header from '../../PersonalLoan/components/topBar';
 
 const ChoiceScreen = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const [selectedChoice, setSelectedChoice] = useState(null);
 
   const handleChoice = (choice) => {
@@ -27,8 +24,6 @@ const ChoiceScreen = () => {
       return;
     }
 
-    dispatch(setUserChoice(selectedChoice));
-
     if (selectedChoice === 'dashboard') {
       navigation.navigate('Dashboard');
     } else if (selectedChoice === 'personalLoan') {
@@ -37,45 +32,45 @@ const ChoiceScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome! Where would you like to go?</Text>
-        
-        <TouchableOpacity
-          style={[
-            styles.choiceButton,
-            selectedChoice === 'dashboard' && styles.selectedChoice,
-          ]}
-          onPress={() => handleChoice('dashboard')}
-        >
-          <Text style={styles.choiceText}>Dashboard</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[
-            styles.choiceButton,
-            selectedChoice === 'personalLoan' && styles.selectedChoice,
-          ]}
-          onPress={() => handleChoice('personalLoan')}
-        >
-          <Text style={styles.choiceText}>Personal Loan</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={styles.continueButton}
-          onPress={handleContinue}
-        >
-          <Text style={styles.continueText}>Continue</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <View style={{ flex: 1 }}>
+      <Header />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Welcome! Where would you like to go?</Text>
+
+          <TouchableOpacity
+            style={[
+              styles.choiceButton,
+              selectedChoice === "dashboard" && styles.selectedChoice,
+            ]}
+            onPress={() => handleChoice("dashboard")}>
+            <Text style={styles.choiceText}>Dashboard</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.choiceButton,
+              selectedChoice === "personalLoan" && styles.selectedChoice,
+            ]}
+            onPress={() => handleChoice("personalLoan")}>
+            <Text style={styles.choiceText}>Personal Loan</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={handleContinue}>
+            <Text style={styles.continueText}>Continue</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
   },
   content: {
     flex: 1,

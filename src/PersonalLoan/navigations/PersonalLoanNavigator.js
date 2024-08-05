@@ -64,17 +64,17 @@ function PersonalLoanNavigator() {
     <Provider store={store}>
       <View style={{ flex: 1 }}>
         <AppProvider>
-          {currentScreen?.length > 0 && currentScreen[currentScreen.length - 1].name !== 'SplashScreen' && (
+          {/* {currentScreen?.length > 0 && currentScreen[currentScreen.length - 1].name !== 'SplashScreen' && ( */}
             <View>
               <StatusBar />
               <Header />
             </View>
-          )}
+         {/* )} */}
           <ProgressBarProvider>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
+              {/* <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
               <Stack.Screen name="welcome" component={SignInScreen} />
-              <Stack.Screen name="otpverification" component={OtpVerification} />
+              <Stack.Screen name="otpverification" component={OtpVerification} /> */}
               <Stack.Screen name="QLA" component={QuickLoanAsk} />
               <Stack.Screen name="primaryInfo" component={PrimaryInfo} />
               <Stack.Screen name="personalInfo" component={PersonalInfo} />
