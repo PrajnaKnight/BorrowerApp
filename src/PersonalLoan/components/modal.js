@@ -1,7 +1,7 @@
 // ReusableModal.js
 import React from 'react';
 import { Modal, View, StyleSheet, Pressable, Text, Platform } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
 const ReusableModal = ({ modalVisible, setModalVisible, modalContent }) => {
@@ -21,7 +21,7 @@ const ReusableModal = ({ modalVisible, setModalVisible, modalContent }) => {
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(false)}
           >
-             <Icon name="close" size={16} color="#ffffff" style={styles.CloseIcon} />
+            <MaterialCommunityIcons name="close-circle-outline" size={24} color="#FF0000" />
           </Pressable>
         </View>
       </View>
@@ -60,7 +60,6 @@ const styles = applyFontFamily({
   button: {
     borderRadius: 20,
     padding: 0,
-    elevation: 2,
     marginTop: 15, // Add some space above the button
     position:'absolute',
     right:10,
@@ -69,9 +68,6 @@ const styles = applyFontFamily({
     display:'flex',
     alignItems:'center',
     justifyContent:"center"
-  },
-  buttonClose: {
-    backgroundColor: "#758BFD",
   },
   textStyle: {
     color: "white",

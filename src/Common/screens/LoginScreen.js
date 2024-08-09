@@ -523,7 +523,7 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-    <Header />
+      <Header />
     <View style={styles.mainContainer}>
       <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
         {isWeb && (isDesktop || (isTablet && width > height)) && (
@@ -612,14 +612,6 @@ function LoginScreen({ navigation }) {
                 <View style={styles.carouselContainer}>
                   <CustomCarousel data={carouselData} renderItem={renderItem} />
                 </View>
-                <Text
-                  style={[
-                    styles.headerText,
-                    styles.center,
-                    { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-                  ]}>
-                  Welcome
-                </Text>
                 {error && (
                   <Text
                     style={[
@@ -632,8 +624,9 @@ function LoginScreen({ navigation }) {
                 <View style={styles.formGrop}>
                   <Text
                     style={[
-                      styles.label,
                       { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      styles.label,
+                      styles.mobilelabel,
                     ]}>
                     Mobile Number <Text style={styles.mandatoryStar}>*</Text>{" "}
                   </Text>
@@ -666,16 +659,14 @@ function LoginScreen({ navigation }) {
                           { fontSize: dynamicFontSize(styles.link.fontSize) },
                         ]}
                         onPress={() => {
-                          let num = isValidPhoneNumber(requestModel.LeadPhone)
-                          setMobileError(num)
+                          let num = isValidPhoneNumber(requestModel.LeadPhone);
+                          setMobileError(num);
                           if (num != null) {
-                            return
+                            return;
                           }
 
-                          setModalVisible(true)
-                        }
-
-                        }>
+                          setModalVisible(true);
+                        }}>
                         terms and conditions
                       </Text>{" "}
                       and consent to provide ABC Bank Pvt Ltd to fetch my credit
@@ -690,6 +681,8 @@ function LoginScreen({ navigation }) {
                   />
                 </View>
               </View>
+            </View>
+            <View style={styles.boxShadow}>
               <ButtonComponent
                 title="GET OTP"
                 onPress={handleSubmit}

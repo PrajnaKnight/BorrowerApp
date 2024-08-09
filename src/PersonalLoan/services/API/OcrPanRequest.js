@@ -1,4 +1,3 @@
-import { da } from "date-fns/locale";
 import { GetLeadId } from "../LOCAL/AsyncStroage";
 import { OCR_PAN_REQUEST, GetHeader, STATUS, API_RESPONSE_STATUS, GET_PAN_COMPERHENSIVE_DATA, GET_CKYC_ID, GET_CKYC_Data } from "./Constants";
 import axios from "axios";

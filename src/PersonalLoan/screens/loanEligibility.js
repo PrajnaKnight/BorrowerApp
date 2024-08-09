@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, TextInput, ScrollView, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  useWindowDimensions
+} from 'react-native';
 import Slider from '@react-native-community/slider';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,35 +17,40 @@ import ProgressBar from '../components/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
 import LoadingOverlay from '../components/FullScreenLoader';
-import SaveBankAccountDetails, { SubmitBorrowerLoanApplicationAsyncSubmit, GetBranchNameWithIFSC } from '../services/API/SaveBankAccountDetail';  
-import { GetApplicantId, GetLoanAskAmmount, StoreApplicantId } from '../services/LOCAL/AsyncStroage';
+import CustomSlider from '../components/CustomSlider';
+import {
+  GetBreEligibility,
+  SendSaveBREEligibilityInfo
+} from '../services/API/LoanEligibility';
+import GetQuickEligibilityDetailInfo from '../services/API/LoanEligibility';
+import { GetApplicantId, setApplicationID } from '../services/LOCAL/AsyncStroage';
 import { formateAmmountValue, isValidNumberOnlyField, properAmmount } from '../services/Utils/FieldVerifier';
-
-import { useFocusEffect, useRoute } from "@react-navigation/native"
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { GoBack } from '../services/Utils/ViewValidator';
-import GetQuickEligibilityDetailInfo, { GetBreEligibility, SendSaveBREEligibilityInfo } from '../services/API/LoanEligibility';
-import { API_RESPONSE_STATUS, STATUS, SaveBREEligibility } from '../services/API/Constants';
+import { API_RESPONSE_STATUS, STATUS } from '../services/API/Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
-import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
-
+import { ALL_SCREEN, Network_Error } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
-import CustomSlider from '../components/CustomSlider';
 import { checkLocationPermission } from './PermissionScreen';
 import { updateBreStatus } from '../services/Utils/Redux/ExtraSlices';
+import GetLookUp from '../services/API/GetLookUp';
+import CustomProgressChart from '../components/CustomProgressChart';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SubmitBorrowerLoanApplicationAsyncSubmit } from '../services/API/SaveBankAccountDetail';
 
 const LoanEligibilityScreen = ({ navigation }) => {
-
-  const route = useRoute()
+  const route = useRoute();
   const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
-  const loanAskDetails = useSelector(state => state.loanAskSlice);
+  const extraSlices = useSelector(state => state.extraStageSlice);
 
   const dispatch = useDispatch()
+  const { setProgress } = useProgressBar();
+  const { fontSize } = useAppContext();
 
   const [loading, setLoading] = useState(false);
-  const [otherError, setOtherError] = useState(null)
-  const [isEligible, setIsEligible] = useState(true)
-
+  const [otherError, setOtherError] = useState(null);
+  const [isEligible, setIsEligible] = useState(true);
   const [loanAmount, setLoanAmount] = useState(0);
   const [emiAmount, setEmiAmount] = useState(0);
   const [loanAskAmount, setLoanAskAmount] = useState(null)
@@ -47,42 +61,28 @@ const LoanEligibilityScreen = ({ navigation }) => {
   const [maxTenure, setMaxTenure] = useState(0)
 
   const [tenure, setTenure] = useState(0);
-
-  const [minLoanAmount, setMinLoanAmount] = useState(0)
-  const [maxLoanAmount, setMaxLoanAmount] = useState(0)
-
+  const [minLoanAmount, setMinLoanAmount] = useState(0);
+  const [maxLoanAmount, setMaxLoanAmount] = useState(0);
   const [rateOfInterest, setRateOfInterest] = useState(0);
-
-  const { setProgress } = useProgressBar();
-
-  const [loanCriteria, setLoanCriteria] = useState()
-
-  const [tenureError, setTenureError] = useState(null)
-  const [loanAmountError, setLoanAmountError] = useState(null)
-
-
-  const [loanApproved, setLoanApproved] = useState(null)
-
-  const [ApplicationID, setApplicationID] = useState(null)
-
-  const [refreshPage, setRefreshPage] = useState(true)
-  const onTryAgainClick = () => {
-    setRefreshPage(true)
-  }
-
-  const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick)
-
+  const [loanCriteria, setLoanCriteria] = useState(null);
+  const [tenureError, setTenureError] = useState(null);
+  const [loanAmountError, setLoanAmountError] = useState(null);
+  const [loanApproved, setLoanApproved] = useState(null);
+  const [ApplicationID, setApplicationID] = useState(null);
+  const [refreshPage, setRefreshPage] = useState(true);
+  const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
   useEffect(() => {
     setProgress(0.3);
   }, []);
 
+  const onTryAgainClick = () => {
+    setRefreshPage(true);
+  };
 
   const ProcessTheLoanApplication = async () => {
-    let apiResponse = API_RESPONSE_STATUS()
-    let submitBorrowerLoan = await SubmitBorrowerLoanApplicationAsyncSubmit()
-
-
+    let apiResponse = API_RESPONSE_STATUS();
+    let submitBorrowerLoan = await SubmitBorrowerLoanApplicationAsyncSubmit();
 
     if (submitBorrowerLoan.status == STATUS.ERROR) {
       apiResponse.status = STATUS.ERROR
@@ -166,7 +166,6 @@ const LoanEligibilityScreen = ({ navigation }) => {
    
     setApplicationID(await GetApplicantId())
 
-    dispatch(updateBreStatus(true))
     apiResponse.status = STATUS.SUCCESS
 
     return apiResponse
@@ -176,32 +175,26 @@ const LoanEligibilityScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
     if (!refreshPage) {
-      return
+      return;
     }
-    setLoading(true)
+    setLoading(true);
 
-    ProcessTheLoanApplication().then((response) => {
-      setNewErrorScreen(null)
+    ProcessTheLoanApplication().then(response => {
+      setNewErrorScreen(null);
+      setLoading(false);
 
-      setLoading(false)
-
-      if (response.status == STATUS.ERROR) {
-        if (response.message == "NOT ELIGIBLE") {
-          setLoanApproved(false)
-          navigation.replace("rejection")
+      if (response.status === STATUS.ERROR) {
+        if (response.message === "NOT ELIGIBLE") {
+          setLoanApproved(false);
+          navigation.replace("rejection");
+        } else if (response.message !== Network_Error && response.message) {
+          setNewErrorScreen(response.message);
+        } else {
+          setOtherError(response.message);
         }
-        else if (response.message != Network_Error && response.message != null) {
-          setNewErrorScreen(response.message)
-        }
-        else {
-          setOtherError(response.message)
-        }
-
-        return
+        return;
       }
-
-     
-    })
+    });
 
     setRefreshPage(false)
 
@@ -430,165 +423,123 @@ const LoanEligibilityScreen = ({ navigation }) => {
   }, [refreshPage]))
 
   const handleLoanAmountChange = (value, from) => {
-    console.log("trying to chnage loan Ammount ", value)
-
-    let finalValue = parseInt(properAmmount(value)) || 0
-    if (from != null) {
+    let finalValue = parseInt(properAmmount(value)) || 0;
+    if (from) {
       if (finalValue > maxLoanAmount) {
-        finalValue = maxLoanAmount
-      }
-      else if (finalValue < minLoanAmount) {
-        finalValue = minLoanAmount
+        finalValue = maxLoanAmount;
+      } else if (finalValue < minLoanAmount) {
+        finalValue = minLoanAmount;
       }
     }
-
-
     setLoanAmount(finalValue);
-
-    setLoanAmountError(null)
+    setLoanAmountError(null);
   };
-
-
-
 
   const handleTenureChange = (value, from) => {
-
-    let finalValue = parseInt(value) || 0
-
-    if (from != null) {
+    let finalValue = parseInt(value) || 0;
+    if (from) {
       if (finalValue > maxTenure) {
-        finalValue = maxTenure
-      }
-      else if (finalValue < minTenure) {
-        finalValue = minTenure
+        finalValue = maxTenure;
+      } else if (finalValue < minTenure) {
+        finalValue = minTenure;
       }
     }
-
     setTenure(finalValue);
-
-    setTenureError(null)
-
+    setTenureError(null);
   };
 
-
-  // Function to calculate EMI based on loan amount, tenure, and rate of interest
-  // This is a simplified formula and might need adjustment based on your specific calculation method
   const calculateEMI = () => {
-
-    console.log("====== calculate emi ======")
-    console.log("rate of interest = " + rateOfInterest)
-    console.log("tenure = " + tenure)
-    console.log("loanAmount = " + loanAmount)
-
-
     let monthlyInterestRatio = rateOfInterest / 100 / 12;
-    let top = Math.pow((1 + monthlyInterestRatio), tenure);
+    let top = Math.pow(1 + monthlyInterestRatio, tenure);
     let bottom = top - 1;
     let sp = top / bottom;
-    let emi = ((loanAmount * monthlyInterestRatio) * sp);
-
-    let finalEmi = Math.round(emi)
-    setEmiAmount(finalEmi);
+    let emi = loanAmount * monthlyInterestRatio * sp;
+    setEmiAmount(Math.round(emi));
   };
 
-  // Update state and recalculate EMI whenever the loan amount or tenure changes
   useEffect(() => {
-
-    setOtherError(null)
-
-    if (loanCriteria == null) {
-      return
+    setOtherError(null);
+    if (!loanCriteria) {
+      return;
     }
-
     if (loanAmount > loanCriteria[`${tenure}`]) {
-      setIsEligible(false)
-      return
+      setIsEligible(false);
+      return;
     }
-    setIsEligible(true)
-
+    setIsEligible(true);
     calculateEMI();
-
   }, [loanAmount, tenure]);
 
-  const { fontSize } = useAppContext();
-  const dynamicFontSize = (size) => size + fontSize;
+  const dynamicFontSize = size => size + fontSize;
 
   const handleProceed = async() => {
-
+    if (extraSlices.isBreDone) {
+      navigation.navigate('sanctionLetter');
+      return;
+    }
     let askLoanAmountValidity = isValidNumberOnlyField(loanAmount, "Loan Amount")
     setLoanAmountError(askLoanAmountValidity)
     if (askLoanAmountValidity != null) {
       return
     }
-
     if (loanAmount < minLoanAmount || loanAmount > maxLoanAmount) {
-      setLoanAmountError("Please provide valid loan amount in given range")
-      return
+      setLoanAmountError("Please provide a valid loan amount in the given range");
+      return;
     }
-
-
-    let askTenureValidity = isValidNumberOnlyField(tenure, "Tenure")
-    setTenureError(askTenureValidity)
-    if (askTenureValidity != null) {
-      return
+    let askTenureValidity = isValidNumberOnlyField(tenure, "Tenure");
+    setTenureError(askTenureValidity);
+    if (askTenureValidity) {
+      return;
     }
-
     if (tenure < minTenure || tenure > maxTenure) {
-      setTenureError("Please provide valid tenure in given range")
-      return
+      setTenureError("Please provide a valid tenure in the given range");
+      return;
     }
-
-
-    if (loanCriteria == null || loanCriteria[`${tenure}`] == null) {
-      setOtherError("Something went wrong")
-      return
+    if (!loanCriteria || !loanCriteria[`${tenure}`]) {
+      setOtherError("Something went wrong");
+      return;
     }
-
-
     if (loanAmount > loanCriteria[`${tenure}`]) {
-      setIsEligible(false)
-      return
+      setIsEligible(false);
+      return;
+    }
+    setIsEligible(true);
+
+    if (await checkLocationPermission() === false) {
+      navigation.navigate("PermissionsScreen", { permissionStatus: "denied", permissionType: "location" });
+      return;
     }
 
-
-    setIsEligible(true)
-
-
-    if(await checkLocationPermission() == false){
-      navigation.navigate("PermissionsScreen", {permissionStatus : "denied", permissionType : "location"})
-      return
+    let LeadStage = nextJumpTo;
+    if (ALL_SCREEN[nextJumpTo] === "loanEligibility") {
+      LeadStage = nextJumpTo + 1;
     }
-
-    let LeadStage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "loanEligibility") {
-      LeadStage = nextJumpTo + 1
-    }
-
 
     let reponseModel = { Tenure: tenure, RateOfInterest: rateOfInterest, Amount: loanAmount, EMI: emiAmount, Leadstage: LeadStage }
     setLoading(true)
-    SendSaveBREEligibilityInfo(reponseModel).then((response) => {
-      setLoading(false)
 
-      setNewErrorScreen(null)
-
-      if (response.status == STATUS.ERROR) {
-
-        if (response.message == Network_Error || response.message != null) {
-          setNewErrorScreen(response.message)
-          return
-        }
-        setOtherError(response.message)
+    const sendSaveEligibility = await SendSaveBREEligibilityInfo(reponseModel)
+    setNewErrorScreen(null)
+    setLoading(false)
+    if(sendSaveEligibility.status == STATUS.ERROR){
+        setNewErrorScreen(response.message)
         return
-      }
+      
+    }
 
-      if (ALL_SCREEN[nextJumpTo] == "loanEligibility") {
-        dispatch(updateJumpTo(LeadStage))
-      }
+    if (ALL_SCREEN[nextJumpTo] == "loanEligibility") {
+      dispatch(updateJumpTo(LeadStage))
+    }
+    
+    let userAvailable = await GetLookUp()
+    if (userAvailable.data != null) {
+      dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
+    }
+    
+    
+    navigation.navigate('sanctionLetter')
 
-      navigation.navigate('sanctionLetter')
-
-    })
+    
 
 
   }
@@ -597,114 +548,173 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
   const { width, height } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
-
-  // Definitions for "mobile", "tablet", and "desktop" based on width
   const isMobile = width < 768;
-  const isTablet = width >= 768 && width < 1024; // Tablet range, including iPad portrait
-  const isDesktop = width >= 1024; // Desktop and iPad landscape
-
+  const isTablet = width >= 768 && width < 1024;
+  const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
 
-
-
   return (
     <View style={styles.mainContainer}>
-      <View style={{ flex: 1, flexDirection: isWeb ? 'row' : 'column' }}>
+      <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
         {isWeb && (isDesktop || (isTablet && width > height)) && (
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
                 <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>Move Into Your Dreams!</Text>
+                <Text style={styles.websubtitleText}>
+                  Move Into Your Dreams!
+                </Text>
               </View>
               <LinearGradient
-                // button Linear Gradient
-                colors={['#000565', '#111791', '#000565']}
-                style={styles.webinterestButton}
-              >
-                <TouchableOpacity >
-                  <Text style={styles.webinterestText}>Interest starting from 8.4%*</Text>
+                colors={["#000565", "#111791", "#000565"]}
+                style={styles.webinterestButton}>
+                <TouchableOpacity>
+                  <Text style={styles.webinterestText}>
+                    Interest starting from 8.4%*
+                  </Text>
                 </TouchableOpacity>
-
               </LinearGradient>
 
               <View style={styles.webfeaturesContainer}>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5, }]}>%</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    %
+                  </Text>
                   <Text style={styles.webfeatureText}>Nil processing fee*</Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>3</Text>
-                  <Text style={styles.webfeatureText}>3-Step Instant approval in 30 minutes</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    3
+                  </Text>
+                  <Text style={styles.webfeatureText}>
+                    3-Step Instant approval in 30 minutes
+                  </Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>⏳</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    ⏳
+                  </Text>
                   <Text style={styles.webfeatureText}>Longer Tenure</Text>
                 </View>
               </View>
 
               <View style={styles.webdescription}>
                 <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that isn't any more than 30 minutes.
+                  There's more! Complete the entire process in just 3-steps that
+                  isn't any more than 30 minutes.
                 </Text>
                 <TouchableOpacity>
-                  <Text style={styles.weblinkText}>To know more about product features & benefits, please click here</Text>
+                  <Text style={styles.weblinkText}>
+                    To know more about product features & benefits, please click
+                    here
+                  </Text>
                 </TouchableOpacity>
               </View>
-              {/* <View style={styles.bottomFixed}>
-         <Image source={require('../assets/images/poweredby.png')} style={styles.logo} />
-      </View> */}
             </View>
           </View>
         )}
         <KeyboardAvoidingView
-          style={[styles.rightCOntainer, { flex: 1 }]}
+          style={[styles.rightContainer, { flex: 1 }]}
           behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-        >
+          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
+          <View style={{ paddingHorizontal: 16 }}>
+            <ProgressBar progress={0.3} />
+            <Text
+              style={[
+                styles.headerText,
+                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+              ]}>
+              Loan Eligibility
+            </Text>
+          </View>
 
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
               <View>
-                <ProgressBar progress={0.3} />
-
-                <Text style={[styles.headerText, { fontSize: dynamicFontSize(styles.headerText.fontSize) }]}>Loan Eligibility</Text>
                 {otherError && (
-                  <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{otherError}</Text>
+                  <Text
+                    style={[
+                      styles.errorText,
+                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                    ]}>
+                    {otherError}
+                  </Text>
                 )}
 
                 <View style={styles.marginBtm}>
+                {loanApproved == true &&
+                    <Text
+                      style={[
+                        styles.description,
+                        {
+                          fontSize: dynamicFontSize(styles.description.fontSize),
+                        },
+                      ]}>
+                      Hurray, you’re approved for a loan amount up to{" "}
+                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text> You can
+                      apply the loan amount in range{" "}
+                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text> to{" "}
+                      <Text style={styles.descriptionAmt}>Rs. {maxLoanAmount.toLocaleString()}</Text>
+                    </Text>
 
-                  {loanApproved != null && loanApproved == true &&
-                    <View style={{ flexDirection: "column" }}>
-                      <Text style={[styles.description, { fontSize: dynamicFontSize(styles.description.fontSize) }]}>
-                        Hurray, your requested loan amount of
-                      </Text>
-
-
-                      <Text style={[styles.descriptionAmt, { fontSize: dynamicFontSize(styles.descriptionAmt.fontSize) }]}>{loanAskAmount != null && `Rs. ${loanAskAmount.toLocaleString()} is approved.`}  </Text>
-
-                      <Text style={[styles.description, { fontSize: dynamicFontSize(styles.description.fontSize) }]}>
-                        You're also eligible for a higher loan value. Please use the slider below to select loan amount. To proceed, kindly confirm and provide the necessary documents and sign the loan agreement and eMandate.
-                      </Text>
-                    </View>
                   }
-
-
-
                 </View>
 
-                <Text style={[styles.loanId, { fontSize: dynamicFontSize(styles.loanId.fontSize) }]}>Loan ID: {ApplicationID}</Text>
+                {/* Loan Amount Chart */}
+                <View
+                  style={[
+                    styles.ChartContainer,
+                    { alignItems: "center", marginTop: 10, marginBottom: 20 },
+                  ]}>
+                  <CustomProgressChart
+                    loanAmount={loanAskAmount}
+                    minLoanAmount={0}
+                    maxLoanAmount={maxLoanAmount}
+                  />
+                </View>
 
-                {/* Loan Amount Slider */}
-
+                <Text
+                  style={[
+                    styles.description,
+                    {
+                      fontSize: dynamicFontSize(styles.description.fontSize),
+                    },
+                  ]}>
+                  To proceed, kindly confirm and provide the necessary documents
+                  and sign the loan agreement and eMandate.
+                </Text>
+                <View style={styles.loanIdcontainer}>
+                  <View style={styles.loanIdiconContainer}>
+                    <MaterialCommunityIcons
+                      name="hand-coin-outline"
+                      size={24}
+                      color="#ffffff"
+                    />
+                  </View>
+                  <Text style={styles.loanId}>
+                    Loan ID:{" "}
+                    <Text style={styles.loanIdValue}>{ApplicationID}</Text>
+                  </Text>
+                </View>
                 <CustomSlider
                   title="Loan Amount"
                   icon="rupee"
-                  keyboardType='numeric'
+                  keyboardType="numeric"
                   min={minLoanAmount}
                   max={maxLoanAmount}
                   steps={10000}
@@ -713,48 +723,12 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   error={loanAmountError}
                   onChange={(e, from) => handleLoanAmountChange(e, from)}
                   isForAmount={true}
-
                 />
-                {/* <View style={styles.sliderContainer}>
-                  <View style={styles.LabelInput}>
-                    <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Loan Amount</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Icon name="rupee" size={16} color="#00194c" style={{ marginHorizontal: 10 }} />
-                      <TextInput
-                        style={[styles.Input, { fontSize: dynamicFontSize(styles.Input.fontSize) }]}
-                        onChangeText={(e) => handleLoanAmountChange(e)}
-                        value={formateAmmountValue(loanAmount.toString())}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                  </View>
-
-                  <Slider
-                    style={styles.slider}
-                    minimumValue={minLoanAmount}
-                    maximumValue={maxLoanAmount}
-                    step={10000}
-                    onValueChange={(e) => handleLoanAmountChange(e, "fromSlider")}
-                    value={properAmmount(loanAmount)}
-                    minimumTrackTintColor="#0010AC"
-                    maximumTrackTintColor="#758BFD"
-                    thumbTintColor="#F38F00"
-                  />
-                  <View style={styles.sliderLabels}>
-                    <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>{minLoanAmount}</Text>
-                    <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>₹ {maxLoanAmount}</Text>
-                  </View>
-                  {loanAmountError && (
-                    <Text style={[styles.errorText, { paddingHorizontal: 15 }]}>{loanAmountError}</Text>
-                  )}
-                </View> */}
-
-                {/* Tenure Slider */}
 
                 <CustomSlider
                   title="Tenure"
                   icon="calendar"
-                  keyboardType='numeric'
+                  keyboardType="numeric"
                   min={minTenure}
                   max={maxTenure}
                   steps={3}
@@ -762,89 +736,96 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   inputValue={tenure.toString()}
                   error={tenureError}
                   onChange={(e, from) => handleTenureChange(e, from)}
-
+                  isTenure={true}
                 />
-                {/* <View style={styles.sliderContainer}>
-                  <View style={styles.LabelInput}>
-                    <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Tenure</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Icon name="calendar" size={16} color="#00194c" style={{ marginHorizontal: 10 }} />
-                      <TextInput
-                        style={[styles.Input, { fontSize: dynamicFontSize(styles.Input.fontSize) }]}
-                        onChangeText={(e) => handleTenureChange(e)}
-                        value={tenure.toString()}
-                        keyboardType="numeric"
-                      />
-                    </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}>
+                  <View style={{flex:1, paddingRight:5}}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Rate of Interest
+                    </Text>
+                    <Text
+                      style={[
+                        styles.input,
+                        styles.readonly,
+                        { fontSize: dynamicFontSize(styles.input.fontSize) },
+                      ]}>
+                      {rateOfInterest || 0} %
+                    </Text>
                   </View>
-                  <Slider
-                    style={styles.slider}
-                    minimumValue={minTenure}
-                    maximumValue={maxTenure}
-                    onValueChange={(e) => handleTenureChange(e, "fromSlider")}
-                    value={tenure}
-                    step={3}
-                    minimumTrackTintColor="#0010AC"
-                    maximumTrackTintColor="#758BFD"
-                    thumbTintColor="#F38F00"
-                  />
-                  <View style={styles.sliderLabels}>
-                    <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>{minTenure}</Text>
-                    <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>{maxTenure} Months</Text>
+
+                  <View style={[styles.emiContainer, {flex:1, paddingLeft:5}]}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      EMI Amount
+                    </Text>
+                    {!isEligible && (
+                      <Text style={styles.errorText}>
+                        You are not eligible for selected loan amount
+                      </Text>
+                    )}
+
+                    <Text
+                      style={[
+                        styles.input,
+                        styles.readonly,
+                        { fontSize: dynamicFontSize(styles.input.fontSize) },
+                      ]}>
+                      ₹ {emiAmount || 0}
+                    </Text>
                   </View>
-                  {tenureError && (
-                    <Text style={[styles.errorText, { paddingHorizontal: 15 }]}>{tenureError}</Text>
-                  )}
-                </View> */}
-
-
-                <View>
-                  <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Rate of Interest</Text>
-                  <Text style={[styles.input, styles.readonly, { fontSize: dynamicFontSize(styles.input.fontSize) }]}>{rateOfInterest || 0} %</Text>
                 </View>
-
-                <View style={styles.emiContainer}>
-                  <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>EMI Amount</Text>
-                  {!isEligible && (
-                    <Text style={styles.errorText}>You are not elegible for selected loan amount</Text>
-                  )}
-
-                  <Text style={[styles.input, styles.readonly, { fontSize: dynamicFontSize(styles.input.fontSize) }]}>₹ {emiAmount || 0}</Text>
-
-                </View>
-
-              </View>
-
-              <View style={styles.actionContainer}>
-                <TouchableOpacity style={styles.backButton} onPress={() => GoBack(navigation)}>
-                  <Text style={[styles.backBtnText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize) }]}>BACK</Text>
-                </TouchableOpacity>
-                <LinearGradient
-                  // button Linear Gradient
-                  colors={['#002777', '#00194C']}
-                  style={styles.verifyButton}
-                >
-                  <TouchableOpacity onPress={() => handleProceed()} >
-                    <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>PROCEED</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
               </View>
             </View>
           </ScrollView>
+          <View style={[styles.actionContainer, styles.boxShadow]}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => GoBack(navigation)}>
+              <Text
+                style={[
+                  styles.backBtnText,
+                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                ]}>
+                BACK
+              </Text>
+            </TouchableOpacity>
+            <LinearGradient
+              colors={["#002777", "#00194C"]}
+              style={styles.verifyButton}>
+              <TouchableOpacity onPress={handleProceed}>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                  ]}>
+                  PROCEED
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
 
-          {errorScreen.type != null && <ScreenError errorObject={errorScreen} onTryAgainClick={onTryAgainClick} setNewErrorScreen={setNewErrorScreen} />}
-
+          {errorScreen.type != null && (
+            <ScreenError
+              errorObject={errorScreen}
+              onTryAgainClick={onTryAgainClick}
+              setNewErrorScreen={setNewErrorScreen}
+            />
+          )}
         </KeyboardAvoidingView>
-
       </View>
     </View>
-
   );
 };
 
-
-
 export default LoanEligibilityScreen;
-
-
-

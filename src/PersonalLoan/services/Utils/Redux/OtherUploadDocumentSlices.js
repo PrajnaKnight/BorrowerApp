@@ -9,14 +9,11 @@ export const documentModel = {
     Name: null,
     ContentType: null,
     DocumentType: null,
-    OriginalFile: null,
+    OriginalFile: {},
     DocType: null,
     DocSetTypeDisplayName: null,
     DisplayName: null,
-    Error : null,
-
-
-
+    Error: null,
     ShowPassword: false,
     Password: null,
     EnablePassword: false,
@@ -27,7 +24,13 @@ const initialState = {
     error: null,
     data: {
         MASTER_OPTION: [],
-        OTHER_FILES: []
+        OTHER_FILES: {},
+        lastDocType: null,
+        lastDisplayName: null,
+        selectedDoc: {
+            master : null,
+            child : null
+        }
     }
 }
 
@@ -44,11 +47,22 @@ const UploadOtherFileSlice = createSlice({
         },
         updateOtherFile(state, payload) {
             const response = payload.payload
-            const other = state.data.OTHER_FILES
-            other[response.index] = response.data
-            state.data.OTHER_FILES = other
+            state.data.OTHER_FILES = response
         },
 
+        updateMasterSelected(state, payload) {
+            const newMasterKey = payload.payload
+            if(state.data.OTHER_FILES.hasOwnProperty(newMasterKey)){
+                const newChildKey = Object.keys(state.data.OTHER_FILES[newMasterKey])
+                state.data.selectedDoc = {master : newMasterKey, child : newChildKey[0] }
+            }
+        
+        },
+
+        updateChildSelected(state, payload) {
+            const newChildKey = payload.payload
+            state.data.selectedDoc = {...state.data.selectedDoc,child : newChildKey }
+        },
 
         updateOtherDocumentAndFields(state, payload) {
 
@@ -73,44 +87,87 @@ const UploadOtherFileSlice = createSlice({
             });
 
 
-            let resultArray = [];
+            let resultArray = {};
 
             for (let i = 0; i < state.data.MASTER_OPTION.length; i++) {
-                resultArray.push(documentModel)
-            }
+                const master = state.data.MASTER_OPTION[i]
 
+                let resultArrayMaster = {}
+                
+                for (let j = 0; j < master.DocList.length; j++) {
+
+                    
+                    let key = master.DocList[j].value
+                    resultArrayMaster[key] = {
+                        Id: parseInt(master.DocList[j].ID),
+                        IsSelected: false,
+                        Name: null,
+                        Base64: null,
+                        Password: null,
+                        EnablePassword: false
+                    }
+                }
+
+                resultArrayMaster = {...resultArrayMaster, MandatoryFlag : master.MandatoryFlag}
+                resultArray[master.DoctypeType] = resultArrayMaster
+
+            }
 
             
 
-            console.log("-- starting --")
-            for(let i = 0 ; i < newOtherList.length ; i++){
-                const current = newOtherList[i]
+            for (let i = 0; i < state.data.MASTER_OPTION.length; i++) {
 
-                console.log("-- currenr ---")
-                console.log(current)
+                const master = state.data.MASTER_OPTION[i]
 
-                for(let j = 0 ; j < state.data.MASTER_OPTION.length ; j++){
-                  const master = state.data.MASTER_OPTION[j]
-                  console.log("-- master ---")
-                  console.log(master)
-                  for(let k = 0 ; k < master.DocList.length ; k++){
-                    const docs = master.DocList[k]
-                    console.log("-- docs ---")
-                    console.log(docs)
-                    console.log(current.DocType)
-                    if(docs.ID == current.DocType){
-                      console.log("added")
-                      if(!resultArray[j].DocType)
-                        {
-                            resultArray[j] = current
+                let resultArrayMaster = { ...resultArray[master.DoctypeType] }
+
+
+
+                for (let j = 0; j < newOtherList.length; j++) {
+
+                    if (newOtherList[j].DocSetTypeDisplayName == master.DoctypeType) {
+                        resultArrayMaster[newOtherList[j].DisplayName] = {
+                            Id: parseInt(newOtherList[j].DocType),
+                            IsSelected: false,
+                            Name: newOtherList[j].Name,
+                            Base64: newOtherList[j].OriginalFile,
+                            Password: newOtherList[j].Password,
+                            EnablePassword: newOtherList[j].Password ? true : false
                         }
                     }
-                  }
                 }
-              }
 
+
+                resultArray[master.DoctypeType] = resultArrayMaster
+
+
+            }
+
+
+
+
+
+
+            if(Object.keys(resultArray).length > 0){
+                if(state.data.selectedDoc.master == null){
+                    let masterKey = Object.keys(resultArray)[0]
+                    let childKey = Object.keys(resultArray[masterKey])[0]
+                    state.data.selectedDoc = { child :  childKey,  master : masterKey}
+                }
+                else if(state.data.selectedDoc.child == null){
+                    let master = state.data.selectedDoc.master
+                    let childKey = Object.keys(resultArray[master])[0]
+                    state.data.selectedDoc = {... state.data.selectedDoc, child :  childKey}
+                }
+            }
+
+           
 
             console.log(resultArray)
+       
+
+
+
             state.data.OTHER_FILES = resultArray
 
             state.loading = false
@@ -134,9 +191,12 @@ const UploadOtherFileSlice = createSlice({
 
             state.data.MASTER_OPTION = convertedData
 
-            state.loading = false
         },
 
+        updateLastDocs(state, payload) {
+            state.data.lastDisplayName = payload.payload
+            
+        },
         updateOtherFileError(state, payload) {
             state.error = payload.payload
             state.loading = false
@@ -145,6 +205,16 @@ const UploadOtherFileSlice = createSlice({
             state.loading = payload.payload
         },
 
+        updateCleanAll(state, payload) {
+            state.data.MASTER_OPTION = []
+            state.data.OTHER_FILES = {}
+            state.data.lastDocType = null
+            state.data.lastDisplayName = null
+            state.data.selectedDoc = {
+                master : null,
+                child : null
+            }
+        }
 
 
 
@@ -174,18 +244,20 @@ function* deleteFile(action) {
 
     const docType = action.payload.docType
 
+    console.log(docType)
+
     const deleteResponse = yield call(DeleteUploadFiles, docType);
-    if (deleteResponse.status == STATUS.ERROR) {        
+    if (deleteResponse.status == STATUS.ERROR) {
         yield put(updateOtherFileError(deleteResponse.message))
-        return 
+        return
     }
-    
+
     const getFileResponse = yield* getUploadedOtherFiles(action);
     if (getFileResponse.status == STATUS.ERROR) {
         yield put(updateOtherFileError(getFileResponse.message))
         return
     }
-    
+
     yield put(updateOtherFileLoading(false))
 }
 
@@ -251,7 +323,7 @@ export const sagaDeleteFileRequest = (docType) => (
     {
         type: "DeleteFileRunner",
         payload: {
-            docType : docType
+            docType: docType
         }
     }
 );
@@ -274,5 +346,22 @@ export const sagaDeleteFileRequest = (docType) => (
 
 
 
-export const { updateOtherDocumentAndFields, updateOtherFileLoading, updateOtherFileError, addNewOtherFile, updateOtherFile, updateMasterOptionList } = UploadOtherFileSlice.actions
+export const { updateOtherDocumentAndFields, updateOtherFileLoading, updateOtherFileError, addNewOtherFile, updateOtherFile, updateMasterOptionList, updateMasterSelected, updateLastDocs , updateChildSelected, updateCleanAll} = UploadOtherFileSlice.actions
 export default UploadOtherFileSlice.reducer
+
+
+
+
+{
+
+    Proof_Of_Address: {
+        Aadhar_Card: {
+            Id: null;
+            IsSelected: false;
+            Name: null;
+            Base64: null;
+            Password: null;
+            EnablePassword: false
+        }
+    }
+}

@@ -93,15 +93,14 @@ export const isThisIsFutureTime = (providedTimeString) => {
         return false
     }
 
-    console.log("Provided Time String ", providedTimeString)
-    console.log("Todays Date", new Date())
-    // Convert the provided time string to a Date object
+   
     const providedTime = new Date(providedTimeString);
 
     // Get the current time
     const currentTime = new Date();
     console.log("Provided Time String ", providedTime)
     console.log("Todays Date", currentTime)
+
     return providedTime > currentTime
 }
 
@@ -511,3 +510,18 @@ export function getBase64MimeType(extension) {
     }
 
 } 
+
+
+export const isImage = (name) => {
+    if(name.endsWith(".png")){
+        return true
+    }
+    if(name.endsWith(".jpg")){
+        return true
+    }
+    if(name.endsWith(".jpeg")){
+        return true
+    }
+
+    return false
+}

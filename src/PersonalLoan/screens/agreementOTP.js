@@ -4,7 +4,7 @@ import { styles } from '../../assets/style/personalStyle';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
 import { GoBack } from '../services/Utils/ViewValidator';
-import { isValidNumberOnlyFieldWithZero } from "../services/Utils/FieldVerifier";
+import { isValidNumberOnlyFieldWithZero } from '../services/Utils/FieldVerifier';
 
 
 const AgreementOTPVerificationScreen = ({ navigation, route }) => {
@@ -12,6 +12,7 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
   const [error, setError] = useState('');
   const inputsRef = useRef([]);
   const [focusedInput, setFocusedInput] = useState(null);
+  const [isOTPFilled, setIsOTPFilled] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes in seconds
   const [isResendEnabled, setIsResendEnabled] = useState(false);
@@ -55,6 +56,7 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
         inputsRef.current[index + 1].focus();
       }
       setOTP(newOTP);
+      setIsOTPFilled(newOTP.every(digit => digit !== ''));
     }
 
 
@@ -63,7 +65,7 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
   
     // Focus the next input if there's a next one and the current one is filled
     
-    
+   
     
   };
   // Add onFocus and onBlur handlers
@@ -115,6 +117,7 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
   };
 
   const handleVerifyPress = () => {
+ 
     let isValid = true;
     OTP.forEach((value) => {
       if (value.trim().length !== 1) {
@@ -141,6 +144,8 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+
+
 
 
   return (
@@ -223,16 +228,20 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
           style={[styles.rightCOntainer, { flex: 1 }]}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-                <Text
+
+            <View style={{paddingHorizontal:16}}>
+            <Text
                   style={[
                     styles.headerText,
                     { fontSize: dynamicFontSize(styles.headerText.fontSize) },
                   ]}>
                   Agreement OTP Verification
                 </Text>
+            </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={styles.container}>
+              <View>
+               
                 <Text
                   style={[
                     styles.subText,
@@ -291,13 +300,13 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
                   </Text>
                 ) : null}
 
-                <View style={styles.flexContent}>
+                <View style={styles.flex}>
                   <Text
                     style={[
                       styles.resendText,
                       { fontSize: dynamicFontSize(styles.resendText.fontSize) },
                     ]}>
-                    Please wait to resend OTP
+                    Did not receive the OTP?
                   </Text>
                   <TouchableOpacity
                     style={[
@@ -315,47 +324,42 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
                           ),
                         },
                       ]}>
-                      RESEND
+                      RESEND OTP
                     </Text>
                   </TouchableOpacity>
                 </View>
               </View>
-
-              <View style={styles.actionContainer}>
-                <TouchableOpacity
-                  style={styles.backButton}
-                  onPress={() => {
-                    GoBack(navigation);
-                  }}>
-                  <Text
-                    style={[
-                      styles.backBtnText,
-                      {
-                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                      },
-                    ]}>
-                    BACK
-                  </Text>
-                </TouchableOpacity>
-                <LinearGradient
-                  // button Linear Gradient
-                  colors={["#002777", "#00194C"]}
-                  style={styles.verifyButton}>
-                  <TouchableOpacity onPress={handleVerifyPress}>
-                    <Text
-                      style={[
-                        styles.buttonText,
-                        {
-                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
-                        },
-                      ]}>
-                      VERIFY
-                    </Text>
-                  </TouchableOpacity>
-                </LinearGradient>
-              </View>
             </View>
           </ScrollView>
+          <View style={[styles.actionContainer, styles.boxShadow]}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => {
+                GoBack(navigation);
+              }}>
+              <Text
+                style={[
+                  styles.backBtnText,
+                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                ]}>
+                BACK
+              </Text>
+            </TouchableOpacity>
+            <LinearGradient
+              // button Linear Gradient
+              colors={isOTPFilled ? ["#002777", "#00194C"] : ["#E9EEFF", "#D8E2FF"]}
+              style={[styles.verifyButton, !isOTPFilled && styles.disabledButton]}>
+              <TouchableOpacity onPress={handleVerifyPress}>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                  ]}>
+                  VERIFY
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
         </KeyboardAvoidingView>
       </View>
     </View>

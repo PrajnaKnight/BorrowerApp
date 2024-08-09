@@ -4,6 +4,7 @@ import ProgressBar from '../components/progressBar';
 import { GoBack } from '../services/Utils/ViewValidator';
 import { useAppContext } from './useContext';
 import { styles } from '../../assets/style/personalStyle';
+import applyFontFamily from '../../assets/style/applyFontFamily';
 
 const RejectionScreen = ({navigation}) => {
 
@@ -41,7 +42,7 @@ const RejectionScreen = ({navigation}) => {
   );
 };
 
-const style = StyleSheet.create({
+const style = applyFontFamily({
 
   failureIcon: {
     width: 180, // Set the width as per your icon's aspect ratio

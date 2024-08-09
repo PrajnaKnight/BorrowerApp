@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, StatusBar } from 'react-native';
+import { NavigationContainer, useNavigationContainerRef  } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigationState } from '@react-navigation/native';
-import { Provider } from 'react-redux';
 import store from '../services/Utils/Redux/Store'; 
-// Import your screens and components here
 import QuickLoanAsk from '../screens/quickLoanAsk';
 import SignInScreen from '../screens/signInScreen';
 import OtpVerification from '../screens/otpVerification';
@@ -36,6 +34,8 @@ import DisbursementAcceptedScreen from '../screens/DisbursalAcceptedScreen';
 import PermissionsScreen from '../screens/PermissionScreen';
 import InitiateDisbursalScreen from '../screens/InitiateDisbursalScreen';
 import WebCameraScreen from '../screens/WebCameraScreen';
+import { PortalProvider } from '@gorhom/portal';
+import FAQScreen from '../screens/FAQScreen';
 
 import {decode, encode} from 'base-64'
 
@@ -50,30 +50,64 @@ if (!global.atob) {
 const Stack = createNativeStackNavigator();
 
 function PersonalLoanNavigator() {
-  const [currentScreen, setCurrentScreen] = useState();
-  const navigationState = useNavigationState(state => state);
+ 
 
-  useEffect(() => {
-    if (navigationState) {
-      const routes = navigationState.routes;
-      setCurrentScreen(routes);
+  const [currentScreen, setCurrentScreen] = useState();
+  const navigationRef = useNavigationContainerRef();
+
+  
+  const navigate = useCallback((name, params) => {
+    if (name === 'goBack') {
+      navigationRef.current?.goBack();
+    } else if (navigationRef.isReady()) {
+      navigationRef.navigate(name, params);
     }
-  }, [navigationState]);
+  }, [navigationRef]);
+
+  // useEffect(() => {
+  //   if (fontsLoaded) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  // if (!fontsLoaded) {
+  //   return null; // Render nothing until fonts are loaded
+  // }
 
   return (
-    <Provider store={store}>
-      <View style={{ flex: 1 }}>
-        <AppProvider>
-          {/* {currentScreen?.length > 0 && currentScreen[currentScreen.length - 1].name !== 'SplashScreen' && ( */}
-            <View>
-              <StatusBar />
-              <Header />
-            </View>
-         {/* )} */}
-          <ProgressBarProvider>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              {/* <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
-              <Stack.Screen name="welcome" component={SignInScreen} />
+    <PortalProvider store={store}>
+    <View style={{ flex: 1 }}>
+      <AppProvider>
+        {currentScreen?.length > 0 && currentScreen[currentScreen.length - 1].name !== 'SplashScreen' && (
+          <View>
+            <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+            <Header 
+                navigate={navigate} 
+                isOnFAQScreen={currentScreen === 'FAQScreen'} 
+              />
+          </View>
+        )}
+        <ProgressBarProvider>
+        <NavigationContainer
+              ref={navigationRef}
+              onReady={() => {
+                console.log('Navigation is ready');
+              }}
+              onStateChange={(state) => {
+                const currentRouteName = state.routes[state.index].name;
+                console.log('Current screen:', currentRouteName);
+                setCurrentScreen(currentRouteName);
+              }}
+            >
+            <Stack.Navigator  screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
+              {/* <Stack.Screen name="welcome" component={SignInScreen} />
               <Stack.Screen name="otpverification" component={OtpVerification} /> */}
               <Stack.Screen name="QLA" component={QuickLoanAsk} />
               <Stack.Screen name="primaryInfo" component={PrimaryInfo} />
@@ -100,11 +134,14 @@ function PersonalLoanNavigator() {
               <Stack.Screen name="Preview" component={Preview} />
               <Stack.Screen name="PermissionsScreen" component={PermissionsScreen} />
               <Stack.Screen name="WebCameraScreen" component={WebCameraScreen} />
+              <Stack.Screen name="FAQScreen" component={FAQScreen}  />
+              
             </Stack.Navigator>
-          </ProgressBarProvider>
-        </AppProvider>
-      </View>
-    </Provider>
+          </NavigationContainer>
+        </ProgressBarProvider>
+      </AppProvider>
+    </View>
+    </PortalProvider>
   );
 }
 

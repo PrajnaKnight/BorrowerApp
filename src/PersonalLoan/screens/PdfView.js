@@ -4,6 +4,7 @@ import { StyleSheet, Dimensions, View } from 'react-native';
 import Pdf from 'react-native-pdf';
 import * as FileSystem from 'expo-file-system';
 import FileViewer from "react-native-file-viewer";
+import applyFontFamily from '../../assets/style/applyFontFamily';
 
 import * as Print from 'expo-print';
 
@@ -48,7 +49,7 @@ export default PDFViewer = ({ navigation, route }) => {
 }
 
 
-const styles = StyleSheet.create({
+const styles = applyFontFamily({
     container: {
         flex: 1,
         justifyContent: 'flex-start',

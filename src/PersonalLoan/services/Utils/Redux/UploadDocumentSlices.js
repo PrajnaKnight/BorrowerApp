@@ -91,6 +91,26 @@ const UploadFileSlice = createSlice({
             state.error = payload.payload
             state.loading = false
         },
+
+        updateFileRemove(state, payload){
+            const docId = payload.payload
+            if(docId == PAN_CODE){
+                state.data.PAN_FILES = [{}]
+                state.data.PAN = null
+            }
+            else{
+
+                let newAadharList = [...state.data.AADHAAR_FILES]
+                for(let i = 0 ;i < newAadharList.length ; i++){
+                    if(newAadharList[i].DocType == docId){
+                        newAadharList[i] = {}
+                    }
+                }
+
+                state.data.AADHAAR_FILES = newAadharList
+                state.data.AADHAAR = null
+            }
+        },
         updateLoading(state, payload){
             console.log("stop loaidng in Upload Document Slices")
             state.loading = payload.payload
@@ -151,7 +171,7 @@ function* requestAadharOcr(action){
     if (aadhar?.length > 0) {
         let number = ""
         aadhar.forEach(element => {
-            if(element.AadhaarNumber){
+            if(element?.AadhaarNumber){
                 number = element.AadhaarNumber
             }
         })
@@ -308,5 +328,5 @@ export const sagaSubmitFileRquest = (document, DocCode, shouldFillTheField = fal
 
 
 
-export const { updatePanNumber, updateAadhaarNumber,updateDocumentAndFields, updateLoading, updateError, clearUploadedDocs} = UploadFileSlice.actions
+export const { updatePanNumber, updateAadhaarNumber,updateDocumentAndFields, updateLoading, updateError, clearUploadedDocs,updateFileRemove} = UploadFileSlice.actions
 export default UploadFileSlice.reducer

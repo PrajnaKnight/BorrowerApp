@@ -1,5 +1,6 @@
 import { StyleSheet, Platform, Dimensions } from "react-native";
 import applyFontFamily from "./applyFontFamily";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 // Get the device's width and height
 const window = Dimensions.get('window');
@@ -16,12 +17,11 @@ export const styles = applyFontFamily({
     flex: 1,
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
-        width: '100%',
-        alignSelf: 'center',
+        width: "100%",
+        alignSelf: "center",
       },
     }),
   },
@@ -30,51 +30,56 @@ export const styles = applyFontFamily({
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
-        marginTop: 40
+        marginTop: 40,
       },
     }),
   },
   dropdownBorder: {
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
   dropdown: {
     borderWidth: 0,
-    borderColor: 'transparent',
-    color: '#00194c',
+    borderColor: "transparent",
+    color: "#00194c",
     fontSize: 12,
-    backgroundColor: '#ffffff',
-    zIndex:9000,
+    backgroundColor: "#ffffff",
+    zIndex: 9000,
   },
   TopBar: {
     ...Platform.select({
       web: {
-        zIndex: 100
+        zIndex: 100,
       },
     }),
   },
   logoContainer: {
-    alignItems: 'start',
+    alignItems: "start",
     marginVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
     ...Platform.select({
       web: {
         marginVertical: 0,
-        alignItems: 'center',
+        alignItems: "center",
       },
     }),
   },
+  goBackButton: {
+    marginRight: 10,
+  },
   logo: {
     width: 130, // Set the width of your logo
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   welcomeText: {
     fontSize: 16,
     marginBottom: 20,
-    textAlign: 'left',
-    color: '#00194c',
-    lineHeight: 24
+    textAlign: "left",
+    color: "#00194c",
+    lineHeight: 24,
   },
   sliderContainer: {
     marginBottom: 20,
@@ -82,30 +87,30 @@ export const styles = applyFontFamily({
   slider: {
     height: 40,
     borderRadius: 5,
-    flexDirection:'row'
+    flexDirection: "row",
   },
   sliderLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    color: '#00194c',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    color: "#00194c",
   },
   proceedButtonContainer: {
     marginTop: 20,
   },
   TopBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     zIndex: 5000,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    backgroundColor: "#ffffff",
     ...Platform.select({
       // Additional, web-specific styles
       web: {
-
         paddingHorizontal: 20,
-        backgroundColor: '#00194c',
-        width: '100%',
-        margin: 'auto',
+        backgroundColor: "#00194c",
+        width: "100%",
+        margin: "auto",
         right: 0,
         left: 0,
         flexDirection: "row",
@@ -116,414 +121,441 @@ export const styles = applyFontFamily({
   },
   boldText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#00194C'
+    fontWeight: "bold",
+    color: "#00194C",
   },
   LinearGradient: {
     marginTop: 10,
   },
+  GrayBOrder: {
+    borderColor: "#E9EEFF",
+  },
+  BlueBorder: {
+    borderColor: "#00194c",
+  },
   button: {
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     ...Platform.select({
       web: {
-        transition: 'background-color 0.3s ease',
-        '&:hover': {
-          backgroundColor: '#0056b3',
+        transition: "background-color 0.3s ease",
+        "&:hover": {
+          backgroundColor: "#0056b3",
         },
       },
     }),
   },
   addbutton: {
-    //backgroundColor: '#00194c', 
+    //backgroundColor: '#00194c',
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 10,
   },
   text: {
-    color: '#FFFFFF', // Text color
+    color: "#FFFFFF", // Text color
     fontSize: 16, // Text size
   },
   proceedButtonContainer: {
-    position: 'absolute',
-    bottom: 10,
-    left: 20,
-    right: 20,
-    backgroundColor: '#ffffff',
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    backgroundColor: "#ffffff",
     // ...Platform.select({
     //   web: {
-    //     position: 'fixed', 
-    //     bottom: '10px', 
+    //     position: 'fixed',
+    //     bottom: '10px',
     //     left: 0,
     //     right: 0,
-    //     boxShadow: '0 2px 4px rgba(0,0,0,0.2)', 
-    //     maxWidth: '1200px', 
-    //     width: '100%', 
+    //     boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+    //     maxWidth: '1200px',
+    //     width: '100%',
     //     margin:'auto',
     //     paddingHorizontal:20,
     //     paddingVertical:10
     //   },
     // }),
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   LabelInput: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   Input: {
     width: 150,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: 'transparent',
-    backgroundColor: '#EBEFFF',
-    color: '#000000',
+    padding: 5,
+    lineHeight: 26,
+    borderColor: "transparent",
+    backgroundColor: "#EBEFFF",
+    color: "#000000",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 2,
     ...Platform.select({
       web: {
-        outline: 'none',
-        '&:focus': {
-          borderColor: '#0056b3',
+        outline: "none",
+        "&:focus": {
+          borderColor: "#0056b3",
         },
       },
     }),
   },
   inputFocused: {
-    borderColor: '#00194C',
+    borderColor: "#00194C",
   },
   listItemLabel: {
-    color: '#2E2E22', // Example color
+    color: "#2E2E22", // Example color
   },
 
   listItemContainer: {
     // Style for the container of each option
     padding: 10, // Example padding
-    backgroundColor: '#fffffff',
+    backgroundColor: "#fffffff",
     opacity: 1,
   },
   input: {
-    width: '100%',
+    width: "100%",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
     fontSize: 14,
-    color: '#00194C'
+    color: "#00194C",
   },
   termsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
   carouselItem: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 5,
     height: 250,
     padding: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   Carouselimage: {
     padding: 10,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   link: {
-    color: '#758BFD',
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-    fontSize: 14
+    color: "#758BFD",
+    textDecorationLine: "underline",
+    fontWeight: "bold",
+    fontSize: 12,
   },
   checkbox: {
     marginRight: 10,
-    borderColor: '#00194C99',
+    borderColor: "#00194C99",
     borderRadius: 5,
-    borderWidth: 1
+    borderWidth: 1,
   },
   tc: {
-    width: '95%',
+    width: "95%",
   },
   p: {
-    fontSize: 14,
-    color: '#00194c',
-    marginBottom: 10,
-    lineHeight: 22
+    fontSize: 12,
+    color: "#00194c",
   },
   modalp: {
     fontSize: 12,
-    color: '#00194C',
+    color: "#00194C",
     marginBottom: 10,
-    lineHeight: 20
+    lineHeight: 20,
   },
   modalH: {
-    color: '#00194c',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10
+    color: "#00194c",
+    fontSize: 12,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   modalH2: {
-    color: '#00194c',
-    fontSize: 14,
-    fontWeight: 'bold',
+    color: "#ff8500",
+    fontSize: 12,
+    fontWeight: "bold",
     marginBottom: 10,
-    marginLeft:10,
+    marginLeft: 10,
   },
-  subpoints:{
-    marginLeft:10,
+  subpoints: {
+    marginLeft: 10,
   },
   Modaltitle: {
-    color: '#00194c',
+    color: "#00194c",
     fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 10
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   accepBtn: {
-    paddingHorizontal:20,
+    paddingHorizontal: 20,
   },
   acceptBtnWrapper: {
-    display: 'flex',
-    marginTop: 10,
+    display: "flex",
+    marginTop: 30,
     marginBottom: 20,
   },
   btnText: {
-    color: '#ffffff',
-    fontSize: 16
+    color: "#ffffff",
+    fontSize: 14,
   },
   buttonText: {
-    color: '#ffffff',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: "#ffffff",
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 14,
-    textTransform: 'uppercase'
+    textTransform: "uppercase",
   },
   buttonEnabled: {
-    backgroundColor: '#002777',
+    backgroundColor: "#002777",
     opacity: 1,
-    padding: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonDisabled: {
-    backgroundColor: '#EDF1FE',
-    borderColor:'#EDF1FE',
-    color: '#BED3FF',
+    backgroundColor: "#EDF1FE",
+    borderColor: "#EDF1FE",
+    color: "#BED3FF",
     opacity: 1,
-    padding: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonEnabledText: {
-    color: '#ffffff',
+    color: "#ffffff",
   },
   buttonDisabledText: {
-    color: '#BED3FF',
+    color: "#BED3FF",
   },
   flexContent: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  flex: {
+    flexDirection: "row",
+    flex: 1,
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#00194C',
+    fontWeight: "bold",
+    color: "#00194C",
   },
   WebheaderText: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#fff',
-    textAlign: 'center'
+    color: "#fff",
+    textAlign: "center",
   },
   subText: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 15,
   },
 
   phoneNumber: {
-    fontSize: 18,
-    marginBottom: 20,
-    color: '#00194c'
+    fontSize: 16,
+    marginBottom: 10,
+    color: "#00194c",
+    fontWeight: "bold",
   },
   timer: {
-    fontSize: 18,
-    marginBottom: 20,
-    color: '#FF8600',
+    fontSize: 16,
+    marginBottom: 10,
+    color: "#FF8600",
   },
   otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 5,
     ...Platform.select({
       web: {
-        justifyContent: 'flex-start'
+        justifyContent: "flex-start",
       },
     }),
   },
   otpInput: {
-    width: 50,
-    height: 40,
-    borderColor: '#00194C99',
+    width: 60,
+    height: 50,
+    borderColor: "#A2ACC6",
     borderWidth: 1,
-    textAlign: 'center',
+    textAlign: "center",
     borderRadius: 5,
     fontSize: 14,
     ...Platform.select({
       web: {
-        marginRight: 5
+        marginRight: 5,
       },
     }),
   },
   resendText: {
     marginVertical: 10,
-    color: '#00194C',
-    fontSize: 12
+    color: "#00194C",
+    fontSize: 16,
   },
   resendButton: {
-    marginVertical: 10,
+    margin: 10,
   },
   resendButtonText: {
-    color: '#758BFD',
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-    fontSize: 16
+    color: "#758BFD",
+    fontWeight: "bold",
+    fontSize: 16,
   },
   actionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center",
   },
-  addAnotherBank:{
-    flex:1,
-    justifyContent:'flex-end'
+  addAnotherBank: {
+    flex: 1,
+    justifyContent: "flex-end",
   },
-  backButton: {     
-    backgroundColor: '#ffffff',
+  backButton: {
+    backgroundColor: "#ffffff",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#FF8600',
+    borderColor: "#FF8600",
     borderRadius: 5,
-    width: '48%',
-    alignItems: 'center'
+    width: "48%",
+    alignItems: "center",
   },
   skipbuttonpress: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     paddingHorizontal: 20,
     paddingVertical: 10,
     flex: 1,
   },
   backBtnText: {
-    color: '#FF8600',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: "#FF8600",
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 14,
-    textTransform: 'uppercase'
+    textTransform: "uppercase",
   },
   verifyButton: {
-    backgroundColor: '#00194c',
+    backgroundColor: "#00194c",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#00194c',
+    borderColor: "#00194c",
     borderRadius: 5,
-    width: '48%',
-    alignItems: 'center'
+    width: "48%",
+    alignItems: "center",
   },
-  proceedbutton:{
-    backgroundColor: '#00194c',
-    paddingHorizontal:5,
+  disabledButton: {
+    backgroundColor: "#D8E2FF",
+    borderColor: "#D8E2FF",
+  },
+  invalidOtpInput: {
+    borderColor: "red",
+    color: "red",
+  },
+  proceedbutton: {
+    paddingHorizontal: 5,
     borderWidth: 1,
-    borderColor: '#00194c',
     borderRadius: 5,
   },
   progressBarBackground: {
-    height: 10,
-    width: '100%',
-    backgroundColor: '#D2E1FF',
+    height: 5,
+    width: "100%",
+    backgroundColor: "#D2E1FF",
     borderRadius: 5,
     marginBottom: 20,
   },
   progressBarFill: {
-    height: '100%',
-    backgroundColor: '#758BFD',
+    height: "100%",
+    backgroundColor: "#758BFD",
     borderRadius: 5,
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
-    fontSize: 14
-
+    fontSize: 14,
   },
   errorMessageStyle: { textAlign: "center", color: "red" },
   errorBorder: {
-    borderColor: 'red',
+    borderColor: "red",
   },
   header: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
   },
   customBtn: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#FF8600',
+    borderColor: "#FF8600",
     borderRadius: 5,
-    width: '48.5%',
+    width: "48.5%",
   },
   customBtnText: {
-    color: '#ff8500',
-    textAlign: 'center',
+    color: "#ff8500",
+    textAlign: "center",
     fontSize: 14,
-    textTransform:'uppercase',
-    fontWeight:'600'
+    textTransform: "uppercase",
+    fontWeight: "600",
   },
   orWrapper: {
-    position: 'relative',
-    borderColor: '#DDE5FF',
+    position: "relative",
+    borderColor: "#DDE5FF",
     borderBottomWidth: 1,
     borderRadius: 0,
     marginVertical: 30,
     zIndex: 9,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   or: {
-    position: 'absolute',
-    left: '45%',
-    backgroundColor: '#DDE5FF',
-    color: '#00194c',
-    textAlign: 'center',
+    position: "absolute",
+    left: "45%",
+    backgroundColor: "#DDE5FF",
+    color: "#00194c",
+    textAlign: "center",
     marginVertical: 0,
-    marginHorizontal: 'auto',
+    marginHorizontal: "auto",
     zIndex: 99,
     borderRadius: 100,
     width: 35,
     paddingVertical: 4,
     paddingHorizontal: 2,
-    fontSize: 14
+    fontSize: 14,
   },
   scrollViewContent: {
     flex: 1,
@@ -536,49 +568,50 @@ export const styles = applyFontFamily({
       },
     }),
   },
-  circle: {
+  radioContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 20,
+  },
+  outerCircle: {
     height: 23,
     width: 23,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#00194C99',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#A2ACC6",
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 10,
   },
-  selectedCircle: {
-    height: 23,
-    width: 23,
-    borderRadius: 20,
-    borderColor: '#ff8500',
-    backgroundColor: '#ff8500',
+  selectedOuterCircle: {
+    borderColor: "#A2ACC6",
+  },
+  selectedInnerCircle: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#ff8500",
+  },
+  radioLabel: {
+    fontSize: 16,
+    color: "#00194C",
   },
   InlineGender: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 10
-  },
-  radioContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginRight: 15
-  },
-  Radiolabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#00194c'
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   datePicker: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
-    marginBottom: 10
+    marginBottom: 10,
   },
   dateText: {
     fontSize: 16,
@@ -587,34 +620,34 @@ export const styles = applyFontFamily({
     fontSize: 24,
   },
   flexContentTime: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   accordion: {
     paddingHorizontal: 0,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderColor: '#CCCCCC',
-    flexDirection: 'row', // Align title and icon horizontally
-    justifyContent: 'space-between', // Space between title and icon
-    alignItems: 'center', // Center items vertically
+    borderColor: "#CCCCCC",
+    flexDirection: "row", // Align title and icon horizontally
+    justifyContent: "space-between", // Space between title and icon
+    alignItems: "center", // Center items vertically
   },
   Accordiontitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#00194C'
+    fontWeight: "bold",
+    color: "#00194C",
   },
   child: {
     paddingHorizontal: 0,
     paddingVertical: 16,
   },
   InlineInput: {
-    width: '49%'
+    width: "49%",
   },
   formEmp: {
     zIndex: 1000,
-    marginBottom: 20
+    marginBottom: 20,
   },
   frmOccupation: {
     zIndex: 900,
@@ -622,22 +655,22 @@ export const styles = applyFontFamily({
   },
   headerTitle: {
     fontSize: 16,
-    color: '#00194C',
-    fontWeight: 'bold',
-    marginBottom: 20
+    color: "#00194C",
+    fontWeight: "bold",
+    marginBottom: 20,
   },
   employmentWrapper: {
-    paddingBottom: 60
+    paddingBottom: 60,
   },
   deleteButtonText: {
-    color: '#758BFD',
+    color: "#758BFD",
     fontSize: 16,
   },
   deleteButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginVertical: 10
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginVertical: 10,
   },
   statusMessage: {
     fontSize: 14,
@@ -645,208 +678,221 @@ export const styles = applyFontFamily({
     marginBottom: 10,
   },
   match: {
-    color: 'green',
+    color: "green",
   },
   noMatch: {
-    color: 'red',
+    color: "red",
   },
   description: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#00194C',
+    color: "#00194C",
   },
   descriptionAmt: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#ff8500',
+    color: "#ff8500",
   },
   marginBtm: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   loanId: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#00194C',
-    fontWeight: 'bold',
+    color: "#00194C",
+    fontWeight: "bold",
     marginVertical: 10,
   },
   readonly: {
-    backgroundColor: '#00194C1A',
-    color: '#00194C'
+    backgroundColor: "#00194C1A",
+    color: "#00194C",
   },
   detailContainer: {
     marginBottom: 30,
     borderWidth: 1,
-    borderColor: '#D5E3FF',
-    borderRadius: 5
+    borderColor: "#D5E3FF",
+    borderRadius: 5,
   },
   detailRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    alignItems: 'center',
-    borderBottomColor: '#D5E3FF',
+    alignItems: "center",
+    borderBottomColor: "#D5E3FF",
   },
   detailLabel: {
     fontSize: 14,
-    color: '#00194C',
-    backgroundColor: '#f8f9ff',
+    color: "#00194C",
+    backgroundColor: "#f8f9ff",
     paddingVertical: 10,
     paddingHorizontal: 10,
-    width: '50%',
-    textTransform: 'capitalize'
+    width: "50%",
+    textTransform: "capitalize",
   },
   detailValue: {
     fontSize: 14,
-    color: '#00194C',
+    color: "#00194C",
     paddingVertical: 10,
     paddingHorizontal: 10,
-    textAlign: 'left'
+    textAlign: "left",
+    fontWeight: "600",
+
+  },
+  downloadButtonLink: {
+    borderRadius: 5,
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  downloadButtonLinkText: {
+    color: "#758BFD",
+    fontWeight: "bold",
+    fontSize: 14,
   },
   downloadButton: {
-    backgroundColor: '#00194c',
+    backgroundColor: "#00194c",
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   downloadButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 14,
   },
   documentSection: {
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f1f1',
-    padding:16,
+    borderBottomColor: "#f1f1f1",
+    padding: 16,
     paddingBottom: 30,
-    borderRadius:10
+    borderRadius: 10,
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
     marginBottom: 5,
-    color: '#00194c',
+    color: "#00194c",
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 10,
-    width: '100%',
-    backgroundColor: '#ffffff',
+    width: "100%",
+    backgroundColor: "#ffffff",
     zIndex: 3000,
-    position: 'relative',
+    position: "relative",
     ...Platform.select({
       web: {
         padding: 10,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
       },
     }),
   },
   pickerContainerDrpdwn: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 10,
-    width: '100%',
+    width: "100%",
     zIndex: 4000,
-    backgroundColor: '#ffffff',
-    position: 'relative',
+    backgroundColor: "#ffffff",
+    position: "relative",
     ...Platform.select({
       web: {
         padding: 10,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         zIndex: 4000,
       },
     }),
   },
   picker: {
-    width: '100%',
+    width: "100%",
     fontSize: 14,
     ...Platform.select({
       web: {
         borderWidth: 0,
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
       },
     }),
   },
   carouselContainer: {
     ...Platform.select({
       web: {
-        bakgroundSize: 'auto'
+        bakgroundSize: "auto",
       },
     }),
   },
   ScrollImage: {
     ...Platform.select({
       web: {
-        bakgroundSize: 'auto'
+        bakgroundSize: "auto",
       },
     }),
   },
   uploadButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
   },
   fileInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 10,
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: 10,
   },
   addButtonContainer: {
-    marginTop: 20,
+    marginTop: 10,
   },
   navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
   },
   downloadSamplebutton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    margin: 10
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 10,
   },
   downloadSamplebuttonText: {
-    color: '#758BFD',
+    color: "#758BFD",
     padding: 10,
     fontSize: 14,
-    fontWeight:'bold',
-    textTransform: 'uppercase',
+    fontWeight: "bold",
+    textTransform: "uppercase",
   },
 
   signbuttonText: {
-    color: '#ffffff'
+    color: "#ffffff",
   },
   uploadButtonNach: {
     borderWidth: 1,
-    borderColor: '#FFBB70',
+    borderColor: "#FFBB70",
     borderRadius: 5,
-    padding: 10,
+    paddingLeft: 10,
     marginVertical: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row'
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
   },
   uploadButtonNachText: {
     fontSize: 16,
-    color: '#FF8600'
+    color: "#FF8600",
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
   },
 
@@ -855,70 +901,71 @@ export const styles = applyFontFamily({
     height: 20,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: "#333",
     marginRight: 8,
   },
-  checkboxChecked: {
-    backgroundColor: '#007bff',
+  checkedCheckbox: {
+    backgroundColor: "#ff8500",
+    color: "#ff8500",
   },
   checkboxLabel: {
     flex: 1,
-    color: '#00194c',
+    color: "#00194c",
     fontSize: 14,
-    lineHeight: 20
+    lineHeight: 20,
   },
   ImageContainer: {
-    width: '100%',
-    marginVertical: 10
+    width: "100%",
+    marginVertical: 10,
   },
   agreebutton: {
     padding: 10,
-    backgroundColor: '#00194c',
-    width: '100%',
-    borderRadius: 5
+    backgroundColor: "#00194c",
+    flex: 1,
+    borderRadius: 5,
   },
   finalContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '65%'
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "65%",
   },
   checkboxDisabled: {
     opacity: 0.5,
   },
   accountContainer: {
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   loanLabel: {
-    color: '#00194c',
+    color: "#00194c",
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   resendButtonDisabled: {
     opacity: 0.5,
   },
   inputReadOnly: {
-    backgroundColor: '#f3f3f3',
-    color: '#999',
-    borderColor: '#ccc',
+    backgroundColor: "#f3f3f3",
+    color: "#999",
+    borderColor: "#ccc",
   },
   paddingBottom: {
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   webViewContainer: {
     height: 480, // Adjust the height as needed
-    width: '100%',
+    width: "100%",
     marginBottom: 10,
   },
   webView: {
     flex: 1,
   },
   iconContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginLeft: 10,
   },
   iconButton: {
@@ -931,14 +978,14 @@ export const styles = applyFontFamily({
   },
   iconText: {
     fontSize: 14,
-    color: '#00194c',
-    fontWeight: 'normal',
+    color: "#00194c",
+    fontWeight: "normal",
   },
   bellIcon: {
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: '#ffffff'
+        color: "#ffffff",
       },
     }),
   },
@@ -946,66 +993,66 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: '#ffffff'
+        color: "#ffffff",
       },
     }),
   },
   iconRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     height: 40,
   },
   drpDownWrapper: {
-    marginLeft: 5
+    marginLeft: 5,
   },
   center: {
-    textAlign: 'center'
+    textAlign: "center",
   },
   mandatoryStar: {
-    color: 'red',
-    fontSize: 14
+    color: "red",
+    fontSize: 14,
   },
   focusedInput: {
-    borderColor: '#00194c',
+    borderColor: "#00194c",
     borderWidth: 1,
   },
   downloadIcon: {
     borderWidth: 1,
     borderRadius: 5,
     height: 25,
-    borderColor: '#ff8500',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    textAlign: 'center',
+    borderColor: "#ff8500",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    textAlign: "center",
     padding: 5,
-    marginRight: 10
+    marginRight: 10,
   },
   deleteIcon: {
     borderWidth: 1,
     borderRadius: 5,
     height: 25,
-    borderColor: 'red',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    textAlign: 'center',
+    borderColor: "red",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    textAlign: "center",
     padding: 5,
   },
   RadioWrapper: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   textInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#EDF1FE',
-    borderRadius: 5
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#EDF1FE",
+    borderRadius: 5,
   },
   iconStyle: {
     marginRight: 5,
-    backgroundColor: '#758BFD',
+    backgroundColor: "#758BFD",
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderTopLeftRadius: 5,
@@ -1015,353 +1062,344 @@ export const styles = applyFontFamily({
     fontSize: 14,
   },
   wrapiNput: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   decoration: {
-    color: '#758BFD',
-    textDecorationLine: 'underline',
-    textDecorationColor: '#758BFD'
-
+    color: "#758BFD",
+    textDecorationLine: "underline",
+    textDecorationColor: "#758BFD",
   },
   agreeButtonDisabled: {
     opacity: 0.5,
   },
   disursecontent: {
-    backgroundColor: '#EDF1FE',
+    backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 20,
-    marginVertical: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
   statusSection: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   statusIcon: {
     marginTop: -50,
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   bannerImage: {
     flex: 1,
-    justifyContent: 'flex-end',
-    marginVertical: 50
+    justifyContent: "flex-end",
+    marginVertical: 50,
   },
   banner: {
-    width: '100%',
-    margin: 'auto'
+    width: "100%",
+    margin: "auto",
   },
   disburseamount: {
     fontSize: 46,
-    color: '#00194c',
-    fontWeight: 'bold',
-    marginVertical: 10
+    color: "#00194c",
+    fontWeight: "bold",
+    marginVertical: 10,
   },
   disburseSentence: {
     fontSize: 16,
-    color: '#00194c',
-    marginTop: 10
+    color: "#00194c",
+    marginTop: 10,
   },
   disbuseItemDetails: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: '#EDF1FE'
+    borderBottomColor: "#EDF1FE",
   },
   disbuseItem: {
-    color: '#00194C',
+    color: "#00194C",
     fontSize: 16,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   mandate: {
-    color: '#758BFD',
+    color: "#758BFD",
     fontSize: 14,
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
+    textDecorationLine: "underline",
+    fontWeight: "bold",
     fontSize: 16,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   transerfferedDetails: {
     borderWidth: 1,
-    borderColor: '#00194C66',
+    borderColor: "#00194C66",
     borderRadius: 5,
-    backgroundColor: '#ffffff',
-    color: '#00194C',
+    backgroundColor: "#ffffff",
+    color: "#00194C",
     fontSize: 16,
     padding: 5,
-    marginBottom: 10
+    marginBottom: 10,
   },
   transferDetails: {
-    color: '#00194C',
+    color: "#00194C",
     fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 5
+    textAlign: "center",
+    marginBottom: 5,
   },
   transferInfo: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   LAproceedButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
     left: 20,
-    right: 20
+    right: 20,
   },
   optional: {
     fontSize: 12,
-    color: '#ff8500',
-    fontStyle: 'italic'
+    color: "#ff8500",
+    fontStyle: "italic",
   },
   tablecontainer: {
     borderWidth: 1,
-    borderColor: '#D5E3FF',
+    borderColor: "#D5E3FF",
     borderBottomWidth: 0,
     borderRadius: 5,
-    marginVertical: 20
+    marginVertical: 20,
   },
   tablerow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: '#D5E3FF',
+    borderBottomColor: "#D5E3FF",
   },
   tablelabel: {
-    backgroundColor: '#EDF1FE',
+    backgroundColor: "#EDF1FE",
     padding: 10,
-    color: '#00194C',
-    width: '50%'
+    color: "#00194C",
+    width: "50%",
   },
   tablevalue: {
     padding: 10,
-    color: '#00194C',
+    color: "#00194C",
   },
   Note: {
     fontSize: 14,
-    color: '#00194C',
+    color: "#00194C",
     lineHeight: 20,
-    textAlign: 'center',
-    marginVertical: 10
+    textAlign: "center",
+    marginVertical: 10,
   },
   infoIcon: {
     borderWidth: 1,
-    borderColor: '#00194C',
+    borderColor: "#00194C",
     borderRadius: 50,
-    width: 25,
-    height: 25,
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    lineHeight: 25,
+    width: 20,
+    height: 20,
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    lineHeight: 20,
     ...Platform.select({
       web: {
         padding: 9,
-        color: '#ffffff',
-        borderColor: '#ffffff'
+        color: "#ffffff",
+        borderColor: "#ffffff",
       },
     }),
   },
   modalView: {
     flex: 1,
     paddingTop: 22,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   modalHeader: {
-    backgroundColor: '#00194c',
+    backgroundColor: "#00194c",
     paddingVertical: 15,
     paddingHorizontal: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   logo: {
     width: 100,
     height: 40,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   faqsTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: "bold",
+    color: "#fff",
     flex: 1,
   },
   faqClose: {
     width: 70,
-    display: 'flex',
-    alignItems: 'flex-end',
-    marginRight: 15
+    display: "flex",
+    alignItems: "flex-end",
+    marginRight: 15,
   },
   searchBar: {
     height: 50,
     borderWidth: 1,
-    borderColor: '#e2e2e2',
+    borderColor: "#e2e2e2",
     borderRadius: 8,
     paddingLeft: 10,
     marginHorizontal: 10,
     marginVertical: 15,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   faqItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   faqQuestion: {
-    fontWeight: 'bold',
+    color: "#00194c",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   faqAnswerContainer: {
-    padding: 20,
+    paddingHorizontal: 20,
   },
   faqAnswer: {
-    color: '#333',
+    color: "#00194c",
+    fontSize: 12,
+    lineHeight: 20,
   },
   closeButton: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 10,
     marginVertical: 20,
     marginHorizontal: 10,
     borderRadius: 8,
-    backgroundColor: '#FF6347',
+    backgroundColor: "#FF6347",
   },
   closeButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   leftContainer: {
     ...Platform.select({
       web: {
         // backgroundColor:'#c9d9fa',
-        backgroundColor: '#000565',
-
-
+        backgroundColor: "#000565",
       },
     }),
   },
   rightCOntainer: {
     ...Platform.select({
       web: {
-        backgroundColor: '#ffffff',
-
+        backgroundColor: "#ffffff",
       },
     }),
   },
   mainContainer: {
     ...Platform.select({
       web: {
-        width: '85%',
-        marginHorizontal: 'auto',
-        backgroundColor: '#f1f1f1',
+        width: "85%",
+        marginHorizontal: "auto",
+        backgroundColor: "#f1f1f1",
         flex: 1,
-        alignSelf: 'center',
+        alignSelf: "center",
         paddingTop: 70,
         paddingBottom: 10,
-        flexDirection: "column"
+        flexDirection: "column",
       },
     }),
     ...(isSmallDevice && {
-      width: '100%',
+      width: "100%",
       paddingTop: 0,
       paddingBottom: 0,
     }),
   },
   webheader: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   websubtitleText: {
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
   webinterestButton: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 20,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   webinterestText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: "bold",
+    color: "#fff",
   },
   webfeaturesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   webfeature: {
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: '#0F158D',
+    borderColor: "#0F158D",
     borderRadius: 5,
     padding: 15,
-    width: '32.33%'
+    width: "32.33%",
   },
   webfeatureIcon: {
     fontSize: 40,
     marginBottom: 5,
-    display: 'flex',
-    color: '#fff'
+    display: "flex",
+    color: "#fff",
   },
   webfeatureText: {
-    textAlign: 'center',
-    color: '#fff',
+    textAlign: "center",
+    color: "#fff",
     fontSize: 12,
   },
   webdescription: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 20,
   },
   webdescriptionText: {
     fontSize: 14,
-    fontWeight: '400',
-    color: '#fff',
+    fontWeight: "400",
+    color: "#fff",
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: "center",
   },
   weblinkText: {
-    color: '#758BFD',
-    textDecorationLine: 'underline',
+    color: "#758BFD",
+    textDecorationLine: "underline",
   },
   mincontainer: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   featureIcon: {
-    color: '#ffffff'
+    color: "#ffffff",
   },
   bottomFixed: {
-    position: 'absolute',
-    bottom: 10
+    position: "absolute",
+    bottom: 10,
   },
-
 
   mainContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 20,
   },
   subtitleText: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
   interestButton: {
     paddingVertical: 10,
@@ -1370,24 +1408,24 @@ export const styles = applyFontFamily({
     marginTop: 10,
   },
   interestText: {
-    color: '#fff',
-    textAlign: 'center',
+    color: "#fff",
+    textAlign: "center",
   },
   featuresContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginVertical: 20,
   },
   feature: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   featureIcon: {
     fontSize: 24,
-    color: '#0056B3',
+    color: "#0056B3",
   },
   featureText: {
-    textAlign: 'center',
-    color: '#666',
+    textAlign: "center",
+    color: "#666",
   },
   // description: {
   //   fontSize: 16,
@@ -1395,21 +1433,21 @@ export const styles = applyFontFamily({
   //   paddingHorizontal: 20,
   // },
   descriptionText: {
-    textAlign: 'center',
-    color: '#666',
+    textAlign: "center",
+    color: "#666",
   },
   linkText: {
-    color: '#0056B3',
-    textAlign: 'center',
+    color: "#0056B3",
+    textAlign: "center",
     marginTop: 10,
   },
   permissionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 15,
     borderBottomWidth: 2,
-    borderBottomColor: '#DDE5FF'
+    borderBottomColor: "#DDE5FF",
   },
   permissionText: {
     flex: 1,
@@ -1417,128 +1455,126 @@ export const styles = applyFontFamily({
   },
   permissionTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#00194C',
+    fontWeight: "bold",
+    color: "#00194C",
   },
   permissionDesc: {
     fontSize: 12,
-    color: '#00194C',
+    color: "#00194C",
   },
   permissionAlert: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   permissionAlertText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    color: '#FF6200',
+    color: "#FF6200",
   },
   permissionAlertDesc: {
-    textAlign: 'center',
-    color: '#666',
+    textAlign: "center",
+    color: "#666",
     marginVertical: 10,
   },
   Nextbutton: {
-    backgroundColor: '#0056B3',
+    backgroundColor: "#0056B3",
     padding: 15,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 10,
-    marginTop: 'auto',
-
+    marginTop: "auto",
   },
   permissionContainer: {
     flex: 1,
   },
   permissionDialog: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: "#f1f1f1",
     padding: 20,
     marginVertical: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   permissionDialogText: {
     fontSize: 16,
     marginVertical: 10,
   },
   dialogButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '60%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "60%",
   },
   dialogButtonText: {
     fontSize: 16,
-    color: '#0056B3',
+    color: "#0056B3",
   },
   permissionAlert: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   permissionAlertText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    color: '#FF6200',
+    color: "#FF6200",
   },
   permissionAlertDesc: {
-    textAlign: 'center',
-    color: '#666',
+    textAlign: "center",
+    color: "#666",
     marginVertical: 10,
   },
   Gotobutton: {
-    backgroundColor: '#0056B3',
+    backgroundColor: "#0056B3",
     padding: 15,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 10,
-    marginTop: 'auto',
+    marginTop: "auto",
   },
 
   permissionDialog: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: "#f1f1f1",
     padding: 20,
     marginVertical: 20,
     borderRadius: 10,
-    alignItems: 'center',
-    position: 'absolute',
-    top: '30%',
-    left: '10%',
-    right: '10%',
+    alignItems: "center",
+    position: "absolute",
+    top: "30%",
+    left: "10%",
+    right: "10%",
     zIndex: 1,
     ...Platform.select({
       web: {
-        width: '50%',
-        alignItems: 'center',
+        width: "50%",
+        alignItems: "center",
         position: "absolute",
         top: null,
         left: null,
         right: null,
-
       },
     }),
   },
   permissionDialogText: {
     fontSize: 16,
     marginVertical: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   dialogButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '60%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "60%",
     marginTop: 10,
   },
   dialogButtonText: {
     fontSize: 16,
-    color: '#0056B3',
+    color: "#0056B3",
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   textInput: {
     flex: 1,
@@ -1547,22 +1583,20 @@ export const styles = applyFontFamily({
   },
   tableContainer: {
     marginTop: 20,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
     borderRadius: 10,
   },
   tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: '#D5E3FF',
-
+    borderBottomColor: "#D5E3FF",
   },
   tableHeader: {
     fontSize: 14,
-    color: '#00194c',
-    backgroundColor: '#EDF1FE',
+    color: "#00194c",
+    backgroundColor: "#EDF1FE",
     padding: 10,
-    width: '60%',
+    width: "50%",
   },
   firstChild: {
     borderTopLeftRadius: 10,
@@ -1572,67 +1606,67 @@ export const styles = applyFontFamily({
   },
   tableData: {
     fontSize: 14,
-    color: '#00194c',
+    color: "#00194c",
     padding: 10,
   },
   initiateButton: {
-    display: 'flex',
+    display: "flex",
     padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    alignItems: 'center'
+    borderRadius: 8,
+    alignItems: "center",
+    alignItems: "center",
   },
   inputIcon: {
-    backgroundColor: '#758BFD',
+    backgroundColor: "#758BFD",
     marginBottom: 10,
     padding: 10,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
   },
   urlText: {
-    color: '#758BFD',
-    textDecorationLine: 'underline',
-    textDecorationColor: '#758BFD'
+    color: "#758BFD",
+    textDecorationLine: "underline",
+    textDecorationColor: "#758BFD",
   },
   webViewContainer: {
-    height: '70vh',
-    width: '100%',
+    height: "70vh",
+    width: "100%",
     marginBottom: 20,
   },
 
   webViewContainerMobile: {
-    height: '50vh',
-    width: '100%',
+    height: "50vh",
+    width: "100%",
     marginBottom: 20,
   },
   IconClose: {
     width: 30,
     height: 30,
     borderWidth: 1,
-    borderColor: '#00194c',
+    borderColor: "#00194c",
     borderRadius: 100,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     margin: 15,
   },
   wifiIcon: {
-    color: 'red'
+    color: "red",
   },
   CloseIcon: {
-    color: '#00194c',
+    color: "#00194c",
   },
   webViewWrapper: {
-    height: height * 0.60,  // 60% of total screen height
-    width: width * 0.90,  // 90% of total screen width
+    height: height * 0.6, // 60% of total screen height
+    width: width * 0.9, // 90% of total screen width
     borderWidth: 1,
-    borderColor: '#00194c',
+    borderColor: "#00194c",
     padding: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 10,
     ...Platform.select({
       web: {
-        width: '100%',
+        width: "100%",
       },
     }),
   },
@@ -1641,18 +1675,18 @@ export const styles = applyFontFamily({
     flex: 1,
     ...Platform.select({
       web: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
       },
     }),
   },
   stepHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    position: 'relative',
+    borderBottomColor: "#ccc",
+    position: "relative",
   },
   stepHeaderText: {
     flex: 1,
@@ -1660,15 +1694,15 @@ export const styles = applyFontFamily({
   },
   stepTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#00194c'
+    fontWeight: "bold",
+    color: "#00194c",
   },
   stepContent: {
     padding: 15,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   verticalLine: {
-    position: 'absolute',
+    position: "absolute",
     left: 7,
     top: 35,
     bottom: -25,
@@ -1677,38 +1711,571 @@ export const styles = applyFontFamily({
   },
   stepIcon: {
     zIndex: 1,
-    position: 'relative'
+    position: "relative",
   },
   downloadButton: {
-    backgroundColor: '#00194c',
+    backgroundColor: "#00194c",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#00194c',
+    borderColor: "#00194c",
     borderRadius: 5,
-    width: '100%',
-    alignItems: 'center'
+    width: "100%",
+    alignItems: "center",
   },
   downloadButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
   },
-  DownloadBtnWrapper:{
-    flexDirection:'column',
-    justifyContent:'flex-end',
-    flex:1,
-    marginBottom:15
+  DownloadBtnWrapper: {
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    flex: 1,
+    marginBottom: 15,
   },
-  signMandate:{
-    marginTop:10
+  signMandate: {
+    marginTop: 10,
   },
-  uploadedDocName:{
-    marginVertical:10,
-    alignItems:'center'
+  uploadedDocName: {
+    marginVertical: 10,
+    alignItems: "center",
   },
-  uploadedDoc:{
-    fontSize:14,
-    color:'#00194C'
+  uploadedDoc: {
+    fontSize: 14,
+    color: "#00194C",
   },
+  mobilelabel: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#00194c",
+  },
+  boxShadow: {
+    backgroundColor: "#FFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+  
+    padding: 16,
+  },
+  docCaptureWrapper: {
+    borderWidth: 1,
+    borderColor: "#A2ACC6",
+    padding: 16,
+    borderRadius: 10,
+  },
+  docFlex: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  docButtonWrapper: {
+    width: "12%",
+    marginLeft: "auto",
+  },
+  docButton: {
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ff8500",
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    backgroundColor: "#ff8500",
+  },
+  previewWrapper: {
+    width: "75%",
+    flex: 1,
+    marginRight: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#A2ACC6",
+    minHeight: 150,
+    marginBottom: 15,
+    borderStyle: "dashed",
+    padding: 10,
+  },
+  previewDocWrapper: {
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  previewDoc: {
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: 130,
+    padding: 10,
+  },
+  docImagePreview: {
+    width: "100%",
+    height: 120,
+  },
+  docProgressBar: {
+    width: "100%",
+  },
+
+  tabsContainer: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  tabScrollView: {
+    flexGrow: 0,
+    marginHorizontal: 16,
+  },
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginRight: 8,
+    borderRadius: 10,
+    backgroundColor: "#D0E4FE",
+    borderWidth: 1,
+    borderColor: "transparent",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activeTab: {
+    backgroundColor: "#002777",
+    borderColor: "#002777",
+    textAlign: "center",
+    justifyContent: "center",
+  },
+  tabText: {
+    color: "#00194c",
+    fontSize: 16,
+  },
+  activeTabText: {
+    color: "#fff",
+  },
+  accountIcon: {
+    marginRight: 10,
+    position: "relative",
+    backgroundColor: "#ffffff",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  BankdeleteIcon: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+  },
+  ChartContainer: {
+    padding: 16,
+    backgroundColor: "#fff",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    borderRadius: 10,
+  },
+  loanIdcontainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginVertical: 30,
+    borderWidth: 1,
+    borderColor: "#A2ACC6",
+  },
+  loanIdiconContainer: {
+    backgroundColor: "#FF9800",
+    padding: 10,
+    marginRight: 8,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
+  },
+  loanIdicon: {
+    fontSize: 18,
+  },
+  loanId: {
+    fontSize: 14,
+    color: "#00194c",
+    fontWeight: "bold",
+  },
+  loanIdValue: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#ff8500",
+  },
+  gradientRow: {
+    borderRadius: 8,
+    marginBottom: 8,
+    padding: 8,
+  },
+  // New document upload screen style starts
+  DoctabContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  Doctab: {
+    padding: 12,
+    alignItems: "center",
+    backgroundColor: "#D0E4FE",
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  DocselectedTab: {
+    borderBottomWidth: 2,
+    backgroundColor: "#00194c",
+  },
+  DoctabText: {
+    fontSize: 14,
+    color: "#00194c",
+  },
+  DocselectedTabText: {
+    color: "#fff",
+  },
+  DocaddButton: {
+    backgroundColor: "#D0E4FE",
+    borderRadius: 5,
+    padding: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 5,
+  },
+  DocaddButtonText: {
+    fontSize: 18,
+    color: "#002777",
+    fontWeight: "bold",
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#002777",
+    marginBottom: 4,
+  },
+  sectionTitleHindi: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 12,
+  },
+  docTypeContainer: {
+    paddingVertical: 16,
+  },
+  docTypeButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    flex: 1,
+  },
+  docTypeButton: {
+    alignItems: "center",
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 8,
+    marginRight: 10,
+    minWidth: "30%",
+  },
+  dotIndicatorContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 8,
+  },
+  dotIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#E0E0E0",
+    marginHorizontal: 4,
+  },
+  activeDotIndicator: {
+    backgroundColor: "#ff8500",
+  },
+  selectedDocTypeButton: {
+    backgroundColor: "#002777",
+    borderColor: "#A2ACC6",
+  },
+  docTypeText: {
+    marginTop: 4,
+    fontSize: 12,
+    color: "#00194c",
+    textAlign: "center",
+  },
+  selectedDocTypeText: {
+    color: "#fff",
+  },
+  fileUploadContainer: {
+    padding: 16,
+  },
+  uploadPreviewContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+  },
+  pdfPreview: {
+    width: 80,
+    height: 80,
+    backgroundColor: "#FFEBEE",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  pdfText: {
+    color: "#FF0000",
+    fontWeight: "bold",
+  },
+  uploadedFileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 12,
+  },
+  previewArea: {
+    borderWidth: 1,
+    borderColor: "#A2ACC6",
+    padding: 10,
+    borderStyle: "dashed",
+    flex: 1,
+    marginRight: 10,
+    minHeight: 150,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  fileIcon: {
+    marginRight: 8,
+  },
+  fileName: {
+    flex: 1,
+    fontSize: 14,
+    color: "#666",
+  },
+  uploadButtonsContainer: {
+    flexDirection: "column",
+  },
+  uploadButton: {
+    borderWidth: 1,
+    borderColor: "#ff8500",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    backgroundColor: "#ff8500",
+  },
+  passwordContainer: {
+    padding: 16,
+  },
+  passwordLabelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  passwordLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#002777",
+  },
+  passwordLabelHindi: {
+    fontSize: 14,
+    color: "#666",
+  },
+  passwordToggle: {
+    width: 50,
+    height: 24,
+    borderRadius: 12,
+    padding: 2,
+    backgroundColor: "#E0E0E0",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  toggleKnob: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "white",
+    position: "absolute",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+  },
+  passwordToggleText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    position: "absolute",
+    right: 5,
+  },
+  passwordToggleTextEnabled: {
+    color: "#fff",
+    left: 5,
+  },
+  passwordToggleTextDisabled: {
+    color: "#666",
+  },
+  passwordToggleKnobEnabled: {
+    backgroundColor: "#758BFD",
+  },
+  passwordToggleKnobDisabled: {
+    backgroundColor: "white",
+  },
+  passwordToggleEnabled: {
+    backgroundColor: "#00194c",
+  },
+  passwordToggleDisabled: {
+    backgroundColor: "#E2EAFC",
+  },
+  passwordInputContainer: {
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  passwordInput: {
+    padding: 12,
+    fontSize: 16,
+  },
+  FileControllerContainer: {
+    borderWidth: 1,
+    borderColor: "#A2ACC6",
+    borderRadius: 10,
+  },
+  closePDF: {
+    position: "absolute",
+    right: -10,
+    top: -10,
+  },
+  disabledInput: {
+    backgroundColor: "#f0f0f0",
+    color: "#888",
+  },
+  Linkcontainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  linktext: {
+    marginLeft: 4,
+    color: "#758BFD",
+    fontSize: 16,
+    lineHeight: 16,
+  },
+  detailsContainer: {
+    overflow: "hidden",
+    width: "100%",
+  },
+  detailItem: {
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
+    borderWidth: 1,
+    borderColor: "#A2ACC6",
+    marginBottom: 15,
+  },
+  borderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.2)",
+  },
+  disburseiconContainer: {
+    padding: 15,
+    width: 50,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    backgroundColor: "#758BFD",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  detailTextContainer: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor:'#ffffff',
+    borderTopRightRadius:10,
+    borderBottomRightRadius:10,
+  },
+  disbursedetailLabel: {
+    fontSize: 14,
+    color: "#00194c",
+    borderRightWidth: 1,
+    borderColor: "#f8f9ff",
+    backgroundColor: "#f8f9ff",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: "50%",
+  },
+ 
+  disbursestatusText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#00194c",
+    textAlign: "center",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  disburseamountText: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#00194c",
+    marginBottom: 5,
+  },
+  disbursesubtitleText: {
+    fontSize: 14,
+    color: "#8A99B8",
+    marginBottom: 20,
+  },
+  noteText: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+    marginVertical: 20,
+  },
+  disbursebannerImage: {
+    width: "100%",
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  homeButton: {
+    backgroundColor: "#002777",
+    paddingVertical: 15,
+    borderRadius: 5,
+  },
+  homeButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  disbursebackgroundImage: {
+    resizeMode: "cover",
+    flex: 1,
+  },
+  disburseAccountInfo: {
+    backgroundColor: "#FF8500",
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 5,
+    color: "white",
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  disburseTransactionInfo: {
+    color: "#8A99B8",
+    fontSize: 14,
+  },
+  disbursebannerContainer:{
+  marginTop:40
+  },
+  //New document upload screen ends
 });
+
+

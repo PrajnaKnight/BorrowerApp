@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Text, ScrollView, TextInput, TouchableOpacity, StatusBar, Image, Dimensions, KeyboardAvoidingView, useWindowDimensions } from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, StatusBar, Image, Dimensions, KeyboardAvoidingView, useWindowDimensions, BackHandler } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import Checkbox from 'expo-checkbox';
 import ProgressBar from '../components/progressBar';
@@ -15,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { DownloadMyFile, generateUniqueAddress } from '../services/Utils/FieldVerifier';
 import { Platform } from 'react-native';
 import WebView from 'react-native-webview';
+import { GoBack } from '../services/Utils/ViewValidator';
 
 import * as FileSystem from 'expo-file-system';
 import { checkImagePermission, checkLocationPermission } from './PermissionScreen';
@@ -49,6 +50,8 @@ const LoanAgreementScreen = ({ navigation }) => {
   const { setProgress } = useProgressBar();
   const [refreshPage, setRefreshPage] = useState(true)
   const [otherError, setOtherError] = useState(null)
+
+
 
   const onTryAgainClick = () => {
     setRefreshPage(true)
@@ -102,6 +105,15 @@ const LoanAgreementScreen = ({ navigation }) => {
     })
     setRefreshPage(false)
   }, [refreshPage]));
+
+  useEffect(() => {
+    const backAction = () => {
+      GoBack(navigation, 'eMandate');
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
 
 
   function base64toBlob(base64Data, contentType) {
@@ -318,6 +330,7 @@ const LoanAgreementScreen = ({ navigation }) => {
   const dynamicFontSize = (size) => size + fontSize;
 
 
+  const isProceedEnabled = loanWebView != null && isChecked;
 
   const contentComponent = Platform.OS === 'web' ? (
     <View style={styles.webViewWrapper}>
@@ -364,46 +377,72 @@ const LoanAgreementScreen = ({ navigation }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{ flex: 1, flexDirection: isWeb ? 'row' : 'column' }}>
+      <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
         {isWeb && (isDesktop || (isTablet && width > height)) && (
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
                 <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>Move Into Your Dreams!</Text>
+                <Text style={styles.websubtitleText}>
+                  Move Into Your Dreams!
+                </Text>
               </View>
               <LinearGradient
                 // button Linear Gradient
-                colors={['#000565', '#111791', '#000565']}
-                style={styles.webinterestButton}
-              >
-                <TouchableOpacity >
-                  <Text style={styles.webinterestText}>Interest starting from 8.4%*</Text>
+                colors={["#000565", "#111791", "#000565"]}
+                style={styles.webinterestButton}>
+                <TouchableOpacity>
+                  <Text style={styles.webinterestText}>
+                    Interest starting from 8.4%*
+                  </Text>
                 </TouchableOpacity>
-
               </LinearGradient>
 
               <View style={styles.webfeaturesContainer}>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5, }]}>%</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    %
+                  </Text>
                   <Text style={styles.webfeatureText}>Nil processing fee*</Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>3</Text>
-                  <Text style={styles.webfeatureText}>3-Step Instant approval in 30 minutes</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    3
+                  </Text>
+                  <Text style={styles.webfeatureText}>
+                    3-Step Instant approval in 30 minutes
+                  </Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>⏳</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    ⏳
+                  </Text>
                   <Text style={styles.webfeatureText}>Longer Tenure</Text>
                 </View>
               </View>
 
               <View style={styles.webdescription}>
                 <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that isn't any more than 30 minutes.
+                  There's more! Complete the entire process in just 3-steps that
+                  isn't any more than 30 minutes.
                 </Text>
                 <TouchableOpacity>
-                  <Text style={styles.weblinkText}>To know more about product features & benefits, please click here</Text>
+                  <Text style={styles.weblinkText}>
+                    To know more about product features & benefits, please click
+                    here
+                  </Text>
                 </TouchableOpacity>
               </View>
               {/* <View style={styles.bottomFixed}>
@@ -416,17 +455,29 @@ const LoanAgreementScreen = ({ navigation }) => {
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-        >
+          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
+          <View style={{ paddingHorizontal: 16 }}>
+            <ProgressBar progress={0.7} />
+            <Text
+              style={[
+                styles.headerText,
+                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+              ]}>
+              Loan Agreement
+            </Text>
+          </View>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
               <View>
-
-                <ProgressBar progress={0.7} />
-                <Text style={[styles.headerText, { fontSize: dynamicFontSize(styles.headerText.fontSize) }]}>Loan Agreement</Text>
                 {otherError && (
-                  <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{otherError}</Text>
+                  <Text
+                    style={[
+                      styles.errorText,
+                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                    ]}>
+                    {otherError}
+                  </Text>
                 )}
                 {/* <View style={isMobile ? styles.webViewContainerMobile : styles.webViewContainer}>
           {loanWebView &&
@@ -442,37 +493,77 @@ const LoanAgreementScreen = ({ navigation }) => {
                 {/* componet for display loan agreement html content */}
                 {contentComponent}
 
-                <View
-                  style={styles.checkboxContainer}
-                >
-                  <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setChecked} />
-                  <Text style={[styles.checkboxLabel, { fontSize: dynamicFontSize(styles.checkboxLabel.fontSize) }]}>
-                    I accept the terms and conditions and consent to provide ABC Bank Pvt Ltd to fetch my credit bureau report for the purpose of offering lending services.
+                <View style={styles.checkboxContainer}>
+                  <Checkbox
+                    style={styles.checkbox}
+                    value={isChecked}
+                    onValueChange={setChecked}
+                    color={isChecked ? "#FF8500" : undefined}
+                  />
+                  <Text
+                    style={[
+                      styles.checkboxLabel,
+                      {
+                        fontSize: dynamicFontSize(
+                          styles.checkboxLabel.fontSize
+                        ),
+                      },
+                    ]}>
+                    I accept the terms and conditions and consent to provide ABC
+                    Bank Pvt Ltd to fetch my credit bureau report for the
+                    purpose of offering lending services.
                   </Text>
                 </View>
-
               </View>
-              <View style={styles.LAproceedButtonContainer}>
+              <View style={styles.LAproceedButtonContainer}></View>
 
-
-
-                <View style={styles.actionContainer}>
-                  <LinearGradient
-                    colors={loanWebView == null ? ["grey", "grey"] : ['#002777', '#00194C']}
-                    style={styles.agreebutton}
-                  >
-                    <TouchableOpacity onPress={() => OnProceedClick()} >
-                      <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>Proceed</Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
-                </View>
-              </View>
-
-
-              {errorScreen.type != null && <ScreenError errorObject={errorScreen} onTryAgainClick={onTryAgainClick} setNewErrorScreen={setNewErrorScreen} />}
-
+              {errorScreen.type != null && (
+                <ScreenError
+                  errorObject={errorScreen}
+                  onTryAgainClick={onTryAgainClick}
+                  setNewErrorScreen={setNewErrorScreen}
+                />
+              )}
             </View>
           </ScrollView>
+          <View style={[styles.actionContainer, styles.boxShadow]}>
+            <TouchableOpacity
+              style={[styles.backButton, { marginRight: 10 }]}
+              onPress={() => GoBack(navigation)}>
+              <Text
+                style={[
+                  styles.backBtnText,
+                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                ]}>
+                Back
+              </Text>
+            </TouchableOpacity>
+            <LinearGradient
+              colors={
+                isProceedEnabled
+                  ? ["#002777", "#00194C"]
+                  : ["#E9EEFF", "#D8E2FF"]
+              }
+              style={[
+                styles.agreebutton,
+                !isProceedEnabled && styles.disabledButton,
+              ]}>
+              <TouchableOpacity
+                onPress={() => isProceedEnabled && OnProceedClick()}
+                disabled={!isProceedEnabled}>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    {
+                      fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                      color: isProceedEnabled ? "#FFFFFF" : "#ffffff",
+                    },
+                  ]}>
+                  Proceed
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
         </KeyboardAvoidingView>
       </View>
     </View>

@@ -7,6 +7,7 @@ import { styles } from '../../assets/style/personalStyle';
 import { useAppContext } from '../components/useContext';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { FontAwesome5 } from '@expo/vector-icons';
 
 
 const DatePickerComponent = ({ onDateChange, initialDate, maximumDate, minimumDate, readonly }) => {
@@ -40,9 +41,9 @@ const DatePickerComponent = ({ onDateChange, initialDate, maximumDate, minimumDa
           style={[styles.datePicker, readonly && styles.inputReadOnly]}
         >
           <Text
-            style={[styles.dateText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize), color: initialDate ? "black" : "gray" }]}
+            style={[styles.dateText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize), color: initialDate ? "#00194c" : "#cccccc" }]}
           >{initialDate ? format(initialDate, 'PPP') : "Date"}</Text>
-          <Icon name="calendar" size={16} color={readonly ? "#cccccc" : "#00194c"} style={styles.icon} />
+          <FontAwesome5 name="calendar-alt" size={16} color={readonly ? "#cccccc" : "#ff8500"} style={styles.icon} />
         </TouchableOpacity>
 
 
@@ -97,9 +98,9 @@ const ExampleCustomInput = forwardRef(({ value, onClick , readonly}, ref) => (
       ref={ref}
     >
       <Text
-        style={[styles.dateText, { fontSize: 12, color: value ? "black" : "gray" }]}
+        style={[styles.dateText, { fontSize: 12, color: value ? "#00194c" : "#ccccccc" }]}
       >{value ? format(value, 'PPP') : "Date"}</Text>
-      <Icon name="calendar" size={16} color={readonly ? "#cccccc" : "#00194c"} style={styles.icon} />
+     <FontAwesome5 name="calendar-alt" size={16} color={readonly ? "#cccccc" : "#ff8500"} style={styles.icon} />
     </TouchableOpacity>
 
   </View>

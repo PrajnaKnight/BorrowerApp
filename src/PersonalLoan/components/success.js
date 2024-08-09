@@ -38,7 +38,7 @@ const styles = applyFontFamily({
   },
   successIcon: {
     width: 200, 
-    height: 200, 
+    height: 300, 
   },
   message: {
     fontSize: 22,

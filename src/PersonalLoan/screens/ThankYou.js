@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View, Text, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView, useWindowDimensions } from "react-native";
-import * as Print from 'expo-print';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
 import { useRoute } from "@react-navigation/native";
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from "../../assets/style/personalStyle";
 import { checkImagePermission } from "./PermissionScreen";
 import { ALL_SCREEN, Something_Went_Wrong } from "../services/Utils/Constants";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +15,7 @@ import { CheckEsignLoanAgreement } from "../services/API/ESignDocument";
 import { DownloadMyFile } from "../services/Utils/FieldVerifier";
 import { STATUS } from "../services/API/Constants";
 import { GoBack } from "../services/Utils/ViewValidator";
-
-
+import applyFontFamily from "../../assets/style/applyFontFamily";
 
 const ThankYou = ({ navigation }) => {
   const route = useRoute();
@@ -39,69 +37,69 @@ const ThankYou = ({ navigation }) => {
 
   };
 
-  const handleDownloadForMobile = async () => {
+  // const handleDownloadForMobile = async () => {
 
 
 
 
-      if(await checkImagePermission() == false){
-        navigation.navigate("PermissionsScreen", { permissionStatus: "denied", permissionType: 'files' })
-        return
-      }
+  //     if(await checkImagePermission() == false){
+  //       navigation.navigate("PermissionsScreen", { permissionStatus: "denied", permissionType: 'files' })
+  //       return
+  //     }
 
-      try {
+  //     try {
 
        
-          let Share = require('react-native-share').default;
+  //         let Share = require('react-native-share').default;
 
-          let fileName = route.params?.fileName
+  //         let fileName = route.params?.fileName
     
-          if (fileName.endsWith('.pdf')) {
-            fileName = fileName.slice(0, -4); // Remove the last 4 characters (which is ".pdf")
-          }
-          let shareResult = await Share.open({
-            url: `data:application/pdf;base64,${route.params?.pdfUri}`,
-            filename: fileName,
-            isNewTask: true,
-            title: "Save file",
-            failOnCancel: false
-          })
+  //         if (fileName.endsWith('.pdf')) {
+  //           fileName = fileName.slice(0, -4); // Remove the last 4 characters (which is ".pdf")
+  //         }
+  //         let shareResult = await Share.open({
+  //           url: `data:application/pdf;base64,${route.params?.pdfUri}`,
+  //           filename: fileName,
+  //           isNewTask: true,
+  //           title: "Save file",
+  //           failOnCancel: false
+  //         })
         
        
   
-      }
-      catch (e) {
-        console.log(e)
-      }
+  //     }
+  //     catch (e) {
+  //       console.log(e)
+  //     }
       
     
     
 
 
-  }
-  const handleDownloadAndShowPdf = () => {
-    try {
-      const byteCharacters = atob(route.params.pdfUri);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
+  // }
+  // const handleDownloadAndShowPdf = () => {
+  //   try {
+  //     const byteCharacters = atob(route.params.pdfUri);
+  //     const byteNumbers = new Array(byteCharacters.length);
+  //     for (let i = 0; i < byteCharacters.length; i++) {
+  //       byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //     }
+  //     const byteArray = new Uint8Array(byteNumbers);
+  //     const blob = new Blob([byteArray], { type: 'application/pdf' });
+  //     const url = URL.createObjectURL(blob);
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = route.params?.fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      return url;
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
-  };
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.download = route.params?.fileName;
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //     return url;
+  //   } catch (e) {
+  //     console.log(e);
+  //     return null;
+  //   }
+  // };
 
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
@@ -214,7 +212,7 @@ const ThankYou = ({ navigation }) => {
             <View style={styles.container}>
               <View style={[screenStyles.successContainer, { flex: 1, minHeight: '70%' }]}>
                 <Image
-                  source={require('../../assets/images/Done.gif')}
+                  source={require('../assets/images/Done.gif')}
                   resizeMode="contain"
                   style={screenStyles.successIcon}
                 />
@@ -269,7 +267,7 @@ const ThankYou = ({ navigation }) => {
   );
 };
 
-const screenStyles = StyleSheet.create({
+const screenStyles = applyFontFamily({
   successContainer: {
     display: 'flex',
     flexDirection: 'column',

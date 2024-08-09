@@ -93,7 +93,7 @@ const Final = ({ navigation }) => {
     <View style={styles.finalResultConatiner}>
         <ProgressBar progress={0.8} />
         <View style={styles.finalContainer}>
-             <SuccessScreen message="Congratulation!" subMessage="Your loan application has been approved" />
+             <SuccessScreen message="Done!" subMessage="Thank you for signing the loan agreement. Your loan amount will be disbursed shortly." />
         </View>
     </View>
     </ScrollView>

@@ -6,15 +6,37 @@ import { Network_Error, Something_Went_Wrong } from '../Utils/Constants';
 import { SendGeoLocation } from './LocationApi';
 
 
-const SubmitEmploymentDetails = async (requestModel) => {
+const SubmitEmploymentDetails = async (requestModel, EmploymentType, EmploymentCategory, Leadstage) => {
 
     let status, data, message;
 
     try {
 
         const header = await GetHeader()
+        
+        const queryParams = {
+            EmployementType: EmploymentType,
+            Profession: EmploymentCategory,
+            Leadstage: Leadstage,
+        };
 
-        let response = await axios.post(SAVE_EMPLOYEMENT_DETAILS, requestModel, { headers: header })
+
+        console.log("================ EMPLOYMENT DETAILS REQUEST =================")
+        console.log(requestModel)
+        console.log("EmploymentType  = ",EmploymentType)
+
+        console.log("EmploymentCategory  = ",EmploymentCategory)
+        
+        console.log("================ EMPLOYMENT DETAILS REQUEST =================")
+
+
+        const queryString = new URLSearchParams(queryParams).toString();
+        const url = `${SAVE_EMPLOYEMENT_DETAILS}?${queryString}`;
+
+        console.log('SubmitEmploymentDetails ----> url : ',url)
+        console.log('requestModel ---->: ',requestModel)
+
+        let response = await axios.post(url, requestModel, { headers: header })
 
         data = response.data
 
@@ -288,7 +310,7 @@ export const EmploymentDetailsModel = () => {
 
         EmploymentCategoryError: null,
         EmploymentTypeError: null,
-        LeadStage: null,
+        // LeadStage: null,
         ...EmploymentData
     }
 }

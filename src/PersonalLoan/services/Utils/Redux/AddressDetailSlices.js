@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import { GetBorrowerAddress, sampleAddress } from '../../API/AddressDetails'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { STATUS } from '../../API/Constants'
-import { retry } from 'redux-saga/effects'
 
 
 

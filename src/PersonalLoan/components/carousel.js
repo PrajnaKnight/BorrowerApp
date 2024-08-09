@@ -24,7 +24,7 @@ const CustomCarousel = ({ data }) => {
       if (nextIndex === data.length) {
         nextIndex = 0; // Loop back to the start
       }
-      scrollViewRef.current.scrollTo({
+      scrollViewRef.current?.scrollTo({
         x: adjustedWidth * nextIndex,
         animated: true,
       });
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
     marginBottom:20
   },
   dot: {
-    width: 10,
-    height: 10,
+    width: 15,
+    height: 5,
     borderRadius: 5,
     marginHorizontal: 5,
   },

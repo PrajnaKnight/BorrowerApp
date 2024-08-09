@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions, ImageBackground } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { formateAmmountValue } from '../services/Utils/FieldVerifier';
 import { GetApplicantId } from '../services/LOCAL/AsyncStroage';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const DisbursementAcceptedScreen = ({ navigation }) => {
 
@@ -46,6 +47,19 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
   
     const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
     const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+
+    const DetailItem = ({ iconName, label, value, isLastItem }) => (
+      <View style={[styles.detailItem, !isLastItem && styles.borderBottom]}>
+        <View style={styles.disburseiconContainer}>
+          <FontAwesome5 name={iconName} size={16} color="#FFFFFF" />
+        </View>
+        <View style={styles.detailTextContainer}>
+          <Text style={styles.disbursedetailLabel}>{label}</Text>
+          <Text style={styles.detailValue}>{value}</Text>
+        </View>
+        <View style={styles.goldAccent} />
+      </View>
+    );
 
     return (
       <View style={styles.mainContainer}>
@@ -129,92 +143,77 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
             style={[styles.rightCOntainer, { flex: 1 }]}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+            <View style={{ paddingHorizontal: 16 }}>
+              <ProgressBar progress={10} />
+            </View>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={styles.container}>
-                <ProgressBar progress={10} />
-                <View style={styles.disursecontent}>
-                  <View style={styles.statusSection}>
-                    <Image
-                      source={require("../../assets/images/success.png")}
-                      style={styles.statusIcon}
-                    />
-                    <Text style={styles.disburseSentence}>
-                      Your disbursement request is processed
-                    </Text>
-                    <Text style={styles.disburseamount}>
-                      ₹{" "}
-                      {formateAmmountValue(disbursedetails?.NetDisbursalAmount)}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.disbursedetails}>
-                <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Loan ID</Text>
-                    <Text style={styles.disbuseItem}>
-                      {applicationId}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>1st EMI Date</Text>
-                    <Text style={styles.disbuseItem}>
-                      {format(disbursedetails?.FirstEmiDate, "PPP")}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>EMI Amount</Text>
-                    <Text style={styles.disbuseItem}>
-                      ₹ {disbursedetails?.EmiAmount}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Transaction UTR</Text>
-                    <Text style={styles.disbuseItem}>
-                      {disbursedetails?.TransactionUtr}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Transaction Date</Text>
-                    <Text style={styles.disbuseItem}>
+                <ImageBackground
+                  source={require("../../assets/images/Confetti.png")}
+                  style={styles.disbursebackgroundImage}>
+                  <View style={styles.disursecontent}>
+                    <View style={styles.statusSection}>
+                      <Text style={styles.disburseSentence}>
+                        Your disbursement request is processed
+                      </Text>
+                      <Text style={styles.disburseamount}>
+                        ₹{" "}
+                        {formateAmmountValue(disbursedetails?.NetDisbursalAmount)}
+                      </Text>
+                      <Text style={styles.disburseAccountInfo}>
+                        Transferred to Bank Account - {disbursedetails?.BankAcc}
+                      </Text>
+                      <Text style={styles.disburseTransactionInfo}>
+                        Transaction ID : {disbursedetails?.TransactionId}
+                      </Text>
+                      <Text style={styles.disburseTransactionInfo}>
                       {format(disbursedetails?.TransactionDate, "PPP")}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Account No</Text>
-                    <Text style={styles.disbuseItem}>
-                      {disbursedetails?.BankAcc}
-                    </Text>
-                  </View>
-
-                  {/* <View style={styles.disbuseItemDetails}>
-                        <Text style={styles.disbuseItem}>Transaction Id</Text>
-                        <Text style={[styles.disbuseItem,{width:180}]}>{disbursedetails?.TransactionId}</Text>
+                      </Text>
                     </View>
- */}
-                </View>
-
-                <View style={styles.bannerImage}>
-                  <Image
-                    source={require("../../assets/images/loanDisbursement.png")}
-                    style={styles.banner}
-                  />
-                </View>
-                <View style={styles.proceedButtonContainer}>
-                  <View style={styles.actionContainer}>
-                    {/* <LinearGradient
-                            // button Linear Gradient
-                            colors={['#002777', '#00194C']}
-                            style={styles.agreebutton}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {}}
-                            >
-                                <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>Home Page</Text>
-                            </TouchableOpacity>
-                        </LinearGradient> */}
                   </View>
+                  <View style={styles.detailsContainer}>
+                    <DetailItem
+                      iconName="calendar-alt"
+                      label="1st EMI Date"
+                      value= {disbursedetails?.FirstEmiDate && format(disbursedetails?.FirstEmiDate, "PPP")}
+                    />
+                    <DetailItem
+                      iconName="rupee-sign"
+                      label="EMI Amount"
+                      value= {disbursedetails?.EmiAmount && `₹ ${formateAmmountValue(disbursedetails?.EmiAmount)}`}
+                    />
+                    <DetailItem
+                      iconName="id-card"
+                      label="Mandate ID"
+                      value={null}
+                      isLastItem
+                    />
+                  </View>
+                </ImageBackground>
+                <View style={styles.disbursebannerContainer}>
+                  <Image
+                    source={require("../../assets/images/smart-banking.png")}
+                    style={styles.disbursebannerImage}
+                  />
                 </View>
               </View>
             </ScrollView>
+            <View style={[styles.actionContainer, styles.boxShadow]}>
+              <LinearGradient
+                // button Linear Gradient
+                colors={["#002777", "#00194C"]}
+                style={styles.agreebutton}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    ]}>
+                    Home Page
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </KeyboardAvoidingView>
         </View>
       </View>

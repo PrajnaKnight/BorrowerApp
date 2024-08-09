@@ -5,6 +5,7 @@ import { useAppContext } from '../components/useContext';
 import MaskInput from 'react-native-mask-input';
 import { FlatList } from 'react-native';
 import { ListViewBase } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTextEntry, onChangeText, maxLength, readOnly, value, cityOrState = false, error, autoCapitalize, onEndEditing, widthPercentage = "100%" }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -256,7 +257,7 @@ export const DateOfJoiningMaskedCustomInput = ({
 
   return (
     <View style={{ flex: 1 }}>
-      <View>
+      <View >
         <MaskInput
 
           style={[

@@ -20,7 +20,6 @@ import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../../assets/style/personalStyle';
 import { RequestLocationPermission, fetchCameraFromWeb } from '../services/API/LocationApi';
-import * as ImagePicker from 'expo-image-picker';
 import { IntentLauncherAndroid } from 'react-native';
 import { GoBack } from '../services/Utils/ViewValidator';
 

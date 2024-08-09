@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,10 +17,10 @@ import { STATUS } from '../services/API/Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { ALL_SCREEN } from '../services/Utils/Constants';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
-
+import CustomDropdown from '../components/Dropdown';
 
 const EMandateScreen = ({ navigation }) => {
-  const [selectedAccount, setSelectedAccount] = useState();
+  const [selectedAccount, setSelectedAccount] = useState('');
   const [ifscCode, setIfscCode] = useState('');
   const [loading, setLoading] = useState(false);
   const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
@@ -39,22 +39,14 @@ const EMandateScreen = ({ navigation }) => {
   ];
 
   const { setProgress } = useProgressBar();
-
-  useEffect(() => {
-    setProgress(0.6);
-  }, []);
-
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
   const { width, height } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
-  
-  // Definitions for "mobile", "tablet", and "desktop" based on width
-  const isMobile = width < 768; 
-  const isTablet = width >= 768 && width < 1024; // Tablet range, including iPad portrait
-  const isDesktop = width >= 1024; // Desktop and iPad landscape
-
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1024;
+  const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
@@ -86,49 +78,103 @@ const EMandateScreen = ({ navigation }) => {
     navigation.navigate('loanAgreement')
   }
 
-  return (
+  const renderGradientButton = (text, onPress, disabled = false) => (
+    <TouchableOpacity 
+      onPress={onPress} 
+      disabled={disabled}   
+      style={{
+        flex: 1, 
+        borderWidth: 1, 
+        borderColor: disabled ? '#E9EEFF' : '#002777', // Changed from '#00194c' to '#E9EEFF' for disabled state
+        borderRadius: 5,
+        overflow: 'hidden',
+      }}
+    >
+      <LinearGradient
+        colors={disabled ? ['#E9EEFF', '#D8E2FF'] : ['#002777', '#00194C']}
+        style={[styles.button, disabled && styles.disabledButton]}
+      >
+        <Text style={[
+          styles.buttonText, 
+          { 
+            fontSize: dynamicFontSize(styles.buttonText.fontSize),
+            color: disabled ? '#ffffff' : '#FFFFFF' 
+          }
+        ]}>
+          {text}
+        </Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
 
+  return (
     <View style={styles.mainContainer}>
-    <View style={{ flex: 1, flexDirection: isWeb ? 'row' : 'column' }}>
-    {isWeb && (isDesktop || (isTablet && width > height)) && (
+      <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
+        {isWeb && (isDesktop || (isTablet && width > height)) && (
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
                 <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>Move Into Your Dreams!</Text>
+                <Text style={styles.websubtitleText}>
+                  Move Into Your Dreams!
+                </Text>
               </View>
               <LinearGradient
                 // button Linear Gradient
-                colors={['#000565', '#111791', '#000565']}
-                style={styles.webinterestButton}
-              >
-                <TouchableOpacity >
-                  <Text style={styles.webinterestText}>Interest starting from 8.4%*</Text>
+                colors={["#000565", "#111791", "#000565"]}
+                style={styles.webinterestButton}>
+                <TouchableOpacity>
+                  <Text style={styles.webinterestText}>
+                    Interest starting from 8.4%*
+                  </Text>
                 </TouchableOpacity>
-
               </LinearGradient>
 
               <View style={styles.webfeaturesContainer}>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5, }]}>%</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    %
+                  </Text>
                   <Text style={styles.webfeatureText}>Nil processing fee*</Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>3</Text>
-                  <Text style={styles.webfeatureText}>3-Step Instant approval in 30 minutes</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    3
+                  </Text>
+                  <Text style={styles.webfeatureText}>
+                    3-Step Instant approval in 30 minutes
+                  </Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>⏳</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    ⏳
+                  </Text>
                   <Text style={styles.webfeatureText}>Longer Tenure</Text>
                 </View>
               </View>
 
               <View style={styles.webdescription}>
                 <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that isn't any more than 30 minutes.
+                  There's more! Complete the entire process in just 3-steps that
+                  isn't any more than 30 minutes.
                 </Text>
                 <TouchableOpacity>
-                  <Text style={styles.weblinkText}>To know more about product features & benefits, please click here</Text>
+                  <Text style={styles.weblinkText}>
+                    To know more about product features & benefits, please click
+                    here
+                  </Text>
                 </TouchableOpacity>
               </View>
               {/* <View style={styles.bottomFixed}>
@@ -146,70 +192,115 @@ const EMandateScreen = ({ navigation }) => {
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
         <View style={styles.container}>
-          <View>
+          <View >
 
             <ProgressBar progress={0.6} />
-            <Text style={[styles.headerText, { fontSize: dynamicFontSize(styles.headerText.fontSize) }]}>eMandate</Text>
-            <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Bank Account Number <Text style={styles.mandatoryStar}>*</Text></Text>
-
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedAccount}
-                onValueChange={(itemValue) => setSelectedAccount(itemValue)}
-                style={[styles.picker, { fontSize: dynamicFontSize(styles.picker.fontSize) }]}
-              >
-                {bankAccounts.map(account => (
-                  <Picker.Item key={account.value} label={account.label} value={account.value} />
-                ))}
-              </Picker>
-            </View>
-
-            <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Bank Branch IFSC Code <Text style={styles.mandatoryStar}>*</Text></Text>
-            <CustomInput
-              value={ifscCode}
-              onChangeText={(text) => setIfscCode('ifsCode', text)}
-              placeholder="Enter bank your branch IFSC code"
-            />
-            {/* Buttons */}
-            <View
-            >
-              <LinearGradient
-                // button Linear Gradient
-                colors={['#002777', '#00194C']}
-                style={[styles.button, styles.signMandate]}
-              >
-                <TouchableOpacity >
-                  <Text style={[styles.signbuttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>Sign eMandate</Text>
-                </TouchableOpacity>
-              </LinearGradient>
-            </View>
-
-            <View style={styles.orWrapper}>
-              <Text style={[styles.or, { fontSize: dynamicFontSize(styles.or.fontSize) }]}>OR</Text>
-            </View>
-            <TouchableOpacity style={styles.uploadButtonNach}>
-              <Text style={[styles.uploadButtonNachText, { fontSize: dynamicFontSize(styles.uploadButtonNachText.fontSize) }]}>Upload Physical NACH</Text>
-              <Icon name="upload" size={16} color="#FF8600" />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.downloadSamplebutton}>
-              <Text style={[styles.downloadSamplebuttonText, { fontSize: dynamicFontSize(styles.downloadSamplebuttonText.fontSize) }]}>Download NACH Form</Text>
-            </TouchableOpacity>
+            <Text
+              style={[
+                styles.headerText,
+                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+              ]}>
+              eMandate
+            </Text>
           </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+         
+              <View>
+                <Text
+                  style={[
+                    styles.label,
+                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                  ]}>
+                  Bank Account Number{" "}
+                  <Text style={styles.mandatoryStar}>*</Text>
+                </Text>
+                <CustomDropdown
+                  options={bankAccounts}
+                  selectedValue={selectedAccount}
+                  onValueChange={(itemValue) => setSelectedAccount(itemValue)}
+                />
 
-          <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.backButton} onPress={() =>  GoBack(navigation)}>
-              <Text style={[styles.backBtnText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize) }]}>BACK</Text>
+                <Text
+                  style={[
+                    styles.label,
+                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                  ]}>
+                  Bank Branch IFSC Code{" "}
+                  <Text style={styles.mandatoryStar}>*</Text>
+                </Text>
+                <CustomInput
+                  value={ifscCode}
+                  onChangeText={(text) => setIfscCode(text)}
+                  placeholder="Enter your bank branch IFSC code"
+                  editable={selectedAccount !== ""}
+                  style={selectedAccount === "" ? styles.disabledInput : {}}
+                />
+
+                {renderGradientButton(
+                  "SIGN eMANDATE",
+                  () => {
+                    HandleProcced()
+                  },
+                
+                )}
+
+                <View style={styles.orWrapper}>
+                  <Text
+                    style={[
+                      styles.or,
+                      { fontSize: dynamicFontSize(styles.or.fontSize) },
+                    ]}>
+                    OR
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.uploadButtonNach}>
+                  <Text
+                    style={[
+                      styles.uploadButtonNachText,
+                      {
+                        fontSize: dynamicFontSize(
+                          styles.uploadButtonNachText.fontSize
+                        ),
+                      },
+                    ]}>
+                    Upload Physical NACH
+                  </Text>
+                  <Icon name="upload" size={16} color="#fff" style={[styles.icon,{backgroundColor:'#FF8600',padding:10}]} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.downloadSamplebutton}>
+                  <Text
+                    style={[
+                      styles.downloadSamplebuttonText,
+                      {
+                        fontSize: dynamicFontSize(
+                          styles.downloadSamplebuttonText.fontSize
+                        ),
+                      },
+                    ]}>
+                    Download NACH Form
+                  </Text>
+                </TouchableOpacity>
+              </View>
+          
+          </ScrollView>
+          <View style={[styles.actionContainer, styles.boxShadow, {paddingHorizontal:0}]}>
+            <TouchableOpacity
+              style={[styles.backButton, { marginRight: 10 }]}
+              onPress={() => GoBack(navigation)}>
+              <Text
+                style={[
+                  styles.backBtnText,
+                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                ]}>
+                BACK
+              </Text>
             </TouchableOpacity>
-            <LinearGradient
-              // button Linear Gradient
-              colors={['#002777', '#00194C']}
-              style={styles.verifyButton}
-            >
-              <TouchableOpacity onPress={()=>HandleProcced()} >
-                <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>PROCEED</Text>
-              </TouchableOpacity>
-            </LinearGradient>
+            {renderGradientButton(
+              "PROCEED",
+              () => HandleProcced(),
+              
+            )}
           </View>
         </View>
       </ScrollView>
@@ -227,6 +318,5 @@ const EMandateScreen = ({ navigation }) => {
     </View>
   );
 };
-
 
 export default EMandateScreen;

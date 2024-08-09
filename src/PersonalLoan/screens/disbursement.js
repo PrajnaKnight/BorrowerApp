@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, useWindowDimensions, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
-
+import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions, Platform, KeyboardAvoidingView, ScrollView, Image, ImageBackground } from 'react-native';
+import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'; // Import Expo Vector Icons
 import { styles } from '../../assets/style/personalStyle';
 import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,6 +16,7 @@ import { updateDisbursalInfoFromGetBankFundOut } from '../services/Utils/Redux/D
 import { useDispatch, useSelector } from 'react-redux';
 import { GetApplicantId } from '../services/LOCAL/AsyncStroage';
 import { useFocusEffect } from '@react-navigation/native';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const DisbursementScreen = ({ navigation }) => {
   const disbursedetails = useSelector(state => state.disbursalInfoSlices);
@@ -33,7 +34,6 @@ const DisbursementScreen = ({ navigation }) => {
   }
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick)
-
 
   useFocusEffect(
     useCallback(() => {
@@ -57,35 +57,36 @@ const DisbursementScreen = ({ navigation }) => {
       setRefreshPage(false)
     }, [refreshPage]))
 
-  useEffect(() => {
-    if (transactionDetails) {
-      dispatch(updateDisbursalInfoFromGetBankFundOut(transactionDetails))
-    }
-
-    if (transactionDetails?.IsFundOutComplete) {
-      navigation.replace("DisbursalAcceptedScreen");
-      return
-    }
-
-    setTimeout(() => {
-      if (transactionDetails?.UTRNumber && transactionDetails?.DisbursementAmount) {
-        setLoading(true)
-
-        setTimeout(() => {
-          BankFundOut(transactionDetails?.UTRNumber, transactionDetails?.DisbursementAmount).then((response) => {
-            setLoading(false);
-            if (response.status === STATUS.ERROR) {
-              setNewErrorScreen(response.message);
-              return;
-            }
-
-
-            navigation.replace("DisbursalAcceptedScreen");
-          });
-        }, 15000);
+  useFocusEffect(
+    useCallback(() => {
+      if (transactionDetails) {
+        dispatch(updateDisbursalInfoFromGetBankFundOut(transactionDetails))
       }
-    }, 5000);
-  }, [transactionDetails])
+
+      if (transactionDetails?.IsFundOutComplete) {
+        navigation.replace("DisbursalAcceptedScreen");
+        return
+      }
+
+      setTimeout(() => {
+        if (transactionDetails?.UTRNumber && transactionDetails?.DisbursementAmount) {
+          setLoading(true)
+
+          setTimeout(() => {
+            BankFundOut(transactionDetails?.UTRNumber, transactionDetails?.DisbursementAmount).then((response) => {
+              setLoading(false);
+              if (response.status === STATUS.ERROR) {
+                setNewErrorScreen(response.message);
+                return;
+              }
+
+
+              navigation.replace("DisbursalAcceptedScreen");
+            });
+          }, 15000);
+        }
+      }, 5000);
+    }, [transactionDetails]))
 
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
@@ -96,18 +97,29 @@ const DisbursementScreen = ({ navigation }) => {
     setProgress(10);
   }, []);
 
-
   const { width, height } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
 
-  // Definitions for "mobile", "tablet", and "desktop" based on width
   const isMobile = width < 768;
-  const isTablet = width >= 768 && width < 1024; // Tablet range, including iPad portrait
-  const isDesktop = width >= 1024; // Desktop and iPad landscape
-
+  const isTablet = width >= 768 && width < 1024;
+  const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+
+  const DetailItem = ({ iconName, label, value, isLastItem }) => (
+    <View style={[styles.detailItem]}>
+      <View style={styles.disburseiconContainer}>
+        <FontAwesome5 name={iconName} size={16} color="#FFFFFF" />
+      </View>
+      <View style={styles.detailTextContainer}>
+        <Text style={styles.disbursedetailLabel}>{label}</Text>
+        <Text style={styles.detailValue}>{value}</Text>
+      </View>
+      <View style={styles.goldAccent} />
+    </View>
+  );
+  
 
   return (
     <View style={styles.mainContainer}>
@@ -191,115 +203,78 @@ const DisbursementScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          {transactionDetails?.UTRNumber != null && (
+          <View style={{ paddingHorizontal: 16 }}>
+            <ProgressBar progress={10} />
+          </View>
+          {transactionDetails?.UTRNumber != null &&
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={[styles.container]}>
                 <ProgressBar progress={10} />
-                <View style={[styles.disursecontent, { marginVertical: 10 }]}>
+              <View style={[styles.disursecontent,{marginVertical:10}]}>
+              <ImageBackground
+                  source={require("../../assets/images/Confetti.png")}
+                  style={styles.disbursebackgroundImage}>
                   <View style={styles.statusSection}>
-                    <Image
-                      source={require("../../assets/images/success.png")}
-                      style={styles.statusIcon}
-                    />
-                    <Text style={styles.disburseSentence}>
+                    <Text style={styles.disbursestatusText}>
                       Your disbursement request is accepted
                     </Text>
-                    <Text style={styles.disburseamount}>
-                      ₹ {transactionDetails?.DisbursementAmount}
+                    <Text style={styles.disburseamountText}>
+                      ₹{" "}
+                      {transactionDetails?.DisbursementAmount &&
+                        formateAmmountValue(
+                          transactionDetails?.DisbursementAmount
+                        )}
                     </Text>
-                    <Text style={styles.disburseSentence}>
+                    <Text style={styles.disbursesubtitleText}>
                       Net Disbursement Amount
                     </Text>
-
-                    {/* {transactionDetails.transactionId && (
-                    <View style={styles.transferInfo}>
-                      <Text style={styles.transerfferedDetails}>Transfer to {transactionDetails.beneficiary}</Text>
-                      <Text style={styles.transferDetails}>Transaction ID: {transactionDetails.transactionId}</Text>
-                      <Text style={styles.transferDetails}>{transactionDetails.transactionDate}</Text>
-
-
-                    </View>
-                  )
-                  } */}
                   </View>
-                  <View style={styles.disbursedetails}>
-                    <View style={styles.disbuseItemDetails}>
-                      <Text style={styles.disbuseItem}>Loan ID</Text>
-                      <Text style={styles.disbuseItem}>{applicationId}</Text>
-                    </View>
-
-                    <View style={styles.disbuseItemDetails}>
-                      <Text style={styles.disbuseItem}>Loan Amount</Text>
-                      <Text style={styles.disbuseItem}>
-                        {disbursedetails?.LoanAmount &&
-                          `₹ ${formateAmmountValue(
-                            disbursedetails?.LoanAmount
-                          )}`}
-                      </Text>
-                    </View>
-
-                    <View style={styles.disbuseItemDetails}>
-                      <Text style={styles.disbuseItem}>
-                        Processing Fee + Insurance
-                      </Text>
-                      <Text style={styles.disbuseItem}>
-                        ₹{" "}
-                        {parseInt(
-                          (disbursedetails?.ProcessingFee || 0) +
-                            (disbursedetails?.Insurance || 0)
-                        )}
-                      </Text>
-                    </View>
-
-                    <View style={styles.disbuseItemDetails}>
-                      <Text style={styles.disbuseItem}>1st EMI Date</Text>
-                      <Text style={styles.disbuseItem}>
-                        {disbursedetails?.FirstEmiDate &&
-                          format(disbursedetails?.FirstEmiDate, "PPP")}
-                      </Text>
-                    </View>
-
-                    <View style={styles.disbuseItemDetails}>
-                      <Text style={styles.disbuseItem}>EMI Amount</Text>
-                      <Text style={styles.disbuseItem}>
-                        {disbursedetails?.EmiAmount &&
-                          `₹ ${formateAmmountValue(
-                            disbursedetails?.EmiAmount
-                          )}/ m`}
-                      </Text>
-                    </View>
-
-                    <Text style={styles.Note}>
-                      Disbursement requests are usually processed within 1-2
-                      working days
-                    </Text>
-                  </View>
-
-                  <View style={styles.bannerImage}>
-                    <Image
-                      source={require("../../assets/images/loanDisbursement.png")}
-                      style={styles.banner}
+                  <View style={styles.detailsContainer}>
+                    <DetailItem
+                      iconName="calendar-alt"
+                      label="1st EMI Date"
+                      value={
+                        disbursedetails?.FirstEmiDate && format(disbursedetails?.FirstEmiDate, 'PPP')
+                      }
+                    />
+                    <DetailItem
+                      iconName="rupee-sign"
+                      label="EMI Amount"
+                      value={disbursedetails?.EmiAmount && `₹ ${formateAmmountValue(disbursedetails?.EmiAmount)}/ m`}
+                    />
+                    <DetailItem
+                      iconName="id-card"
+                      label="Mandate ID"
+                      value={null}
                     />
                   </View>
-                  <View style={styles.proceedButtonContainer}>
-                    <View style={styles.actionContainer}>
-                      {/* <LinearGradient
-                      // button Linear Gradient
-                      colors={['#002777', '#00194C']}
-                      style={styles.agreebutton}
-                    >
-                      <TouchableOpacity
-                        onPress={() => { }}
-                      >
-                        <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>Home Page</Text>
-                      </TouchableOpacity>
-                    </LinearGradient> */}
-                    </View>
-                  </View>
+                </ImageBackground>
+
+                <Text style={styles.noteText}>
+                  Disbursement requests are usually processed within 1-2 working
+                  days
+                </Text>
+
+                <View style={styles.disbursebannerContainer}>
+                  <Image
+                    source={require("../../assets/images/smart-banking.png")}
+                    style={styles.disbursebannerImage}
+                  />
                 </View>
               </View>
-            </ScrollView>
-          )}
+            </View>
+          </ScrollView>
+}
+          <View style={[styles.actioncontainer, styles.boxShadow]}>
+            <LinearGradient
+              colors={["#002777", "#00194C"]}
+              style={styles.homeButton}>
+              <TouchableOpacity onPress={() => {}}>
+                <Text style={styles.homeButtonText}>HOME PAGE</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+          
           {errorScreen.type != null && (
             <ScreenError
               errorObject={errorScreen}
@@ -312,8 +287,6 @@ const DisbursementScreen = ({ navigation }) => {
     </View>
   );
 };
-
-
 
 
 export default DisbursementScreen;
