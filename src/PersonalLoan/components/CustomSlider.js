@@ -3,7 +3,7 @@ import { Text, TextInput, View } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Slider from '@react-native-community/slider';
-import { useAppContext } from './useContext';
+import { useAppContext } from '../../Common/components/useContext';
 
 const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue, inputValue, error, onChange, isForAmount }) => {
     const { fontSize } = useAppContext();

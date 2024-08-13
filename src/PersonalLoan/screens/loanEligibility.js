@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, StatusBar, TextInput, ScrollView, Keyboar
 import Slider from '@react-native-community/slider';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import LoadingOverlay from '../components/FullScreenLoader';
 import SaveBankAccountDetails, { SubmitBorrowerLoanApplicationAsyncSubmit, GetBranchNameWithIFSC } from '../services/API/SaveBankAccountDetail';  
 import { GetApplicantId, GetLoanAskAmmount, StoreApplicantId } from '../services/LOCAL/AsyncStroage';
@@ -21,7 +21,7 @@ import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 
 import ScreenError, { useErrorEffect } from './ScreenError';
-import CustomSlider from '../components/CustomSlider';
+import CustomSlider from '../../Common/components/ControlPanel/CustomSlider';
 import { checkLocationPermission } from './PermissionScreen';
 import { updateBreStatus } from '../services/Utils/Redux/ExtraSlices';
 

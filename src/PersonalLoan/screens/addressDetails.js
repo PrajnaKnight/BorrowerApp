@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, KeyboardAvoidingView, Platform , useWindowDimensions} from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
-import CustomInput from '../components/input';
+import CustomInput from '../../Common/components/ControlPanel/input';
 import Accordion from '../components/accordion';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import RadioButton from '../components/radioButton';
 import SubmitAddress, { GetCityAndState, AddressModel } from '../services/API/AddressDetails';
 import { GetHeader, STATUS } from '../services/API/Constants';

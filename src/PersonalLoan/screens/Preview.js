@@ -4,7 +4,7 @@ import Collapsible from 'react-native-collapsible';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../assets/style/personalStyle';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import LoadingOverlay from '../components/FullScreenLoader';
 
 const data = [

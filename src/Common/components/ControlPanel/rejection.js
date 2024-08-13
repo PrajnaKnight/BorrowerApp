@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import ProgressBar from '../components/progressBar';
-import { GoBack } from '../services/Utils/ViewValidator';
-import { useAppContext } from './useContext';
-import { styles } from '../../assets/style/personalStyle';
+import ProgressBar from './progressBar';
+import { GoBack } from '../../../PersonalLoan/services/Utils/ViewValidator';
+import { useAppContext } from '../useContext';
+import { styles } from '../../../assets/style/personalStyle';
 
 const RejectionScreen = ({navigation}) => {
 
@@ -14,30 +14,27 @@ const RejectionScreen = ({navigation}) => {
     <View style={style.container}>
       <ProgressBar progress={0.3} />
 
-
-
       <View style={{ alignItems: "center", flex: 1, justifyContent: "center" }}>
         <Image
-          source={require('../../assets/images/Error.gif')} // replace with your actual rejection icon
+          source={require("../../../assets/images/Error.gif")}
           resizeMode="contain"
           style={style.failureIcon}
         />
-        <Text style={style.message}>{"Sorry, your loan application cannot be processed\ndue to non-compliance with our policy. We hope\nto serve you in the future."}</Text>
+        <Text style={style.message}>
+          {
+            "Sorry, your loan application cannot be processed\ndue to non-compliance with our policy. We hope\nto serve you in the future."
+          }
+        </Text>
       </View>
-
 
       <View style={styles.actionContainer}>
         <TouchableOpacity
-          style={[styles.backButton, {width:"100%"}]}
-          onPress={() => GoBack(navigation)}
-        >
-          <Text style={styles.backBtnText }>
-            BACK
-          </Text>
+          style={[styles.backButton, { width: "100%" }]}
+          onPress={() => GoBack(navigation)}>
+          <Text style={styles.backBtnText}>BACK</Text>
         </TouchableOpacity>
       </View>
     </View>
-
   );
 };
 

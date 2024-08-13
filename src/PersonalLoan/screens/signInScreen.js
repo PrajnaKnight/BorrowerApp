@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert, Image, KeyboardAvoidingView, Platform, useWindowDimensions, StatusBar } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { styles } from '../../assets/style/personalStyle';
-import ButtonComponent from '../components/button';
-import CustomCarousel from '../components/carousel';
-import ReusableModal from '../components/modal';
-import MobileNumberInput from '../components/mobileInput';
-import { useAppContext } from '../components/useContext';
+import ButtonComponent from '../../Common/components/ControlPanel/button';
+import CustomCarousel from '../../Common/components/ControlPanel/carousel';
+import ReusableModal from '../../Common/components/ControlPanel/modal';
+import MobileNumberInput from '../../Common/components/ControlPanel/mobileInput';
+import { useAppContext } from '../../Common/components/useContext';
 import { useFocusEffect } from '@react-navigation/native';
 import GetOTPByPhoneNumber, { GetLoginTopByPhoneRequestModel } from '../services/API/GetLoginOtpByPhone';
 import { STATUS } from '../services/API/Constants';
@@ -16,7 +16,6 @@ import { BackHandler } from 'react-native';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import { LinearGradient } from 'expo-linear-gradient';
-import Header from '../components/topBar';
 
 function SignInScreen({ navigation }) {
   const [loading, setLoading] = useState(false);

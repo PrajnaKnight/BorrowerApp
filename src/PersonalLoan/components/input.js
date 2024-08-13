@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import MaskInput from 'react-native-mask-input';
 import { FlatList } from 'react-native';
 import { ListViewBase } from 'react-native';

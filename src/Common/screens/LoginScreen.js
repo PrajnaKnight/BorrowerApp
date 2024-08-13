@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert, Image, KeyboardAvoidingView, Platform, useWindowDimensions, StatusBar } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { styles } from '../../assets/style/personalStyle';
-import ButtonComponent from '../../PersonalLoan/components/button';
-import CustomCarousel from '../../PersonalLoan/components/carousel';
-import ReusableModal from '../../PersonalLoan/components/modal';
-import MobileNumberInput from '../../PersonalLoan/components/mobileInput';
-import { useAppContext } from '../../PersonalLoan/components/useContext';
+import ButtonComponent from '../components/ControlPanel/button';
+import CustomCarousel from '../components/ControlPanel/carousel';
+import ReusableModal from '../components/ControlPanel/modal';
+import MobileNumberInput from '../components/ControlPanel/mobileInput';
+import { useAppContext } from '../components/useContext';
 import { useFocusEffect } from '@react-navigation/native';
 import GetOTPByPhoneNumber, { GetLoginTopByPhoneRequestModel } from '../../PersonalLoan/services/API/GetLoginOtpByPhone';
 import { STATUS } from '../../PersonalLoan/services/API/Constants';
@@ -16,7 +16,8 @@ import { BackHandler } from 'react-native';
 import ScreenError, { useErrorEffect } from '../../PersonalLoan/screens/ScreenError';
 import { Network_Error, Something_Went_Wrong } from '../../PersonalLoan/services/Utils/Constants';
 import { LinearGradient } from 'expo-linear-gradient';
-import Header from '../../PersonalLoan/components/topBar';
+import Layout from '../components/Layout';
+import WhatsAppToggle from '../components/ControlPanel/whatsapp';
 
 function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,13 @@ function LoginScreen({ navigation }) {
   const [error, setError] = useState(null);
   const [mobileError, setMobileError] = useState(null)
   const { fontSize } = useAppContext();
+
+  const [isWhatsAppEnabled, setIsWhatsAppEnabled] = useState(false);
+
+  const toggleWhatsApp = () => {
+    setIsWhatsAppEnabled(prevState => !prevState);
+  };
+
 
 
 
@@ -145,7 +153,7 @@ function LoginScreen({ navigation }) {
 
   const modalContentA = (
     <View style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView >
         <Text
           style={[
             styles.Modaltitle,
@@ -510,7 +518,7 @@ function LoginScreen({ navigation }) {
         style.type = 'text/css';
         style.innerHTML = ` .r-4gszlv, .r-backgroundSize-4gszlv {
         background-size: contain;
-        background-position: 10%;
+        background-position: 10%%;
     }`;
         document.head.appendChild(style);
 
@@ -523,200 +531,215 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-    <Header />
-    <View style={styles.mainContainer}>
-      <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
-        {isWeb && (isDesktop || (isTablet && width > height)) && (
-          <View style={[styles.leftContainer, imageContainerStyle]}>
-            <View style={styles.mincontainer}>
-              <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
-              </View>
-              <LinearGradient
-                // button Linear Gradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
-              </View>
-
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {/* <View style={styles.bottomFixed}>
-         <Image source={require('../assets/images/poweredby.png')} style={styles.logo} />
-      </View> */}
-            </View>
-          </View>
-        )}
-
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
-          <LoadingOverlay visible={loading} />
-
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-                <View style={styles.carouselContainer}>
-                  <CustomCarousel data={carouselData} renderItem={renderItem} />
-                </View>
-                <Text
-                  style={[
-                    styles.headerText,
-                    styles.center,
-                    { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-                  ]}>
-                  Welcome
-                </Text>
-                {error && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
-                    ]}>
-                    {error}
-                  </Text>
-                )}
-                <View style={styles.formGrop}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Mobile Number <Text style={styles.mandatoryStar}>*</Text>{" "}
-                  </Text>
-                  <MobileNumberInput
-                    mobileNumber={requestModel.LeadPhone}
-                    setMobileNumber={handleMobileChange}
-                    error={mobileError}
-                  />
-                </View>
-                <View style={styles.termsContainer}>
-                  <Checkbox
-                    style={[
-                      styles.checkbox,
-                      !termsAccepted ? styles.checkboxDisabled : {},
-                    ]}
-                    value={termsAccepted}
-                    onValueChange={handleCheckboxTap}
-                    color={termsAccepted ? "#FF8800" : undefined}
-                  />
-                  <View style={styles.tc}>
-                    <Text
-                      style={[
-                        styles.p,
-                        { fontSize: dynamicFontSize(styles.p.fontSize) },
-                      ]}>
-                      I accept the{" "}
-                      <Text
-                        style={[
-                          styles.link,
-                          { fontSize: dynamicFontSize(styles.link.fontSize) },
-                        ]}
-                        onPress={() => {
-                          let num = isValidPhoneNumber(requestModel.LeadPhone)
-                          setMobileError(num)
-                          if (num != null) {
-                            return
-                          }
-
-                          setModalVisible(true)
-                        }
-
-                        }>
-                        terms and conditions
-                      </Text>{" "}
-                      and consent to provide ABC Bank Pvt Ltd to fetch my credit
-                      bureau report for the purpose of offering lending
-                      services.
+      <Layout>
+        <View style={styles.mainContainer}>
+          <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
+            {isWeb && (isDesktop || (isTablet && width > height)) && (
+              <View style={[styles.leftContainer, imageContainerStyle]}>
+                <View style={styles.mincontainer}>
+                  <View style={styles.webheader}>
+                    <Text style={styles.WebheaderText}>Personal Loan</Text>
+                    <Text style={styles.websubtitleText}>
+                      Move Into Your Dreams!
                     </Text>
                   </View>
-                  <ReusableModal
-                    modalVisible={modalVisible}
-                    setModalVisible={setModalVisible}
-                    modalContent={modalContentA}
-                  />
+                  <LinearGradient
+                    // button Linear Gradient
+                    colors={["#000565", "#111791", "#000565"]}
+                    style={styles.webinterestButton}>
+                    <TouchableOpacity>
+                      <Text style={styles.webinterestText}>
+                        Interest starting from 8.4%*
+                      </Text>
+                    </TouchableOpacity>
+                  </LinearGradient>
+
+                  <View style={styles.webfeaturesContainer}>
+                    <View style={styles.webfeature}>
+                      <Text
+                        style={[
+                          styles.webfeatureIcon,
+                          { fontSize: 30, marginBottom: 5 },
+                        ]}>
+                        %
+                      </Text>
+                      <Text style={styles.webfeatureText}>
+                        Nil processing fee*
+                      </Text>
+                    </View>
+                    <View style={styles.webfeature}>
+                      <Text
+                        style={[
+                          styles.webfeatureIcon,
+                          { fontSize: 30, marginBottom: 5 },
+                        ]}>
+                        3
+                      </Text>
+                      <Text style={styles.webfeatureText}>
+                        3-Step Instant approval in 30 minutes
+                      </Text>
+                    </View>
+                    <View style={styles.webfeature}>
+                      <Text
+                        style={[
+                          styles.webfeatureIcon,
+                          { fontSize: 30, marginBottom: 5 },
+                        ]}>
+                        ⏳
+                      </Text>
+                      <Text style={styles.webfeatureText}>Longer Tenure</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.webdescription}>
+                    <Text style={styles.webdescriptionText}>
+                      There's more! Complete the entire process in just 3-steps
+                      that isn't any more than 30 minutes.
+                    </Text>
+                    <TouchableOpacity>
+                      <Text style={styles.weblinkText}>
+                        To know more about product features & benefits, please
+                        click here
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  {/* <View style={styles.bottomFixed}>
+         <Image source={require('../assets/images/poweredby.png')} style={styles.logo} />
+      </View> */}
                 </View>
               </View>
-              <ButtonComponent
-                title="GET OTP"
-                onPress={handleSubmit}
-                disabled={!termsAccepted}
-                style={{
-                  button: !termsAccepted
-                    ? styles.buttonDisabled
-                    : styles.buttonEnabled,
-                }}
-                textStyle={{
-                  buttonText: !termsAccepted
-                    ? styles.buttonDisabledText
-                    : styles.buttonEnabledText,
-                }}
-              />
-            </View>
-          </ScrollView>
-          {errorScreen.type != null && (
-            <ScreenError
-              errorObject={errorScreen}
-              onTryAgainClick={onTryAgainClick}
-              setNewErrorScreen={setNewErrorScreen}
-            />
-          )}
-        </KeyboardAvoidingView>
-      </View>
-    </View>
+            )}
+
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === "ios" ? "padding" : null}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+              <LoadingOverlay visible={loading} />
+
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={styles.container}>
+                  <View>
+                    <View style={styles.carouselContainer}>
+                      <CustomCarousel
+                        data={carouselData}
+                        renderItem={renderItem}
+                      />
+                    </View>
+                    {error && (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.errorText.fontSize
+                            ),
+                          },
+                        ]}>
+                        {error}
+                      </Text>
+                    )}
+                    <View style={styles.formGrop}>
+                      <Text
+                        style={[
+                          styles.headerText,
+                          { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                        ]}>
+                        Mobile Number
+                      </Text>
+                      <MobileNumberInput
+                        mobileNumber={requestModel.LeadPhone}
+                        setMobileNumber={handleMobileChange}
+                        error={mobileError}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "flex-end",
+                      }}>
+                      <WhatsAppToggle
+                        isEnabled={isWhatsAppEnabled}
+                        onToggle={toggleWhatsApp}
+                      />
+                    </View>
+                    <View style={styles.termsContainer}>
+                      <Checkbox
+                        style={[
+                          styles.checkbox,
+                          !termsAccepted ? styles.checkboxDisabled : {},
+                        ]}
+                        value={termsAccepted}
+                        onValueChange={handleCheckboxTap}
+                        color={termsAccepted ? "#FF8800" : undefined}
+                      />
+
+                      <View style={styles.tc}>
+                        <Text
+                          style={[
+                            styles.p,
+                            { fontSize: dynamicFontSize(styles.p.fontSize) },
+                          ]}>
+                          I accept the{" "}
+                          <Text
+                            style={[
+                              styles.link,
+                              {
+                                fontSize: dynamicFontSize(styles.link.fontSize),
+                              },
+                            ]}
+                            onPress={() => {
+                              let num = isValidPhoneNumber(
+                                requestModel.LeadPhone
+                              );
+                              setMobileError(num);
+                              if (num != null) {
+                                return;
+                              }
+
+                              setModalVisible(true);
+                            }}>
+                            terms and conditions
+                          </Text>{" "}
+                          and consent to provide ABC Bank Pvt Ltd to fetch my
+                          credit bureau report for the purpose of offering
+                          lending services.
+                        </Text>
+                      </View>
+                      <ReusableModal
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+                        modalContent={modalContentA}
+                      />
+                    </View>
+                  </View>
+                  <ButtonComponent
+                    title="Proceed"
+                    onPress={handleSubmit}
+                    disabled={!termsAccepted}
+                    style={{
+                      button: !termsAccepted
+                        ? styles.buttonDisabled
+                        : styles.buttonEnabled,
+                    }}
+                    textStyle={{
+                      buttonText: !termsAccepted
+                        ? styles.buttonDisabledText
+                        : styles.buttonEnabledText,
+                    }}
+                  />
+                </View>
+              </ScrollView>
+              {errorScreen.type != null && (
+                <ScreenError
+                  errorObject={errorScreen}
+                  onTryAgainClick={onTryAgainClick}
+                  setNewErrorScreen={setNewErrorScreen}
+                />
+              )}
+            </KeyboardAvoidingView>
+          </View>
+        </View>
+      </Layout>
     </View>
   );
 }

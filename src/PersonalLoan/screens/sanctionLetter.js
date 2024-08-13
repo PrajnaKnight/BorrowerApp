@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StatusBar, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
-import { useAppContext } from '../components/useContext';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useAppContext } from '../../Common/components/useContext'; 
 import { LinearGradient } from 'expo-linear-gradient';
 import { GoBack } from '../services/Utils/ViewValidator';
 import { GetBorrowerSectionData, GetSectionHtmlPage, SendBorrowerSectionData } from '../services/API/Section';

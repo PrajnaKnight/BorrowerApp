@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import VerifyLoginOTP, { GetVerifyLoginOtpRequestModel } from '../services/API/VerifyLoginOtp';
 import GetOTPByPhoneNumber, { GetLoginTopByPhoneRequestModel } from '../services/API/GetLoginOtpByPhone';
 import CreateBorrowerLead from '../services/API/CreateBorrowerLead';

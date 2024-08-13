@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CommonNavigator from './src/Common/navigations/CommonNavigator';
 import PersonalLoanNavigator from './src/PersonalLoan/navigations/PersonalLoanNavigator';
 import DashboardNavigator from './src/Dashboard/navigations/DashboardNavigator';
+import MsmeLoanNavigator from './src/MsmeLoan/navigations/MsmeNavigator';
 
 const RootStack = createNativeStackNavigator();
 
@@ -89,6 +90,17 @@ const linking = {
           PreDisbursementScreen: 'pre-disbursement',
         },
       },
+      MsmeLoan: {
+        screens: {
+          LoanDetails: 'loan-details',
+          BusinessInfo: 'business-info',
+          BusinessSummary: 'business-summary',
+          BusinessProfile: 'business-profile',
+          BusinessTypeDetails: 'business-type-details',
+          BusinessLoanEligibility: 'business-loan-eligibility',
+          BusinessBankDetails: 'business-bank-details',
+        },
+      },
     },
   },
 };
@@ -100,6 +112,7 @@ function RootNavigator() {
         <RootStack.Screen name="Common" component={CommonNavigator} />
         <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />
         <RootStack.Screen name="Dashboard" component={DashboardNavigator} />
+        <RootStack.Screen name="MsmeLoan" component={MsmeLoanNavigator} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

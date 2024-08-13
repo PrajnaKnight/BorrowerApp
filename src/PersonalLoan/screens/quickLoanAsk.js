@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../assets/style/personalStyle';
-import ButtonComponent from '../components/button';
+import ButtonComponent from '../../Common/components/ControlPanel/button';
 import CustomDropdown from '../components/dropdownPicker';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import LoanAskDetails, { LoanPurpose } from '../services/API/LoanAskDetails';
 import { GetLeadId } from '../services/LOCAL/AsyncStroage';
 import { STATUS } from '../services/API/Constants';
@@ -21,10 +21,10 @@ import ScreenError, { useErrorEffect } from './ScreenError';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-import CustomSlider from '../components/CustomSlider';
+import CustomSlider from '../../Common/components/ControlPanel/CustomSlider';
 import { checkLocationPermission } from './PermissionScreen';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { useFocusEffect } from '@react-navigation/native';
 
 function QuickLoanAsk({ navigation }) {

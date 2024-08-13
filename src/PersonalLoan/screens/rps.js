@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
-import CustomInput from '../components/input';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import CustomInput from '../../Common/components/ControlPanel/input';
 
 const RpsScreen = ({ navigation }) => {
   const [umrn, setUmrn] = useState('');

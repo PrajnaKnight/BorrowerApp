@@ -3,11 +3,11 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Keyboar
 import { Picker } from '@react-native-picker/picker';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ProgressBar from '../components/progressBar';
-import { useProgressBar } from '../components/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
-import CustomInput from '../components/input';
+import { useAppContext } from '../../Common/components/useContext';
+import CustomInput from '../../Common/components/ControlPanel/input';
 import { GoBack } from '../services/Utils/ViewValidator';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import LoadingOverlay from '../components/FullScreenLoader';

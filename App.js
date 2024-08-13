@@ -3,11 +3,12 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './src/PersonalLoan/services/Utils/Redux/Store';
-import { AppProvider } from './src/PersonalLoan/components/appContext';
+import { AppProvider } from './src/Common/components/appContext';
 import RootNavigator from './RootNavigator';
 import SplashScreen from './src/Common/screens/SplashScreen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import * as ExpoSplashScreen from 'expo-splash-screen';
+import { PortalProvider } from '@gorhom/portal';
 
 // Keep the splash screen visible while we fetch resources
 ExpoSplashScreen.preventAutoHideAsync();
@@ -52,14 +53,16 @@ export default function App() {
 
   console.log('Rendering main app content');
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ReduxProvider store={store}>
-        <AppProvider>
-          <SafeAreaProvider>
-            <RootNavigator />
-          </SafeAreaProvider>
-        </AppProvider>
-      </ReduxProvider>
-    </View>
+    <PortalProvider>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <ReduxProvider store={store}>
+          <AppProvider>
+            <SafeAreaProvider>
+              <RootNavigator />
+            </SafeAreaProvider>
+          </AppProvider>
+        </ReduxProvider>
+      </View>
+    </PortalProvider>
   );
 }

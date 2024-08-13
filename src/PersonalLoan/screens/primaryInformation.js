@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollVie
 import * as ImagePicker from 'expo-image-picker';
 import { styles } from '../../assets/style/personalStyle';
 import CustomInput, { AadharMaskedCustomInput } from '../components/input';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import UploadFile, { GetUploadFiles } from '../services/API/DocumentUpload';
 import { API_RESPONSE_STATUS, STATUS } from '../services/API/Constants';

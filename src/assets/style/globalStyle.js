@@ -13,7 +13,7 @@ export const styles = applyFontFamily({
   // home screen style starts
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8FAFF',
   },
   header: {
     flexDirection: 'row',

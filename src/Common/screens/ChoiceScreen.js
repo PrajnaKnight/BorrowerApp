@@ -8,7 +8,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Header from '../../PersonalLoan/components/topBar';
+import Layout from '../../Common/components/Layout';
 
 const ChoiceScreen = () => {
   const navigation = useNavigation();
@@ -28,12 +28,14 @@ const ChoiceScreen = () => {
       navigation.navigate('Dashboard');
     } else if (selectedChoice === 'personalLoan') {
       navigation.navigate('PersonalLoan');
+    } else if (selectedChoice === 'msmeLoan') {
+      navigation.navigate('MsmeLoan');
     }
   };
 
   return (
     <View style={{ flex: 1 }}>
-      <Header />
+      <Layout>
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>Welcome! Where would you like to go?</Text>
@@ -55,6 +57,14 @@ const ChoiceScreen = () => {
             onPress={() => handleChoice("personalLoan")}>
             <Text style={styles.choiceText}>Personal Loan</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.choiceButton,
+              selectedChoice === "msmeLoan" && styles.selectedChoice,
+            ]}
+            onPress={() => handleChoice("msmeLoan")}>
+            <Text style={styles.choiceText}>MSME Loan</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.continueButton}
@@ -63,6 +73,7 @@ const ChoiceScreen = () => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+      </Layout>
     </View>
   );
 };
@@ -70,7 +81,7 @@ const ChoiceScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F8FAFF',
   },
   content: {
     flex: 1,
@@ -107,7 +118,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     marginTop: 20,
-    backgroundColor: '#007bff',
+    backgroundColor: '#00194c',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,

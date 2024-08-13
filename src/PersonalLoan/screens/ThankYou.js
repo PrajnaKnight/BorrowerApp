@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Image, StyleSheet, View, Text, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView, useWindowDimensions } from "react-native";
 import * as Print from 'expo-print';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { useRoute } from "@react-navigation/native";
 import { styles } from '../../assets/style/personalStyle';
 import { checkImagePermission } from "./PermissionScreen";

@@ -3,15 +3,15 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput, useWindowDimension
 import CustomDropdown from '../components/dropdownPicker';
 import { styles } from '../../assets/style/personalStyle';
 import CustomInput, { CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
-import DatePickerComponent from '../components/datePicker';
+import DatePickerComponent from '../../Common/components/ControlPanel/datePicker';
 import Slider from '@react-native-community/slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
-import MobileNumberInput from '../components/mobileInput';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import MobileNumberInput from '../../Common/components/ControlPanel/mobileInput';
 import { LinearGradient } from 'expo-linear-gradient';
 import { KeyboardAvoidingView } from 'react-native';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { Platform } from 'react-native';
 
 
@@ -28,7 +28,7 @@ import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Uti
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { StyleSheet } from 'react-native';
 import { FlatList } from 'react-native';
-import CustomSlider from '../components/CustomSlider';
+import CustomSlider from '../../Common/components/ControlPanel/CustomSlider';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 

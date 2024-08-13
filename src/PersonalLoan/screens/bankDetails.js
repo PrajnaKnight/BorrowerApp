@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
-import CustomInput from '../components/input';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import CustomInput from '../../Common/components/ControlPanel/input';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { styles } from '../../assets/style/personalStyle';
 import { API_RESPONSE_STATUS, STATUS } from '../services/API/Constants';
 import SaveBankAccountDetails, { SubmitBorrowerLoanApplicationAsyncSubmit, GetBranchNameWithIFSC, VerifyBankAccount } from '../services/API/SaveBankAccountDetail';

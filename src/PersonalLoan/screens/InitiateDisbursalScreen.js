@@ -12,12 +12,12 @@ import {
 } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ProgressBar from '../components/progressBar';
-import { useProgressBar } from '../components/progressContext';
-import { useAppContext } from '../components/useContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
-import CustomInput from '../components/input';
+import CustomInput from '../../Common/components/ControlPanel/input';
 import { STATUS } from '../services/API/Constants';
 import LoadingOverlay from '../components/FullScreenLoader';
 import ScreenError, { useErrorEffect } from './ScreenError';

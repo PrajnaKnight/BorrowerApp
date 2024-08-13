@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { useAppContext } from '../components/useContext';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import { useAppContext } from '../useContext';
+import applyFontFamily from '../../../assets/style/applyFontFamily';
 
 const SuccessScreen = ({ message, subMessage }) => {
   
@@ -11,9 +11,8 @@ const SuccessScreen = ({ message, subMessage }) => {
     <View style={styles.container}>
       <View style={styles.successContainer}>
         <View style={styles.iconContainer}>
-          {/* Replace with your actual success icon image */}
           <Image
-            source={require('../../assets/images/Done.gif')}
+            source={require('../../../assets/images/Done.gif')}
             resizeMode="contain"
             style={styles.successIcon}
           />
@@ -27,7 +26,6 @@ const SuccessScreen = ({ message, subMessage }) => {
 
 const styles = applyFontFamily({
   iconContainer: {
-    // Container for the success icon
     marginBottom: 30,
   },
   successContainer:{

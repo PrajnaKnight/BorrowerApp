@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, LayoutAnimation, Platform, UIManager } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import RadioButton from '../components/radioButton';
 
 

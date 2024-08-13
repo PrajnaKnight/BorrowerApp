@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, useWindowDimensions, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { BankFundOut, GetBankFundOutData, GetBankFundOutDataModel } from '../services/API/InitialDisbursal';
 import { STATUS } from '../services/API/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';

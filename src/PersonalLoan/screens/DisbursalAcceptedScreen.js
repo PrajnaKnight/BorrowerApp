@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { formateAmmountValue } from '../services/Utils/FieldVerifier';

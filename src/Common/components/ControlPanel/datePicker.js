@@ -3,8 +3,8 @@ import { View, TouchableOpacity, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
-import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../components/useContext';
+import { styles } from '../../../assets/style/personalStyle';
+import { useAppContext } from '../useContext';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -40,9 +40,9 @@ const DatePickerComponent = ({ onDateChange, initialDate, maximumDate, minimumDa
           style={[styles.datePicker, readonly && styles.inputReadOnly]}
         >
           <Text
-            style={[styles.dateText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize), color: initialDate ? "black" : "gray" }]}
+            style={[styles.dateText, { fontSize: dynamicFontSize(styles.dateText.fontSize), color: initialDate ? "#00194c" : "gray" }]}
           >{initialDate ? format(initialDate, 'PPP') : "Date"}</Text>
-          <Icon name="calendar" size={16} color={readonly ? "#cccccc" : "#00194c"} style={styles.icon} />
+          <Icon name="calendar" size={14} color={readonly ? "#cccccc" : "#ff8500"} style={styles.icon} />
         </TouchableOpacity>
 
 
@@ -85,23 +85,29 @@ const DatePickerComponent = ({ onDateChange, initialDate, maximumDate, minimumDa
 };
 
 
-const ExampleCustomInput = forwardRef(({ value, onClick , readonly}, ref) => (
-
+const ExampleCustomInput = forwardRef(({ value, onClick, readonly }, ref) => (
   <View>
     {/* Conditional rendering based on `readonly` prop */}
     <TouchableOpacity
       onPress={() => {
-        onClick()
+        onClick();
       }}
       style={[styles.datePicker, readonly && styles.inputReadOnly]}
-      ref={ref}
-    >
+      ref={ref}>
       <Text
-        style={[styles.dateText, { fontSize: 12, color: value ? "black" : "gray" }]}
-      >{value ? format(value, 'PPP') : "Date"}</Text>
-      <Icon name="calendar" size={16} color={readonly ? "#cccccc" : "#00194c"} style={styles.icon} />
+        style={[
+          styles.dateText,
+          { fontSize: 14, color: value ? "#00194c" : "gray" },
+        ]}>
+        {value ? format(value, "PPP") : "Date"}
+      </Text>
+      <Icon
+        name="calendar"
+        size={14}
+        color={readonly ? "#cccccc" : "#ff8500"}
+        style={styles.icon}
+      />
     </TouchableOpacity>
-
   </View>
 ));
 

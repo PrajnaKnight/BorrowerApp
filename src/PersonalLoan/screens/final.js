@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
-import SuccessScreen from '../components/success';
+import SuccessScreen from '../../Common/components/ControlPanel/success';
 import { styles } from '../../assets/style/personalStyle';
-import ProgressBar from '../components/progressBar';
-import { useProgressBar } from '../components/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import { useRoute } from "@react-navigation/native"
 
 const Final = ({ navigation }) => {

@@ -13,10 +13,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import ProgressBar from '../components/progressBar';
-import { useProgressBar } from '../components/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../../assets/style/personalStyle';
 import { RequestLocationPermission, fetchCameraFromWeb } from '../services/API/LocationApi';

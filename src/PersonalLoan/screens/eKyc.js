@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
-import { useProgressBar } from '../components/progressContext';
-import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../components/useContext';
+import { useAppContext } from '../../Common/components/useContext';
 import { isValidNumberOnlyFieldWithZero, isValidOtp } from '../services/Utils/FieldVerifier';
 import LoadingOverlay from '../components/FullScreenLoader';
 import SubmitAadhaarOtpRequest from '../services/API/SubmitAadhaarOtpRequest';
