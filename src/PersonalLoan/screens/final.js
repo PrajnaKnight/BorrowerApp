@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
 import SuccessScreen from '../components/success';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import ProgressBar from '../components/progressBar';
 import { useProgressBar } from '../components/progressContext';
 import { useRoute } from "@react-navigation/native"

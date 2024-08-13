@@ -8,19 +8,31 @@ import RootNavigator from './RootNavigator';
 import SplashScreen from './src/Common/screens/SplashScreen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import * as ExpoSplashScreen from 'expo-splash-screen';
+import { GetBorrowerPhoneNumber } from './src/PersonalLoan/services/LOCAL/AsyncStroage';
 
 // Keep the splash screen visible while we fetch resources
 ExpoSplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const [initialRouteName, setInitialRouteName] = useState(null)
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
     Poppins_700Bold,
   });
 
+  const isUserAvailable = async () => {
+    const number = await GetBorrowerPhoneNumber()
+    console.log("===== fetching number =========")
+    console.log(number)
+    setInitialRouteName(number != null ? "Dashboard" : "Common" )
+  }
+
   useEffect(() => {
+    isUserAvailable().then(()=>{
+
+    })
     async function prepare() {
       try {
         console.log('App preparation started');
@@ -46,9 +58,11 @@ export default function App() {
     }
   }, [appIsReady, fontsLoaded]);
 
-  if (!appIsReady || !fontsLoaded) {
+  if (!appIsReady || !fontsLoaded || !initialRouteName) {
     return <SplashScreen />;
   }
+
+  
 
   console.log('Rendering main app content');
   return (
@@ -56,7 +70,7 @@ export default function App() {
       <ReduxProvider store={store}>
         <AppProvider>
           <SafeAreaProvider>
-            <RootNavigator />
+            <RootNavigator initialRouteName = {initialRouteName}/>
           </SafeAreaProvider>
         </AppProvider>
       </ReduxProvider>

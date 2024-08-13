@@ -194,20 +194,40 @@ export const EmploymentDetailSlice = createSlice({
         
       }
       else if (EmploymentType == "Self-Employed") {
-        const dob = response.data.IncorporationDate_CommencementDate?.includes("-") ? reverseDateFormat(response.data.IncorporationDate_CommencementDate) : response.data.IncorporationDate_CommencementDate
+        console.log(response.data.IncorporationDate_CommencementDate)
+        let dob = response.data.IncorporationDate_CommencementDate;
+        if (dob?.includes("T")) {
+
+          // Create a Date object
+          let date = new Date(dob);
+
+          // Extract day, month, and year
+          let day = date.getDate().toString().padStart(2, '0'); // Ensure two digits
+          let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so add 1
+          let year = date.getFullYear();
+          dob = `${day}/${month}/${year}`;
+        }
 
 
 
         let CompanyAddress = response.data.RegisteredAddress
         let AddressLine1 = CompanyAddress
         let AddressLine2 = null
-  
+        let City = null
+        let State = null
+        let Landmark = null
+
+
         if (CompanyAddress?.includes("|")) {
           const parts = CompanyAddress.split('|');
           AddressLine1 = parts[0]
           AddressLine2 = parts[1]
+          City = parts[2]
+          State = parts[3]
+          Landmark = parts[4]
+
         }
-        const currentResponse = { ...response.data, IncorporationDate_CommencementDate: dob, AddressLine1: AddressLine1, AddressLine2: AddressLine2 }
+        const currentResponse = { ...response.data, IncorporationDate_CommencementDate: dob, AddressLine1: AddressLine1, AddressLine2: AddressLine2, EmpCity: City, EmpState: State, OfficeLandmark: Landmark }
 
         state.data.SelfEmployed = currentResponse
 
@@ -216,7 +236,6 @@ export const EmploymentDetailSlice = createSlice({
      
       
       }
-     
       
 
       state.data.LeadDOB = response.data.LeadDOB

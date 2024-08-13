@@ -5,7 +5,7 @@ import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { API_RESPONSE_STATUS, STATUS } from '../services/API/Constants';
 import SaveBankAccountDetails, { DeleteBankAccount, GetBranchNameWithIFSC, VerifyBankAccount } from '../services/API/SaveBankAccountDetail';
 import LoadingOverlay from '../components/FullScreenLoader';
@@ -37,7 +37,6 @@ const BankDetailsScreen = ({ navigation }) => {
 
   const addAccount = () => {
   
-    
       dispatch(addBankAccount());
       setSelectedAccountIndex(bankAccountSlices.data.BankList.length);
     

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProgressBar from '../components/progressBar';
 import { useProgressBar } from '../components/progressContext';

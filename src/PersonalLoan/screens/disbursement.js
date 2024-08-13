@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions, Platform, KeyboardAvoidingView, ScrollView, Image, ImageBackground } from 'react-native';
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'; // Import Expo Vector Icons
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
-import { BankFundOut, GetBankFundOutData, GetBankFundOutDataModel } from '../services/API/InitialDisbursal';
+import { BankFundOut, GetBankFundOutData, GetBankFundOutDataModel, GetDisbursalData, GetDisbursalModel } from '../services/API/InitialDisbursal';
 import { STATUS } from '../services/API/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import LoadingOverlay from '../components/FullScreenLoader';
@@ -25,6 +25,8 @@ const DisbursementScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [refreshPage, setRefreshPage] = useState(true)
   const [applicationId, setApplicationID] = useState(null)
+  const [disbursalInfo, setDisbursalInfo] = useState(null)
+
 
   const dispatch = useDispatch()
 
@@ -41,6 +43,16 @@ const DisbursementScreen = ({ navigation }) => {
         return
       }
       setLoading(true)
+
+      GetDisbursalData().then((response) => {
+        setLoading(false)
+        if (response.status == STATUS.ERROR) {
+          setNewErrorScreen(response.message)
+          return
+        }
+        let details = GetDisbursalModel(response.data)
+        setDisbursalInfo(details)
+      })
       GetBankFundOutData().then((response) => {
         setLoading(false)
         if (response.status == STATUS.ERROR) {
@@ -234,13 +246,13 @@ const DisbursementScreen = ({ navigation }) => {
                       iconName="calendar-alt"
                       label="1st EMI Date"
                       value={
-                        disbursedetails?.FirstEmiDate && format(disbursedetails?.FirstEmiDate, 'PPP')
+                        disbursalInfo?.FirstEMIDate && format(disbursalInfo?.FirstEMIDate, 'PPP')
                       }
                     />
                     <DetailItem
                       iconName="rupee-sign"
                       label="EMI Amount"
-                      value={disbursedetails?.EmiAmount && `₹ ${formateAmmountValue(disbursedetails?.EmiAmount)}/ m`}
+                      value={disbursalInfo?.EmiAmount && `₹ ${formateAmmountValue(disbursalInfo?.EmiAmount)}/ m`}
                     />
                     <DetailItem
                       iconName="id-card"

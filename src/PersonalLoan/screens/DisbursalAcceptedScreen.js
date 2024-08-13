@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions, ImageBackground } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useProgressBar } from '../components/progressContext';
@@ -10,18 +10,24 @@ import { format } from 'date-fns';
 import { formateAmmountValue } from '../services/Utils/FieldVerifier';
 import { GetApplicantId } from '../services/LOCAL/AsyncStroage';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { GetBankFundOutData, GetBankFundOutDataModel } from '../services/API/InitialDisbursal';
+import ScreenError, { useErrorEffect } from './ScreenError';
+import LoadingOverlay from '../components/FullScreenLoader';
+import { STATUS } from '../services/API/Constants';
 
 const DisbursementAcceptedScreen = ({ navigation }) => {
 
   const [applicationId, setApplicationID] = useState(null)
 
-  const disbursedetails = useSelector(state => state.disbursalInfoSlices);
+  const [transactionDetails, setTransactionDetails] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+  const onTryAgainClick = () => {
+    setNewErrorScreen(null)
+  }
 
-    useEffect(() => {
-        console.log("================ Transaction details =======================")
-        console.log(disbursedetails)
-    }, []);
+  const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick)
+
 
 
     const { fontSize } = useAppContext();
@@ -31,6 +37,19 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
 
     useEffect(() => {
         setProgress(10);
+        setLoading(true)
+        
+
+        GetBankFundOutData().then((response) => {
+          setLoading(false)
+          if (response.status == STATUS.ERROR) {
+            setNewErrorScreen(response.message)
+            return
+          }
+  
+          setTransactionDetails(GetBankFundOutDataModel(response.data))
+  
+        })
         GetApplicantId().then((response)=>{
           setApplicationID(response)
         })
@@ -143,6 +162,8 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
             style={[styles.rightCOntainer, { flex: 1 }]}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+            <LoadingOverlay visible={loading} />
+
             <View style={{ paddingHorizontal: 16 }}>
               <ProgressBar progress={10} />
             </View>
@@ -158,29 +179,30 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
                       </Text>
                       <Text style={styles.disburseamount}>
                         ₹{" "}
-                        {formateAmmountValue(disbursedetails?.NetDisbursalAmount)}
+                        {formateAmmountValue(transactionDetails?.DisbursementAmount)}
                       </Text>
                       <Text style={styles.disburseAccountInfo}>
-                        Transferred to Bank Account - {disbursedetails?.BankAcc}
+                        Transferred to Bank Account - {transactionDetails?.BankAcc}
                       </Text>
                       <Text style={styles.disburseTransactionInfo}>
-                        Transaction ID : {disbursedetails?.TransactionId}
+                        Transaction ID : {transactionDetails?.TransactionID}
                       </Text>
                       <Text style={styles.disburseTransactionInfo}>
-                      {format(disbursedetails?.TransactionDate, "PPP")}
+                      {transactionDetails?.TransactionDate && format(transactionDetails?.TransactionDate, "PPP")}
                       </Text>
+
                     </View>
                   </View>
                   <View style={styles.detailsContainer}>
                     <DetailItem
                       iconName="calendar-alt"
                       label="1st EMI Date"
-                      value= {disbursedetails?.FirstEmiDate && format(disbursedetails?.FirstEmiDate, "PPP")}
+                      value= {transactionDetails?.EMIDate && format(transactionDetails?.EMIDate, "PPP")}
                     />
                     <DetailItem
                       iconName="rupee-sign"
                       label="EMI Amount"
-                      value= {disbursedetails?.EmiAmount && `₹ ${formateAmmountValue(disbursedetails?.EmiAmount)}`}
+                      value= {transactionDetails?.EMIAmount && `₹ ${formateAmmountValue(transactionDetails?.EMIAmount)}`}
                     />
                     <DetailItem
                       iconName="id-card"
@@ -214,6 +236,14 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </LinearGradient>
             </View>
+
+            {errorScreen.type != null && (
+            <ScreenError
+              errorObject={errorScreen}
+              onTryAgainClick={onTryAgainClick}
+              setNewErrorScreen={setNewErrorScreen}
+            />
+          )}
           </KeyboardAvoidingView>
         </View>
       </View>

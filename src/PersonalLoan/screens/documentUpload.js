@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, FlatList, Image, TextInput, Animated } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import ProgressBar from '../components/progressBar';
 import { useProgressBar } from '../components/progressContext';
 import CustomDropdown from '../components/dropdownPicker';
@@ -24,7 +24,7 @@ import SaveLeadStage from '../services/API/SaveLeadStage';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { useFocusEffect } from '@react-navigation/native';
 import DownloadPopup from '../components/DownloadPopup';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 import { AntDesign } from '@expo/vector-icons';
 import { retry } from 'redux-saga/effects';
 
@@ -38,12 +38,15 @@ const DocumentUploadScreen = ({ navigation }) => {
   const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
   const [downloadPath, setDownloadPath] = useState(null)
   const tabsRef = useRef(null);
+  const scrollViewRef = useRef(null);
+
 
   const [selectedDocType, setSelectedDocType] = useState()
   const [selectedSubDocType, setSelectedSubDocType] = useState()
   const [listOfSubDoc, setListOfSubDoc] = useState()
   const toggleAnimation = useRef(new Animated.Value(0)).current;
   const [currentSelectedFile, setCurrentSelectedFile] = useState()
+  const [firstTime, setFirstTime] = useState(true)
 
   const dispatch = useDispatch();
 
@@ -73,8 +76,12 @@ const DocumentUploadScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
 
-      dispatch(updateCleanAll())
-    }, []));
+      if (firstTime) {
+        dispatch(updateCleanAll())
+        setFirstTime(false)
+      }
+
+    }, [firstTime]));
   useFocusEffect(
     useCallback(() => {
       if (!errorScreen || !refreshPage) {
@@ -450,6 +457,8 @@ const DocumentUploadScreen = ({ navigation }) => {
             onPress={() => {
               console.log("clicked : ", index)
               dispatch(updateMasterSelected(item.DoctypeType))
+              scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+
               tabsRef.current.scrollToIndex({ index, animated: true });
             }}>
             <Text style={[styles.DoctabText, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTabText,
@@ -470,29 +479,31 @@ const DocumentUploadScreen = ({ navigation }) => {
   const renderChildType = (list) => (
 
     list &&
-    <View style={[styles.DoctabContainer, { flexDirection: "column" }]}>
+    <View style={[{ flexDirection: "column" }]}>
       <Text style={styles.sectionTitle}>Select ID Type</Text>
-      <FlatList
-        data={Object.keys(list)}
+      <View style={{ flex: 1, flexDirection: 'row' }}>
 
-        horizontal={true}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.docTypeButton, uploadDocumentSlices.data.selectedDoc.child === item && styles.selectedDocTypeButton]}
-            onPress={() => changeType(item)}>
-            <Icon name={getIconName(item)} size={24} color={uploadDocumentSlices.data.selectedDoc.child === item ? "#fff" : "#00194c"} />
-            <Text style={{ color: uploadDocumentSlices.data.selectedDoc.child === item ? "#fff" : "#00194c" }}>
-              {item}
-            </Text>
-          </TouchableOpacity>
-        )}
-        contentContainerStyle={{ ...styles.docTypeButtonContainer }} // Adjust as necessary
-      />
-      {/* <View style={styles.dotIndicatorContainer}>
-        {docTypes[selectedTab].map((_, index) => (
-          <View key={index} style={[styles.dotIndicator, index === 0 && styles.activeDotIndicator]} />
-        ))}
-      </View> */}
+        <ScrollView  ref={scrollViewRef} horizontal={true} style={{ flex: 1 }}>
+          {Object.keys(list).filter((item) => item != "MandatoryFlag").map(element => (
+            <TouchableOpacity
+              key={element}
+              style={[styles.docTypeButton, { minWidth: 120 }, uploadDocumentSlices.data.selectedDoc.child === element && styles.selectedDocTypeButton]}
+              onPress={() => changeType(element)}>
+              <View key={element} style={{ flexDirection: "column", alignItems: "center" }}>
+                <Icon name={getIconName(element)} size={24} color={uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"} />
+                <View style={{ height: 4 }}></View>
+                <Text style={{ color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c" }} key={element}>{element}</Text>
+              </View>
+            </TouchableOpacity>
+
+
+          ))}
+
+        </ScrollView>
+
+      </View>
+
+
     </View>
   )
 

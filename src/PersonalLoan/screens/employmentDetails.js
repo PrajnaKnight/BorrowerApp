@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, useWindowDimensions, KeyboardAvoidingView, Platform, StyleSheet, FlatList } from 'react-native';
 import CustomDropdown from '../components/dropdownPicker';
-import { styles } from '../../assets/style/personalStyle';
-import CustomInput, { CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
+import { styles } from '../services/style/gloablStyle';
+import CustomInput, { CustomInputFieldWithSearchSuggestionForEmplymentDetails, CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
 import DatePickerComponent from '../components/datePicker';
 import Slider from '@react-native-community/slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -78,7 +78,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
 
   const fetchCompanyList = (query) => {
     GetCompanyList(query).then((response) => {
-      if (EmploymentType == "salaried") {
+      if (EmploymentType == "Salaried") {
         setSalariedCompanySearchResult(response?.data);
       } else {
         setSelfEmployeedCompanySearchResult(response?.data);
@@ -174,41 +174,36 @@ const EmploymentDetailScreen = ({ navigation }) => {
       setRefreshPage(false)
     }, [refreshPage]))
 
-  useEffect(() => {
-    if (currentSelectedEmploymentOptionId == null) {
-      return;
-    }
-    setLoading(true);
-    GetOccupationType(currentSelectedEmploymentOptionId).then(response => {
-      setLoading(false);
-      if (response.status == STATUS.ERROR) {
-        setOtherError(response.message);
+    useEffect(() => {
+      if (currentSelectedEmploymentOptionId == null) {
         return;
       }
-      setOtherError(null);
-      if (response.data != null) {
-        let occupationTypes = [];
-        let currentEmploymentCategoryExist = false;
-        response.data.forEach((item) => {
-          if (item.Text == EmploymentCategory) {
-            currentEmploymentCategoryExist = true;
-          }
-          occupationTypes.push({ label: item.Text, value: item.Text });
-        });
-        setOcupationValueOptions([...occupationTypes]);
-        if (!currentEmploymentCategoryExist) {
-          dispatch(updateEmploymentCategory(null));
+      setLoading(true);
+      GetOccupationType(currentSelectedEmploymentOptionId).then(response => {
+        setLoading(false);
+        if (response.status == STATUS.ERROR) {
+          setOtherError(response.message);
+          return;
         }
-      }
-    });
-  }, [currentSelectedEmploymentOptionId]);
+        setOtherError(null);
+        if (response.data != null) {
+          let occupationTypes = [];
+          response.data.forEach((item) => {
+            occupationTypes.push({ label: item.Text, value: item.Text });
+          });
+          setOcupationValueOptions([...occupationTypes]);
+        }
+      });
+    }, [currentSelectedEmploymentOptionId]);
 
   const onEmploymentTypeChange = (itemValue) => {
     dispatch(updateEmploymentType(itemValue.label));
+    dispatch(updateEmploymentCategory(null));
+
   };
 
   const onEmploymenCategoryChange = (itemValue) => {
-    dispatch(updateEmploymentCategory(itemValue.label));
+    dispatch(updateEmploymentCategory(itemValue));
   };
 
   function formatJoiningDate(date) {
@@ -306,18 +301,18 @@ const EmploymentDetailScreen = ({ navigation }) => {
           currentState.DesignationError = null;
           break;
         case "AddressLine1":
-          currentState.AddressLine1 = value;
+          currentState.AddressLine1 = value.replace(/\|/g, '');
           currentState.AddressLine1Error = null;
           break;
         case "AddressLine2":
-          currentState.AddressLine2 = value;
+          currentState.AddressLine2 = value.replace(/\|/g, '');
           break;
         case "EmpCity":
-          currentState.EmpCity = value;
+          currentState.EmpCity = value.replace(/\|/g, '');
           currentState.CityError = null;
           break;
         case "EmpState":
-          currentState.EmpState = value;
+          currentState.EmpState = value.replace(/\|/g, '');
           currentState.StateError = null;
           break;
         case "EmpCountry":
@@ -365,7 +360,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
           currentState.AnnualCTCError = null;
           break;
         case "OfficeLandmark":
-          currentState.OfficeLandmark = value;
+          currentState.OfficeLandmark = value.replace(/\|/g, '');
           break;
       }
       dispatch(updateSelfEmployed(currentState));
@@ -588,7 +583,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       }
       currentRequestModel = { ...SelfEmployed, ...currentRequestModel };
       currentRequestModel.IncorporationDate_CommencementDate = createDateFromDMYToDash(currentRequestModel.IncorporationDate_CommencementDate)
-      currentRequestModel.RegisteredAddress = `${currentRequestModel.AddressLine1}${currentRequestModel.AddressLine2 ? ` | ${currentRequestModel.AddressLine2}` : ""}`
+      currentRequestModel.RegisteredAddress = `${currentRequestModel.AddressLine1}|${currentRequestModel.AddressLine2 || ""}|${currentRequestModel.EmpCity || ""}|${currentRequestModel.EmpState || ""}|${currentRequestModel.OfficeLandmark || ""}`
       currentRequestModel.LeadId = LeadId
 
     }
@@ -698,10 +693,21 @@ const EmploymentDetailScreen = ({ navigation }) => {
               <View>
                 {otherError && <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{otherError}</Text>}
                 <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Employment Type <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomDropdown value={EmploymentType} items={employmentTypeOptions} setValue={(e) => onEmploymentTypeChange(e)} placeholder="Select" style={[styles.pickerContainer, { fontSize }]} zIndex={3000} />
+                <CustomDropdown value={EmploymentType} items={employmentTypeOptions} setValue={(e) => onEmploymentTypeChange(e)} placeholder="Select" style={[styles.pickerContainer, { fontSize }]} zIndex={7000} />
                 {EmploymentTypeError && <Text style={styles.errorText}>{EmploymentTypeError}</Text>}
                 <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Occupation Type <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomDropdown value={EmploymentCategory} items={ocupationValueOptions} setValue={(e) => { onEmploymenCategoryChange(e); }} placeholder="Select" style={[styles.pickerContainer, { fontSize }]} zIndex={2000} searchable={true} />
+                
+                <View>
+                <CustomInputFieldWithSearchSuggestionForEmplymentDetails
+                  value={EmploymentCategory} 
+                  listOfData={ocupationValueOptions} 
+                  onChangeText={(e) => { console.log(e); onEmploymenCategoryChange(e); }} 
+                  placeholder="Select" 
+                  style={[styles.pickerContainer, { fontSize }]} 
+                  zIndex={2000} 
+                  searchable={true} 
+                />
+                </View>
                 {EmploymentCategoryError && <Text style={styles.errorText}>{EmploymentCategoryError}</Text>}
                 <View>
                   {EmploymentType == 'Salaried' ? (
@@ -760,11 +766,11 @@ const EmploymentDetailScreen = ({ navigation }) => {
                   {EmploymentType == "Self-Employed" ? (
                     <View style={styles.employmentWrapper}>
                       <View style={styles.formGroup}>
-                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Business <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <CustomInput placeholder="Total Business" keyboardType="numeric" error={SelfEmployed.ExperienceError} value={SelfEmployed.BusinessExperience} onChangeText={(e) => { updateInfo("Experience", e); }} />
+                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience <Text style={styles.mandatoryStar}>*</Text></Text>
+                        <CustomInput placeholder="Total Experience" keyboardType="numeric" error={SelfEmployed.ExperienceError} value={SelfEmployed.BusinessExperience?.toString()} onChangeText={(e) => { updateInfo("Experience", e); }} />
                       </View>
                       <View style={styles.formGroup}>
-                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Business/Shop/Company Name <Text style={styles.mandatoryStar}>*</Text></Text>
+                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Business/Shop/Trade Name <Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput placeholder="Business/Shop/Trade Name" error={SelfEmployed.CompanyNameError} value={SelfEmployed.BusinessName} onChangeText={(e) => { updateInfo("EmployerName", e); }} />
                       </View>
                       <View style={styles.formGroup}>

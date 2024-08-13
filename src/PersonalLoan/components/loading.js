@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet,Image } from 'react-native';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const LoadingScreen = ({ message }) => {
   return (

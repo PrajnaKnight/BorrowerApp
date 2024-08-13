@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { useAppContext } from '../components/useContext';
 import { styles } from '../../assets/style/personalStyle';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 import { Feather } from '@expo/vector-icons';
 
 const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {

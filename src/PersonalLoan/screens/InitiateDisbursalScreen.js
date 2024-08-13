@@ -11,7 +11,7 @@ import {
   StyleSheet
 
 } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProgressBar from '../components/progressBar';
 import { useProgressBar } from '../components/progressContext';
@@ -35,7 +35,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import CustomDropdown from '../components/Dropdown';
 import { Fontisto } from '@expo/vector-icons';
 import { formateAmmountValue } from '../services/Utils/FieldVerifier';
-
 const InitiateDisbursalScreen = ({ navigation }) => {
 
   const { width, height } = useWindowDimensions();

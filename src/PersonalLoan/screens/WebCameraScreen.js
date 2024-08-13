@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { View, TouchableOpacity, Text, Button, StyleSheet } from 'react-native';
 import { Camera } from 'expo-camera';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const WebCameraScreen = ({ navigation, route }) => {
   const [facing, setFacing] = useState('back');

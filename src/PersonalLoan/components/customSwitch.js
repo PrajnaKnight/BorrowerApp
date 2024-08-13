@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const CustomSwitch = ({ value, onValueChange }) => {
    

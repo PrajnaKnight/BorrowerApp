@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { styles } from "../../assets/style/personalStyle";
+import { styles } from "../services/style/gloablStyle";
 import ButtonComponent from "../components/button";
 import CustomDropdown from "../components/dropdownPicker";
 import { useAppContext } from "../components/useContext";
@@ -44,7 +44,6 @@ import { checkLocationPermission } from "./PermissionScreen";
 import { useProgressBar } from "../components/progressContext";
 import ProgressBar from "../components/progressBar";
 import { useFocusEffect } from '@react-navigation/native';
-
 function QuickLoanAsk({ navigation }) {
   const dispatch = useDispatch();
   const nextJumpTo = useSelector((state) => state.leadStageSlice.jumpTo);

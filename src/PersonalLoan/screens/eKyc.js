@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -429,7 +429,7 @@ const EKycVerificationScreen = ({ navigation, route }) => {
           <LinearGradient
             // button Linear Gradient
             colors={['#002777', '#00194C']}
-            style={styles.button}
+            style={[styles.button,{marginBottom:10}]}
           >
             <TouchableOpacity onPress={handleVerifyPress}>
               <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>I AGREE</Text>

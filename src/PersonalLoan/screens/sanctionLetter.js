@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StatusBar, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
-import { styles } from '../assets/style/gloablStyle';
+import { styles } from '../services/style/gloablStyle';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
 import { useAppContext } from '../components/useContext';

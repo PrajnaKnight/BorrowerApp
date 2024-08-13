@@ -18,7 +18,7 @@ import { useProgressBar } from '../components/progressContext';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { RequestLocationPermission, fetchCameraFromWeb } from '../services/API/LocationApi';
 import { IntentLauncherAndroid } from 'react-native';
 import { GoBack } from '../services/Utils/ViewValidator';
@@ -472,13 +472,16 @@ const PermissionsScreen = ({ navigation, route }) => {
                                 {showPermssionModel && ShowPermissionDialog()}
                             </View>
 
-                            <LinearGradient colors={['#002777', '#00194C']} style={styles.Nextbutton}>
-                                <TouchableOpacity onPress={handleNextPress}>
+
+                            <TouchableOpacity onPress={handleNextPress} style={{marginBottom:10}}>
+
+                            <LinearGradient colors={['#002777', '#00194C']} style={[styles.Nextbutton]}>
                                     <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>
                                         BACK
                                     </Text>
-                                </TouchableOpacity>
                             </LinearGradient>
+                            </TouchableOpacity>
+
 
 
                         </View>

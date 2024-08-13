@@ -1,9 +1,10 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CommonNavigator from './src/Common/navigations/CommonNavigator';
 import PersonalLoanNavigator from './src/PersonalLoan/navigations/PersonalLoanNavigator';
 import DashboardNavigator from './src/Dashboard/navigations/DashboardNavigator';
+import { GetBorrowerPhoneNumber } from './src/PersonalLoan/services/LOCAL/AsyncStroage';
 
 const RootStack = createNativeStackNavigator();
 
@@ -13,9 +14,11 @@ const linking = {
     screens: {
       Common: {
         screens: {
+
           Login: 'login',
           otpverification: 'otp',
           ChoiceScreen: 'choice',
+
         },
       },
       PersonalLoan: {
@@ -93,13 +96,37 @@ const linking = {
   },
 };
 
-function RootNavigator() {
+
+
+
+function RootNavigator({initialRouteName}) {
+  const navigation = useNavigationContainerRef();
+
+  // useEffect(() => {
+  //   if (navigation.current == null) {
+  //     return
+  //   }
+  //   isUserAvailable().then((response) => {
+  //     if (response) {
+  //       navigation.navigate('Dashboard');
+  //     }
+  //   })
+  // }, [navigation])
+
+  console.log("loading screen ",initialRouteName)
   return (
-    <NavigationContainer linking={linking}>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        <RootStack.Screen name="Common" component={CommonNavigator} />
-        <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
+
+        
+      <RootStack.Screen name="Common" component={CommonNavigator} />
+
         <RootStack.Screen name="Dashboard" component={DashboardNavigator} />
+            
+
+        
+        <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />
+
       </RootStack.Navigator>
     </NavigationContainer>
   );

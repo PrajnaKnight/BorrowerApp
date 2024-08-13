@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert, Image, KeyboardAvoidingView, Platform, useWindowDimensions, StatusBar } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import ButtonComponent from '../components/button';
 import CustomCarousel from '../components/carousel';
 import ReusableModal from '../components/modal';

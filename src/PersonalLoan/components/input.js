@@ -284,4 +284,134 @@ export const DateOfJoiningMaskedCustomInput = ({
 };
 
 
+
+export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, error, style, listOfData, onChangeText, placeholder}) =>{
+
+
+  const [isFocused, setIsFocused] = useState(false);
+
+
+  const [suggestionList, setSuggestionList] = useState(listOfData)
+
+  const [showList, setShowList] = useState(false)
+
+
+  // Handle focus only if not read-only
+  const handleFocus = () => {
+    
+      setIsFocused(true);
+    
+  };
+
+
+
+  // Handle blur only if not read-only
+  const handleBlur = () => {
+    
+      setIsFocused(false);
+    
+  };
+
+  const { fontSize } = useAppContext();
+  const dynamicFontSize = (size) => size + fontSize;
+
+
+
+  const CompanyItem = ({ item, onPress }) => (
+    <TouchableOpacity onPress={() => onPress(item)} style={{ paddingHorizontal: 4, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "black" }}>
+
+      <Text>{item.value}</Text>
+
+    </TouchableOpacity>
+  );
+
+  const handleItemClick = (item, isLastSearch) => {
+    console.log("Item clicked:", item);
+    onChangeText(item)
+
+   
+    let listOfCompany = []
+    listOfData?.forEach(element => {
+      console.log(element)
+      if(element.value.includes(item)){
+        listOfCompany.push(element)
+      }
+    });
+  
+    console.log(listOfCompany)
+    setSuggestionList(listOfCompany)
+    
+    if(!isLastSearch){
+      setShowList(false)
+    }
+    
+
+
+    // You can perform any action here when an item is clicked
+  };
+
+
+  useEffect(()=>{
+    if(showList){
+      setSuggestionList(listOfData)
+    }
+    else{
+      setSuggestionList([])
+    }
+  },[showList])
+
+  return (
+    <View style={{ flex: 1 }}>
+
+      <View >
+      <TextInput  
+          onTouchEndCapture={()=>{setShowList(!showList)}}
+          style={[
+            styles.input,
+            isFocused && styles.inputFocused,
+            style, { fontSize: dynamicFontSize(styles.input.fontSize) }
+          ]}
+          onChangeText={(e) => {
+           
+              handleItemClick(e, true)
+        
+
+          }} // Disable onChangeText if readOnly
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          
+          placeholder={placeholder}
+          placeholderTextColor="gray"
+          
+    
+          value={value}
+        />
+
+
+      </View>
+        
+      
+
+      {error && (
+        <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text>
+      )}
+
+      {showList &&
+        <FlatList
+          data={suggestionList}
+          nestedScrollEnabled={true}
+          style={{
+            width: "100%", maxHeight: 400, borderWidth: 1, borderColor: "black", borderRadius: 10, zIndex: 100
+          }
+          }
+          renderItem={({ item }) => <CompanyItem item={item} onPress={(e)=>handleItemClick(e.value, false)} />}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      }
+
+    </View>
+
+  );
+}
+
 export default CustomInput;

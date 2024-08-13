@@ -4,7 +4,7 @@ import ProgressBar from '../components/progressBar';
 import { GoBack } from '../services/Utils/ViewValidator';
 import { useAppContext } from './useContext';
 import { styles } from '../../assets/style/personalStyle';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const RejectionScreen = ({navigation}) => {
 

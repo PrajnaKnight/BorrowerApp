@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal, View, StyleSheet, Pressable, Text, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const ReusableModal = ({ modalVisible, setModalVisible, modalContent }) => {
   return (

@@ -6,6 +6,13 @@ import { WebView } from 'react-native-webview';
 import moment from 'moment';
 import Layout from '../components/Layout';
 import { styles } from '../../assets/style/globalStyle';
+import GetLookUp from '../../PersonalLoan/services/API/GetLookUp';
+import { StoreApplicantId, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
+import { API_RESPONSE_STATUS, STATUS } from '../../PersonalLoan/services/API/Constants';
+import { updateBreStatus } from '../../PersonalLoan/services/Utils/Redux/ExtraSlices';
+import { useDispatch } from 'react-redux';
+import { resetNavigationStack } from '../../PersonalLoan/services/Utils/ViewValidator';
+import { updateJumpTo } from '../../PersonalLoan/services/Utils/Redux/LeadStageSlices';
 
 const { width } = Dimensions.get('window');
 
@@ -137,12 +144,50 @@ const ImageGallery = () => {
 };
 
 const LoanSliderItem = ({ item, navigation }) => {
+  const dispatch = useDispatch()
+
   const currentDate = moment();
   const nextEmiDate = moment(item.nextEmiDate, 'DD MMM YYYY');
   const isOverdue = nextEmiDate.isBefore(currentDate);
 
-  const handleContinue = () => {
-    navigation.navigate('PersonalLoan', { screen: 'QLA' });
+  const handleContinue = async() => {
+
+    let response =  API_RESPONSE_STATUS()
+    let userAvailable = await GetLookUp()
+
+    console.log("------------------------- get look up response ---------------------------")
+    console.log(userAvailable)
+    console.log("------------------------- get look up response ---------------------------")
+
+    if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
+
+      response.status = STATUS.ERROR
+      response.message = null
+      response.data = 0
+
+
+
+
+      if (userAvailable.data.LeadStage != null) {
+        const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
+        response.data = jumpTo
+      }
+
+
+      dispatch(updateBreStatus(userAvailable.data?.IsBREcompleted))
+      dispatch(updateJumpTo(response.data))
+
+
+      if (userAvailable.data.leadID != null) {
+        await StoreLeadId(userAvailable.data.leadID)
+      }
+      if (userAvailable.data.ApplicationID != null) {
+        await StoreApplicantId(userAvailable.data.ApplicationID)
+      }
+      navigation.navigate("PersonalLoan")
+    }
+    
+
   };
 
   const stageStatusStyles = {
@@ -161,7 +206,7 @@ const LoanSliderItem = ({ item, navigation }) => {
         return null;
     }
   };
- 
+
   const handlePress = () => {
     navigation.navigate('Loans', {
       screen: 'IndividualLoanDetails',
@@ -221,7 +266,7 @@ const LoanSliderItem = ({ item, navigation }) => {
           </View>
           <TouchableOpacity
             style={styles.availNowButton}
-            onPress={handleContinue}>
+            onPress={()=>handleContinue()}>
             <Text style={styles.avaialNowText}>{item.buttonLabel}</Text>
           </TouchableOpacity>
         </View>
@@ -238,7 +283,7 @@ const LoanSliderItem = ({ item, navigation }) => {
           marginBottom: 16,
         }}>
         <View style={styles.boxShadow}>
-          <View style={{flexDirection:'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.offerWrapper}>
               <Text style={styles.SpecialofferBadge}>{item.offerBadge}</Text>
               <Text style={styles.Offertitle}>{item.title}</Text>
@@ -368,9 +413,9 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       case 'Loan Eligibility':
         navigation.navigate('LoanEligibilityCalculator');
         break;
-        case 'Pre Disbursement':
-          navigation.navigate('PreDisbursementScreen');
-          break;
+      case 'Pre Disbursement':
+        navigation.navigate('PreDisbursementScreen');
+        break;
       default:
         break;
     }
@@ -384,17 +429,17 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
         { width: itemWidth },
         Platform.OS === "ios"
           ? {
-              shadowColor: shadowColor,
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 10,
-            }
-          : {
-              elevation: 5,
+            shadowColor: shadowColor,
+            shadowOffset: {
+              width: 0,
+              height: 2,
             },
+            shadowOpacity: 0.25,
+            shadowRadius: 10,
+          }
+          : {
+            elevation: 5,
+          },
         { shadowColor: shadowColor },
       ]}>
       <ImageBackground
@@ -426,10 +471,10 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
 
 
 const BannerItem = ({ item }) => (
-  <View  style={[{
+  <View style={[{
     width: width * 0.92,
     marginRight: width * 0.03,
-  },styles.bannerContainer]}>
+  }, styles.bannerContainer]}>
     <ImageBackground source={item.imageSource} style={styles.bannerImage} resizeMode="contain">
       <View style={styles.bannerContent}>
         <TouchableOpacity style={styles.applyNowButton}>
@@ -442,6 +487,8 @@ const BannerItem = ({ item }) => (
 
 
 const HomeScreen = ({ navigation }) => {
+
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const onViewRef = React.useRef(({ viewableItems }) => {
@@ -455,17 +502,17 @@ const HomeScreen = ({ navigation }) => {
   return (
     <Layout>
       <View style={styles.header}>
-          <View style={styles.userInfo}>
-            <Text style={styles.welcome}>Welcome,</Text>
-            <Text style={styles.username}>Satat Mishra</Text>
-          </View>
-          <View style={styles.cibilScore}>
-            <Text style={styles.cibilScoreText}>790</Text>
-            <Text style={styles.cibilLabel}>Score</Text>
-          </View>
+        <View style={styles.userInfo}>
+          <Text style={styles.welcome}>Welcome,</Text>
+          <Text style={styles.username}>Satat Mishra</Text>
         </View>
+        <View style={styles.cibilScore}>
+          <Text style={styles.cibilScoreText}>790</Text>
+          <Text style={styles.cibilLabel}>Score</Text>
+        </View>
+      </View>
       <ScrollView style={styles.container}>
-        
+
 
         <View>
           <FlatList
@@ -477,7 +524,7 @@ const HomeScreen = ({ navigation }) => {
               <LoanSliderItem item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item.key}
-            onScrollToIndexFailed={() => {}} // This function can be used to handle errors if scrollToIndex fails
+            onScrollToIndexFailed={() => { }} // This function can be used to handle errors if scrollToIndex fails
             onViewableItemsChanged={onViewRef.current}
             viewabilityConfig={viewConfigRef.current}
           />
@@ -504,7 +551,7 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
           />
         </View>
-        <View style={{marginHorizontal:16}}>
+        <View style={{ marginHorizontal: 16 }}>
           <FlatList
             horizontal
             pagingEnabled

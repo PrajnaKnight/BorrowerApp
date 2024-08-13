@@ -1809,5 +1809,29 @@ messageText: {
   color: '#fff',
   textAlign: 'center',
 },
+detailLabel: {
+  fontSize: 14,
+  color: "#00194C",
+  backgroundColor: "#f8f9ff",
+  paddingVertical: 10,
+  paddingHorizontal: 10,
+  width: "50%",
+  textTransform: "capitalize",
+},
+detailValue: {
+  fontSize: 14,
+  color: "#00194C",
+  paddingVertical: 10,
+  paddingHorizontal: 10,
+  textAlign: "left",
+  fontWeight: "600",
+
+},
+
+headerText: {
+  fontSize: 24,
+  fontWeight: "bold",
+  color: "#00194C",
+},
 //LOan pre disbursal charges screen style ends
 });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
 import VerifyLoginOTP, { GetVerifyLoginOtpRequestModel } from '../services/API/VerifyLoginOtp';
@@ -26,7 +26,6 @@ import {
   useOtpVerify,
 } from 'react-native-otp-verify';
 import { checkSMSPermission } from './PermissionScreen';
-
 
 const OTPVerificationScreen = ({ navigation, route }) => {
 

@@ -3,7 +3,7 @@ import { Image, StyleSheet, View, Text, TouchableOpacity, Platform, KeyboardAvoi
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
 import { useRoute } from "@react-navigation/native";
-import { styles } from "../../assets/style/personalStyle";
+import { styles } from "../services/style/gloablStyle";
 import { checkImagePermission } from "./PermissionScreen";
 import { ALL_SCREEN, Something_Went_Wrong } from "../services/Utils/Constants";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +15,7 @@ import { CheckEsignLoanAgreement } from "../services/API/ESignDocument";
 import { DownloadMyFile } from "../services/Utils/FieldVerifier";
 import { STATUS } from "../services/API/Constants";
 import { GoBack } from "../services/Utils/ViewValidator";
-import applyFontFamily from "../../assets/style/applyFontFamily";
-
+import applyFontFamily from "../services/style/applyFontFamily";
 const ThankYou = ({ navigation }) => {
   const route = useRoute();
 
@@ -212,7 +211,7 @@ const ThankYou = ({ navigation }) => {
             <View style={styles.container}>
               <View style={[screenStyles.successContainer, { flex: 1, minHeight: '70%' }]}>
                 <Image
-                  source={require('../assets/images/Done.gif')}
+                  source={require('../../assets/images/Done.gif')}
                   resizeMode="contain"
                   style={screenStyles.successIcon}
                 />
@@ -237,7 +236,7 @@ const ThankYou = ({ navigation }) => {
                   </LinearGradient>
                 </View>
               )}
-              <View style={styles.actionContainer}>
+              <View style={[styles.actionContainer,{marginBottom:10}]}>
                 <TouchableOpacity
                   style={[styles.backButton]}
                   onPress={() => GoBack(navigation)}
@@ -267,7 +266,7 @@ const ThankYou = ({ navigation }) => {
   );
 };
 
-const screenStyles = applyFontFamily({
+const screenStyles = StyleSheet.create({
   successContainer: {
     display: 'flex',
     flexDirection: 'column',

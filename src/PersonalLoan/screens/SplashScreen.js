@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { GetLeadId, GetTokenValidity, StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../LOCAL/AsyncStroage';
+import { GetLeadId, GetTokenValidity, StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../services/LOCAL/AsyncStroage';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
 import { generatePdf, isThisIsFutureTime } from '../services/Utils/FieldVerifier';
@@ -18,7 +18,6 @@ import { RequestLocationPermission } from '../services/API/LocationApi';
 import DeviceInfo from 'react-native-device-info';
 import { GetBreEligibility } from '../services/API/LoanEligibility';
 import { updateBreStatus } from '../services/Utils/Redux/ExtraSlices';
-
 
 
 const SplashScreen = ({ navigation }) => {
@@ -160,7 +159,7 @@ const SplashScreen = ({ navigation }) => {
           setNewErrorScreen(null)
 
 
-          navigation.navigate('qla');
+          navigation.navigate('welcome');
 
 
         })
@@ -181,7 +180,7 @@ const SplashScreen = ({ navigation }) => {
 
     <View style={styles.container}>
       {/* <WebCalendar/> */}
-      <Image source={require('../assets/images/your-logo.png')} />
+      <Image source={require('../../assets/images/your-logo.png')} />
       {errorScreen.type != null && <ScreenError errorObject={errorScreen} onTryAgainClick={onTryAgainClick} setNewErrorScreen={setNewErrorScreen} />}
 
     </View>

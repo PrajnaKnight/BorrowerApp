@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { PortalProvider } from '@gorhom/portal';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const CustomDropdown = ({ options, onSelect }) => {
   const [isVisible, setIsVisible] = useState(false);

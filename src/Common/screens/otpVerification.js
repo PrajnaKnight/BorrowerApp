@@ -240,57 +240,6 @@ const OTPVerificationScreen = ({ navigation, route }) => {
     await StoreBorrowerPhoneNumber(requestModel.LeadPhone)
 
 
-    let userAvailable = await GetLookUp()
-
-    console.log("------------------------- get look up response ---------------------------")
-    console.log(userAvailable)
-    console.log("------------------------- get look up response ---------------------------")
-
-    if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
-
-      response.status = STATUS.ERROR
-      response.message = null
-      response.data = 0
-
-
-
-
-      if (userAvailable.data.LeadStage != null) {
-        const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
-        response.data = jumpTo
-      }
-
-
-      dispatch(updateJumpTo(response.data))
-
-
-
-      if (userAvailable.data.leadID != null) {
-        await StoreLeadId(userAvailable.data.leadID)
-      }
-      if (userAvailable.data.ApplicationID != null) {
-        await StoreApplicantId(userAvailable.data.ApplicationID)
-      }
-
-
-      let getBreEligibility = await GetBreEligibility()
-
-      console.log("=============================== Get Bre Eligibility =============================")
-      console.log(getBreEligibility)
-      console.log("=============================== Get Bre Eligibility =============================")
-
-      if (getBreEligibility.status == STATUS.SUCCESS && getBreEligibility.data?.MPBFLimit) {
-        dispatch(updateBreStatus(true))
-      }
-
-
-      return response
-    }
-
-
-
-
-
     let createLeadResponse = await CreateBorrowerLead({ LeadPhone: requestModel.LeadPhone })
     if (createLeadResponse.status == STATUS.ERROR) {
       response.status = STATUS.ERROR
@@ -333,16 +282,12 @@ const OTPVerificationScreen = ({ navigation, route }) => {
         }
 
         setError(response.message)
-        if (response.data != null) {
-
-          resetNavigationStack(navigation, response.data)
-
-        }
+        
         return
 
       }
 
-      navigation.navigate("QLA")
+      navigation.navigate("Dashboard")
       setResponseModel(response)
     })
 

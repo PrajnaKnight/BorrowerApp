@@ -13,7 +13,7 @@ import {
   BackHandler,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import CustomInput, { AadharMaskedCustomInput } from '../components/input';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
@@ -560,7 +560,10 @@ const PrimaryInfo = ({ navigation }) => {
       navigation.navigate("PermissionsScreen", { permissionStatus: "denied", permissionType: "location" })
       return
     }
-
+    if(!uploadDocumentSlices.data.PAN){
+      setOtherError("Please provide the PAN number")
+      return
+    }
     setSubmitStart("isSkiped")
 
 

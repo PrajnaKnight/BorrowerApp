@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, StatusBar, Image, Dimensions, KeyboardAvoidingView, useWindowDimensions, BackHandler } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import Checkbox from 'expo-checkbox';
 import ProgressBar from '../components/progressBar';
 import { useProgressBar } from '../components/progressContext';

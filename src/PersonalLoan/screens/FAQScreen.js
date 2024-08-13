@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import applyFontFamily from '../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const FAQScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState('');

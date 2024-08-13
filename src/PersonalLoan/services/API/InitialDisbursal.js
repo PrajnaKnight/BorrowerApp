@@ -309,7 +309,7 @@ export const GetBankFundOutDataModel = (data) => {
         DisbursementAmount: data.DisbursementAmount,
         TransactionDate: data.TransactionDate,
         TransactionID: data.TransactionID,
-        BankAcc: data.BankAcc,
+        BankAcc: data.BankAcc ,
         EMIAmount: data.EMIAmount,
         IsFundOutComplete: data.IsFundOutComplete
     }

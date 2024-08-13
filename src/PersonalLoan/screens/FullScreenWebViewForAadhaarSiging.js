@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { GoBack } from '../services/Utils/ViewValidator';
 import { DownloadESigningDocument } from '../services/API/ESignDocument';
 import { STATUS } from '../services/API/Constants';

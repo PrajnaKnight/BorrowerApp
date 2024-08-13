@@ -10,7 +10,7 @@ import {
   useWindowDimensions
 } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
@@ -738,6 +738,12 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   onChange={(e, from) => handleTenureChange(e, from)}
                   isTenure={true}
                 />
+
+{!isEligible && (
+                      <Text style={styles.errorText}>
+                        You are not eligible for selected loan amount
+                      </Text>
+                    )}
                 <View
                   style={{
                     flexDirection: "row",
@@ -761,6 +767,8 @@ const LoanEligibilityScreen = ({ navigation }) => {
                     </Text>
                   </View>
 
+                
+
                   <View style={[styles.emiContainer, {flex:1, paddingLeft:5}]}>
                     <Text
                       style={[
@@ -769,12 +777,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       ]}>
                       EMI Amount
                     </Text>
-                    {!isEligible && (
-                      <Text style={styles.errorText}>
-                        You are not eligible for selected loan amount
-                      </Text>
-                    )}
-
+                    
                     <Text
                       style={[
                         styles.input,

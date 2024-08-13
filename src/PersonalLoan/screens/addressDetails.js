@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, KeyboardAvoidingView, Platform , useWindowDimensions} from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import CustomInput from '../components/input';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
@@ -21,6 +21,7 @@ import ScreenError, { useErrorEffect } from './ScreenError';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+
 
 const AddressScreen = ({ navigation }) => {
   const dispatch = useDispatch();

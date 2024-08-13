@@ -104,6 +104,7 @@ function PersonalLoanNavigator() {
                 console.log('Current screen:', currentRouteName);
                 setCurrentScreen(currentRouteName);
               }}
+              independent={true}
             >
             <Stack.Navigator  screenOptions={{ headerShown: false }}>
               <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />

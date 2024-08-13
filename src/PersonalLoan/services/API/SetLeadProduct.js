@@ -18,7 +18,7 @@ const SetLeadProduct = async (requestModel) => {
 
         data = response.data
         
-        status = response.status == 200 && data.StatusCode == "2000" ? STATUS.SUCCESS : STATUS.ERROR
+        status = response.status == 200 && (data.StatusCode == "2000" || data.Message == "Application already created.")? STATUS.SUCCESS : STATUS.ERROR
         
         if(status == STATUS.SUCCESS){
             message = data.Message

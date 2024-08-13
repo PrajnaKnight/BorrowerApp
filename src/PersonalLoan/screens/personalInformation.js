@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
 import CustomDropdown from '../components/dropdownPicker';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import CustomInput from '../components/input';
 import RadioButton from '../components/radioButton';
 import DatePickerComponent, { WebCalendar } from '../components/datePicker';
