@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import { GetBankAccountDetails } from '../../API/SaveBankAccountDetail'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { STATUS } from '../../API/Constants'
-import { stat } from 'react-native-fs'
 
 const bankModel = {
     LeadId: null,// "LeadId"

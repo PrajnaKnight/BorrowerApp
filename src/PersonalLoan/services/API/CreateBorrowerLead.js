@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { API_RESPONSE_STATUS, STATUS, CREATE_BORROWER_LEAD, GET_MARITAL_STATUS, GetHeader, GET_LEADS_DATA } from "./Constants";
 import { GetBorrowerPhoneNumber, GetLeadId } from '../LOCAL/AsyncStroage';
-import { da } from 'date-fns/locale';
 import { Network_Error, Something_Went_Wrong } from '../Utils/Constants';
 import { SendGeoLocation } from './LocationApi';
 

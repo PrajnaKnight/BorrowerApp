@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../../Common/components/useContext';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions, ImageBackground } from 'react-native';
+import { styles } from '../services/style/gloablStyle';
+import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
-import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useProgressBar } from '../components/progressContext';
+import ProgressBar from '../components/progressBar';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { formateAmmountValue } from '../services/Utils/FieldVerifier';
 import { GetApplicantId } from '../services/LOCAL/AsyncStroage';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { GetBankFundOutData, GetBankFundOutDataModel } from '../services/API/InitialDisbursal';
+import ScreenError, { useErrorEffect } from './ScreenError';
+import LoadingOverlay from '../components/FullScreenLoader';
+import { STATUS } from '../services/API/Constants';
 
 const DisbursementAcceptedScreen = ({ navigation }) => {
 
   const [applicationId, setApplicationID] = useState(null)
 
-  const disbursedetails = useSelector(state => state.disbursalInfoSlices);
+  const [transactionDetails, setTransactionDetails] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+  const onTryAgainClick = () => {
+    setNewErrorScreen(null)
+  }
 
-    useEffect(() => {
-        console.log("================ Transaction details =======================")
-        console.log(disbursedetails)
-    }, []);
+  const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick)
+
 
 
     const { fontSize } = useAppContext();
@@ -30,6 +37,19 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
 
     useEffect(() => {
         setProgress(10);
+        setLoading(true)
+        
+
+        GetBankFundOutData().then((response) => {
+          setLoading(false)
+          if (response.status == STATUS.ERROR) {
+            setNewErrorScreen(response.message)
+            return
+          }
+  
+          setTransactionDetails(GetBankFundOutDataModel(response.data))
+  
+        })
         GetApplicantId().then((response)=>{
           setApplicationID(response)
         })
@@ -46,6 +66,19 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
   
     const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
     const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+
+    const DetailItem = ({ iconName, label, value, isLastItem }) => (
+      <View style={[styles.detailItem, !isLastItem && styles.borderBottom]}>
+        <View style={styles.disburseiconContainer}>
+          <FontAwesome5 name={iconName} size={16} color="#FFFFFF" />
+        </View>
+        <View style={styles.detailTextContainer}>
+          <Text style={styles.disbursedetailLabel}>{label}</Text>
+          <Text style={styles.detailValue}>{value}</Text>
+        </View>
+        <View style={styles.goldAccent} />
+      </View>
+    );
 
     return (
       <View style={styles.mainContainer}>
@@ -129,92 +162,88 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
             style={[styles.rightCOntainer, { flex: 1 }]}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+            <LoadingOverlay visible={loading} />
+
+            <View style={{ paddingHorizontal: 16 }}>
+              <ProgressBar progress={10} />
+            </View>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={styles.container}>
-                <ProgressBar progress={10} />
-                <View style={styles.disursecontent}>
-                  <View style={styles.statusSection}>
-                    <Image
-                      source={require("../../assets/images/success.png")}
-                      style={styles.statusIcon}
-                    />
-                    <Text style={styles.disburseSentence}>
-                      Your disbursement request is processed
-                    </Text>
-                    <Text style={styles.disburseamount}>
-                      ₹{" "}
-                      {formateAmmountValue(disbursedetails?.NetDisbursalAmount)}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.disbursedetails}>
-                <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Loan ID</Text>
-                    <Text style={styles.disbuseItem}>
-                      {applicationId}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>1st EMI Date</Text>
-                    <Text style={styles.disbuseItem}>
-                      {format(disbursedetails?.FirstEmiDate, "PPP")}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>EMI Amount</Text>
-                    <Text style={styles.disbuseItem}>
-                      ₹ {disbursedetails?.EmiAmount}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Transaction UTR</Text>
-                    <Text style={styles.disbuseItem}>
-                      {disbursedetails?.TransactionUtr}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Transaction Date</Text>
-                    <Text style={styles.disbuseItem}>
-                      {format(disbursedetails?.TransactionDate, "PPP")}
-                    </Text>
-                  </View>
-                  <View style={styles.disbuseItemDetails}>
-                    <Text style={styles.disbuseItem}>Account No</Text>
-                    <Text style={styles.disbuseItem}>
-                      {disbursedetails?.BankAcc}
-                    </Text>
-                  </View>
+                <ImageBackground
+                  source={require("../../assets/images/Confetti.png")}
+                  style={styles.disbursebackgroundImage}>
+                  <View style={styles.disursecontent}>
+                    <View style={styles.statusSection}>
+                      <Text style={styles.disburseSentence}>
+                        Your disbursement request is processed
+                      </Text>
+                      <Text style={styles.disburseamount}>
+                        ₹{" "}
+                        {formateAmmountValue(transactionDetails?.DisbursementAmount)}
+                      </Text>
+                      <Text style={styles.disburseAccountInfo}>
+                        Transferred to Bank Account - {transactionDetails?.BankAcc}
+                      </Text>
+                      <Text style={styles.disburseTransactionInfo}>
+                        Transaction ID : {transactionDetails?.TransactionID}
+                      </Text>
+                      <Text style={styles.disburseTransactionInfo}>
+                      {transactionDetails?.TransactionDate && format(transactionDetails?.TransactionDate, "PPP")}
+                      </Text>
 
-                  {/* <View style={styles.disbuseItemDetails}>
-                        <Text style={styles.disbuseItem}>Transaction Id</Text>
-                        <Text style={[styles.disbuseItem,{width:180}]}>{disbursedetails?.TransactionId}</Text>
                     </View>
- */}
-                </View>
-
-                <View style={styles.bannerImage}>
-                  <Image
-                    source={require("../../assets/images/loanDisbursement.png")}
-                    style={styles.banner}
-                  />
-                </View>
-                <View style={styles.proceedButtonContainer}>
-                  <View style={styles.actionContainer}>
-                    {/* <LinearGradient
-                            // button Linear Gradient
-                            colors={['#002777', '#00194C']}
-                            style={styles.agreebutton}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {}}
-                            >
-                                <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>Home Page</Text>
-                            </TouchableOpacity>
-                        </LinearGradient> */}
                   </View>
+                  <View style={styles.detailsContainer}>
+                    <DetailItem
+                      iconName="calendar-alt"
+                      label="1st EMI Date"
+                      value= {transactionDetails?.EMIDate && format(transactionDetails?.EMIDate, "PPP")}
+                    />
+                    <DetailItem
+                      iconName="rupee-sign"
+                      label="EMI Amount"
+                      value= {transactionDetails?.EMIAmount && `₹ ${formateAmmountValue(transactionDetails?.EMIAmount)}`}
+                    />
+                    <DetailItem
+                      iconName="id-card"
+                      label="Mandate ID"
+                      value={null}
+                      isLastItem
+                    />
+                  </View>
+                </ImageBackground>
+                <View style={styles.disbursebannerContainer}>
+                  <Image
+                    source={require("../../assets/images/smart-banking.png")}
+                    style={styles.disbursebannerImage}
+                  />
                 </View>
               </View>
             </ScrollView>
+            <View style={[styles.actionContainer, styles.boxShadow]}>
+              <LinearGradient
+                // button Linear Gradient
+                colors={["#002777", "#00194C"]}
+                style={styles.agreebutton}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    ]}>
+                    Home Page
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+
+            {errorScreen.type != null && (
+            <ScreenError
+              errorObject={errorScreen}
+              onTryAgainClick={onTryAgainClick}
+              setNewErrorScreen={setNewErrorScreen}
+            />
+          )}
           </KeyboardAvoidingView>
         </View>
       </View>

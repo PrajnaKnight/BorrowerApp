@@ -2,7 +2,6 @@ import axios from 'axios';
 import { API_RESPONSE_STATUS, STATUS, LOAD_ASK_DETAILS, LOAD_PURPOSE, GetHeader, GET_LOAD_ASK_DETAILS} from "./Constants";
 
 import { GetLeadId, StoreLoanAskAmmount } from '../LOCAL/AsyncStroage';
-import { da } from 'date-fns/locale';
 import { Network_Error, Something_Went_Wrong } from '../Utils/Constants';
 import { SendGeoLocation } from './LocationApi';
 

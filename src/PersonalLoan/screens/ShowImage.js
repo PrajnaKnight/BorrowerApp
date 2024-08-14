@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, Text } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
-import { useAppContext } from '../../Common/components/useContext';
+import { styles } from '../services/style/gloablStyle';
+import { useAppContext } from '../components/useContext';
 import { GoBack } from '../services/Utils/ViewValidator';
 
 const ShowImage = ({ navigation, route }) => {

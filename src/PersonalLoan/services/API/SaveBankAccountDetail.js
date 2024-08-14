@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_RESPONSE_STATUS, STATUS, SAVE_BANK_ACC_DEATILS, SUBMIT_BORROWER_LOAN_APPLICATION_ASYNC, GET_BRANCH_NAME_BY_ISFC_CODE, GetHeader, GET_BANK_ACC_DEATILS, VERIFY_BANK} from "./Constants";
+import { API_RESPONSE_STATUS, STATUS, SAVE_BANK_ACC_DEATILS, SUBMIT_BORROWER_LOAN_APPLICATION_ASYNC, GET_BRANCH_NAME_BY_ISFC_CODE, GetHeader, GET_BANK_ACC_DEATILS, VERIFY_BANK, DeleteBankDetails} from "./Constants";
 import { GetLeadId, StoreApplicantId } from '../LOCAL/AsyncStroage';
 import { Network_Error, Something_Went_Wrong } from '../Utils/Constants';
 
@@ -98,6 +98,62 @@ export const SubmitBorrowerLoanApplicationAsyncSubmit = async () => {
 
         if(errorMessage != Network_Error){
            errorMessage = errorresponseData || "Error : Facing Problem While Submitting Loan Application"
+        }
+
+        message = errorMessage
+        data = null
+    
+        // status = STATUS.ERROR
+        // let errorMessage = error.message
+        // if(errorMessage != Network_Error){
+        //     errorMessage = Something_Went_Wrong
+        // }
+        // message = errorMessage
+        // data = null
+    }
+
+    return API_RESPONSE_STATUS(status, data, message)
+
+}
+
+
+export const DeleteBankAccount = async (primaryId) => {
+
+    let status, data, message;
+
+    try {
+
+        const header = await GetHeader()
+        const LeadId = await GetLeadId()
+     
+        
+        
+        let response = await axios.post(`${DeleteBankDetails}?LeadID=${LeadId}&PrimeryID=${primaryId}`, null,  {headers  : header})
+        
+        data = response.data
+
+      
+        // || data.Message == "Application already created."
+        status = response.status == 200 && data.StatusCode == "2000"   ? STATUS.SUCCESS : STATUS.ERROR
+        
+        if(status == STATUS.SUCCESS){
+            message = response.data.Message
+          
+        }
+        else{
+            message = data?.Message || "Error : Facing Problem Deleting Bank Account";
+        }
+         
+    } catch (error) {
+
+        const errorresponseData = error?.response?.data?.Message;
+        console.error('Error - SubmitBorrowerLoanApplicationAsyncSubmit  - response data : ', errorresponseData);
+
+        status = STATUS.ERROR
+        let errorMessage = error.message
+
+        if(errorMessage != Network_Error){
+           errorMessage = errorresponseData || "Error : Facing Problem Deleting Bank Account"
         }
 
         message = errorMessage

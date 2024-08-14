@@ -55,7 +55,7 @@ export const GetDisbursalData = async () => {
 
 
     }
-    
+
     return API_RESPONSE_STATUS(status, data, message)
 
 
@@ -114,7 +114,7 @@ export const CreateLA = async () => {
     }
     if (status == STATUS.SUCCESS) {
 
- 
+
         console.log("========== fetching location =================")
         await SendGeoLocation(12)
         console.log("========== fetching location =================")
@@ -125,7 +125,7 @@ export const CreateLA = async () => {
 }
 
 
-export const BankFundOut = async (UTRNo ,NetPayAmount ) => {
+export const BankFundOut = async (UTRNo, NetPayAmount) => {
 
     let status, data, message;
 
@@ -138,7 +138,7 @@ export const BankFundOut = async (UTRNo ,NetPayAmount ) => {
         const leadId = await GetLeadId()
 
 
-        let requestModel = BankFundOutPost(leadId, UTRNo, NetPayAmount )
+        let requestModel = BankFundOutPost(leadId, UTRNo, NetPayAmount)
 
         console.log(requestModel)
 
@@ -177,11 +177,11 @@ export const BankFundOut = async (UTRNo ,NetPayAmount ) => {
 
     if (status == STATUS.SUCCESS) {
 
-  
+
         console.log("========== fetching location =================")
         await SendGeoLocation(14)
         console.log("========== fetching location =================")
-    
+
     }
     // if (status == STATUS.SUCCESS) {
     //     console.log("========== fetching location =================")
@@ -195,7 +195,7 @@ export const BankFundOut = async (UTRNo ,NetPayAmount ) => {
 
 }
 
-export const GetBankFundOutData = async ()=>{
+export const GetBankFundOutData = async () => {
     let status, data, message;
 
     try {
@@ -244,58 +244,73 @@ export const GetBankFundOutData = async ()=>{
 
 
     }
-   
 
-    
+
+
     if (status == STATUS.SUCCESS) {
-     
+
         console.log("========== fetching location =================")
         await SendGeoLocation(13)
         console.log("========== fetching location =================")
-    
+
     }
- 
+
     return API_RESPONSE_STATUS(status, data, message)
 
 }
 
 
 export const GetDisbursalModel = (data) => {
+
+
+    const bankAcc = []
+
+    data?.BankAccount.forEach(element => {
+        bankAcc.push({ label: element.AccountNumber, value: element.AccountNumber })
+    })
+
+
+
+    if (data?.BankAccount.length > 1) {
+        bankAcc.unshift({ label: 'Select an account', value: 'Select an account' })
+    }
+
+   
     return {
-        EmandateUMRN : data?.EmandateUMRN,
+        EmandateUMRN: data?.EmandateUMRN,
         ApplicationID: data?.ApplicationID,
-        BankAccount: data?.BankAccount,
+        BankAccount: bankAcc,
         IsAutoDisbursement: data?.IsAutoDisbursement,
         FirstEMIDate: data?.FirstEMIDate,
         LoanAmount: data?.LoanAmount,
         ProcessingFeeAmount: data?.ProcessingFeeAmount,
         Insurance: data?.Insurance,
 
-        EmiAmount : data?.EMIAmount,
-        NetDisbursmentAmount : null
+        EmiAmount: data?.EMIAmount,
+        NetDisbursmentAmount: null
     }
 }
 
 
-export const BankFundOutPost = (leadId, UTRNo, NetPayAmount ) =>{
+export const BankFundOutPost = (leadId, UTRNo, NetPayAmount) => {
     return {
         LeadId: leadId,
-        LenderType:"Bank",
+        LenderType: "Bank",
         UTRNo: UTRNo,
         PayoutDate: new Date(),
-        NetPayAmount:NetPayAmount
+        NetPayAmount: NetPayAmount
     }
 }
 
-export const GetBankFundOutDataModel = (data) =>{
+export const GetBankFundOutDataModel = (data) => {
     return {
         UTRNumber: data.UTRNumber,
         EMIDate: data.EMIDate,
         DisbursementAmount: data.DisbursementAmount,
         TransactionDate: data.TransactionDate,
         TransactionID: data.TransactionID,
-        BankAcc : data.BankAcc,
-        EMIAmount : data.EMIAmount,
-        IsFundOutComplete : data.IsFundOutComplete
-      }
+        BankAcc: data.BankAcc ,
+        EMIAmount: data.EMIAmount,
+        IsFundOutComplete: data.IsFundOutComplete
+    }
 }

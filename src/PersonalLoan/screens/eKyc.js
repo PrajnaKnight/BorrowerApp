@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
-import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
-import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { styles } from '../services/style/gloablStyle';
+import { useProgressBar } from '../components/progressContext';
+import ProgressBar from '../components/progressBar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../../Common/components/useContext';
+import { useAppContext } from '../components/useContext';
 import { isValidNumberOnlyFieldWithZero, isValidOtp } from '../services/Utils/FieldVerifier';
 import LoadingOverlay from '../components/FullScreenLoader';
 import SubmitAadhaarOtpRequest from '../services/API/SubmitAadhaarOtpRequest';
@@ -18,8 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { clearAadhaarCkyc, executeAadhaarEkyc, updateAadhaarEkyc, updateAadhaarError, updateAadhaarLoading } from '../services/Utils/Redux/DocumentVerificationSlices';
-import { SubmitAddressFromDocuments } from '../services/API/AddressDetails';  
-import { da } from 'date-fns/locale';
+import { SubmitAddressFromDocuments } from '../services/API/AddressDetails';
 import { fetchGetBorrowerAddress } from '../services/Utils/Redux/AddressDetailSlices';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { checkLocationPermission } from './PermissionScreen';
@@ -430,7 +429,7 @@ const EKycVerificationScreen = ({ navigation, route }) => {
           <LinearGradient
             // button Linear Gradient
             colors={['#002777', '#00194C']}
-            style={styles.button}
+            style={[styles.button,{marginBottom:10}]}
           >
             <TouchableOpacity onPress={handleVerifyPress}>
               <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>I AGREE</Text>

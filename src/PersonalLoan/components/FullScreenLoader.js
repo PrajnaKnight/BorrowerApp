@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Modal, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 const LoadingOverlay = ({ visible }) => {
   return (

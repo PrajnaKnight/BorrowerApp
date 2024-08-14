@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert, Image, KeyboardAvoidingView, Platform, useWindowDimensions, StatusBar } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { styles } from '../../assets/style/personalStyle';
-import ButtonComponent from '../../Common/components/ControlPanel/button';
-import CustomCarousel from '../../Common/components/ControlPanel/carousel';
-import ReusableModal from '../../Common/components/ControlPanel/modal';
-import MobileNumberInput from '../../Common/components/ControlPanel/mobileInput';
-import { useAppContext } from '../../Common/components/useContext';
+import { styles } from '../services/style/gloablStyle';
+import ButtonComponent from '../components/button';
+import CustomCarousel from '../components/carousel';
+import ReusableModal from '../components/modal';
+import MobileNumberInput from '../components/mobileInput';
+import { useAppContext } from '../components/useContext';
 import { useFocusEffect } from '@react-navigation/native';
 import GetOTPByPhoneNumber, { GetLoginTopByPhoneRequestModel } from '../services/API/GetLoginOtpByPhone';
 import { STATUS } from '../services/API/Constants';
@@ -16,6 +16,7 @@ import { BackHandler } from 'react-native';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import { LinearGradient } from 'expo-linear-gradient';
+import Header from '../components/topBar';
 
 function SignInScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -609,14 +610,6 @@ function SignInScreen({ navigation }) {
                 <View style={styles.carouselContainer}>
                   <CustomCarousel data={carouselData} renderItem={renderItem} />
                 </View>
-                <Text
-                  style={[
-                    styles.headerText,
-                    styles.center,
-                    { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-                  ]}>
-                  Welcome
-                </Text>
                 {error && (
                   <Text
                     style={[
@@ -629,8 +622,9 @@ function SignInScreen({ navigation }) {
                 <View style={styles.formGrop}>
                   <Text
                     style={[
-                      styles.label,
                       { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      styles.label,
+                      styles.mobilelabel,
                     ]}>
                     Mobile Number <Text style={styles.mandatoryStar}>*</Text>{" "}
                   </Text>
@@ -663,16 +657,14 @@ function SignInScreen({ navigation }) {
                           { fontSize: dynamicFontSize(styles.link.fontSize) },
                         ]}
                         onPress={() => {
-                          let num = isValidPhoneNumber(requestModel.LeadPhone)
-                          setMobileError(num)
+                          let num = isValidPhoneNumber(requestModel.LeadPhone);
+                          setMobileError(num);
                           if (num != null) {
-                            return
+                            return;
                           }
 
-                          setModalVisible(true)
-                        }
-
-                        }>
+                          setModalVisible(true);
+                        }}>
                         terms and conditions
                       </Text>{" "}
                       and consent to provide ABC Bank Pvt Ltd to fetch my credit
@@ -687,6 +679,8 @@ function SignInScreen({ navigation }) {
                   />
                 </View>
               </View>
+            </View>
+            <View style={styles.boxShadow}>
               <ButtonComponent
                 title="GET OTP"
                 onPress={handleSubmit}

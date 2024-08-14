@@ -97,6 +97,10 @@ export const SAVED_LEAD_STAGE = `${BASE_URL}/SaveLeadStage`
 
 export const GET_E_SIGN_LOAN_AGREEMENT = `${BASE_URL}/GetEsignLoanAgreement`
 
+
+export const DeleteBankDetails = `${BASE_URL}/DeleteBankDetails`
+
+
 export const RedirectUrl =  "www.knightfintech.com"
 export const STATUS  = {
     SUCCESS : "SUCCESS",

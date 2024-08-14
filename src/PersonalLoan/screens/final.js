@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
-import SuccessScreen from '../../Common/components/ControlPanel/success';
-import { styles } from '../../assets/style/personalStyle';
-import ProgressBar from '../../Common/components/ControlPanel/progressBar';
-import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import SuccessScreen from '../components/success';
+import { styles } from '../services/style/gloablStyle';
+import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../components/progressContext';
 import { useRoute } from "@react-navigation/native"
 
 const Final = ({ navigation }) => {
@@ -93,7 +93,7 @@ const Final = ({ navigation }) => {
     <View style={styles.finalResultConatiner}>
         <ProgressBar progress={0.8} />
         <View style={styles.finalContainer}>
-             <SuccessScreen message="Congratulation!" subMessage="Your loan application has been approved" />
+             <SuccessScreen message="Done!" subMessage="Thank you for signing the loan agreement. Your loan amount will be disbursed shortly." />
         </View>
     </View>
     </ScrollView>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppContext } from '../../Common/components/useContext';
+import { useAppContext } from '../components/useContext';
 import VerifyLoginOTP, { GetVerifyLoginOtpRequestModel } from '../services/API/VerifyLoginOtp';
 import GetOTPByPhoneNumber, { GetLoginTopByPhoneRequestModel } from '../services/API/GetLoginOtpByPhone';
 import CreateBorrowerLead from '../services/API/CreateBorrowerLead';
@@ -27,7 +27,6 @@ import {
 } from 'react-native-otp-verify';
 import { checkSMSPermission } from './PermissionScreen';
 
-
 const OTPVerificationScreen = ({ navigation, route }) => {
 
   const dispatch = useDispatch()
@@ -41,10 +40,11 @@ const OTPVerificationScreen = ({ navigation, route }) => {
   const [timeLeft, setTimeLeft] = useState(45); // 2 minutes in seconds
   const [isResendEnabled, setIsResendEnabled] = useState(false);
   const dynamicFontSize = (size) => size + fontSize;
-
+  const isOTPValid = OTP.join('').length === 6;
 
   const [requestModel, setRequestModel] = useState(GetLoginTopByPhoneRequestModel())
   const [responseModel, setResponseModel] = useState(null)
+  const [isOTPInvalid, setIsOTPInvalid] = useState(false);
 
   const onTryAgainClick = () => {
     submitPhoneNumber()
@@ -89,6 +89,8 @@ const OTPVerificationScreen = ({ navigation, route }) => {
   }, [OTP]);
 
   const handleOTPChange = (text, index) => {
+    setIsOTPInvalid(false); // Reset invalid state
+    setError(''); // Clear error message
     const newOTP = [...OTP];
 
 
@@ -211,14 +213,15 @@ const OTPVerificationScreen = ({ navigation, route }) => {
   
 
   const handleVerifyPress = () => {
-
-    let otpVerification = isValidOtp(OTP)
-
-    setError(otpVerification)
+    let otpVerification = isValidOtp(OTP);
+  
     if (otpVerification != null) {
-      return
+      setError(otpVerification);
+      setIsOTPInvalid(true);
+      return;
     }
-    submitOtp()
+    setIsOTPInvalid(false);
+    submitOtp();
   };
 
 
@@ -270,17 +273,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
         await StoreApplicantId(userAvailable.data.ApplicationID)
       }
 
-
-      let getBreEligibility = await GetBreEligibility()
-
-      console.log("=============================== Get Bre Eligibility =============================")
-      console.log(getBreEligibility)
-      console.log("=============================== Get Bre Eligibility =============================")
-
-      if (getBreEligibility.status == STATUS.SUCCESS && getBreEligibility.data?.MPBFLimit) {
-        dispatch(updateBreStatus(true))
-      }
-
+      dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
 
       return response
     }
@@ -317,13 +310,12 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
 
   const submitOtp = () => {
-
-    setLoading(true)
+    setLoading(true);
     HandleMoveToNextPage().then(response => {
-      console.log(response)
-      setLoading(false)
-      setNewErrorScreen(null)
-
+      console.log(response);
+      setLoading(false);
+      setNewErrorScreen(null);
+  
       if (response.status == STATUS.ERROR) {
         if (response.message == Network_Error || (response.message != null && response.message != "OTP Mismatch.")) {
           setNewErrorScreen(response.message)
@@ -360,7 +352,6 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
 
   return (
-
     <View style={styles.mainContainer}>
       <View style={{ flex: 1, flexDirection: isWeb ? 'row' : 'column' }}>
 
@@ -369,40 +360,66 @@ const OTPVerificationScreen = ({ navigation, route }) => {
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
                 <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>Move Into Your Dreams!</Text>
+                <Text style={styles.websubtitleText}>
+                  Move Into Your Dreams!
+                </Text>
               </View>
               <LinearGradient
                 // button Linear Gradient
-                colors={['#000565', '#111791', '#000565']}
-                style={styles.webinterestButton}
-              >
-                <TouchableOpacity >
-                  <Text style={styles.webinterestText}>Interest starting from 8.4%*</Text>
+                colors={["#000565", "#111791", "#000565"]}
+                style={styles.webinterestButton}>
+                <TouchableOpacity>
+                  <Text style={styles.webinterestText}>
+                    Interest starting from 8.4%*
+                  </Text>
                 </TouchableOpacity>
-
               </LinearGradient>
 
               <View style={styles.webfeaturesContainer}>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5, }]}>%</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    %
+                  </Text>
                   <Text style={styles.webfeatureText}>Nil processing fee*</Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>3</Text>
-                  <Text style={styles.webfeatureText}>3-Step Instant approval in 30 minutes</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    3
+                  </Text>
+                  <Text style={styles.webfeatureText}>
+                    3-Step Instant approval in 30 minutes
+                  </Text>
                 </View>
                 <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>⏳</Text>
+                  <Text
+                    style={[
+                      styles.webfeatureIcon,
+                      { fontSize: 30, marginBottom: 5 },
+                    ]}>
+                    ⏳
+                  </Text>
                   <Text style={styles.webfeatureText}>Longer Tenure</Text>
                 </View>
               </View>
 
               <View style={styles.webdescription}>
                 <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that isn't any more than 30 minutes.
+                  There's more! Complete the entire process in just 3-steps that
+                  isn't any more than 30 minutes.
                 </Text>
                 <TouchableOpacity>
-                  <Text style={styles.weblinkText}>To know more about product features & benefits, please click here</Text>
+                  <Text style={styles.weblinkText}>
+                    To know more about product features & benefits, please click
+                    here
+                  </Text>
                 </TouchableOpacity>
               </View>
               {/* <View style={styles.bottomFixed}>
@@ -413,20 +430,45 @@ const OTPVerificationScreen = ({ navigation, route }) => {
         )}
         <KeyboardAvoidingView
           style={[styles.rightCOntainer, { flex: 1 }]}
-
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-        >
+          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
               <View>
-                <Text style={[styles.headerText, { fontSize: dynamicFontSize(styles.headerText.fontSize) }]}>Mobile OTP Verification</Text>
-                <Text style={[styles.subText, { fontSize: dynamicFontSize(styles.subText.fontSize) }]}>Please enter the OTP sent to your mobile number</Text>
+                <Text
+                  style={[
+                    styles.headerText,
+                    { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                  ]}>
+                  Mobile OTP Verification
+                </Text>
+                <Text
+                  style={[
+                    styles.subText,
+                    { fontSize: dynamicFontSize(styles.subText.fontSize) },
+                  ]}>
+                  Please enter the OTP sent to your mobile number
+                </Text>
                 <View style={styles.flexContent}>
-                  <Text style={[styles.phoneNumber, { fontSize: dynamicFontSize(styles.phoneNumber.fontSize) }]}> {`+91${requestModel.LeadPhone}`}</Text>
-                  <Text style={[styles.timer, { fontSize: dynamicFontSize(styles.timer.fontSize) }]}>{formatTimeLeft()}</Text>
+                  <Text
+                    style={[
+                      styles.phoneNumber,
+                      {
+                        fontSize: dynamicFontSize(styles.phoneNumber.fontSize),
+                      },
+                    ]}>
+                    {" "}
+                    {`+91${requestModel.LeadPhone}`}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.timer,
+                      { fontSize: dynamicFontSize(styles.timer.fontSize) },
+                    ]}>
+                    {formatTimeLeft()}
+                  </Text>
                 </View>
                 <View style={styles.otpContainer}>
                   {OTP.map((value, index) => (
@@ -435,62 +477,111 @@ const OTPVerificationScreen = ({ navigation, route }) => {
                       style={[
                         styles.otpInput,
                         { fontSize: dynamicFontSize(styles.otpInput.fontSize) },
-                        focusedInput === index && styles.focusedInput, // Conditional style for focused input
+                        focusedInput === index && styles.focusedInput,
+                        isOTPInvalid && styles.invalidOtpInput,
                       ]}
                       value={value}
-                      // onChangeText={(text) => handleOTPChange(text, index)}
                       onFocus={() => handleFocus(index)}
                       onBlur={handleBlur}
                       maxLength={1}
                       onKeyPress={({ nativeEvent: { key } }) => {
-
-                        handleOTPChange(key, index)
-
+                        handleOTPChange(key, index);
                       }}
                       keyboardType="numeric"
-                      ref={(el) => inputsRef.current[index] = el}
+                      ref={(el) => (inputsRef.current[index] = el)}
                     />
                   ))}
                 </View>
-                {error ? <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text> : null}
+                {error ? (
+                  <Text
+                    style={[
+                      styles.errorText,
+                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                    ]}>
+                    {error}
+                  </Text>
+                ) : null}
 
-                <View style={styles.flexContent}>
-                  <Text style={[styles.resendText, { fontSize: dynamicFontSize(styles.resendText.fontSize) }]}>Please wait to resend OTP</Text>
+                <View style={styles.flex}>
+                  <Text
+                    style={[
+                      styles.resendText,
+                      { fontSize: dynamicFontSize(styles.resendText.fontSize) },
+                    ]}>
+                    Did not receive the OTP?
+                  </Text>
                   <TouchableOpacity
                     style={[
                       styles.resendButton,
-                      !isResendEnabled && styles.resendButtonDisabled
+                      !isResendEnabled && styles.resendButtonDisabled,
                     ]}
                     onPress={submitPhoneNumber}
-                    disabled={!isResendEnabled}
-                  >
-                    <Text style={[styles.resendButtonText, { fontSize: dynamicFontSize(styles.resendButtonText.fontSize) }]}>RESEND</Text>
+                    disabled={!isResendEnabled}>
+                    <Text
+                      style={[
+                        styles.resendButtonText,
+                        {
+                          fontSize: dynamicFontSize(
+                            styles.resendButtonText.fontSize
+                          ),
+                        },
+                      ]}>
+                      Resend OTP
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={styles.proceedButtonContainer}>
-                <View style={styles.actionContainer}>
-                  <TouchableOpacity style={styles.backButton} onPress={() => GoBack(navigation)}>
-                    <Text style={[styles.backBtnText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize) }]}>BACK</Text>
+            </View>
+            <View style={styles.proceedButtonContainer}>
+              <View style={styles.actionContainer}>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => GoBack(navigation)}>
+                  <Text
+                    style={[
+                      styles.backBtnText,
+                      {
+                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                      },
+                    ]}>
+                    BACK
+                  </Text>
+                </TouchableOpacity>
+                <LinearGradient
+                  colors={
+                    isOTPValid ? ["#002777", "#00194C"] : ["#E9EEFF", "#D8E2FF"]
+                  }
+                  style={[
+                    styles.verifyButton,
+                    !isOTPValid && styles.disabledButton,
+                  ]}>
+                  <TouchableOpacity
+                    onPress={handleVerifyPress}
+                    disabled={!isOTPValid}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                        },
+                        !isOTPValid && styles.disabledButtonText,
+                      ]}>
+                      {isOTPValid ? "PROCEED" : "VERIFY"}
+                    </Text>
                   </TouchableOpacity>
-                  <LinearGradient
-                    // button Linear Gradient
-                    colors={['#002777', '#00194C']}
-                    style={styles.verifyButton}
-                  >
-                    <TouchableOpacity onPress={handleVerifyPress} >
-                      <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>VERIFY</Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
-                </View>
+                </LinearGradient>
               </View>
             </View>
           </ScrollView>
 
-          {errorScreen.type != null && <ScreenError errorObject={errorScreen} onTryAgainClick={onTryAgainClick} setNewErrorScreen={setNewErrorScreen} />}
-
+          {errorScreen.type != null && (
+            <ScreenError
+              errorObject={errorScreen}
+              onTryAgainClick={onTryAgainClick}
+              setNewErrorScreen={setNewErrorScreen}
+            />
+          )}
         </KeyboardAvoidingView>
-
       </View>
     </View>
   );

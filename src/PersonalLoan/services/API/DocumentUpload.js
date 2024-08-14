@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 
 
 
-const UploadFile = async (document, DocCode, ApplicantType = "Applicant") => {
+const UploadFile = async (document, DocCode,  Password = null, ApplicantType = "Applicant",) => {
     let status, data, message;
 
  
@@ -29,6 +29,7 @@ const UploadFile = async (document, DocCode, ApplicantType = "Applicant") => {
         formData.append('contentType', document.name.split('.').pop())
         formData.append('ApplicantType', ApplicantType); // or 'CoApplicant' as needed
         formData.append('Upload', document);
+        formData.append('Password', Password || '')
 
         const header = await GetHeader()
             console.log(header)

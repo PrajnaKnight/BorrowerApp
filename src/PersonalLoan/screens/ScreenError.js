@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetInfo, { fetch } from "@react-native-community/netinfo";
-import { useAppContext } from '../../Common/components/useContext';
-import { Network_Error } from '../services/Utils/Constants';   
-import applyFontFamily from '../../assets/style/applyFontFamily';
+import { useAppContext } from '../components/useContext';
+import { Network_Error } from '../services/Utils/Constants';
+import applyFontFamily from '../services/style/applyFontFamily';
 
 export const useErrorEffect = (onTryAgainClick) => {
     const [errorScreen, setErrorScreen] = useState({ type: null, onCancelClick: () => { setErrorScreen({ ...errorScreen, type: null }) } });

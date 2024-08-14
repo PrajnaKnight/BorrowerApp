@@ -13,14 +13,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import ProgressBar from '../../Common/components/ControlPanel/progressBar';
-import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
+import ProgressBar from '../components/progressBar';
+import { useProgressBar } from '../components/progressContext';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
-import { useAppContext } from '../../Common/components/useContext';
+import { useAppContext } from '../components/useContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import { RequestLocationPermission, fetchCameraFromWeb } from '../services/API/LocationApi';
-import * as ImagePicker from 'expo-image-picker';
 import { IntentLauncherAndroid } from 'react-native';
 import { GoBack } from '../services/Utils/ViewValidator';
 
@@ -473,13 +472,16 @@ const PermissionsScreen = ({ navigation, route }) => {
                                 {showPermssionModel && ShowPermissionDialog()}
                             </View>
 
-                            <LinearGradient colors={['#002777', '#00194C']} style={styles.Nextbutton}>
-                                <TouchableOpacity onPress={handleNextPress}>
+
+                            <TouchableOpacity onPress={handleNextPress} style={{marginBottom:10}}>
+
+                            <LinearGradient colors={['#002777', '#00194C']} style={[styles.Nextbutton]}>
                                     <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>
                                         BACK
                                     </Text>
-                                </TouchableOpacity>
                             </LinearGradient>
+                            </TouchableOpacity>
+
 
 
                         </View>

@@ -15,12 +15,7 @@ import UploadOtherFileSlice, { sagaFetchOtherFileRunner, sagaDeleteFileRunner } 
 
 import createSagaMiddleware from "@redux-saga/core";
 import { doPanCkyc } from "./DocumentVerificationSlices"
-import { FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER } from 'redux-persist';
+
 import { all } from "redux-saga/effects"
 
 const sagaMiddleware = createSagaMiddleware();
@@ -41,12 +36,7 @@ const store = configureStore({
     extraStageSlice : ExtraStageSlice
   },
 
-  middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }).concat([sagaMiddleware])
+  middleware: (getDefaultMiddleware) =>  getDefaultMiddleware().concat([sagaMiddleware]), 
  
 })
 
