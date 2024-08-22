@@ -66,7 +66,7 @@ const NoLoans = ({ navigation }) => {
           />
           <Text style={styles.noLoansTitle}>No Loan Taken</Text>
           <Text style={styles.noLoansSubtitle}>
-            You currently do not have any loans. Take your time to explore our loan
+            You currently do not have any loans.{'\n'} Take your time to explore our loan
             options and start a new financial journey with us today.
           </Text>
         </View>

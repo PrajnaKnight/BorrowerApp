@@ -55,7 +55,7 @@ const loanData = [
     title: 'Personal Loan',
     subtitle: '****1234',
     loanAmount: '₹ 10,00,000',
-    emiAmount: '₹ 56786',
+    emiAmount: '₹ 56,786',
     nextEmiDate: '05 Sep 2024',
   },
   {
@@ -63,7 +63,7 @@ const loanData = [
     title: 'Car Loan',
     subtitle: '****9876',
     loanAmount: '₹ 5,00,000',
-    emiAmount: '₹ 28893',
+    emiAmount: '₹ 28,893',
     nextEmiDate: '12 Oct 2023',
   },
   {
@@ -261,7 +261,7 @@ const LoanSliderItem = ({ item, navigation }) => {
             </View>
             <TouchableOpacity
               style={styles.availNowButton}
-              onPress={() => navigation.navigate("noLoan")}>
+              onPress={() => navigation.navigate("NoLoans")}>
               <Text style={styles.avaialNowText}>{item.buttonLabel}</Text>
             </TouchableOpacity>
           </View>
@@ -309,14 +309,14 @@ const LoanSliderItem = ({ item, navigation }) => {
       <View style={styles.card}>
         <View style={styles.flex}>
           <View>
-            <Text style={styles.emiDetails}>EMI Amount:</Text>
+            <Text style={styles.emiDetails}>EMI Amount</Text>
             <Text style={styles.emiAmount}>{item.emiAmount}</Text>
           </View>
           <View>
-            <Text style={styles.emiDetails}>
-              {isOverdue ? "Overdue Date:" : "Next EMI Date:"}
+            <Text style={[styles.emiDetails, isOverdue && styles.redText]}>
+              {isOverdue ? "Overdue From" : "Next EMI Date"}
             </Text>
-            <Text style={styles.emiDate}>{item.nextEmiDate}</Text>
+            <Text style={[styles.emiDate, isOverdue && styles.redTextBold]}>{item.nextEmiDate}</Text>
           </View>
           <TouchableOpacity
             style={styles.payNowButton}
@@ -349,7 +349,9 @@ const Dots = ({ index, total }) => {
 const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, navigation, totalItems, index }) => {
   const itemWidth = totalItems > 3 ? width * 0.25 : width / totalItems;
   const isOdd = index % 2 !== 0;
-  const shadowColor = isOdd ? "#ADD0FF" : "#FFE7CC";
+  const borderColor = isOdd ? "#ff8500" : "#add0ff";
+  const shadowColor = isOdd ? "#ff8500" : "#add0ff";
+
 
   const handlePress = () => {
     switch (title) {
@@ -381,22 +383,22 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       onPress={handlePress}
       style={[
         styles.cardContainer,
-        { width: itemWidth },
+        { 
+          width: itemWidth, 
+          borderColor: borderColor,
+        },
         Platform.OS === "ios"
           ? {
-              shadowColor: shadowColor,
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
+              shadowColor: isOdd ? "#FCD5AA" : "#D0E4FE",
+              shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.25,
-              shadowRadius: 10,
+              shadowRadius: 5,
             }
           : {
-              elevation: 5,
+              elevation: 3,
             },
-        { shadowColor: shadowColor },
-      ]}>
+      ]}
+    >
       <ImageBackground
         source={backgroundImage}
         style={[styles.featureBackground, { backgroundColor }]}
@@ -417,7 +419,7 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
               </View>
             )}
           </View>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.quickCardTitle}>{title}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -488,7 +490,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             horizontal
             data={data}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <Card
                 title={item.title}
                 offer={item.offer}
@@ -497,6 +499,7 @@ const HomeScreen = ({ navigation }) => {
                 backgroundColor={item.backgroundColor}
                 navigation={navigation} // pass navigation prop
                 totalItems={data.length} // pass total items count
+                index={index}
               />
             )}
             keyExtractor={(item) => item.id}

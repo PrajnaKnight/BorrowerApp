@@ -30,7 +30,7 @@ const LoanStagesScreen = ({ navigation }) => {
       <View style={[styles.flexContainer, styles.container]}>
       <View>
           <View style={styles.content}>
-            <Text style={styles.congratulations}>Congratulations!</Text>
+            <Text style={styles.congratulations}>Congratulations</Text>
             <Text style={styles.BriefsubText}>
               Application Submitted & Pending Verification
             </Text>

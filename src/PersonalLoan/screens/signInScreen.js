@@ -626,7 +626,7 @@ function SignInScreen({ navigation }) {
                       styles.label,
                       styles.mobilelabel,
                     ]}>
-                    Mobile Number <Text style={styles.mandatoryStar}>*</Text>{" "}
+                    Mobile Number 
                   </Text>
                   <MobileNumberInput
                     mobileNumber={requestModel.LeadPhone}

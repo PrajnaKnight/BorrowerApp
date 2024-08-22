@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Dimensions, TouchableOpacity, Text, FlatList } from 'react-native';
+import { View, Dimensions, TouchableOpacity, Text, FlatList, ImageBackground } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { styles } from '../../assets/style/globalStyle';
 import Layout from '../components/Layout';
@@ -25,28 +25,46 @@ const LoanItem = ({ item, navigation, route }) => {
 
   return (
     <TouchableOpacity
-      style={styles.loanItem}
+    style={styles.loanItemWrapper}
       onPress={() => {
-        if (item.status === 'In Process') {
-          navigation.navigate('LoanStages', { loanId: item.id, loanStatus: item.status });
+        if (item.status === "In Process") {
+          navigation.navigate("LoanStages", {
+            loanId: item.id,
+            loanStatus: item.status,
+          });
         } else {
-          navigation.navigate('IndividualLoanDetails', { loanId: item.id, loanStatus: item.status });
+          navigation.navigate("IndividualLoanDetails", {
+            loanId: item.id,
+            loanStatus: item.status,
+          });
         }
-      }}
-    >
-      <View style={styles.loanDetails}>
-        <Text style={styles.loanType}>{item.type}</Text>
-        <Text style={styles.loanAccount}>{item.loanAccount}</Text>
-        <Text style={styles.loanSubText}>Loan Amount</Text>
-        <Text style={styles.StageloanAmount}>{item.amount}</Text>
-      </View>
-      <View style={styles.loanMeta}>
-        <TouchableOpacity style={[styles.statusButton, { backgroundColor: statusStyles[item.status].backgroundColor }]}>
-          <Text style={styles.statusButtonText}>{statusStyles[item.status].text}</Text>
-        </TouchableOpacity>
-        <Text style={styles.loanDuration}>Duration</Text>
-        <Text style={styles.loanDurationValue}>{item.duration}</Text>
-      </View>
+      }}>
+      <ImageBackground
+        source={require("../../assets/images/loanBg.png")}
+        tyle={styles.backgroundImageLoan}
+        resizeMode="contain">
+        <View style={styles.loanItem}>
+          <View style={styles.loanDetails}>
+            <Text style={styles.loanType}>{item.type}</Text>
+            <Text style={styles.loanAccount}>{item.loanAccount}</Text>
+            <Text style={styles.loanSubText}>Loan Amount</Text>
+            <Text style={styles.StageloanAmount}>{item.amount}</Text>
+          </View>
+          <View style={styles.loanMeta}>
+            <TouchableOpacity
+              style={[
+                styles.statusButton,
+                { backgroundColor: statusStyles[item.status].backgroundColor },
+              ]}>
+              <Text style={styles.statusButtonText}>
+                {statusStyles[item.status].text}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.loanDuration}>Duration</Text>
+            <Text style={styles.loanDurationValue}>{item.duration}</Text>
+          </View>
+        </View>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };

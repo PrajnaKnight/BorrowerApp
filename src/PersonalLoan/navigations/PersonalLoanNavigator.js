@@ -108,8 +108,8 @@ function PersonalLoanNavigator() {
             >
             <Stack.Navigator  screenOptions={{ headerShown: false }}>
               <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
-              {/* <Stack.Screen name="welcome" component={SignInScreen} />
-              <Stack.Screen name="otpverification" component={OtpVerification} /> */}
+              <Stack.Screen name="welcome" component={SignInScreen} />
+              <Stack.Screen name="otpverification" component={OtpVerification} /> 
               <Stack.Screen name="QLA" component={QuickLoanAsk} />
               <Stack.Screen name="primaryInfo" component={PrimaryInfo} />
               <Stack.Screen name="personalInfo" component={PersonalInfo} />

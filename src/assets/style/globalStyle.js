@@ -60,7 +60,6 @@ export const styles = applyFontFamily({
   OngoingText: {
     textAlign: 'center',
     color: '#fff',
-    fontWeight: 'bold',
     fontSize:14,
   },
   card: {
@@ -106,11 +105,11 @@ export const styles = applyFontFamily({
   boxShadow:{
     borderWidth: 1,
     borderColor: '#add0ff', 
-    shadowColor: '#00274F', 
+    shadowColor: '#ADD0FF', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3, 
+    elevation: 5, 
     backgroundColor:'#ffffff',
     borderRadius:10,
   },
@@ -139,9 +138,7 @@ export const styles = applyFontFamily({
   },
   cardTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
     color: '#fff',
-    fontFamily: 'Poppins_700Bold',
   },
   cardSubtitle: {
     fontSize: 12,
@@ -185,8 +182,6 @@ export const styles = applyFontFamily({
   payNowText: {
     textAlign: 'center',
     color: '#fff',
-    fontWeight: 'bold',
-    fontFamily: 'Poppins_700Bold',
   },
   features: {
     paddingTop: 16,
@@ -211,6 +206,11 @@ export const styles = applyFontFamily({
   title: {
     fontSize: 12,
     color: '#000',
+    textAlign: 'left',
+  },
+  quickCardTitle:{
+    fontSize:14,
+    color:'#00194c',
     textAlign: 'left',
   },
   bannerContainer: {
@@ -259,8 +259,13 @@ export const styles = applyFontFamily({
   },
   avaialNowText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontFamily: 'Poppins_700Bold',
+  },
+  redText:{
+    color:'#D40000'
+  },
+  redTextBold:{
+    color:'#D40000',
+    fontWeight:'bold'
   },
   applyNowButton: {
     marginTop: 10,
@@ -365,7 +370,13 @@ export const styles = applyFontFamily({
   cardContainer: {
     marginHorizontal: 5,
     marginBottom:5,
-    borderRadius:10
+    borderRadius:10,
+    borderWidth: 0.5,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+
   },
   featureBackground: {
     justifyContent: 'center',
@@ -396,10 +407,15 @@ export const styles = applyFontFamily({
   },
   offerBadge: {
     backgroundColor: '#FF0000',
-    borderRadius: 5,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
     paddingHorizontal: 5,
     paddingVertical: 2,
     width:'70%',
+    position:'absolute',
+    top:0,
+    right:-10,
+
   },
   offerText: {
     color: '#fff',
@@ -521,15 +537,17 @@ export const styles = applyFontFamily({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
+  },
+  loanItemWrapper:{
     marginHorizontal: 16,
     marginVertical: 8,
-    backgroundColor: '#3C5078',
-    borderRadius: 8,
-    shadowColor: '#000',
+    backgroundColor: '#3c5078',
+    shadowColor: '#3c5078',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
+    borderRadius: 8,
   },
   flexContainer:{
     backgroundColor:'#ffffff'
@@ -565,7 +583,7 @@ export const styles = applyFontFamily({
   loanDuration: {
     fontSize: 12,
     color: '#FFFFFF',
-    marginTop: 8,
+    marginTop: 15,
   },
   loanDurationValue: {
     fontSize: 16,
@@ -581,8 +599,6 @@ export const styles = applyFontFamily({
   statusButtonText: {
     fontSize: 14,
     color: '#fff',
-    fontWeight: 'bold',
-    fontFamily: 'Poppins_700Bold',
   },
   loanList: {
     paddingBottom: 16,
@@ -605,9 +621,7 @@ export const styles = applyFontFamily({
   },
   tabLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
     textTransform:"capitalize",
-    fontFamily: 'Poppins_700Bold',
   },
   //LoanDetails Screen Style ends
   // LoanStage screen style starts
@@ -1223,13 +1237,13 @@ blueText:{
   color: '#00194c',
 },
 redText:{
-  color: '#DD0000',
+  color: '#D40000',
 },
 ChargestotalAmount: {
   fontSize: 16,
   fontWeight: 'bold',
   fontFamily: 'Poppins_700Bold',
-  color: '#DD0000',
+  color: '#D40000',
 },
 //Pre-disbursal screen style ends
 //Loan repayment screen style starts
@@ -1809,5 +1823,10 @@ messageText: {
   color: '#fff',
   textAlign: 'center',
 },
+  backgroundImage: {
+    width: '100%',
+    overflow: 'hidden',
+    
+  },
 //LOan pre disbursal charges screen style ends
 });

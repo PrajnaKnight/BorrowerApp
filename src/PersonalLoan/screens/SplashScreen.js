@@ -159,7 +159,7 @@ const SplashScreen = ({ navigation }) => {
           setNewErrorScreen(null)
 
 
-          navigation.navigate('QLA');
+          navigation.navigate('welcome');
 
 
         })
