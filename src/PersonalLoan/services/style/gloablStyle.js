@@ -49,6 +49,7 @@ export const styles = applyFontFamily({
     zIndex: 9000,
   },
   TopBar: {
+    backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
         zIndex: 100,
@@ -104,6 +105,11 @@ export const styles = applyFontFamily({
     zIndex: 5000,
     paddingHorizontal: 16,
     backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
     ...Platform.select({
       // Additional, web-specific styles
       web: {
