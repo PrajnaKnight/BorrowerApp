@@ -38,7 +38,7 @@ const formatValue = (value, isForAmount, isTenure) => {
       return `${value.toLocaleString('en-IN')}`;
     }
   } else if (isTenure) {
-    return `${value}m`;
+    return `${value}M`;
   } else {
     return value.toString();
   }
@@ -91,7 +91,8 @@ const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue,
           <TextInput
             style={[styles.Input, { fontSize: dynamicFontSize(styles.Input.fontSize) }]}
             onChangeText={handleTextInputChange}
-            value={isForAmount ? `₹ ${displayValue}` : displayValue}
+            // value={isForAmount ? `₹ ${displayValue}` : displayValue}
+            value={displayValue}
             keyboardType={keyboardType}
           />
         </View>

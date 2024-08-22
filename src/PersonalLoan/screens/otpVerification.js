@@ -26,8 +26,16 @@ import {
   useOtpVerify,
 } from 'react-native-otp-verify';
 import { checkSMSPermission } from './PermissionScreen';
+import { useProgressBar } from "../components/progressContext";
+import ProgressBar from "../components/progressBar";
+
 
 const OTPVerificationScreen = ({ navigation, route }) => {
+  const { setProgress } = useProgressBar();
+
+  useEffect(() => {
+    setProgress(0.01);
+  }, []);
 
   const dispatch = useDispatch()
   const { fontSize } = useAppContext();
@@ -436,7 +444,8 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
-              <View>
+              <View style={{paddingTop:16}}>
+              <ProgressBar progress={0.01} />
                 <Text
                   style={[
                     styles.headerText,

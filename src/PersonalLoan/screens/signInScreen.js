@@ -622,7 +622,7 @@ function SignInScreen({ navigation }) {
                 <View style={styles.formGrop}>
                   <Text
                     style={[
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      { fontSize: dynamicFontSize(styles.mobilelabel.fontSize) },
                       styles.label,
                       styles.mobilelabel,
                     ]}>
@@ -682,7 +682,7 @@ function SignInScreen({ navigation }) {
             </View>
             <View style={styles.boxShadow}>
               <ButtonComponent
-                title="GET OTP"
+                title="Proceed"
                 onPress={handleSubmit}
                 disabled={!termsAccepted}
                 style={{

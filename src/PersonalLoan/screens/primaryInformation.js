@@ -11,6 +11,7 @@ import {
   Linking,
   Alert,
   BackHandler,
+  ImageBackground
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { styles } from '../services/style/gloablStyle';
@@ -361,47 +362,41 @@ const PrimaryInfo = ({ navigation }) => {
     }
   };
 
-  const renderDocumentPreviews = (doc, type) => (
+  const renderDocumentPreviews = (doc, type, handleDeleteDocument, handleDocumentAction) => {
 
-    doc?.OriginalFile && 
-    <View style={styles.previewDoc}>
-      
-        <View style={styles.previewDocWrapper}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-            }}>
-            <Image
-              source={{ uri: `data:image/png;base64,${doc?.OriginalFile}` }}
-              style={styles.docImagePreview}
-              resizeMode="contain"  // or 'cover', 'stretch', etc.
-              onError={(e) => console.error('Error loading image', e)}
-            />
-            <TouchableOpacity
-              style={styles.docdeleteButton}
-              onPress={() => handleDeleteDocument(doc?.DocType)}>
-              <AntDesign name="closecircleo" size={16} color="#FF0000" />
-            </TouchableOpacity>
+    if (doc?.OriginalFile) {
+      return (
+        <View style={styles.previewDoc}>
+          <View style={styles.previewDocWrapper}>
+            <View style={styles.previewHeader}>
+              <Image
+                source={{ uri: `data:image/png;base64,${doc.OriginalFile}` }}
+                style={styles.docImagePreview}
+                resizeMode="contain"
+                onError={(e) => console.error('Error loading image', e)}
+              />
+              <TouchableOpacity
+                style={styles.docdeleteButton}
+                onPress={() => handleDeleteDocument(doc.DocType)}>
+                <AntDesign name="closecircleo" size={16} color="#FF0000" />
+              </TouchableOpacity>
+            </View>
           </View>
-          {/* {uploadProgress[type] < 1 && (
-            <ProgressBar
-              progress={uploadProgress[type]}
-              style={styles.docProgressBar}
-            />
-          )} */}
         </View>
-     
-    </View>
-  );
-
-
-
-
-
-
-
+      );
+    } else {
+      // Placeholder preview when no document is uploaded
+      return (
+        <View style={styles.previewPlaceholder}>
+          <ImageBackground source={require('../../assets/images/dummyid.png')} style={styles.previewPlaceholder}>
+          <Text style={styles.previewPlaceholderText}>
+            Preview {type === 'aadhaar' ? 'Aadhaar' : 'PAN'}
+          </Text>
+          </ImageBackground>
+        </View>
+      );
+    }
+  };
 
 
   const UploadAllFiles = async (fromSkip = false) => {
@@ -694,7 +689,7 @@ const PrimaryInfo = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ paddingHorizontal: 16 }}>
+          <View style={{ padding: 16 }}>
             <ProgressBar progress={0.02} />
             <Text
               style={[
@@ -750,7 +745,7 @@ const PrimaryInfo = ({ navigation }) => {
                   <CustomInput
                     onChangeText={handlePanChange}
                     value={maskPanNumber(uploadDocumentSlices.data.PAN)}
-                    placeholder="Enter your PAN"
+                    placeholder="Enter PAN"
                     keyboardType="default"
                     autoCapitalize="characters"
                     maxLength={10}
@@ -830,7 +825,7 @@ const PrimaryInfo = ({ navigation }) => {
                   </View>
                   <AadharMaskedCustomInput
                     value={maskAadharNumber(uploadDocumentSlices.data.AADHAAR)}
-                    placeholder="Enter your Aadhaar Number"
+                    placeholder="Enter Aadhaar"
                     keyboardType="numeric"
                     maxLength={12}
                     onChangeText={(masked, unmasked) => {

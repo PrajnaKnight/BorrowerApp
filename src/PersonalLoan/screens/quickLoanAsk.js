@@ -11,7 +11,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { styles } from "../services/style/gloablStyle";
 import ButtonComponent from "../components/button";
-import CustomDropdown from "../components/dropdownPicker";
+import CustomDropdown from "../../Common/components/ControlPanel/dropdownPicker";
 import { useAppContext } from "../components/useContext";
 import LoanAskDetails, { LoanPurpose } from "../services/API/LoanAskDetails";
 import { GetLeadId } from "../services/LOCAL/AsyncStroage";
@@ -401,7 +401,7 @@ function QuickLoanAsk({ navigation }) {
                       styles.loanLabel,
                       { fontSize: dynamicFontSize(styles.loanLabel.fontSize) },
                     ]}>
-                    Select a purpose{" "}
+                    Purpose of Loan{" "}
                     <Text
                       style={[
                         styles.mandatoryStar,

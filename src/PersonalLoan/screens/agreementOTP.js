@@ -229,7 +229,7 @@ const AgreementOTPVerificationScreen = ({ navigation, route }) => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
 
-            <View style={{paddingHorizontal:16}}>
+            <View style={{padding:16}}>
             <Text
                   style={[
                     styles.headerText,

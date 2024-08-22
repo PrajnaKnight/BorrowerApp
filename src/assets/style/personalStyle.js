@@ -468,7 +468,7 @@ export const styles = applyFontFamily({
   },
   progressBarFill: {
     height: "100%",
-    backgroundColor: "#ff8500",
+    backgroundColor: "#213ACE",
     borderRadius: 5,
   },
   errorText: {
@@ -1765,4 +1765,5 @@ export const styles = applyFontFamily({
     padding: 16,
   },
   //new css after merge
+ 
 });

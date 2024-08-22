@@ -164,7 +164,7 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
             keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
             <LoadingOverlay visible={loading} />
 
-            <View style={{ paddingHorizontal: 16 }}>
+            <View style={{ padding: 16 }}>
               <ProgressBar progress={10} />
             </View>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>

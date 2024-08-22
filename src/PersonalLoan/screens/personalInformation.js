@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
-import CustomDropdown from '../components/dropdownPicker';
+import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import { styles } from '../services/style/gloablStyle';
 import CustomInput from '../components/input';
 import RadioButton from '../components/radioButton';
@@ -37,7 +37,7 @@ const PersonalInformationScreen = ({ navigation }) => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const [items, setItems] = useState([]);
-  const genders = ['Male', 'Female', 'Other'];
+  const genders = ['Male', 'Female', 'Others'];
 
   const [otherError, setOtherError] = useState(null)
 
@@ -355,7 +355,7 @@ const PersonalInformationScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ paddingHorizontal: 16 }}>
+          <View style={{ padding: 16 }}>
             <ProgressBar progress={0.05} />
             <Text
               style={[
