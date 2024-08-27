@@ -6,6 +6,12 @@ import { WebView } from 'react-native-webview';
 import moment from 'moment';
 import Layout from '../components/Layout';
 import { styles } from '../../assets/style/globalStyle';
+import { API_RESPONSE_STATUS, STATUS } from '../../PersonalLoan/services/API/Constants';
+import GetLookUp from '../../PersonalLoan/services/API/GetLookUp';
+import { useDispatch } from 'react-redux';
+import { updateBreStatus } from '../../PersonalLoan/services/Utils/Redux/ExtraSlices';
+import { updateJumpTo } from '../../PersonalLoan/services/Utils/Redux/LeadStageSlices';
+import { StoreApplicantId, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
 
 const { width } = Dimensions.get('window');
 
@@ -137,13 +143,52 @@ const ImageGallery = () => {
 };
 
 const LoanSliderItem = ({ item, navigation }) => {
+  const dispatch = useDispatch()
+
   const currentDate = moment();
   const nextEmiDate = moment(item.nextEmiDate, 'DD MMM YYYY');
   const isOverdue = nextEmiDate.isBefore(currentDate);
 
-  const handleContinue = () => {
-    navigation.navigate('PersonalLoan', { screen: 'QLA' });
+  const handleContinue = async() => {
+
+    let response =  API_RESPONSE_STATUS()
+    let userAvailable = await GetLookUp()
+
+    console.log("------------------------- get look up response ---------------------------")
+    console.log(userAvailable)
+    console.log("------------------------- get look up response ---------------------------")
+
+    if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
+
+      response.status = STATUS.ERROR
+      response.message = null
+      response.data = 0
+
+
+
+
+      if (userAvailable.data.LeadStage != null) {
+        const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
+        response.data = jumpTo
+      }
+
+
+      dispatch(updateBreStatus(userAvailable.data?.IsBREcompleted))
+      dispatch(updateJumpTo(response.data))
+
+
+      if (userAvailable.data.leadID != null) {
+        await StoreLeadId(userAvailable.data.leadID)
+      }
+      if (userAvailable.data.ApplicationID != null) {
+        await StoreApplicantId(userAvailable.data.ApplicationID)
+      }
+      navigation.navigate("PersonalLoan")
+    }
+    
+
   };
+
 
   const stageStatusStyles = {
     'completed': { backgroundColor: '#32CD32' },

@@ -203,7 +203,7 @@ const SanctionLetterScreen = ({ navigation }) => {
       return
     }
 
-    setLoading(true)
+    setLoading(false)
     const getSectionHtmlPage = await GetSectionHtmlPage()
     setLoading(false)
 

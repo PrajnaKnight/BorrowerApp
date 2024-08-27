@@ -105,10 +105,10 @@ const linking = {
   },
 };
 
-function RootNavigator() {
+function RootNavigator({initialRouteName}) {
   return (
     <NavigationContainer linking={linking}>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
         <RootStack.Screen name="Common" component={CommonNavigator} />
         <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />
         <RootStack.Screen name="Dashboard" component={DashboardNavigator} />

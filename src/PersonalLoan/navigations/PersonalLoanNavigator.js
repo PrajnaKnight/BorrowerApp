@@ -49,7 +49,7 @@ if (!global.atob) {
 
 const Stack = createNativeStackNavigator();
 
-function PersonalLoanNavigator() {
+function PersonalLoanNavigator({navigation}) {
  
 
   const [currentScreen, setCurrentScreen] = useState();
@@ -88,7 +88,8 @@ function PersonalLoanNavigator() {
           <View>
             <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
             <Header 
-                navigate={navigate} 
+                navigation={navigation} 
+                navigate={navigationRef}
                 isOnFAQScreen={currentScreen === 'FAQScreen'} 
               />
           </View>

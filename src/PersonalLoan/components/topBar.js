@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomDropdown from './customDropdown';
 import { Ionicons } from '@expo/vector-icons';
 
-const Header = ({ navigate, isOnFAQScreen }) => {
+const Header = ({navigation,  navigate, isOnFAQScreen }) => {
   const { handleFontSize } = useAppContext();
   const [increaseButtonColor, setIncreaseButtonColor] = useState('#E6EDFF');
 
@@ -49,10 +49,13 @@ const Header = ({ navigate, isOnFAQScreen }) => {
              <Ionicons name="chevron-back-circle-outline" size={24} color="#00194c" />
           </TouchableOpacity>
         )}
+        <TouchableOpacity onPress={()=>{navigation.navigate("Dashboard")}}>
         <Image
           source={require("../../assets/images/your-logo.png")}
           style={styles.logo}
         />
+        </TouchableOpacity>
+        
       </View>
       <View style={styles.iconRow}>
         <TouchableOpacity
