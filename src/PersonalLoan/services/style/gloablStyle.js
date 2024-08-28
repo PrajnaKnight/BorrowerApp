@@ -202,7 +202,7 @@ export const styles = applyFontFamily({
     borderRadius: 5,
     padding: 5,
     lineHeight: 26,
-    borderColor: "transparent",
+    borderColor: "#A2ACC6",
     backgroundColor: "#EBEFFF",
     color: "#000000",
     fontSize: 16,
@@ -1769,6 +1769,7 @@ export const styles = applyFontFamily({
     borderColor: "#A2ACC6",
     padding: 16,
     borderRadius: 10,
+    marginBottom:10
   },
   docFlex: {
     flexDirection: "row",
@@ -1813,6 +1814,7 @@ export const styles = applyFontFamily({
     alignItems: "center",
     minHeight: 130,
     padding: 10,
+   
   },
   docImagePreview: {
     width: "100%",

@@ -492,7 +492,7 @@ const BankDetailsScreen = ({ navigation }) => {
                 styles.headerText,
                 { fontSize: dynamicFontSize(styles.headerText.fontSize) },
               ]}>
-              Bank Details
+              Bank Details <Text style={{fontSize:14, fontWeight:'500'}}>(Salary Account)</Text>
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10, alignItems: 'center' }}>
               {bankAccountSlices.data.BankList.map((account, index) => (
@@ -555,10 +555,10 @@ const BankDetailsScreen = ({ navigation }) => {
                         styles.label,
                         { fontSize: dynamicFontSize(styles.label.fontSize) },
                       ]}>
-                      IFSC<Text style={styles.mandatoryStar}> *</Text>
+                      Bank Branch IFSC Code<Text style={styles.mandatoryStar}> *</Text>
                     </Text>
                     <CustomInput
-                      placeholder="Bank Branch IFSC Code"
+                      placeholder="Enter your bank branch IFSC code"
                       value={bankAccountSlices.data.BankList[selectedAccountIndex]?.IFSC || ''}
                       error={bankAccountSlices.data.BankList[selectedAccountIndex]?.IFSCError}
                       autoCapitalize="characters"
@@ -586,10 +586,25 @@ const BankDetailsScreen = ({ navigation }) => {
                         styles.label,
                         { fontSize: dynamicFontSize(styles.label.fontSize) },
                       ]}>
+                      Bank Name <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Bank  Name"
+                      value={BankIfscWithBankName(bankAccountSlices.data.BankList[selectedAccountIndex])}
+                      error={bankAccountSlices.data.BankList[selectedAccountIndex]?.BankBracnchNameError}
+                      onChangeText={(text) =>
+                        UpdateBankInfo(selectedAccountIndex, "BRANCH-NAME", text)
+                      }
+                    />
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
                       Bank Account Number <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
                     <CustomInput
-                      placeholder="Bank Account Number"
+                      placeholder="Enter your bank Account Number"
                       value={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumber || ''}
                       onChangeText={(text) =>
                         UpdateBankInfo(selectedAccountIndex, "ACCOUNT-NUMBER", text)
@@ -606,7 +621,7 @@ const BankDetailsScreen = ({ navigation }) => {
                       Re-enter Bank Account Number <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
                     <CustomInput
-                      placeholder="Re-enter Bank Account Number"
+                      placeholder="Re-enter your bank Account Number"
                       error={bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumberError}
                       value={bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumber || ''}
                       onChangeText={(text) =>
@@ -642,7 +657,7 @@ const BankDetailsScreen = ({ navigation }) => {
                       Account Holder Name <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
                     <CustomInput
-                      placeholder="Account Holder Name"
+                      placeholder="Enter your Account Holder Name"
                       error={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountHolderNameError}
                       value={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountHolderName || ''}
                       onChangeText={(text) =>

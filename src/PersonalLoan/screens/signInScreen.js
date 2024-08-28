@@ -629,6 +629,7 @@ function SignInScreen({ navigation }) {
                     Mobile Number 
                   </Text>
                   <MobileNumberInput
+                    placeholder="Enter your mobile number"
                     mobileNumber={requestModel.LeadPhone}
                     setMobileNumber={handleMobileChange}
                     error={mobileError}

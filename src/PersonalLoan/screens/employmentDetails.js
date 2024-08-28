@@ -702,7 +702,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                   value={EmploymentCategory} 
                   listOfData={ocupationValueOptions} 
                   onChangeText={(e) => { console.log(e); onEmploymenCategoryChange(e); }} 
-                  placeholder="Select" 
+                  placeholder="Search" 
                   style={[styles.pickerContainer, { fontSize }]} 
                   zIndex={2000} 
                   searchable={true} 
@@ -713,9 +713,9 @@ const EmploymentDetailScreen = ({ navigation }) => {
                   {EmploymentType == 'Salaried' ? (
                     <View style={styles.employmentWrapper}>
                       <View style={styles.formGroup}>
-                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience(Years) <Text style={styles.mandatoryStar}>*</Text></Text>
+                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience<Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput
-                          placeholder="Total Experience(Years)"
+                          placeholder="Years"
                           keyboardType="numeric"
                           error={Salaried.ExperienceError}
                           value={Salaried.Experience}
@@ -724,11 +724,11 @@ const EmploymentDetailScreen = ({ navigation }) => {
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Current Company Name <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <CustomInputFieldWithSuggestion placeholder="Current Company Name" error={Salaried.CompanyNameError} value={Salaried.CompanyName} listOfData={salariedCompanySearchResult} onChangeText={(e) => { updateInfo("EmployerName", e); }} />
+                        <CustomInputFieldWithSuggestion placeholder="Enter your current company name" error={Salaried.CompanyNameError} value={Salaried.CompanyName} listOfData={salariedCompanySearchResult} onChangeText={(e) => { updateInfo("EmployerName", e); }} />
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Your Current Designation <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <CustomInput placeholder="Your Current Designation" error={Salaried.DesignationError} value={Salaried.Designation} onChangeText={(e) => { updateInfo("Designation", e); }} />
+                        <CustomInput placeholder="Enter your current designation" error={Salaried.DesignationError} value={Salaried.Designation} onChangeText={(e) => { updateInfo("Designation", e); }} />
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Date of Joining <Text style={styles.mandatoryStar}>*</Text></Text>
@@ -742,12 +742,22 @@ const EmploymentDetailScreen = ({ navigation }) => {
                         />
                       </View>
                       <View style={styles.formGroup}>
+                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Current Experience<Text style={styles.mandatoryStar}>*</Text></Text>
+                        <CustomInput
+                          placeholder=""
+                          keyboardType="numeric"
+                          error={Salaried.ExperienceError}
+                          value={Salaried.Experience}
+                          onChangeText={(e) => { updateInfo("Experience", e) }}
+                        />
+                      </View>
+                      <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Phone Number <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <MobileNumberInput setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} mobileNumber={Salaried.OfficePhoneNo} error={Salaried.OfficePhoneNoError} />
+                        <MobileNumberInput placeholder="Enter your work phone number" setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} mobileNumber={Salaried.OfficePhoneNo} error={Salaried.OfficePhoneNoError} />
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <CustomInput placeholder="Work Email ID" error={Salaried.WorkEmailError} value={Salaried.WorkEmail} onChangeText={(e) => { updateInfo("WorkEmail", e); }} keyboardType="email-address" autoCapitalize="none" />
+                        <CustomInput placeholder="Enter your work email id" error={Salaried.WorkEmailError} value={Salaried.WorkEmail} onChangeText={(e) => { updateInfo("WorkEmail", e); }} keyboardType="email-address" autoCapitalize="none" />
                       </View>
                       <CustomSlider title="Net Monthly Salary" icon="rupee" keyboardType="numeric" min={0} max={1000000} steps={5000} sliderValue={properAmmount(Salaried.AnnualCTC)} inputValue={formateAmmountValue(Salaried.AnnualCTC.toString())} error={Salaried.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
                       <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Company Address <Text style={styles.mandatoryStar}>*</Text></Text>

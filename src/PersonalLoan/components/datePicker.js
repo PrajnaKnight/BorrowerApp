@@ -42,7 +42,7 @@ const DatePickerComponent = ({ onDateChange, initialDate, maximumDate, minimumDa
         >
           <Text
             style={[styles.dateText, { fontSize: dynamicFontSize(styles.backBtnText.fontSize), color: initialDate ? "#00194c" : "#cccccc" }]}
-          >{initialDate ? format(initialDate, 'PPP') : "Date"}</Text>
+          >{initialDate ? format(initialDate,  "dd/MM/yyyy") : "Date"}</Text>
           <FontAwesome5 name="calendar-alt" size={16} color={readonly ? "#cccccc" : "#ff8500"} style={styles.icon} />
         </TouchableOpacity>
 

@@ -665,10 +665,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           fontSize: dynamicFontSize(styles.description.fontSize),
                         },
                       ]}>
-                      Hurray, you’re approved for a loan amount up to{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text> You can
-                      apply the loan amount in range{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text> to{" "}
+                    Hurray your loan is approved up to the loan amount of
+                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text>
+                       you've requested. You're also eligible to take a higher loan amount up to
+                      {" "}
                       <Text style={styles.descriptionAmt}>Rs. {maxLoanAmount.toLocaleString()}</Text>
                     </Text>
 
@@ -695,8 +695,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       fontSize: dynamicFontSize(styles.description.fontSize),
                     },
                   ]}>
-                  To proceed, kindly confirm and provide the necessary documents
-                  and sign the loan agreement and eMandate.
+                  Kindly confirm the sanctioned loan amount and click the proceed button to provide  necessary documents, and sign loan agreement and eMandate for disbursal of loan.
                 </Text>
                 <View style={styles.loanIdcontainer}>
                   <View style={styles.loanIdiconContainer}>
@@ -763,7 +762,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                         styles.readonly,
                         { fontSize: dynamicFontSize(styles.input.fontSize) },
                       ]}>
-                      {rateOfInterest || 0} %
+                      {rateOfInterest || 0} % <Text>Reducing Rate</Text>
                     </Text>
                   </View>
 

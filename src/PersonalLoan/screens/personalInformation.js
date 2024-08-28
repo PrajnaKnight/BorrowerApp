@@ -409,9 +409,9 @@ const PersonalInformationScreen = ({ navigation }) => {
                     onDateChange={(newDate) => handleDateChange(newDate)}
                     maximumDate={
                       new Date(
-                        new Date().getFullYear() - 18,
+                        new Date().getDate(),
                         new Date().getMonth(),
-                        new Date().getDate()
+                        new Date().getFullYear() - 18
                       )
                     }
                     minimumDate={new Date(null)}
