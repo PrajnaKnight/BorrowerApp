@@ -198,10 +198,11 @@ const EMandateScreen = ({ navigation }) => {
             <Text
               style={[
                 styles.headerText,
-                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                { fontSize: dynamicFontSize(styles.headerText.fontSize), textTransform:'none' },
               ]}>
               eMandate
             </Text>
+            <Text style={{fontSize:14, color:'#00194c', fontWeight:'500'}}>Please sign the e-mandate</Text>
           </View>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
          
@@ -260,7 +261,7 @@ const EMandateScreen = ({ navigation }) => {
                       {
                         fontSize: dynamicFontSize(
                           styles.uploadButtonNachText.fontSize
-                        ),
+                        ), 
                       },
                     ]}>
                     Upload Physical NACH
@@ -275,7 +276,7 @@ const EMandateScreen = ({ navigation }) => {
                       {
                         fontSize: dynamicFontSize(
                           styles.downloadSamplebuttonText.fontSize
-                        ),
+                        ), textTransform:'uppercase'
                       },
                     ]}>
                     Download NACH Form

@@ -244,7 +244,7 @@ const SanctionLetterScreen = ({ navigation }) => {
                   { fontSize: dynamicFontSize(styles.detailLabel.fontSize), backgroundColor:null },
                 ]}
               >
-                {getKey(key)}:
+                {getKey(key)}
               </Text>
               <Text
                 style={[
@@ -264,7 +264,7 @@ const SanctionLetterScreen = ({ navigation }) => {
                 { fontSize: dynamicFontSize(styles.detailLabel.fontSize) },
               ]}
             >
-              {getKey(key)}:
+              {getKey(key)}
             </Text>
             <Text
               style={[

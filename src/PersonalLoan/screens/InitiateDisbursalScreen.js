@@ -306,7 +306,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                     styles.label,
                     { fontSize: dynamicFontSize(styles.label.fontSize) },
                   ]}>
-                  eMandate UMRN <Text style={styles.mandatoryStar}>*</Text>
+                  eMandate URN <Text style={styles.mandatoryStar}>*</Text>
                 </Text>
                 <View style={styles.inputContainer}>
                   <CustomInput

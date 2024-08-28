@@ -545,6 +545,8 @@ const LoanEligibilityScreen = ({ navigation }) => {
   }
 
 
+  
+
 
   const { width, height } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
