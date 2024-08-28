@@ -660,10 +660,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                         },
                       ]}>
                       Hurray, you’re approved for a loan amount up to{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text> You can
+                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount?.toLocaleString()}</Text> You can
                       apply the loan amount in range{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text> to{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {maxLoanAmount.toLocaleString()}</Text>
+                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount?.toLocaleString()}</Text> to{" "}
+                      <Text style={styles.descriptionAmt}>Rs. {maxLoanAmount?.toLocaleString()}</Text>
                     </Text>
 
                   }
