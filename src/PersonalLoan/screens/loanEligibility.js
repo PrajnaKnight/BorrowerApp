@@ -659,22 +659,27 @@ const LoanEligibilityScreen = ({ navigation }) => {
                 )}
 
                 <View style={styles.marginBtm}>
-                {loanApproved == true &&
+                  {loanApproved == true && (
                     <Text
                       style={[
                         styles.description,
                         {
-                          fontSize: dynamicFontSize(styles.description.fontSize),
+                          fontSize: dynamicFontSize(
+                            styles.description.fontSize
+                          ),
                         },
                       ]}>
-                    Hurray your loan is approved up to the loan amount of
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount.toLocaleString()}</Text>
-                       you've requested. You're also eligible to take a higher loan amount up to
-                      {" "}
-                      <Text style={styles.descriptionAmt}>Rs. {maxLoanAmount.toLocaleString()}</Text>
+                      Hurray your loan is approved up to the loan amount of
+                      <Text style={styles.descriptionAmt}>
+                        Rs. {loanAskAmount.toLocaleString()}
+                      </Text>
+                      you've requested. You're also eligible to take a higher
+                      loan amount up to{" "}
+                      <Text style={styles.descriptionAmt}>
+                        Rs. {maxLoanAmount.toLocaleString()}
+                      </Text>
                     </Text>
-
-                  }
+                  )}
                 </View>
 
                 {/* Loan Amount Chart */}
@@ -697,7 +702,9 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       fontSize: dynamicFontSize(styles.description.fontSize),
                     },
                   ]}>
-                  Kindly confirm the sanctioned loan amount and click the proceed button to provide  necessary documents, and sign loan agreement and eMandate for disbursal of loan.
+                  Kindly confirm the sanctioned loan amount and click the
+                  proceed button to provide necessary documents, and sign loan
+                  agreement and eMandate for disbursal of loan.
                 </Text>
                 <View style={styles.loanIdcontainer}>
                   <View style={styles.loanIdiconContainer}>
@@ -740,17 +747,17 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   isTenure={true}
                 />
 
-{!isEligible && (
-                      <Text style={styles.errorText}>
-                        You are not eligible for selected loan amount
-                      </Text>
-                    )}
+                {!isEligible && (
+                  <Text style={styles.errorText}>
+                    You are not eligible for selected loan amount
+                  </Text>
+                )}
                 <View
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}>
-                  <View style={{flex:1, paddingRight:5}}>
+                  <View style={{ flex: 1, paddingRight: 5 }}>
                     <Text
                       style={[
                         styles.label,
@@ -758,19 +765,39 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       ]}>
                       Rate of Interest
                     </Text>
-                    <Text
+
+                    <View
                       style={[
                         styles.input,
                         styles.readonly,
-                        { fontSize: dynamicFontSize(styles.input.fontSize) },
+                        {
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: 8,
+                        },
                       ]}>
-                      {rateOfInterest || 0} % <Text>Reducing Rate</Text>
-                    </Text>
+                      <Text
+                        style={{
+                          fontSize: dynamicFontSize(styles.input.fontSize),
+                          fontWeight: "500",
+                          color: "#000",
+                        }}>
+                        {rateOfInterest || 0} %
+                      </Text>
+                      <View style={{ alignItems: "flex-end" }}>
+                        <Text style={{ color: "#00194c", fontSize: 10 }}>
+                          Reducing
+                        </Text>
+                        <Text style={{ color: "#00194c", fontSize: 10 }}>
+                          Rate
+                        </Text>
+                      </View>
+                    </View>
                   </View>
 
-                
-
-                  <View style={[styles.emiContainer, {flex:1, paddingLeft:5}]}>
+                  <View
+                    style={[styles.emiContainer, { flex: 1, paddingLeft: 5 }]}>
                     <Text
                       style={[
                         styles.label,
@@ -778,7 +805,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       ]}>
                       EMI Amount
                     </Text>
-                    
+
                     <Text
                       style={[
                         styles.input,
