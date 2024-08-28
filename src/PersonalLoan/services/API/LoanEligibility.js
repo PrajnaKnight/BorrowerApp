@@ -143,7 +143,7 @@ export const SendSaveBREEligibilityInfo = async (requestModel) => {
     try {
 
         console.log("==================== Loan Eligibility =======================")
-
+        console.log(requestModel)
         const header = await GetHeader()
         console.log(header)
         const leadId = await GetLeadId()

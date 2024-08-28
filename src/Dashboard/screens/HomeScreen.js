@@ -11,7 +11,7 @@ import GetLookUp from '../../PersonalLoan/services/API/GetLookUp';
 import { useDispatch } from 'react-redux';
 import { updateBreStatus } from '../../PersonalLoan/services/Utils/Redux/ExtraSlices';
 import { updateJumpTo } from '../../PersonalLoan/services/Utils/Redux/LeadStageSlices';
-import { StoreApplicantId, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
+import { GetLeadId, StoreApplicantId, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
 
 const { width } = Dimensions.get('window');
 
@@ -87,13 +87,13 @@ const loanData = [
     key: '4',
     title: 'Personal Loan',
     type: 'applicationProgress',
-    loanAmount: '₹50,000',
-    tenure: '12 Months',
+    // loanAmount: '₹50,000',
+    // tenure: '12 Months',
     steps: [
-      { label: 'Personal Details', status: 'completed' },
-      { label: 'Employment', status: 'inprocess' },
-      { label: 'Document', status: 'pending' },
-      { label: 'Loan Agreement', status: 'pending' },
+      // { label: 'Personal Details', status: 'completed' },
+      // { label: 'Employment', status: 'inprocess' },
+      // { label: 'Document', status: 'pending' },
+      // { label: 'Loan Agreement', status: 'pending' },
     ],
     buttonLabel: 'Continue'
   }
@@ -149,43 +149,39 @@ const LoanSliderItem = ({ item, navigation }) => {
   const nextEmiDate = moment(item.nextEmiDate, 'DD MMM YYYY');
   const isOverdue = nextEmiDate.isBefore(currentDate);
 
-  const handleContinue = async() => {
+  const handleContinue = async () => {
 
-    let response =  API_RESPONSE_STATUS()
+    let response = API_RESPONSE_STATUS()
     let userAvailable = await GetLookUp()
 
     console.log("------------------------- get look up response ---------------------------")
     console.log(userAvailable)
     console.log("------------------------- get look up response ---------------------------")
 
+
+
+    response.status = STATUS.ERROR
+    response.message = userAvailable.message
+    response.data = { jumpTo: null, isSelfEmployed: true }
+
+    if (userAvailable.status == STATUS.ERROR) {
+      return response
+    }
+
+
+
+    response.data.jumpTo = 0
+
     if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
 
-      response.status = STATUS.ERROR
-      response.message = null
-      response.data = 0
+      const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
+      response.data.jumpTo = jumpTo
+      response.data.isSelfEmployed = userAvailable.data.EmploymentType == "Self-Employed"
+      dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
 
-
-
-
-      if (userAvailable.data.LeadStage != null) {
-        const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
-        response.data = jumpTo
-      }
-
-
-      dispatch(updateBreStatus(userAvailable.data?.IsBREcompleted))
-      dispatch(updateJumpTo(response.data))
-
-
-      if (userAvailable.data.leadID != null) {
-        await StoreLeadId(userAvailable.data.leadID)
-      }
-      if (userAvailable.data.ApplicationID != null) {
-        await StoreApplicantId(userAvailable.data.ApplicationID)
-      }
-      navigation.navigate("PersonalLoan")
     }
-    
+
+    navigation.navigate("PersonalLoan")
 
   };
 
@@ -206,7 +202,7 @@ const LoanSliderItem = ({ item, navigation }) => {
         return null;
     }
   };
- 
+
   const handlePress = () => {
     navigation.navigate('Loans', {
       screen: 'IndividualLoanDetails',
@@ -257,11 +253,11 @@ const LoanSliderItem = ({ item, navigation }) => {
         </View>
         <View style={styles.loanDetailsRow}>
           <View>
-            <Text style={styles.loanDetailLabel}>Loan Amount</Text>
+            {/* <Text style={styles.loanDetailLabel}>Loan Amount</Text> */}
             <Text style={styles.loanDetailValue}>{item.loanAmount}</Text>
           </View>
           <View>
-            <Text style={styles.loanDetailLabel}>Tenure</Text>
+            {/* <Text style={styles.loanDetailLabel}>Tenure</Text> */}
             <Text style={styles.loanDetailValue}>{item.tenure}</Text>
           </View>
           <TouchableOpacity
@@ -283,7 +279,7 @@ const LoanSliderItem = ({ item, navigation }) => {
           marginBottom: 16,
         }}>
         <View style={styles.boxShadow}>
-          <View style={{flexDirection:'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.offerWrapper}>
               <Text style={styles.SpecialofferBadge}>{item.offerBadge}</Text>
               <Text style={styles.Offertitle}>{item.title}</Text>
@@ -397,6 +393,43 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
   const borderColor = isOdd ? "#ff8500" : "#add0ff";
   const shadowColor = isOdd ? "#ff8500" : "#add0ff";
 
+  const dispatch = useDispatch()
+
+  const handleContinue = async () => {
+
+    let response = API_RESPONSE_STATUS()
+    let userAvailable = await GetLookUp()
+
+    console.log("------------------------- get look up response ---------------------------")
+    console.log(userAvailable)
+    console.log("------------------------- get look up response ---------------------------")
+
+
+
+    response.status = STATUS.ERROR
+    response.message = userAvailable.message
+    response.data = { jumpTo: null, isSelfEmployed: true }
+
+    if (userAvailable.status == STATUS.ERROR) {
+      return response
+    }
+
+
+
+    response.data.jumpTo = 0
+
+    if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
+
+      const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
+      response.data.jumpTo = jumpTo
+      response.data.isSelfEmployed = userAvailable.data.EmploymentType == "Self-Employed"
+      dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
+
+    }
+
+    navigation.navigate("PersonalLoan")
+
+  };
 
   const handlePress = () => {
     switch (title) {
@@ -410,14 +443,14 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
         navigation.navigate('CreditScorePage');
         break;
       case 'Apply Loan':
-        navigation.navigate('ApplyLoanPage');
+        handleContinue()
         break;
       case 'Loan Eligibility':
         navigation.navigate('LoanEligibilityCalculator');
         break;
-        case 'Pre Disbursement':
-          navigation.navigate('PreDisbursementScreen');
-          break;
+      case 'Pre Disbursement':
+        navigation.navigate('PreDisbursementScreen');
+        break;
       default:
         break;
     }
@@ -428,20 +461,20 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       onPress={handlePress}
       style={[
         styles.cardContainer,
-        { 
-          width: itemWidth, 
+        {
+          width: itemWidth,
           borderColor: borderColor,
         },
         Platform.OS === "ios"
           ? {
-              shadowColor: isOdd ? "#FCD5AA" : "#D0E4FE",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
-              shadowRadius: 5,
-            }
+            shadowColor: isOdd ? "#FCD5AA" : "#D0E4FE",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 5,
+          }
           : {
-              elevation: 3,
-            },
+            elevation: 3,
+          },
       ]}
     >
       <ImageBackground
@@ -473,10 +506,10 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
 
 
 const BannerItem = ({ item }) => (
-  <View  style={[{
+  <View style={[{
     width: width * 0.92,
     marginRight: width * 0.03,
-  },styles.bannerContainer]}>
+  }, styles.bannerContainer]}>
     <ImageBackground source={item.imageSource} style={styles.bannerImage} resizeMode="contain">
       <View style={styles.bannerContent}>
         <TouchableOpacity style={styles.applyNowButton}>
@@ -502,17 +535,17 @@ const HomeScreen = ({ navigation }) => {
   return (
     <Layout>
       <View style={styles.header}>
-          <View style={styles.userInfo}>
-            <Text style={styles.welcome}>Welcome,</Text>
-            <Text style={styles.username}>Satat Mishra</Text>
-          </View>
-          <View style={styles.cibilScore}>
-            <Text style={styles.cibilScoreText}>790</Text>
-            <Text style={styles.cibilLabel}>Score</Text>
-          </View>
+        <View style={styles.userInfo}>
+          <Text style={styles.welcome}>Welcome,</Text>
+          <Text style={styles.username}>Satat Mishra</Text>
         </View>
+        <View style={styles.cibilScore}>
+          <Text style={styles.cibilScoreText}>790</Text>
+          <Text style={styles.cibilLabel}>Score</Text>
+        </View>
+      </View>
       <ScrollView style={styles.container}>
-        
+
 
         <View>
           <FlatList
@@ -524,7 +557,7 @@ const HomeScreen = ({ navigation }) => {
               <LoanSliderItem item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item.key}
-            onScrollToIndexFailed={() => {}} // This function can be used to handle errors if scrollToIndex fails
+            onScrollToIndexFailed={() => { }} // This function can be used to handle errors if scrollToIndex fails
             onViewableItemsChanged={onViewRef.current}
             viewabilityConfig={viewConfigRef.current}
           />
@@ -552,7 +585,7 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
           />
         </View>
-        <View style={{marginHorizontal:16}}>
+        <View style={{ marginHorizontal: 16 }}>
           <FlatList
             horizontal
             pagingEnabled

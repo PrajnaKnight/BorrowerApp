@@ -24,11 +24,15 @@ import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Uti
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
+import useJumpTo from "../components/StageComponent";
 
 const PersonalInformationScreen = ({ navigation }) => {
 
+
   const dispatch = useDispatch()
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
+
+  const stageMaintance = useJumpTo("personalInfo", "addressDetail", navigation);
+
   const personalDetails = useSelector(state => state.personalDetailSlice);
   const extraSlices = useSelector(state => state.extraStageSlice);
 
@@ -228,12 +232,9 @@ const PersonalInformationScreen = ({ navigation }) => {
     setLoading(true)
     StoreUserDob(personalDetails.data.LeadDOB)
 
-    let LeadStage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "personalInfo") {
-      LeadStage = nextJumpTo + 1
-    }
+  
 
-    const model = { ...personalDetails.data, Leadstage: LeadStage, LeadPhone: borrowerPhone }
+    const model = { ...personalDetails.data, Leadstage: stageMaintance.jumpTo, LeadPhone: borrowerPhone }
 
     console.log("------------------ personal info request model --------------------------")
     console.log(model)
@@ -250,9 +251,8 @@ const PersonalInformationScreen = ({ navigation }) => {
         setOtherError(response.message)
         return;
       }
-      if (ALL_SCREEN[nextJumpTo] == "personalInfo") {
-        dispatch(updateJumpTo(LeadStage))
-      }
+      dispatch(updateJumpTo(stageMaintance))
+      
       setOtherError(null)
       navigation.navigate('addressDetail')
     })
@@ -577,5 +577,6 @@ const PersonalInformationScreen = ({ navigation }) => {
     </View>
   );
 }
+
 
 export default PersonalInformationScreen;

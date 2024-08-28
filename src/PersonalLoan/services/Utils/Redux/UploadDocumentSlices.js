@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AADHAAR_FRONT_CODE,AADHAAR_BACK_CODE, ALL_SCREEN, PAN_CODE } from '../Constants'
+import { AADHAAR_FRONT_CODE,AADHAAR_BACK_CODE, PAN_CODE } from '../Constants'
 import UploadFile, { GetUploadFiles } from '../../API/DocumentUpload'
 import { API_RESPONSE_STATUS, STATUS } from '../../API/Constants'
 import { clearAadhaarOcr, clearPanCkyc, clearPanOcr, updateAadhaarOcr, updatePanError, updatePanLoading, updatePanOcr } from './DocumentVerificationSlices'

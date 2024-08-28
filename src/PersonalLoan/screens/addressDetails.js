@@ -21,12 +21,15 @@ import ScreenError, { useErrorEffect } from './ScreenError';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import useJumpTo from "../components/StageComponent";
 
 
 const AddressScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+
+  const stageMaintance = useJumpTo("addressDetail", "employmentDetail", navigation);
+
   const AddressDetailSlice = useSelector(state => state.addressDetailSlices);
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
   const extraSlices = useSelector(state => state.extraStageSlice);
 
 
@@ -341,14 +344,11 @@ const AddressScreen = ({ navigation }) => {
     }
     totalAddress[2] = { ...AddressDetailSlice.data[2] };
 
-    let LeadStage = nextJumpTo;
-    if (ALL_SCREEN[nextJumpTo] == "addressDetail") {
-      LeadStage = nextJumpTo + 1;
-    }
+   
 
     for (let index = 0; index < totalAddress.length; index++) {
       totalAddress[index].LeadId = leadId;
-      totalAddress[index].Leadstage = LeadStage;
+      totalAddress[index].Leadstage = stageMaintance.jumpTo;
     }
 
     if (await checkLocationPermission() == false) {
@@ -371,9 +371,9 @@ const AddressScreen = ({ navigation }) => {
         return;
       }
 
-      if (ALL_SCREEN[nextJumpTo] == "addressDetail") {
-        dispatch(updateJumpTo(LeadStage));
-      }
+   
+      dispatch(updateJumpTo(stageMaintance));
+      
 
       setOtherError(null);
       navigation.navigate('employmentDetail');
@@ -791,5 +791,7 @@ const AddressScreen = ({ navigation }) => {
     </View>
   );
 };
+
+
 
 export default AddressScreen;

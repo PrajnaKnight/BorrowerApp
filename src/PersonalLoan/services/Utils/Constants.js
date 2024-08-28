@@ -4,6 +4,7 @@ export const ALL_SCREEN = [
     "personalInfo",
     "addressDetail",
     "employmentDetail",
+    "personalFinance",
     "bankDetail",
     "loanEligibility",
     "sanctionLetter",
@@ -14,6 +15,24 @@ export const ALL_SCREEN = [
     "Disbursement",
     "DisbursalAcceptedScreen"
 ]
+
+
+export const GetCurrentScreen = (navigation, screen, excludedScreens = []) => {
+    
+  
+
+    const routes = [...ALL_SCREEN]
+
+  
+    // Get the current routes from the navigation state
+    const foundRoute = routes
+        .filter(route => !excludedScreens.includes(route))
+        .findIndex(route => route === screen);
+
+    return foundRoute;
+}
+
+
 
 
 export const AADHAAR_FRONT_CODE = "AadhaarFrontBack_1509"

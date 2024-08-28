@@ -243,11 +243,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
 
     let createLeadResponse = await CreateBorrowerLead({ LeadPhone: requestModel.LeadPhone })
-    if (createLeadResponse.status == STATUS.ERROR) {
-      response.status = STATUS.ERROR
-      response.message = createLeadResponse.message
-      return response
-    }
+   
 
     console.log("Browwer Lead Created")
     console.log(createLeadResponse)
@@ -257,11 +253,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
     let createLeadProductModel = CreateSetLeadProductModel()
     createLeadProductModel.LeadId = await GetLeadId()
     let setLeadProductResponse = await SetLeadProduct(createLeadProductModel)
-    if (setLeadProductResponse.status == STATUS.ERROR) {
-      response.status = STATUS.ERROR
-      response.message = setLeadProductResponse.message
-      return response
-    }
+   
     response.status = STATUS.SUCCESS
     response.data = 0
     return response

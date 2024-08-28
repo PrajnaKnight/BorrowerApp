@@ -27,9 +27,13 @@ import DownloadPopup from '../components/DownloadPopup';
 import applyFontFamily from '../services/style/applyFontFamily';
 import { AntDesign } from '@expo/vector-icons';
 import { retry } from 'redux-saga/effects';
+import useJumpTo from "../components/StageComponent";
 
 
 const DocumentUploadScreen = ({ navigation }) => {
+
+  const stageMaintance = useJumpTo("documnetUplaod", "eMandate", navigation);
+
   const [otherError, setOtherError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setProgress } = useProgressBar();
@@ -417,20 +421,17 @@ const DocumentUploadScreen = ({ navigation }) => {
     setLoading(true);
 
 
-    let Leadstage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "documnetUplaod") {
-      Leadstage = nextJumpTo + 1
 
-      const saveLeadStageResponse = await SaveLeadStage(Leadstage)
-      if (saveLeadStageResponse.status == STATUS.ERROR) {
-        setLoading(false)
-        setOtherError(null)
-        setNewErrorScreen(saveLeadStageResponse.message)
-        return
-      }
-
-      dispatch(updateJumpTo(Leadstage))
+    const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
+    if (saveLeadStageResponse.status == STATUS.ERROR) {
+      setLoading(false)
+      setOtherError(null)
+      setNewErrorScreen(saveLeadStageResponse.message)
+      return
     }
+
+    dispatch(updateJumpTo(stageMaintance))
+
 
 
     console.log("========== fetching location =================");
@@ -441,6 +442,16 @@ const DocumentUploadScreen = ({ navigation }) => {
     navigation.navigate('eMandate');
   };
 
+
+  useEffect(()=>{
+    try{
+      scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+
+    }
+    catch(e){
+
+    }
+  },[uploadDocumentSlices.data.selectedDoc])
 
   const renderDocList = (list) => (
 
@@ -457,9 +468,7 @@ const DocumentUploadScreen = ({ navigation }) => {
             onPress={() => {
               console.log("clicked : ", index)
               dispatch(updateMasterSelected(item.DoctypeType))
-              scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-
-              tabsRef.current.scrollToIndex({ index, animated: true });
+              
             }}>
             <Text style={[styles.DoctabText, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTabText,
             { fontSize: dynamicFontSize(styles.DoctabText.fontSize) }]}>
@@ -483,7 +492,7 @@ const DocumentUploadScreen = ({ navigation }) => {
       <Text style={styles.sectionTitle}>Select ID Type</Text>
       <View style={{ flex: 1, flexDirection: 'row' }}>
 
-        <ScrollView  ref={scrollViewRef} horizontal={true} style={{ flex: 1 }}>
+        <ScrollView ref={scrollViewRef} horizontal={true} style={{ flex: 1 }}>
           {Object.keys(list).filter((item) => item != "MandatoryFlag").map(element => (
             <TouchableOpacity
               key={element}
@@ -837,6 +846,7 @@ const DocumentUploadScreen = ({ navigation }) => {
     </View>
   );
 };
+
 
 const fieldstyles = applyFontFamily({
   inputContainer: {

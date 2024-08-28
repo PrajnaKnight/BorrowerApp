@@ -44,9 +44,13 @@ import { checkLocationPermission } from "./PermissionScreen";
 import { useProgressBar } from "../components/progressContext";
 import ProgressBar from "../components/progressBar";
 import { useFocusEffect } from '@react-navigation/native';
+import useJumpTo from "../components/StageComponent";
+
 function QuickLoanAsk({ navigation }) {
+
+
   const dispatch = useDispatch();
-  const nextJumpTo = useSelector((state) => state.leadStageSlice.jumpTo);
+  const stageMaintance = useJumpTo("QLA", "primaryInfo", navigation);
   const loanAskDetails = useSelector((state) => state.loanAskSlice);
   const extraSlices = useSelector(state => state.extraStageSlice);
 
@@ -60,14 +64,21 @@ function QuickLoanAsk({ navigation }) {
   const [refreshPage, setRefreshPage] = useState(true);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const[minLoanAmount, setMinLoanAmount] = useState(5000)
+  const[maxLoanAmount, setMaxLoanAmount] = useState(500000)
+  const[minTenure, setMinTenure] = useState(6)
+  const[maxTenure, setMaxTenure] = useState(72)
 
-  useEffect(() => {
-    const isLoanAmountValid = loanAskDetails.data.LoanAmount >= 5000 && loanAskDetails.data.LoanAmount <= 500000;
-    const isTenureValid = loanAskDetails.data.AskTenure >= 6 && loanAskDetails.data.AskTenure <= 72;
-    const isPurposeSelected = !!loanAskDetails.data.PurposeOfLoan;
 
-    setIsButtonDisabled(!(isLoanAmountValid && isTenureValid && isPurposeSelected));
-  }, [loanAskDetails.data.LoanAmount, loanAskDetails.data.AskTenure, loanAskDetails.data.PurposeOfLoan]);
+
+
+  // useEffect(() => {
+  //   const isLoanAmountValid = loanAskDetails.data.LoanAmount >= minLoanAmount && loanAskDetails.data.LoanAmount <= maxLoanAmount;
+  //   const isTenureValid = loanAskDetails.data.AskTenure >= minTenure && loanAskDetails.data.AskTenure <= maxTenure;
+  //   const isPurposeSelected = !!loanAskDetails.data.PurposeOfLoan;
+
+  //   setIsButtonDisabled(!(isLoanAmountValid && isTenureValid && isPurposeSelected));
+  // }, [loanAskDetails.data.LoanAmount, loanAskDetails.data.AskTenure, loanAskDetails.data.PurposeOfLoan]);
 
 
   const onTryAgainClick = () => {
@@ -93,7 +104,7 @@ function QuickLoanAsk({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       if (!refreshPage) return;
-
+      
       dispatch(fetchLoanAskDetails());
       GetLeadId().then((response) => {
         setLeadId(response);
@@ -111,6 +122,7 @@ function QuickLoanAsk({ navigation }) {
         }
       });
 
+      
       setRefreshPage(false);
 
     }, [refreshPage]) // Empty dependency array means it will run once when the screen is focused
@@ -131,7 +143,7 @@ function QuickLoanAsk({ navigation }) {
    
     let finalValue = parseInt(properAmmount(value)) || 0;
     if (from) {
-      if (finalValue > 500000) finalValue = 500000;
+      if (finalValue > maxLoanAmount) finalValue = maxLoanAmount;
       else if (finalValue < 0) finalValue = 0;
     }
 
@@ -143,7 +155,7 @@ function QuickLoanAsk({ navigation }) {
   const handleSliderTenureChange = (value, from = null) => {
     let finalValue = parseInt(value) || 0;
     if (from) {
-      if (finalValue > 72) finalValue = 72;
+      if (finalValue > maxTenure) finalValue = maxTenure;
       else if (finalValue < 0) finalValue = 0;
     }
 
@@ -168,8 +180,8 @@ function QuickLoanAsk({ navigation }) {
     if (loanAmountValidity) return;
 
     if (
-      loanAskDetails.data.LoanAmount < 0 ||
-      loanAskDetails.data.LoanAmount > 500000
+      loanAskDetails.data.LoanAmount < minLoanAmount ||
+      loanAskDetails.data.LoanAmount > maxLoanAmount
     ) {
       setLoanAmountError("Please provide valid loan amount in given range");
       return;
@@ -183,8 +195,8 @@ function QuickLoanAsk({ navigation }) {
     if (askTenureValidity) return;
 
     if (
-      loanAskDetails.data.AskTenure < 0 ||
-      loanAskDetails.data.AskTenure > 72
+      loanAskDetails.data.AskTenure < minTenure ||
+      loanAskDetails.data.AskTenure > maxTenure
     ) {
       setTenureError("Please provide valid tenure in given range");
       return;
@@ -217,17 +229,12 @@ function QuickLoanAsk({ navigation }) {
 
     setLoading(true);
 
-    let LeadStage = nextJumpTo;
-    if (ALL_SCREEN[nextJumpTo] === "QLA") {
-      LeadStage = nextJumpTo + 1;
-    }
+    
 
-    const model = { ...loanAskDetails.data, LeadStage, LeadId };
+    const model = { ...loanAskDetails.data, LeadStage : stageMaintance.jumpTo, LeadId };
     console.log("-------------------- QLA REQUEST ------------------------");
     console.log(model);
-    console.log(
-      "-------------------- QLA REQUEST END ------------------------"
-    );
+    console.log("-------------------- QLA REQUEST END ------------------------");
 
     LoanAskDetails(model).then((response) => {
       setLoading(false);
@@ -240,9 +247,9 @@ function QuickLoanAsk({ navigation }) {
         setOtherError(response.message);
         return;
       }
-      if (ALL_SCREEN[nextJumpTo] === "QLA") {
-        dispatch(updateJumpTo(LeadStage));
-      }
+      
+      dispatch(updateJumpTo(stageMaintance));
+      
       navigation.navigate("primaryInfo");
     });
   };
@@ -345,7 +352,7 @@ function QuickLoanAsk({ navigation }) {
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
               <View>
-                <View style={{paddingTop:16}}>
+                <View>
                   <ProgressBar progress={0.01} />
                   <Text
                     style={[
@@ -371,8 +378,8 @@ function QuickLoanAsk({ navigation }) {
                   title="Loan Amount"
                   icon="rupee"
                   keyboardType="numeric"
-                  min={5000}
-                  max={500000}
+                  min={minLoanAmount}
+                  max={maxLoanAmount}
                   steps={10000}
                   sliderValue={properAmmount(loanAskDetails.data.LoanAmount)}
                   inputValue={formateAmmountValue(
@@ -386,8 +393,8 @@ function QuickLoanAsk({ navigation }) {
                   title="Tenure"
                   icon="calendar"
                   keyboardType="numeric"
-                  min={6}
-                  max={72}
+                  min={minTenure}
+                  max={maxTenure}
                   steps={3}
                   sliderValue={loanAskDetails.data.AskTenure}
                   inputValue={loanAskDetails.data.AskTenure.toString()}
@@ -432,19 +439,16 @@ function QuickLoanAsk({ navigation }) {
             <View style={styles.boxShadow}>
               <LinearGradient
                 colors={
-                  isButtonDisabled
-                    ? ["#E9EEFF", "#D8E2FF"]
-                    : ["#002777", "#00194C"]
+                  
+                    ["#002777", "#00194C"]
                 }
-                style={[styles.proceedbutton,isButtonDisabled ? styles.GrayBOrder : styles.BlueBorder,  { fontSize }]}>
+                style={[styles.proceedbutton, styles.BlueBorder,  { fontSize }]}>
                 <ButtonComponent
                   title="PROCEED"
                   onPress={handleProceed}
-                  disabled={isButtonDisabled}
                   textStyle={
-                    isButtonDisabled
-                      ? styles.buttonDisabledText
-                      : styles.buttonEnabledText
+                  
+                      styles.buttonEnabledText
                   }
                 />
               </LinearGradient>

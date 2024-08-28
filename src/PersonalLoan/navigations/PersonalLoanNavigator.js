@@ -37,6 +37,7 @@ import WebCameraScreen from '../screens/WebCameraScreen';
 import { PortalProvider } from '@gorhom/portal';
 import FAQScreen from '../screens/FAQScreen';
 
+import PersonalFinance from'../screens/personalFinance'
 import {decode, encode} from 'base-64'
 
 if (!global.btoa) {
@@ -117,6 +118,8 @@ function PersonalLoanNavigator({navigation}) {
               <Stack.Screen name="eKycVerify" component={EKycVerify} />
               <Stack.Screen name="addressDetail" component={AddressDetail} />
               <Stack.Screen name="employmentDetail" component={EmploymentDetail} />
+              <Stack.Screen name="personalFinance" component={PersonalFinance} />
+
               <Stack.Screen name="bankDetail" component={BankDetail} />
               <Stack.Screen name="loanEligibility" component={LoanEligibility} />
               <Stack.Screen name="sanctionLetter" component={SanctionLetter} />

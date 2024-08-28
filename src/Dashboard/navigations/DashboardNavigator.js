@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import HomeScreen from '../screens/HomeScreen';
 import BottomBar from '../components/BottomTabBar';
@@ -45,7 +44,6 @@ import { TabProvider } from '../components/TabContext';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-SplashScreen.preventAutoHideAsync();
 
 const LoanStack = () => (
   <Stack.Navigator>
@@ -100,12 +98,11 @@ function DashboardNavigator() {
   });
 
   const [isAppReady, setIsAppReady] = useState(false);
-  const [showEMINotification, setShowEMINotification] = useState(true);
+  const [showEMINotification, setShowEMINotification] = useState(false);
 
   useEffect(() => {
     async function prepare() {
       try {
-        await SplashScreen.preventAutoHideAsync();
         if (fontsLoaded) {
           await new Promise(resolve => setTimeout(resolve, 2000));
           setIsAppReady(true);
@@ -113,9 +110,7 @@ function DashboardNavigator() {
       } catch (e) {
         console.warn(e);
       } finally {
-        if (fontsLoaded) {
-          await SplashScreen.hideAsync();
-        }
+        
       }
     }
 
@@ -123,9 +118,7 @@ function DashboardNavigator() {
   }, [fontsLoaded]);
 
   const onLayoutRootView = useCallback(async () => {
-    if (isAppReady) {
-      await SplashScreen.hideAsync();
-    }
+   
   }, [isAppReady]);
 
   if (!isAppReady) {

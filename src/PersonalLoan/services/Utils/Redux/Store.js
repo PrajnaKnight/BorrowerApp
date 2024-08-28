@@ -8,6 +8,7 @@ import AddressDetailSlices from "./AddressDetailSlices"
 import BankDetailSlices from "./BankDetailSlices"
 import DisbursalInfoSlices from "./DisbursalInfo"
 import ExtraStageSlice from "./ExtraSlices"
+import PersonalLoanDetailSlice from "./PersonalFinanceDetailSlices"
 import DocumentVerificationSlices, { doAadhaarEkyc } from "./DocumentVerificationSlices"
 import UploadDocumentSlices, { sagaFetchFileRunner, sagaSubmitFileRunner } from "./UploadDocumentSlices"
 import UploadOtherFileSlice, { sagaFetchOtherFileRunner, sagaDeleteFileRunner } from "./OtherUploadDocumentSlices"
@@ -33,7 +34,8 @@ const store = configureStore({
     uploadDocumentSlices : UploadDocumentSlices,
     disbursalInfoSlices : DisbursalInfoSlices,
     otherDocumentSlices : UploadOtherFileSlice,
-    extraStageSlice : ExtraStageSlice
+    extraStageSlice : ExtraStageSlice,
+    personalLoanDetailSlice : PersonalLoanDetailSlice
   },
 
   middleware: (getDefaultMiddleware) =>  getDefaultMiddleware().concat([sagaMiddleware]), 

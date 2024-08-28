@@ -22,16 +22,15 @@ import { SubmitAddressFromDocuments } from '../services/API/AddressDetails';
 import { fetchGetBorrowerAddress } from '../services/Utils/Redux/AddressDetailSlices';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { checkLocationPermission } from './PermissionScreen';
-
+import useJumpTo from "../components/StageComponent";
 
 const EKycVerificationScreen = ({ navigation, route }) => {
 
   const documentationKycStatus = useSelector(state => state.documentVerificationSlices);
   const AddressDetailSlice = useSelector(state => state.addressDetailSlices);
 
+  const stageMaintance = useJumpTo("primaryInfo", "personalInfo", navigation);
 
-
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
 
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
@@ -130,21 +129,16 @@ const EKycVerificationScreen = ({ navigation, route }) => {
     }
    
 
-    let LeadStage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "primaryInfo") {
-      LeadStage = nextJumpTo + 1
-    }
+  
 
-    const storeTheLead = await PostSaveProceedtage(LeadStage)
+    const storeTheLead = await PostSaveProceedtage(stageMaintance.jumpTo)
     if (storeTheLead.status == STATUS.ERROR) {
       repsonse.status = STATUS.ERROR
       repsonse.message = storeTheLead.message
       return repsonse
     }
 
-    if (ALL_SCREEN[nextJumpTo] == "primaryInfo") {
-      dispatch(updateJumpTo(LeadStage))
-    }
+    dispatch(updateJumpTo(stageMaintance))
 
 
     return repsonse
@@ -445,7 +439,5 @@ const EKycVerificationScreen = ({ navigation, route }) => {
     </View>
   );
 };
-
-
 
 export default EKycVerificationScreen;

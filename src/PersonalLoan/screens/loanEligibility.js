@@ -38,11 +38,12 @@ import GetLookUp from '../services/API/GetLookUp';
 import CustomProgressChart from '../components/CustomProgressChart';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SubmitBorrowerLoanApplicationAsyncSubmit } from '../services/API/SaveBankAccountDetail';
+import useJumpTo from "../components/StageComponent";
 
 const LoanEligibilityScreen = ({ navigation }) => {
   const route = useRoute();
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
   const extraSlices = useSelector(state => state.extraStageSlice);
+  const stageMaintance = useJumpTo("loanEligibility", "sanctionLetter", navigation);
 
   const dispatch = useDispatch()
   const { setProgress } = useProgressBar();
@@ -92,7 +93,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
 
 
-    
+
     let getBreEligibility = await GetBreEligibility()
 
     console.log("=============================== Get Bre Eligibility =============================")
@@ -100,9 +101,9 @@ const LoanEligibilityScreen = ({ navigation }) => {
     console.log("=============================== Get Bre Eligibility =============================")
 
     if (getBreEligibility.status == STATUS.ERROR) {
-        apiResponse.status = STATUS.ERROR
-        apiResponse.message = getBreEligibility.message
-        return apiResponse
+      apiResponse.status = STATUS.ERROR
+      apiResponse.message = getBreEligibility.message
+      return apiResponse
     }
 
 
@@ -110,14 +111,14 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
     let BREPolicyResponseWillShowLoanAmountAndTenure = true
 
-    if(!apiResponse.data.BreElligibility?.MPBFLimit){
+    if (!apiResponse.data.BreElligibility?.MPBFLimit) {
       let loanEligibility = await GetQuickEligibilityDetailInfo()
       console.log("=============================== Loan Eligibility =============================")
       console.log(loanEligibility)
       console.log("=============================== Loan Eligibility =============================")
-  
+
       if (loanEligibility.status == STATUS.ERROR) {
-       
+
         apiResponse.status = STATUS.ERROR
         apiResponse.message = loanEligibility.message
         return apiResponse
@@ -125,25 +126,25 @@ const LoanEligibilityScreen = ({ navigation }) => {
       BREPolicyResponseWillShowLoanAmountAndTenure = false
       apiResponse.data = { ...apiResponse.data, BREPolicyResponse: loanEligibility.data.BREPolicyResponse[0] }
     }
-    else{
+    else {
 
       let MPBFLimit = JSON.parse(apiResponse.data.BreElligibility?.MPBFLimit);
-      
-      apiResponse.data = {...apiResponse.data, BREPolicyResponse: MPBFLimit[0][0] }
+
+      apiResponse.data = { ...apiResponse.data, BREPolicyResponse: MPBFLimit[0][0] }
     }
 
     const BREPolicyResponse = apiResponse.data.BREPolicyResponse
-    
+
     const BreElligibility = apiResponse.data.BreElligibility
 
     setLoanAskAmount(BreElligibility?.LoanAskAmount)
-    setRateOfInterest(BreElligibility?.InterestRate|| BREPolicyResponse?.ROI || 0)
+    setRateOfInterest(BreElligibility?.InterestRate || BREPolicyResponse?.ROI || 0)
 
-    if(!BREPolicyResponseWillShowLoanAmountAndTenure){
+    if (!BREPolicyResponseWillShowLoanAmountAndTenure) {
       setTenure(BREPolicyResponse?.MaxTenure || 0)
       setLoanAmount(BREPolicyResponse?.MPBFRangeMinMaxData[Object.keys(BREPolicyResponse?.MPBFRangeMinMaxData)[Object.keys(BREPolicyResponse?.MPBFRangeMinMaxData).length - 1]] || 0)
     }
-    else{
+    else {
       setTenure(BreElligibility?.Tenure || BREPolicyResponse?.MaxTenure || 0)
       setLoanAmount(BreElligibility?.LoanAmount || BREPolicyResponse?.MPBFRangeMinMaxData[Object.keys(BREPolicyResponse?.MPBFRangeMinMaxData)[Object.keys(BREPolicyResponse?.MPBFRangeMinMaxData).length - 1]] || 0)
     }
@@ -158,12 +159,12 @@ const LoanEligibilityScreen = ({ navigation }) => {
     setMinLoanAmount(BREPolicyResponse?.LoanAmountMin || 0)
 
     setLoanCriteria(BREPolicyResponse?.MPBFRangeMinMaxData)
-      
+
     setLoanApproved(true)
 
     console.log("============ Application ID CREATE ================" + await GetApplicantId())
 
-   
+
     setApplicationID(await GetApplicantId())
 
     apiResponse.status = STATUS.SUCCESS
@@ -174,262 +175,261 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-    if (!refreshPage) {
-      return;
-    }
-    setLoading(true);
-
-    ProcessTheLoanApplication().then(response => {
-      setNewErrorScreen(null);
-      setLoading(false);
-
-      if (response.status === STATUS.ERROR) {
-        if (response.message === "NOT ELIGIBLE") {
-          setLoanApproved(false);
-          navigation.replace("rejection");
-        } else if (response.message !== Network_Error && response.message) {
-          setNewErrorScreen(response.message);
-        } else {
-          setOtherError(response.message);
-        }
+      if (!refreshPage) {
         return;
       }
-    });
+      setLoading(true);
 
-    setRefreshPage(false)
+      ProcessTheLoanApplication().then(response => {
+        setNewErrorScreen(null);
+        setLoading(false);
 
+        if (response.status === STATUS.ERROR) {
+          if (response.message === "NOT ELIGIBLE") {
+            setLoanApproved(false);
+            navigation.replace("rejection");
+          } else if (response.message !== Network_Error && response.message) {
+            setNewErrorScreen(response.message);
+          } else {
+            setOtherError(response.message);
+          }
+          return;
+        }
+      });
 
-
-
-
-
-
-
-
-
-    // const BREPolicyResponse = {
-    //   "PolicyId": 2874,
-    //   "ROI": 16,
-    //   "MinTenure": 10,
-    //   "MaxTenure": 100,
-    //   "IsPassed": "Yes",
-    //   "LoanAmountMin": 5000,
-    //   "LoanAmountMax": 100000,
-    //   "MPBFRangeMinMaxData": {
-    //     "10": 930414,
-    //     "11": 1016856,
-    //     "12": 1102161,
-    //     "13": 1186343,
-    //     "14": 1269417,
-    //     "15": 1351399,
-    //     "16": 1432301,
-    //     "17": 1512140,
-    //     "18": 1590927,
-    //     "19": 1668678,
-    //     "20": 1745406,
-    //     "21": 1821124,
-    //     "22": 1895846,
-    //     "23": 1969585,
-    //     "24": 2042354,
-    //     "25": 2114165,
-    //     "26": 2185031,
-    //     "27": 2254965,
-    //     "28": 2323979,
-    //     "29": 2392084,
-    //     "30": 2459294,
-    //     "31": 2525619,
-    //     "32": 2591071,
-    //     "33": 2655662,
-    //     "34": 2719404,
-    //     "35": 2782306,
-    //     "36": 2844381,
-    //     "37": 2905639,
-    //     "38": 2966091,
-    //     "39": 3025748,
-    //     "40": 3084620,
-    //     "41": 3142717,
-    //     "42": 3200050,
-    //     "43": 3256628,
-    //     "44": 3312462,
-    //     "45": 3367561,
-    //     "46": 3421935,
-    //     "47": 3475594,
-    //     "48": 3528547,
-    //     "49": 3580803,
-    //     "50": 3632371,
-    //     "51": 3683261,
-    //     "52": 3733481,
-    //     "53": 3783040,
-    //     "54": 3831948,
-    //     "55": 3880212,
-    //     "56": 3927840,
-    //     "57": 3974843,
-    //     "58": 4021226,
-    //     "59": 4067000,
-    //     "60": 4112171,
-    //     "61": 4156747,
-    //     "62": 4200737,
-    //     "63": 4244149,
-    //     "64": 4286989,
-    //     "65": 4329265,
-    //     "66": 4370986,
-    //     "67": 4412157,
-    //     "68": 4452786,
-    //     "69": 4492881,
-    //     "70": 4532449,
-    //     "71": 4571495,
-    //     "72": 4610028,
-    //     "73": 4648054,
-    //     "74": 4685580,
-    //     "75": 4722612,
-    //     "76": 4759156,
-    //     "77": 4795220,
-    //     "78": 4830809,
-    //     "79": 4865930,
-    //     "80": 4900589,
-    //     "81": 4934792,
-    //     "82": 4968545,
-    //     "83": 5001853,
-    //     "84": 5034724,
-    //     "85": 5067161,
-    //     "86": 5099172,
-    //     "87": 5130762,
-    //     "88": 5161936,
-    //     "89": 5192700,
-    //     "90": 5223060,
-    //     "91": 5253019,
-    //     "92": 5282585,
-    //     "93": 5311761,
-    //     "94": 5340554,
-    //     "95": 5368968,
-    //     "96": 5397008,
-    //     "97": 5424679,
-    //     "98": 5451985,
-    //     "99": 5478933,
-    //     "100": 5505526
-    //   },
-    //   "EMIRangeMinMaxData": {
-    //     "10": 100000,
-    //     "11": 100000,
-    //     "12": 100000,
-    //     "13": 100000,
-    //     "14": 100000,
-    //     "15": 100000,
-    //     "16": 100000,
-    //     "17": 100000,
-    //     "18": 100000,
-    //     "19": 100000,
-    //     "20": 100000,
-    //     "21": 100000,
-    //     "22": 100000,
-    //     "23": 100000,
-    //     "24": 100000,
-    //     "25": 100000,
-    //     "26": 100000,
-    //     "27": 100000,
-    //     "28": 100000,
-    //     "29": 100000,
-    //     "30": 100000,
-    //     "31": 100000,
-    //     "32": 100000,
-    //     "33": 100000,
-    //     "34": 100000,
-    //     "35": 100000,
-    //     "36": 100000,
-    //     "37": 100000,
-    //     "38": 100000,
-    //     "39": 100000,
-    //     "40": 100000,
-    //     "41": 100000,
-    //     "42": 100000,
-    //     "43": 100000,
-    //     "44": 100000,
-    //     "45": 100000,
-    //     "46": 100000,
-    //     "47": 100000,
-    //     "48": 100000,
-    //     "49": 100000,
-    //     "50": 100000,
-    //     "51": 100000,
-    //     "52": 100000,
-    //     "53": 100000,
-    //     "54": 100000,
-    //     "55": 100000,
-    //     "56": 100000,
-    //     "57": 100000,
-    //     "58": 100000,
-    //     "59": 100000,
-    //     "60": 100000,
-    //     "61": 100000,
-    //     "62": 100000,
-    //     "63": 100000,
-    //     "64": 100000,
-    //     "65": 100000,
-    //     "66": 100000,
-    //     "67": 100000,
-    //     "68": 100000,
-    //     "69": 100000,
-    //     "70": 100000,
-    //     "71": 100000,
-    //     "72": 100000,
-    //     "73": 100000,
-    //     "74": 100000,
-    //     "75": 100000,
-    //     "76": 100000,
-    //     "77": 100000,
-    //     "78": 100000,
-    //     "79": 100000,
-    //     "80": 100000,
-    //     "81": 100000,
-    //     "82": 100000,
-    //     "83": 100000,
-    //     "84": 100000,
-    //     "85": 100000,
-    //     "86": 100000,
-    //     "87": 100000,
-    //     "88": 100000,
-    //     "89": 100000,
-    //     "90": 100000,
-    //     "91": 100000,
-    //     "92": 100000,
-    //     "93": 100000,
-    //     "94": 100000,
-    //     "95": 100000,
-    //     "96": 100000,
-    //     "97": 100000,
-    //     "98": 100000,
-    //     "99": 100000,
-    //     "100": 100000
-    //   }
-    // }
-    // setRateOfInterest(BREPolicyResponse.ROI || 0)
-    // setMinTenure(BREPolicyResponse.MinTenure || 0)
-    // setMaxTenure(BREPolicyResponse.MaxTenure || 0)
-    // setMaxLoanAmount(BREPolicyResponse.MPBFRangeMinMaxData[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData)[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData).length - 1]] || 0)
-    // setMinLoanAmount(BREPolicyResponse.LoanAmountMin || 0)
-    // setLoanCriteria(BREPolicyResponse.MPBFRangeMinMaxData)
-
-    // const maxEmi = BREPolicyResponse.EMIRangeMinMaxData[Object.keys(BREPolicyResponse.EMIRangeMinMaxData)[Object.keys(BREPolicyResponse.EMIRangeMinMaxData).length - 1]] || 0
-    // setEmiAmount(maxEmi)
-
-    // setTenure(BREPolicyResponse.MaxTenure || 0)
-    // setLoanAmount(BREPolicyResponse.MPBFRangeMinMaxData[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData)[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData).length - 1]] || 0)
-    // setLoanApproved(true)
+      setRefreshPage(false)
 
 
 
 
 
-  }, [refreshPage]))
+
+
+
+
+
+      // const BREPolicyResponse = {
+      //   "PolicyId": 2874,
+      //   "ROI": 16,
+      //   "MinTenure": 10,
+      //   "MaxTenure": 100,
+      //   "IsPassed": "Yes",
+      //   "LoanAmountMin": 5000,
+      //   "LoanAmountMax": 100000,
+      //   "MPBFRangeMinMaxData": {
+      //     "10": 930414,
+      //     "11": 1016856,
+      //     "12": 1102161,
+      //     "13": 1186343,
+      //     "14": 1269417,
+      //     "15": 1351399,
+      //     "16": 1432301,
+      //     "17": 1512140,
+      //     "18": 1590927,
+      //     "19": 1668678,
+      //     "20": 1745406,
+      //     "21": 1821124,
+      //     "22": 1895846,
+      //     "23": 1969585,
+      //     "24": 2042354,
+      //     "25": 2114165,
+      //     "26": 2185031,
+      //     "27": 2254965,
+      //     "28": 2323979,
+      //     "29": 2392084,
+      //     "30": 2459294,
+      //     "31": 2525619,
+      //     "32": 2591071,
+      //     "33": 2655662,
+      //     "34": 2719404,
+      //     "35": 2782306,
+      //     "36": 2844381,
+      //     "37": 2905639,
+      //     "38": 2966091,
+      //     "39": 3025748,
+      //     "40": 3084620,
+      //     "41": 3142717,
+      //     "42": 3200050,
+      //     "43": 3256628,
+      //     "44": 3312462,
+      //     "45": 3367561,
+      //     "46": 3421935,
+      //     "47": 3475594,
+      //     "48": 3528547,
+      //     "49": 3580803,
+      //     "50": 3632371,
+      //     "51": 3683261,
+      //     "52": 3733481,
+      //     "53": 3783040,
+      //     "54": 3831948,
+      //     "55": 3880212,
+      //     "56": 3927840,
+      //     "57": 3974843,
+      //     "58": 4021226,
+      //     "59": 4067000,
+      //     "60": 4112171,
+      //     "61": 4156747,
+      //     "62": 4200737,
+      //     "63": 4244149,
+      //     "64": 4286989,
+      //     "65": 4329265,
+      //     "66": 4370986,
+      //     "67": 4412157,
+      //     "68": 4452786,
+      //     "69": 4492881,
+      //     "70": 4532449,
+      //     "71": 4571495,
+      //     "72": 4610028,
+      //     "73": 4648054,
+      //     "74": 4685580,
+      //     "75": 4722612,
+      //     "76": 4759156,
+      //     "77": 4795220,
+      //     "78": 4830809,
+      //     "79": 4865930,
+      //     "80": 4900589,
+      //     "81": 4934792,
+      //     "82": 4968545,
+      //     "83": 5001853,
+      //     "84": 5034724,
+      //     "85": 5067161,
+      //     "86": 5099172,
+      //     "87": 5130762,
+      //     "88": 5161936,
+      //     "89": 5192700,
+      //     "90": 5223060,
+      //     "91": 5253019,
+      //     "92": 5282585,
+      //     "93": 5311761,
+      //     "94": 5340554,
+      //     "95": 5368968,
+      //     "96": 5397008,
+      //     "97": 5424679,
+      //     "98": 5451985,
+      //     "99": 5478933,
+      //     "100": 5505526
+      //   },
+      //   "EMIRangeMinMaxData": {
+      //     "10": 100000,
+      //     "11": 100000,
+      //     "12": 100000,
+      //     "13": 100000,
+      //     "14": 100000,
+      //     "15": 100000,
+      //     "16": 100000,
+      //     "17": 100000,
+      //     "18": 100000,
+      //     "19": 100000,
+      //     "20": 100000,
+      //     "21": 100000,
+      //     "22": 100000,
+      //     "23": 100000,
+      //     "24": 100000,
+      //     "25": 100000,
+      //     "26": 100000,
+      //     "27": 100000,
+      //     "28": 100000,
+      //     "29": 100000,
+      //     "30": 100000,
+      //     "31": 100000,
+      //     "32": 100000,
+      //     "33": 100000,
+      //     "34": 100000,
+      //     "35": 100000,
+      //     "36": 100000,
+      //     "37": 100000,
+      //     "38": 100000,
+      //     "39": 100000,
+      //     "40": 100000,
+      //     "41": 100000,
+      //     "42": 100000,
+      //     "43": 100000,
+      //     "44": 100000,
+      //     "45": 100000,
+      //     "46": 100000,
+      //     "47": 100000,
+      //     "48": 100000,
+      //     "49": 100000,
+      //     "50": 100000,
+      //     "51": 100000,
+      //     "52": 100000,
+      //     "53": 100000,
+      //     "54": 100000,
+      //     "55": 100000,
+      //     "56": 100000,
+      //     "57": 100000,
+      //     "58": 100000,
+      //     "59": 100000,
+      //     "60": 100000,
+      //     "61": 100000,
+      //     "62": 100000,
+      //     "63": 100000,
+      //     "64": 100000,
+      //     "65": 100000,
+      //     "66": 100000,
+      //     "67": 100000,
+      //     "68": 100000,
+      //     "69": 100000,
+      //     "70": 100000,
+      //     "71": 100000,
+      //     "72": 100000,
+      //     "73": 100000,
+      //     "74": 100000,
+      //     "75": 100000,
+      //     "76": 100000,
+      //     "77": 100000,
+      //     "78": 100000,
+      //     "79": 100000,
+      //     "80": 100000,
+      //     "81": 100000,
+      //     "82": 100000,
+      //     "83": 100000,
+      //     "84": 100000,
+      //     "85": 100000,
+      //     "86": 100000,
+      //     "87": 100000,
+      //     "88": 100000,
+      //     "89": 100000,
+      //     "90": 100000,
+      //     "91": 100000,
+      //     "92": 100000,
+      //     "93": 100000,
+      //     "94": 100000,
+      //     "95": 100000,
+      //     "96": 100000,
+      //     "97": 100000,
+      //     "98": 100000,
+      //     "99": 100000,
+      //     "100": 100000
+      //   }
+      // }
+      // setRateOfInterest(BREPolicyResponse.ROI || 0)
+      // setMinTenure(BREPolicyResponse.MinTenure || 0)
+      // setMaxTenure(BREPolicyResponse.MaxTenure || 0)
+      // setMaxLoanAmount(BREPolicyResponse.MPBFRangeMinMaxData[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData)[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData).length - 1]] || 0)
+      // setMinLoanAmount(BREPolicyResponse.LoanAmountMin || 0)
+      // setLoanCriteria(BREPolicyResponse.MPBFRangeMinMaxData)
+
+      // const maxEmi = BREPolicyResponse.EMIRangeMinMaxData[Object.keys(BREPolicyResponse.EMIRangeMinMaxData)[Object.keys(BREPolicyResponse.EMIRangeMinMaxData).length - 1]] || 0
+      // setEmiAmount(maxEmi)
+
+      // setTenure(BREPolicyResponse.MaxTenure || 0)
+      // setLoanAmount(BREPolicyResponse.MPBFRangeMinMaxData[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData)[Object.keys(BREPolicyResponse.MPBFRangeMinMaxData).length - 1]] || 0)
+      // setLoanApproved(true)
+
+
+
+
+
+    }, [refreshPage]))
 
   const handleLoanAmountChange = (value, from) => {
     let finalValue = parseInt(properAmmount(value)) || 0;
     if (from) {
       if (finalValue > maxLoanAmount) {
         finalValue = maxLoanAmount;
-      } else if (finalValue < minLoanAmount) {
-        finalValue = minLoanAmount;
-      }
+      } else if (finalValue < 0) finalValue = 0;
+
     }
     setLoanAmount(finalValue);
     setLoanAmountError(null);
@@ -440,9 +440,8 @@ const LoanEligibilityScreen = ({ navigation }) => {
     if (from) {
       if (finalValue > maxTenure) {
         finalValue = maxTenure;
-      } else if (finalValue < minTenure) {
-        finalValue = minTenure;
-      }
+      } else if (finalValue < 0) finalValue = 0;
+
     }
     setTenure(finalValue);
     setTenureError(null);
@@ -472,7 +471,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
   const dynamicFontSize = size => size + fontSize;
 
-  const handleProceed = async() => {
+  const handleProceed = async () => {
     if (extraSlices.isBreDone) {
       navigation.navigate('sanctionLetter');
       return;
@@ -510,36 +509,31 @@ const LoanEligibilityScreen = ({ navigation }) => {
       return;
     }
 
-    let LeadStage = nextJumpTo;
-    if (ALL_SCREEN[nextJumpTo] === "loanEligibility") {
-      LeadStage = nextJumpTo + 1;
-    }
+ 
 
-    let reponseModel = { Tenure: tenure, RateOfInterest: rateOfInterest, Amount: loanAmount, EMI: emiAmount, Leadstage: LeadStage }
+    let reponseModel = { Tenure: tenure, RateOfInterest: rateOfInterest, Amount: loanAmount, EMI: emiAmount, Leadstage: stageMaintance.jumpTo }
     setLoading(true)
-
     const sendSaveEligibility = await SendSaveBREEligibilityInfo(reponseModel)
     setNewErrorScreen(null)
     setLoading(false)
-    if(sendSaveEligibility.status == STATUS.ERROR){
-        setNewErrorScreen(response.message)
-        return
-      
+    if (sendSaveEligibility.status == STATUS.ERROR) {
+      setNewErrorScreen(response.message)
+      return
+
     }
 
-    if (ALL_SCREEN[nextJumpTo] == "loanEligibility") {
-      dispatch(updateJumpTo(LeadStage))
-    }
+    dispatch(updateJumpTo(stageMaintance))
     
+
     let userAvailable = await GetLookUp()
     if (userAvailable.data != null) {
       dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
     }
-    
-    
+
+
     navigation.navigate('sanctionLetter')
 
-    
+
 
 
   }
@@ -657,7 +651,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                 )}
 
                 <View style={styles.marginBtm}>
-                {loanApproved == true &&
+                  {loanApproved == true &&
                     <Text
                       style={[
                         styles.description,
@@ -682,7 +676,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                     { alignItems: "center", marginTop: 10, marginBottom: 20 },
                   ]}>
                   <CustomProgressChart
-                    loanAmount={loanAskAmount}
+                    loanAmount={properAmmount(loanAmount)}
                     minLoanAmount={0}
                     maxLoanAmount={maxLoanAmount}
                   />
@@ -739,17 +733,17 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   isTenure={true}
                 />
 
-{!isEligible && (
-                      <Text style={styles.errorText}>
-                        You are not eligible for selected loan amount
-                      </Text>
-                    )}
+                {!isEligible && (
+                  <Text style={styles.errorText}>
+                    You are not eligible for selected loan amount
+                  </Text>
+                )}
                 <View
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}>
-                  <View style={{flex:1, paddingRight:5}}>
+                  <View style={{ flex: 1, paddingRight: 5 }}>
                     <Text
                       style={[
                         styles.label,
@@ -767,9 +761,9 @@ const LoanEligibilityScreen = ({ navigation }) => {
                     </Text>
                   </View>
 
-                
 
-                  <View style={[styles.emiContainer, {flex:1, paddingLeft:5}]}>
+
+                  <View style={[styles.emiContainer, { flex: 1, paddingLeft: 5 }]}>
                     <Text
                       style={[
                         styles.label,
@@ -777,7 +771,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       ]}>
                       EMI Amount
                     </Text>
-                    
+
                     <Text
                       style={[
                         styles.input,
@@ -830,5 +824,4 @@ const LoanEligibilityScreen = ({ navigation }) => {
     </View>
   );
 };
-
 export default LoanEligibilityScreen;

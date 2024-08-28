@@ -21,10 +21,12 @@ import SaveLeadStage from '../services/API/SaveLeadStage';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { useFocusEffect } from '@react-navigation/native';
+import useJumpTo from "../components/StageComponent";
 
 const SanctionLetterScreen = ({ navigation }) => {
   // Placeholder data, replace with real data
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
+  const stageMaintance = useJumpTo("sanctionLetter", "documnetUplaod", navigation);
+
   const dispatch = useDispatch()
 
   const [sanctionDetails, setSanctionDetails] = useState([])
@@ -63,28 +65,25 @@ const SanctionLetterScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-    if (refreshPage == false) {
-      return
-    }
-    setProgress(0.4);
-    setLoading(true)
-    getSectionDetails().then((response) => {
-      setLoading(false)
-      setNewErrorScreen(null)
-      if (response.status == STATUS.ERROR) {
-        if (response.message == Network_Error || response.message != null) {
-          setNewErrorScreen(response.message)
-          return
-        }
-        setOtherError(response.message)
+      if (refreshPage == false) {
         return
       }
+      setProgress(0.4);
+      setLoading(true)
+      getSectionDetails().then((response) => {
+        setLoading(false)
+        setNewErrorScreen(null)
+        if (response.status == STATUS.ERROR) {
+            setNewErrorScreen(response.message)
+          
+          return
+        }
 
 
-    })
+      })
 
-    setRefreshPage(false)
-  }, [refreshPage]));
+      setRefreshPage(false)
+    }, [refreshPage]));
 
 
 
@@ -112,21 +111,18 @@ const SanctionLetterScreen = ({ navigation }) => {
     }
 
 
-    let Leadstage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "sanctionLetter") {
-      Leadstage = nextJumpTo + 1
 
-      const saveLeadStageResponse = await SaveLeadStage(Leadstage)
-      if(saveLeadStageResponse.status == STATUS.ERROR){
-        setLoading(false)
-        setOtherError(null)
-        setNewErrorScreen(saveLeadStageResponse.message)
-        return
-      }
-
-      dispatch(updateJumpTo(Leadstage))
-    }
+    const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
     setLoading(false)
+
+    if (saveLeadStageResponse.status == STATUS.ERROR) {
+      setOtherError(null)
+      setNewErrorScreen(saveLeadStageResponse.message)
+      return
+    }
+
+    dispatch(updateJumpTo(stageMaintance))
+
 
     navigation.navigate('documnetUplaod')
      
@@ -216,9 +212,9 @@ const SanctionLetterScreen = ({ navigation }) => {
 
   const { width, height } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
-  
+
   // Definitions for "mobile", "tablet", and "desktop" based on width
-  const isMobile = width < 768; 
+  const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024; // Tablet range, including iPad portrait
   const isDesktop = width >= 1024; // Desktop and iPad landscape
 

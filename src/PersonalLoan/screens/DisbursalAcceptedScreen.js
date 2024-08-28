@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView,Platform, useWindowDimensions, ImageBackground } from 'react-native';
 import { styles } from '../services/style/gloablStyle';
 import { useAppContext } from '../components/useContext';
@@ -14,19 +14,26 @@ import { GetBankFundOutData, GetBankFundOutDataModel } from '../services/API/Ini
 import ScreenError, { useErrorEffect } from './ScreenError';
 import LoadingOverlay from '../components/FullScreenLoader';
 import { STATUS } from '../services/API/Constants';
+import useJumpTo from "../components/StageComponent";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const DisbursementAcceptedScreen = ({ navigation }) => {
 
-  const [applicationId, setApplicationID] = useState(null)
+
+  const disbursedetails = useSelector(state => state.disbursalInfoSlices);
 
   const [transactionDetails, setTransactionDetails] = useState(null);
 
+  const [refresh, setRefersh] = useState(true)
   const [loading, setLoading] = useState(false);
   const onTryAgainClick = () => {
     setNewErrorScreen(null)
+    setRefersh(true)
   }
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick)
+
 
 
 
@@ -35,8 +42,13 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
 
     const { setProgress } = useProgressBar();
 
-    useEffect(() => {
+    useFocusEffect(
+      useCallback(() => {
         setProgress(10);
+
+        if(!refresh){
+          return
+        }
         setLoading(true)
         
 
@@ -50,10 +62,14 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
           setTransactionDetails(GetBankFundOutDataModel(response.data))
   
         })
-        GetApplicantId().then((response)=>{
-          setApplicationID(response)
-        })
-    }, []);
+
+        setRefersh(false)
+        
+    }, [refresh]));
+
+
+   
+  
 
     const { width, height } = useWindowDimensions();
     const isWeb = Platform.OS === 'web';
@@ -67,14 +83,14 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
     const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
     const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
 
-    const DetailItem = ({ iconName, label, value, isLastItem }) => (
+    const DetailItem = ({ style, iconName, label, value, isLastItem }) => (
       <View style={[styles.detailItem, !isLastItem && styles.borderBottom]}>
         <View style={styles.disburseiconContainer}>
           <FontAwesome5 name={iconName} size={16} color="#FFFFFF" />
         </View>
         <View style={styles.detailTextContainer}>
           <Text style={styles.disbursedetailLabel}>{label}</Text>
-          <Text style={styles.detailValue}>{value}</Text>
+          <Text style={[styles.detailValue, style]}>{value}</Text>
         </View>
         <View style={styles.goldAccent} />
       </View>
@@ -162,7 +178,8 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
             style={[styles.rightCOntainer, { flex: 1 }]}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
-            <LoadingOverlay visible={loading} />
+
+            <LoadingOverlay visible={loading}/>
 
             <View style={{ paddingHorizontal: 16 }}>
               <ProgressBar progress={10} />
@@ -178,19 +195,17 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
                         Your disbursement request is processed
                       </Text>
                       <Text style={styles.disburseamount}>
-                        ₹{" "}
-                        {formateAmmountValue(transactionDetails?.DisbursementAmount)}
+                      ₹{" "}
+                      {formateAmmountValue(transactionDetails?.DisbursementAmount)}
                       </Text>
                       <Text style={styles.disburseAccountInfo}>
-                        Transferred to Bank Account - {transactionDetails?.BankAcc}
+                      Transferred to Bank Account - {transactionDetails?.BankAcc}
                       </Text>
-                      <Text style={styles.disburseTransactionInfo}>
-                        Transaction ID : {transactionDetails?.TransactionID}
-                      </Text>
+                     
                       <Text style={styles.disburseTransactionInfo}>
                       {transactionDetails?.TransactionDate && format(transactionDetails?.TransactionDate, "PPP")}
-                      </Text>
 
+                      </Text>
                     </View>
                   </View>
                   <View style={styles.detailsContainer}>
@@ -207,7 +222,8 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
                     <DetailItem
                       iconName="id-card"
                       label="Mandate ID"
-                      value={null}
+                      value={transactionDetails?.MandateID}
+                      style={{maxWidth:200}}
                       isLastItem
                     />
                   </View>
@@ -236,7 +252,6 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </LinearGradient>
             </View>
-
             {errorScreen.type != null && (
             <ScreenError
               errorObject={errorScreen}
@@ -249,8 +264,6 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
       </View>
     );
 };
-
-
 
 
 export default DisbursementAcceptedScreen;

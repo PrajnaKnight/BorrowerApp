@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { API_RESPONSE_STATUS, STATUS, SAVE_EMPLOYEMENT_DETAILS, GET_EMPLOYEMENT_TYPE, GET_OCCUPATION_TYPE, GET_EMPLOYEMENT_DETAILS, GetHeader, GET_COMPANY_DETAILS } from "./Constants";
+import { API_RESPONSE_STATUS, STATUS, SAVE_EMPLOYEMENT_DETAILS, GET_EMPLOYEMENT_TYPE, GET_OCCUPATION_TYPE, GET_EMPLOYEMENT_DETAILS, GetHeader, GET_COMPANY_DETAILS,  GET_BORROWER_PERSONAL_FINAL_DETAIL, SAVE_BORROWER_PERSONAL_FINAL_DETAIL } from "./Constants";
 import { GetLeadId } from '../LOCAL/AsyncStroage';
 import { Network_Error, Something_Went_Wrong } from '../Utils/Constants';
 import { SendGeoLocation } from './LocationApi';
@@ -26,7 +26,7 @@ const SubmitEmploymentDetails = async (requestModel, EmploymentType, EmploymentC
         console.log("EmploymentType  = ",EmploymentType)
 
         console.log("EmploymentCategory  = ",EmploymentCategory)
-        
+        console.log(queryParams)
         console.log("================ EMPLOYMENT DETAILS REQUEST =================")
 
 
@@ -267,7 +267,7 @@ export const GetEmploymentDetails = async () => {
             // else {
             //     message = "Something went wrong";
             // }
-            message = data?.Message ||  "Error : Facing Problem While Fetching Employment Details !"
+            message = data?.Message || "Error : Facing Problem While Fetching Employment Details !"
         }
 
     } catch (error) {
@@ -278,21 +278,105 @@ export const GetEmploymentDetails = async () => {
         status = STATUS.ERROR
         let errorMessage = error.message
 
-        if(errorMessage != Network_Error){
-           errorMessage = errorresponseData || "Error : Facing Problem While Fetching Employment Details !"
+        if (errorMessage != Network_Error) {
+            errorMessage = errorresponseData || "Error : Facing Problem While Fetching Employment Details !"
         }
 
         message = errorMessage
         data = null
+    }
 
-        // console.log(error)
-        // status = STATUS.ERROR
-        // let errorMessage = error.message
-        // if (errorMessage != Network_Error) {
-        //     errorMessage = Something_Went_Wrong
-        // }
-        // message = errorMessage
-        // data = null
+    return API_RESPONSE_STATUS(status, data, message)
+
+
+}
+
+export const SavePeronsalFinanceDetails = async (perosnalLoan) => {
+    let status, data, message;
+
+    try {
+
+        const header = await GetHeader()
+        let response = await axios.post(SAVE_BORROWER_PERSONAL_FINAL_DETAIL, perosnalLoan,  { headers: header })
+
+        data = response.data
+
+        status = response.status == 200 ? STATUS.SUCCESS : STATUS.ERROR
+
+        if (status == STATUS.SUCCESS) {
+            message = response.data.Message
+        }
+        else {
+            message = data?.Message || "Error : Facing Problem While Saving Personal Finance Details !";
+        }
+
+    } catch (error) {
+
+        const errorresponseData = error?.response?.data?.Message;
+        console.error('Error - SavePeronsalFinanceDetails  - response data : ', errorresponseData);
+
+        status = STATUS.ERROR
+        let errorMessage = error.message
+
+        if (errorMessage != Network_Error) {
+            errorMessage = errorresponseData || "Error : Facing Problem Saving Personal Finance Details !"
+        }
+
+        message = errorMessage
+        data = null
+    }
+
+
+    return API_RESPONSE_STATUS(status, data, message)
+}
+
+export const GetPeronsalFinanceDetails = async () => {
+
+
+
+    let status, data, message;
+
+    try {
+
+
+        const LeadId = await GetLeadId()
+        const header = await GetHeader()
+        console.log(LeadId)
+        const url = `${GET_BORROWER_PERSONAL_FINAL_DETAIL}?LeadID=${LeadId}`
+        console.log(url)
+
+        let response = await axios.get(url, { headers: header })
+
+
+        data = response.data
+        console.log(data)
+        status = response.status == 200 ? STATUS.SUCCESS : STATUS.ERROR
+
+        if (status == STATUS.SUCCESS) {
+
+            message = response.data.Message
+
+        }
+        else {
+
+
+            message = data?.Message || "Error : Facing Problem While Fetching Personal Finance Details !"
+        }
+
+    } catch (error) {
+
+        const errorresponseData = error?.response?.data?.Message;
+        console.error('Error - GetPeronsalFinanceDetails  - response data : ', errorresponseData);
+
+        status = STATUS.ERROR
+        let errorMessage = error.message
+
+        if (errorMessage != Network_Error) {
+            errorMessage = errorresponseData || "Error : Facing Problem While Fetching Personal Finance Details !"
+        }
+
+        message = errorMessage
+        data = null
     }
 
     return API_RESPONSE_STATUS(status, data, message)

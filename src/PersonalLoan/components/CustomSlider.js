@@ -59,11 +59,12 @@ const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue,
     }
 
     if (value === '') {
-      setInternalValue('');
-      onChange(min, 'fromInput');
+      onChange(0, 'fromInput');
     } else {
-      const numericValue = Math.max(min, Math.min(max, Number(value)));
-      setInternalValue(numericValue.toString());
+      let numericValue = Number(value);
+      if(numericValue >  max){
+        numericValue = max
+      }
       onChange(numericValue, 'fromInput');
     }
   };
@@ -91,7 +92,7 @@ const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue,
           <TextInput
             style={[styles.Input, { fontSize: dynamicFontSize(styles.Input.fontSize) }]}
             onChangeText={handleTextInputChange}
-            value={isForAmount ? `₹ ${displayValue}` : displayValue}
+            value={internalValue}
             keyboardType={keyboardType}
           />
         </View>

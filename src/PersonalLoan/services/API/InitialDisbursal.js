@@ -287,6 +287,8 @@ export const GetDisbursalModel = (data) => {
         Insurance: data?.Insurance,
 
         EmiAmount: data?.EMIAmount,
+        IsFundOutComplete : data?.IsFundOutComplete,
+        MandateID : data?.MandateID,
         NetDisbursmentAmount: null
     }
 }
@@ -311,6 +313,8 @@ export const GetBankFundOutDataModel = (data) => {
         TransactionID: data.TransactionID,
         BankAcc: data.BankAcc ,
         EMIAmount: data.EMIAmount,
-        IsFundOutComplete: data.IsFundOutComplete
+        IsFundOutComplete: data.IsFundOutComplete,
+        MandateID : data.MandateID
+
     }
 }

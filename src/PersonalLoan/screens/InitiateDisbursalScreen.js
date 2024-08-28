@@ -35,11 +35,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import CustomDropdown from '../components/Dropdown';
 import { Fontisto } from '@expo/vector-icons';
 import { formateAmmountValue } from '../services/Utils/FieldVerifier';
+import useJumpTo from "../components/StageComponent";
+
 const InitiateDisbursalScreen = ({ navigation }) => {
 
   const { width, height } = useWindowDimensions();
   const [applicationId, setApplicationId] = useState(null)
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
+
+  const stageMaintance = useJumpTo("InitiateDisbursalScreen", "Disbursement", navigation);
+
 
   const dispatch = useDispatch()
 
@@ -145,28 +149,29 @@ const InitiateDisbursalScreen = ({ navigation }) => {
     }
 
     setLoading(true)
-
-
     let createLaResponse = await CreateLA()
+    setLoading(false)
 
     if (createLaResponse.status == STATUS.ERROR) {
-      setLoading(false)
       setNewErrorScreen(response.message)
+      return
     }
 
-    let Leadstage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "InitiateDisbursalScreen") {
-      Leadstage = nextJumpTo + 1
-      const saveLeadStageResponse = await SaveLeadStage(Leadstage)
-      if (saveLeadStageResponse == STATUS.ERROR) {
-        setLoading(false)
-        setNewErrorScreen(response.message)
-        return
-      }
 
-      dispatch(updateJumpTo(Leadstage))
 
+
+
+    setLoading(true)
+    const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
+    setLoading(false)
+
+    if (saveLeadStageResponse == STATUS.ERROR) {
+      setNewErrorScreen(response.message)
+      return
     }
+
+    dispatch(updateJumpTo(stageMaintance))
+
 
 
 
@@ -324,10 +329,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                   ]}>
                   Repayment Scheduled
                 </Text>
-                <View style={styles.Linkcontainer}>
-                  <Fontisto name="link" size={16} color="#6B7280" />
-                  <Text style={styles.linktext}>loremipsumtext</Text>
-                </View>
+                
                 <View style={styles.tableContainer}>
                   <View style={[styles.tableRow]}>
                     <Text style={styles.tableHeader}>Loan ID</Text>
@@ -346,7 +348,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                     <Text style={styles.tableHeader}>Processing Fee</Text>
                     <Text style={styles.tableData}>
                       {requestModel?.ProcessingFeeAmount &&
-                        `₹ ${formateAmmountValue(requestModel?.ProcessingFeeAmount)}`}
+                        `₹ ${requestModel?.ProcessingFeeAmount.toLocaleString()}`}
                     </Text>
                   </View>
 

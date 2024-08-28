@@ -16,6 +16,7 @@ import { DownloadMyFile } from "../services/Utils/FieldVerifier";
 import { STATUS } from "../services/API/Constants";
 import { GoBack } from "../services/Utils/ViewValidator";
 import applyFontFamily from "../services/style/applyFontFamily";
+import useJumpTo from "../components/StageComponent";
 const ThankYou = ({ navigation }) => {
   const route = useRoute();
 
@@ -124,6 +125,8 @@ const ThankYou = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const stageMaintance = useJumpTo("loanAgreement", "InitiateDisbursalScreen", navigation);
+
   const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
 
   const dispatch = useDispatch();
@@ -131,20 +134,17 @@ const ThankYou = ({ navigation }) => {
   const HandleProceed = async() =>{
 
     
-    let Leadstage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "loanAgreement") {
-      
-      Leadstage = nextJumpTo + 1
-
-      const saveLeadStageResponse = await SaveLeadStage(Leadstage)
-      if(saveLeadStageResponse.status == STATUS.ERROR){
-        setLoading(false)
-        setNewErrorScreen(saveLeadStageResponse.message)
-        return
-      }
-
-      dispatch(updateJumpTo(Leadstage))
+    
+    setLoading(true)
+    const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
+    setLoading(false)
+    if(saveLeadStageResponse.status == STATUS.ERROR){
+      setNewErrorScreen(saveLeadStageResponse.message)
+      return
     }
+
+    dispatch(updateJumpTo(stageMaintance))
+    
     navigation.navigate("InitiateDisbursalScreen")
   }
 
@@ -265,6 +265,7 @@ const ThankYou = ({ navigation }) => {
     </View>
   );
 };
+
 
 const screenStyles = StyleSheet.create({
   successContainer: {

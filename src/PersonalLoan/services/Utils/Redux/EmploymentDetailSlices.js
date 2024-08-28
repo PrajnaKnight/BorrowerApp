@@ -236,6 +236,7 @@ export const EmploymentDetailSlice = createSlice({
      
       
       }
+     
       
 
       state.data.LeadDOB = response.data.LeadDOB

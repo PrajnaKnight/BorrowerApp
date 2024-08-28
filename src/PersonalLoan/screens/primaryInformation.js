@@ -58,12 +58,15 @@ import PostSaveProceedtage from '../services/API/SaveProceedStage';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { StoreUserAadhaar, StoreUserPan } from '../services/LOCAL/AsyncStroage';
 import { DeleteUploadFiles } from '../services/API/DocumentUpload';
+import useJumpTo from "../components/StageComponent";
 
 
 const PrimaryInfo = ({ navigation }) => {
+
+  const stageMaintance = useJumpTo("primaryInfo", "personalInfo", navigation);
+
   const documentationKycStatus = useSelector((state) => state.documentVerificationSlices);
   const AddressDetailSlice = useSelector((state) => state.addressDetailSlices);
-  const nextJumpTo = useSelector((state) => state.leadStageSlice.jumpTo);
   const uploadDocumentSlices = useSelector((state) => state.uploadDocumentSlices);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -440,21 +443,15 @@ const PrimaryInfo = ({ navigation }) => {
       return response;
     }
 
-    let LeadStage = nextJumpTo;
-    if (ALL_SCREEN[nextJumpTo] === 'primaryInfo') {
-      LeadStage = nextJumpTo + 1;
-    }
-
-    const storeTheLead = await PostSaveProceedtage(LeadStage);
+    const storeTheLead = await PostSaveProceedtage(stageMaintance.jumpTo);
     if (storeTheLead.status === STATUS.ERROR) {
       response.status = STATUS.ERROR;
       response.message = storeTheLead.message;
       return response;
     }
 
-    if (ALL_SCREEN[nextJumpTo] === 'primaryInfo') {
-      dispatch(updateJumpTo(LeadStage));
-    }
+    dispatch(updateJumpTo(stageMaintance));
+    
     response.data = 'personalInfo';
 
     return response;
@@ -596,14 +593,14 @@ const PrimaryInfo = ({ navigation }) => {
 
 
   const maskAadharNumber = (aadhar) => {
-    if (aadhar === null || aadhar.startsWith('null')) {
+    if (aadhar === null || aadhar?.startsWith('null')) {
       return null;
     }
     return aadhar;
   };
 
   const maskPanNumber = (pan) => {
-    if (pan === null || pan.startsWith('null')) {
+    if (pan === null || pan?.startsWith('null')) {
       return null;
     }
     return pan;

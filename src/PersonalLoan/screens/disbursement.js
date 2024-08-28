@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
 import { BankFundOut, GetBankFundOutData, GetBankFundOutDataModel, GetDisbursalData, GetDisbursalModel } from '../services/API/InitialDisbursal';
-import { STATUS } from '../services/API/Constants';
+import { API_RESPONSE_STATUS, STATUS } from '../services/API/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import LoadingOverlay from '../components/FullScreenLoader';
 import { formatDate, formateAmmountValue, properAmmount } from '../services/Utils/FieldVerifier';
@@ -17,18 +17,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GetApplicantId } from '../services/LOCAL/AsyncStroage';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import useJumpTo from "../components/StageComponent";
+
 
 const DisbursementScreen = ({ navigation }) => {
-  const disbursedetails = useSelector(state => state.disbursalInfoSlices);
 
-  const [transactionDetails, setTransactionDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [refreshPage, setRefreshPage] = useState(true)
-  const [applicationId, setApplicationID] = useState(null)
   const [disbursalInfo, setDisbursalInfo] = useState(null)
 
-
-  const dispatch = useDispatch()
 
   const onTryAgainClick = () => {
     setNewErrorScreen(null)
@@ -37,55 +34,61 @@ const DisbursementScreen = ({ navigation }) => {
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick)
 
+
+  const LoadPage = async() =>{
+    let apiResponse = API_RESPONSE_STATUS()
+    const disbursal = await GetDisbursalData()
+    if(disbursal.status == STATUS.ERROR){
+      apiResponse.status = STATUS.ERROR
+      apiResponse.message = disbursal.message
+      return apiResponse;
+    }
+
+    let details = GetDisbursalModel(disbursal.data)
+    setDisbursalInfo(details)
+
+
+ 
+    apiResponse.status = STATUS.SUCCESS
+    return apiResponse
+
+  }
   useFocusEffect(
     useCallback(() => {
       if (!refreshPage) {
         return
       }
       setLoading(true)
-
-      GetDisbursalData().then((response) => {
+      setNewErrorScreen(null)
+      LoadPage().then((response) => {
         setLoading(false)
         if (response.status == STATUS.ERROR) {
           setNewErrorScreen(response.message)
           return
         }
-        let details = GetDisbursalModel(response.data)
-        setDisbursalInfo(details)
       })
-      GetBankFundOutData().then((response) => {
-        setLoading(false)
-        if (response.status == STATUS.ERROR) {
-          setNewErrorScreen(response.message)
-          return
-        }
-
-        setTransactionDetails(GetBankFundOutDataModel(response.data))
-
-      })
-      GetApplicantId().then((response) => {
-        setApplicationID(response)
-      })
+      
+    
       setRefreshPage(false)
     }, [refreshPage]))
 
   useFocusEffect(
     useCallback(() => {
-      if (transactionDetails) {
-        dispatch(updateDisbursalInfoFromGetBankFundOut(transactionDetails))
-      }
+      
 
-      if (transactionDetails?.IsFundOutComplete) {
+      if(disbursalInfo == null){
+        return
+      }
+      if (disbursalInfo.IsFundOutComplete) {
         navigation.replace("DisbursalAcceptedScreen");
         return
       }
 
       setTimeout(() => {
-        if (transactionDetails?.UTRNumber && transactionDetails?.DisbursementAmount) {
           setLoading(true)
 
           setTimeout(() => {
-            BankFundOut(transactionDetails?.UTRNumber, transactionDetails?.DisbursementAmount).then((response) => {
+            BankFundOut(disbursalInfo?.LoanAmount).then((response) => {
               setLoading(false);
               if (response.status === STATUS.ERROR) {
                 setNewErrorScreen(response.message);
@@ -96,9 +99,9 @@ const DisbursementScreen = ({ navigation }) => {
               navigation.replace("DisbursalAcceptedScreen");
             });
           }, 15000);
-        }
+        
       }, 5000);
-    }, [transactionDetails]))
+    }, [disbursalInfo]))
 
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
@@ -119,14 +122,14 @@ const DisbursementScreen = ({ navigation }) => {
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
 
-  const DetailItem = ({ iconName, label, value, isLastItem }) => (
+  const DetailItem = ({ style, iconName, label, value, isLastItem }) => (
     <View style={[styles.detailItem]}>
       <View style={styles.disburseiconContainer}>
         <FontAwesome5 name={iconName} size={16} color="#FFFFFF" />
       </View>
       <View style={styles.detailTextContainer}>
         <Text style={styles.disbursedetailLabel}>{label}</Text>
-        <Text style={styles.detailValue}>{value}</Text>
+        <Text style={[styles.detailValue, style]}>{value}</Text>
       </View>
       <View style={styles.goldAccent} />
     </View>
@@ -218,7 +221,7 @@ const DisbursementScreen = ({ navigation }) => {
           <View style={{ paddingHorizontal: 16 }}>
             <ProgressBar progress={10} />
           </View>
-          {transactionDetails?.UTRNumber != null &&
+          {disbursalInfo != null &&
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={[styles.container]}>
                 <ProgressBar progress={10} />
@@ -232,9 +235,9 @@ const DisbursementScreen = ({ navigation }) => {
                     </Text>
                     <Text style={styles.disburseamountText}>
                       ₹{" "}
-                      {transactionDetails?.DisbursementAmount &&
+                      {disbursalInfo?.LoanAmount &&
                         formateAmmountValue(
-                          transactionDetails?.DisbursementAmount
+                          disbursalInfo?.LoanAmount
                         )}
                     </Text>
                     <Text style={styles.disbursesubtitleText}>
@@ -257,7 +260,8 @@ const DisbursementScreen = ({ navigation }) => {
                     <DetailItem
                       iconName="id-card"
                       label="Mandate ID"
-                      value={null}
+                      value={disbursalInfo?.MandateID}
+                      style={{maxWidth:200}}
                     />
                   </View>
                 </ImageBackground>
@@ -299,6 +303,5 @@ const DisbursementScreen = ({ navigation }) => {
     </View>
   );
 };
-
 
 export default DisbursementScreen;

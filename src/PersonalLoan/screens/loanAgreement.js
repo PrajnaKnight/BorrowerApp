@@ -16,6 +16,7 @@ import { DownloadMyFile, generateUniqueAddress } from '../services/Utils/FieldVe
 import { Platform } from 'react-native';
 import WebView from 'react-native-webview';
 import { GoBack } from '../services/Utils/ViewValidator';
+import useJumpTo from "../components/StageComponent";
 
 import * as FileSystem from 'expo-file-system';
 import { checkImagePermission, checkLocationPermission } from './PermissionScreen';
@@ -34,6 +35,7 @@ const LoanAgreementScreen = ({ navigation }) => {
 
 
 
+  const stageMaintance = useJumpTo("loanAgreement", "InitiateDisbursalScreen", navigation);
 
 
   const [loanWebView, setLoanWebView] = useState(null)
@@ -41,7 +43,6 @@ const LoanAgreementScreen = ({ navigation }) => {
   const [TransactionId, setTransactionId] = useState(null)
   const [AadhaarESignHtmlResponse, setAadhaarESignHtmlResponse] = useState(null)
 
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
 
   const dispatch = useDispatch();
 
@@ -78,33 +79,30 @@ const LoanAgreementScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-    if (refreshPage == false) {
-      return
-    }
-    setProgress(0.7);
-    setLoading(true)
-    setLoanWebView(null)
-    setChecked(false)
-    setTransactionId(null)
-    setAadhaarESignHtmlResponse(null)
-    GetLoanAgreementLetter().then((response) => {
-      setLoading(false)
-
-      if (response.status == STATUS.ERROR) {
-        if (response.message == Network_Error || response.message != null) {
-          setNewErrorScreen(response.message)
-          return
-        }
-        setOtherError(response.message)
+      if (refreshPage == false) {
         return
       }
+      setProgress(0.7);
+      setLoading(true)
+      setLoanWebView(null)
+      setChecked(false)
+      setTransactionId(null)
+      setAadhaarESignHtmlResponse(null)
+      GetLoanAgreementLetter().then((response) => {
+        setLoading(false)
 
-      if (response.data != null) {
-        setLoanWebView(response.data)
-      }
-    })
-    setRefreshPage(false)
-  }, [refreshPage]));
+        if (response.status == STATUS.ERROR) {
+          setNewErrorScreen(response.message)
+           
+          return
+        }
+
+        if (response.data != null) {
+          setLoanWebView(response.data)
+        }
+      })
+      setRefreshPage(false)
+    }, [refreshPage]));
 
   useEffect(() => {
     const backAction = () => {
@@ -182,29 +180,25 @@ const LoanAgreementScreen = ({ navigation }) => {
     setNewErrorScreen(null)
 
     const checkEsignResponse = await CheckEsignLoanAgreement()
+    setLoading(false)
+
     console.log("=============== loan agreemnt response ===================")
     console.log(checkEsignResponse)
     if (checkEsignResponse.status == STATUS.SUCCESS) {
 
+      setLoading(true)
+      const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
       setLoading(false)
-
-      let Leadstage = nextJumpTo
-      if (ALL_SCREEN[nextJumpTo] == "loanAgreement") {
-        Leadstage = nextJumpTo + 1
-
-        setLoading(true)
-        const saveLeadStageResponse = await SaveLeadStage(Leadstage)
-        setLoading(false)
-        if(saveLeadStageResponse.status == STATUS.ERROR){          
-          setNewErrorScreen(saveLeadStageResponse.message)
-          return
-        }
-
-        dispatch(updateJumpTo(Leadstage))
+      if (saveLeadStageResponse.status == STATUS.ERROR) {
+        setNewErrorScreen(saveLeadStageResponse.message)
+        return
       }
 
+      dispatch(updateJumpTo(stageMaintance))
+
+
       navigation.navigate("InitiateDisbursalScreen")
-      
+
       return;
     }
 
@@ -212,10 +206,10 @@ const LoanAgreementScreen = ({ navigation }) => {
 
 
 
+    setLoading(true)
     const getBase64OfLoanAgrreement = await GetLoanAgreementFile()
-
+    setLoading(false)
     if (getBase64OfLoanAgrreement.status == STATUS.ERROR) {
-      setLoading(false)
       setNewErrorScreen(getBase64OfLoanAgrreement.message)
       return
     }
@@ -243,7 +237,7 @@ const LoanAgreementScreen = ({ navigation }) => {
 
 
 
-
+    setLoading(true)
     const eSignExternal = await ESignExternal()
     setLoading(false)
 
@@ -360,7 +354,7 @@ const LoanAgreementScreen = ({ navigation }) => {
     <View style={styles.webViewWrapper}>
       <WebView
         originWhitelist={['*']}
-        source={{ html: loanWebView?.HTMLContent }}
+        source={{ html: loanWebView?.HTMLContent || "" }}
         style={styles.webViewcontent}
       />
     </View>

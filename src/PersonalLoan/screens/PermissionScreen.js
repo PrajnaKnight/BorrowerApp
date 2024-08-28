@@ -9,7 +9,8 @@ import {
     ScrollView,
     Modal,
     AppState,
-    Linking
+    Linking,
+    BackHandler
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -21,7 +22,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../services/style/gloablStyle';
 import { RequestLocationPermission, fetchCameraFromWeb } from '../services/API/LocationApi';
 import { IntentLauncherAndroid } from 'react-native';
-import { GoBack } from '../services/Utils/ViewValidator';
+import { PermissionPopup } from '../components/DownloadPopup';
+import useJumpTo from "../components/StageComponent";
 
 let PermissionsAndroid;
 if (Platform.OS === 'android') {
@@ -108,6 +110,7 @@ const PermissionsScreen = ({ navigation, route }) => {
     const [refreshPermissions, setRefreshPermission] = useState(true)
     const [showPermssionModel, setShowPermssionModel] = useState(null)
 
+    const [showPerimissionPopup, setShowPerimissionPopup] = useState(false)
     const appState = useRef(AppState.currentState);
 
 
@@ -155,8 +158,30 @@ const PermissionsScreen = ({ navigation, route }) => {
     //     }
     //   };
 
-    const handleNextPress = () => {
-        GoBack(navigation)
+    const checkPermission = async () => {
+        const locationPermission = await checkLocationPermission();
+        const cameraPermission = await checkCameraPermission();
+        const imagePermission = await checkImagePermission();
+        return locationPermission && cameraPermission && imagePermission
+    }
+
+    const handleNextPress = async () => {
+        const { GoBack } = require('../services/Utils/ViewValidator');
+
+        if (route.params.launchTimeAsk) {
+
+            if (await checkPermission()) {
+                route.params.onGoBack();
+                return
+            }
+
+            setShowPerimissionPopup(true)
+        }
+        else {
+
+            GoBack(navigation)
+
+        }
     };
 
 
@@ -226,7 +251,7 @@ const PermissionsScreen = ({ navigation, route }) => {
                 </Text>
             </View>
             <LinearGradient colors={['#002777', '#00194C']} style={styles.Gotobutton}>
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity onPress={() => { }}>
                     <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>
                         GO TO SETTINGS
                     </Text>
@@ -274,7 +299,7 @@ const PermissionsScreen = ({ navigation, route }) => {
                     </Text>
                     <View style={styles.dialogButtons}>
                         <TouchableOpacity onPress={() => {
-                        
+
 
                             // if (showPermssionModel === 'camera') setCameraPermission(RESULTS.DENIED);
                             // if (showPermssionModel === 'files') setFilesPermission(RESULTS.DENIED);
@@ -306,6 +331,9 @@ const PermissionsScreen = ({ navigation, route }) => {
 
     const renderPermissionRequestView = async (type) => {
 
+        if (!type) {
+            return
+        }
 
         if (Platform.OS === "android") {
             if (type === 'camera') {
@@ -405,6 +433,22 @@ const PermissionsScreen = ({ navigation, route }) => {
     }, []);
 
 
+    useEffect(() => {
+        
+        const backAction = () => {
+            handleNextPress()
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+    
+        return () => backHandler.remove();
+      }, []);
+    
+
     return (
         <View style={styles.mainContainer}>
             <View style={{ flex: 1, flexDirection: isWeb ? 'row' : 'column' }}>
@@ -449,9 +493,7 @@ const PermissionsScreen = ({ navigation, route }) => {
                                     <Text style={styles.weblinkText}>To know more about product features & benefits, please click here</Text>
                                 </TouchableOpacity>
                             </View>
-                            {/* <View style={styles.bottomFixed}>
-         <Image source={require('../assets/images/poweredby.png')} style={styles.logo} />
-      </View> */}
+
                         </View>
                     </View>
                 )}
@@ -468,24 +510,32 @@ const PermissionsScreen = ({ navigation, route }) => {
                             </Text>
                             <View style={styles.permissionContainer}>
                                 {renderPermissionsView()}
-                               
+
                                 {showPermssionModel && ShowPermissionDialog()}
                             </View>
 
 
-                            <TouchableOpacity onPress={handleNextPress} style={{marginBottom:10}}>
+                            <TouchableOpacity onPress={handleNextPress} style={{ marginBottom: 10 }}>
 
-                            <LinearGradient colors={['#002777', '#00194C']} style={[styles.Nextbutton]}>
+                                <LinearGradient colors={['#002777', '#00194C']} style={[styles.Nextbutton]}>
                                     <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>
-                                        BACK
+
+                                        {route.params.launchTimeAsk ? "NEXT" : "BACK"}
+
                                     </Text>
-                            </LinearGradient>
+                                </LinearGradient>
                             </TouchableOpacity>
 
 
 
                         </View>
                     </ScrollView>
+
+                    {showPerimissionPopup && <PermissionPopup onClose={() => { setShowPerimissionPopup(false) }} onExitApp={() => {
+                        const { GoBack } = require('../services/Utils/ViewValidator');
+                        GoBack(navigation)
+                    }} />}
+
                 </KeyboardAvoidingView>
             </View>
         </View>

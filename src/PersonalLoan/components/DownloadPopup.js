@@ -84,3 +84,49 @@ export default App = ({ path, onClose }) => {
     );
 }
 
+
+export const PermissionPopup = ({ onClose, onExitApp }) => {
+
+
+    return (
+        <Modal
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => {
+                onClose()
+            }}>
+
+            <View style={styles.overlay}>
+                <View style={styles.permissionDialog}>
+                    <Icon
+                        name={'info'}
+                        size={48}
+                        color="#0056B3"
+                    />
+                    <Text style={styles.permissionDialogText}>
+                    To ensure optimal functionality and a seamless user experience, please grant the necessary permissions for Location, Camera, and Files. These permissions are essential for accessing location-based features, capturing and uploading photos, and managing files within the app. We appreciate your attention to this matter.
+                    </Text>
+                    <View style={styles.dialogButtons}>
+                        <TouchableOpacity onPress={() => {
+                            onClose()
+                        }}>
+                            <Text style={styles.dialogButtonText}>Close</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            onClose()
+                            onExitApp()
+                        }
+
+
+                        }>
+                            <Text style={styles.dialogButtonText}>Exit App</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+
+
+        </Modal>
+
+    );
+}

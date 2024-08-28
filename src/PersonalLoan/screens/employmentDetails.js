@@ -19,18 +19,22 @@ import { calculatePastDate, createDateFromDMY, createDateFromDMYToDash, formateA
 import LoadingOverlay from '../components/FullScreenLoader';
 import { GoBack } from '../services/Utils/ViewValidator';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCurrentStage, updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
+import { OPTION, updateCurrentStage, updateJumpTo, updateThingsToRemove } from '../services/Utils/Redux/LeadStageSlices';
 import { fetchGetEmploymentDetails, updateEmploymentCategory, updateEmploymentCategoryError, updateEmploymentType, updateEmploymentTypeError, updateSalaried, updateSelfEmployed } from '../services/Utils/Redux/EmploymentDetailSlices';
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import CustomSlider from '../components/CustomSlider';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
+import useJumpTo from "../components/StageComponent";
 
 const EmploymentDetailScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const extraSlices = useSelector(state => state.extraStageSlice);
 
+
+  const [nextScreen, setNextScreen] = useState("bankDetail")
+  const stageMaintance = useJumpTo("employmentDetail", nextScreen, navigation);
 
   const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
   const EmploymentDetailSlice = useSelector(state => state.employmentDetailSlices);
@@ -59,6 +63,9 @@ const EmploymentDetailScreen = ({ navigation }) => {
   const [refreshPage, setRefreshPage] = useState(true);
   const [salariedCompanySearchResult, setSalariedCompanySearchResult] = useState(null);
   const [selfEmployeedCompanySearchResult, setSelfEmployeedCompanySearchResult] = useState(null);
+
+  const [maxMonthlyIncome, setMaxMonthlyIncome] = useState(1000000)
+  const [minMonthlyIncome, setMinMonthlyIncome] = useState(0)
 
   const onTryAgainClick = () => {
     setRefreshPage(true);
@@ -174,29 +181,30 @@ const EmploymentDetailScreen = ({ navigation }) => {
       setRefreshPage(false)
     }, [refreshPage]))
 
-    useEffect(() => {
-      if (currentSelectedEmploymentOptionId == null) {
+  useEffect(() => {
+    if (currentSelectedEmploymentOptionId == null) {
+      return;
+    }
+    setLoading(true);
+    GetOccupationType(currentSelectedEmploymentOptionId).then(response => {
+      setLoading(false);
+      if (response.status == STATUS.ERROR) {
+        setOtherError(response.message);
         return;
       }
-      setLoading(true);
-      GetOccupationType(currentSelectedEmploymentOptionId).then(response => {
-        setLoading(false);
-        if (response.status == STATUS.ERROR) {
-          setOtherError(response.message);
-          return;
-        }
-        setOtherError(null);
-        if (response.data != null) {
-          let occupationTypes = [];
-          response.data.forEach((item) => {
-            occupationTypes.push({ label: item.Text, value: item.Text });
-          });
-          setOcupationValueOptions([...occupationTypes]);
-        }
-      });
-    }, [currentSelectedEmploymentOptionId]);
+      setOtherError(null);
+      if (response.data != null) {
+        let occupationTypes = [];
+        response.data.forEach((item) => {
+          occupationTypes.push({ label: item.Text, value: item.Text });
+        });
+        setOcupationValueOptions([...occupationTypes]);
+      }
+    });
+  }, [currentSelectedEmploymentOptionId]);
 
   const onEmploymentTypeChange = (itemValue) => {
+    
     dispatch(updateEmploymentType(itemValue.label));
     dispatch(updateEmploymentCategory(null));
 
@@ -275,8 +283,8 @@ const EmploymentDetailScreen = ({ navigation }) => {
         case "AnnualCTC":
           let finalValue = parseInt(properAmmount(value)) || 0;
           if (from != null) {
-            if (finalValue > 1000000) {
-              finalValue = 1000000;
+            if (finalValue > maxMonthlyIncome) {
+              finalValue = maxMonthlyIncome;
             } else if (finalValue < 0) {
               finalValue = 0;
             }
@@ -350,8 +358,8 @@ const EmploymentDetailScreen = ({ navigation }) => {
         case "AnnualCTC":
           let finalValue = parseInt(properAmmount(value)) || 0;
           if (from != null) {
-            if (finalValue > 1000000) {
-              finalValue = 1000000;
+            if (finalValue > maxMonthlyIncome) {
+              finalValue = maxMonthlyIncome;
             } else if (finalValue < 0) {
               finalValue = 0;
             }
@@ -412,7 +420,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       if (annualCTCErrorErrorValidity != null) {
         return employmentDetails;
       }
-      if (details.AnnualCTC < 0 || details.AnnualCTC > 1000000) {
+      if (details.AnnualCTC < minMonthlyIncome || details.AnnualCTC > maxMonthlyIncome) {
         employmentDetails.AnnualCTCError = "Please provide valid net monthly salary is given range";
         return employmentDetails;
       }
@@ -480,7 +488,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       if (annualCTCErrorErrorValidity != null) {
         return employmentDetails;
       }
-      if (details.CompanyTurnOver < 0 || details.CompanyTurnOver > 1000000) {
+      if (details.CompanyTurnOver < minMonthlyIncome || details.CompanyTurnOver > maxMonthlyIncome) {
         employmentDetails.AnnualCTCError = "Please provide valid net monthly company turn over is given range";
         return employmentDetails;
       }
@@ -546,7 +554,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
   const submitEmploymentDetails = async () => {
 
     if (extraSlices.isBreDone) {
-      navigation.navigate('bankDetail');
+      navigation.navigate(nextScreen);
       return;
     }
 
@@ -587,13 +595,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       currentRequestModel.LeadId = LeadId
 
     }
-    let LeadStage = nextJumpTo;
-    if (ALL_SCREEN[nextJumpTo] == "employmentDetail") {
-      LeadStage = nextJumpTo + 1;
-    }
-
-
-    // currentRequestModel.Leadstage = LeadStage
+    
 
 
     if (await checkLocationPermission() == false) {
@@ -601,32 +603,22 @@ const EmploymentDetailScreen = ({ navigation }) => {
       return
     }
     setLoading(true);
-    SubmitEmploymentDetails(currentRequestModel, EmploymentType, EmploymentCategory, LeadStage).then(response => {
+    console.log("==== submiting employment ===")
+    SubmitEmploymentDetails(currentRequestModel, EmploymentType, EmploymentCategory, stageMaintance.jumpTo).then(response => {
       setLoading(false);
       setNewErrorScreen(null);
       if (response.status == STATUS.ERROR) {
-        if (response.message == Network_Error || response.message != null) {
-          setNewErrorScreen(response.message);
-          return;
-        }
-        setOtherError(response.message);
+        setNewErrorScreen(response.message);
         return;
       }
-      if (ALL_SCREEN[nextJumpTo] == "employmentDetail") {
-        dispatch(updateJumpTo(LeadStage));
-      }
+      dispatch(updateJumpTo(stageMaintance));
+      
       setOtherError(null);
-      navigation.navigate('bankDetail');
+      navigation.navigate(nextScreen);
     });
   };
 
-  useEffect(() => {
-    if (EmploymentType == 'salaried') {
-      if (Salaried.Experience && !Salaried.JoiningDate) {
-        updateInfo("WorkStartDate", calculatePastDate(Salaried.Experience));
-      }
-    }
-  }, [EmploymentType, Salaried.Experience]);
+  
 
   const CompanyItem = ({ item, onPress }) => (
     <TouchableOpacity onPress={() => onPress(item)} style={{ paddingHorizontal: 4, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "black" }}>
@@ -635,13 +627,26 @@ const EmploymentDetailScreen = ({ navigation }) => {
   );
 
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
+
+    if(EmploymentType == "Self-Employed"){
+
+      dispatch(updateThingsToRemove({name : "personalFinance", option : OPTION.REMOVE}))
+      setNextScreen("personalFinance")
+      return
+    }
+
+    setNextScreen("bankDetail")
+    dispatch(updateThingsToRemove({name : "personalFinance", option : OPTION.ADD}))
+
     if (EmploymentType == 'Salaried') {
       if (Salaried.Experience && !Salaried.JoiningDate) {
         updateInfo("WorkStartDate", calculatePastDate(Salaried.Experience))
       }
     }
-  }, [EmploymentType, Salaried.Experience])
+    
+  }, [EmploymentType, Salaried.Experience]))
 
 
   return (
@@ -749,7 +754,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput placeholder="Work Email ID" error={Salaried.WorkEmailError} value={Salaried.WorkEmail} onChangeText={(e) => { updateInfo("WorkEmail", e); }} keyboardType="email-address" autoCapitalize="none" />
                       </View>
-                      <CustomSlider title="Net Monthly Salary" icon="rupee" keyboardType="numeric" min={0} max={1000000} steps={5000} sliderValue={properAmmount(Salaried.AnnualCTC)} inputValue={formateAmmountValue(Salaried.AnnualCTC.toString())} error={Salaried.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
+                      <CustomSlider title="Net Monthly Salary" icon="rupee" keyboardType="numeric" min={minMonthlyIncome} max={maxMonthlyIncome} steps={5000} sliderValue={properAmmount(Salaried.AnnualCTC)} inputValue={formateAmmountValue(Salaried.AnnualCTC.toString())} error={Salaried.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
                       <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Company Address <Text style={styles.mandatoryStar}>*</Text></Text>
                       <View style={styles.addressForm}>
                         <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
@@ -794,7 +799,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput placeholder="Work Email ID" value={SelfEmployed.CompanyEmail} onChangeText={(e) => { updateInfo("WorkEmail", e); }} keyboardType="email-address" autoCapitalize="none" error={SelfEmployed.WorkEmailError} />
                       </View>
-                      <CustomSlider title="Net Monthly Turnover" icon="rupee" keyboardType="numeric" min={0} max={1000000} steps={5000} sliderValue={properAmmount(SelfEmployed.CompanyTurnOver)} inputValue={formateAmmountValue(SelfEmployed.CompanyTurnOver.toString())} error={SelfEmployed.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
+                      <CustomSlider title="Net Monthly Turnover" icon="rupee" keyboardType="numeric" min={minMonthlyIncome} max={maxMonthlyIncome} steps={5000} sliderValue={properAmmount(SelfEmployed.CompanyTurnOver)} inputValue={formateAmmountValue(SelfEmployed.CompanyTurnOver.toString())} error={SelfEmployed.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
                       <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Business/Shop/Profession Address <Text style={styles.mandatoryStar}>*</Text></Text>
                       <View style={styles.addressForm}>
                         <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
@@ -829,6 +834,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
     </View>
   );
 };
+
 
 const empoymentDetailStyle = StyleSheet.create({
   formGroup: {

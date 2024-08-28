@@ -24,16 +24,20 @@ import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import useJumpTo from "../components/StageComponent";
 
 const BankDetailsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
+  const stageMaintance = useJumpTo("bankDetail", "loanEligibility", navigation);
+
   const extraSlices = useSelector(state => state.extraStageSlice);
   const bankAccountSlices = useSelector(state => state.bankDetailSlices);
 
   const [loading, setLoading] = useState(false);
   const [otherError, setOtherError] = useState(null);
   const [selectedAccountIndex, setSelectedAccountIndex] = useState(0);
+
+  const [addButtonState, setAddButtonState] = useState(true)
 
   const addAccount = () => {
   
@@ -85,6 +89,14 @@ const BankDetailsScreen = ({ navigation }) => {
   useEffect(() => {
     setLoading(bankAccountSlices.loading);
   }, [bankAccountSlices.loading]);
+
+  useFocusEffect(
+    useCallback(() => {
+
+      setAddButtonState(bankAccountSlices.data.BankList.length < 3)
+
+      
+    },[bankAccountSlices.data.BankList]))
 
   useFocusEffect(
     useCallback(() => {
@@ -269,22 +281,20 @@ const BankDetailsScreen = ({ navigation }) => {
       apiResponse.message = "Please Provide AtLeast 1 Valid Bank Account";
       return apiResponse;
     }
-    let LeadStage = nextJumpTo;
-    if (ALL_SCREEN[nextJumpTo] === "bankDetail") {
-      LeadStage = nextJumpTo + 1;
-    }
+
     for (let item of accounts) {
-      item = { ...item, LeadId: leadid, LeadStage };
+      item = { ...item, LeadId: leadid, LeadStage: stageMaintance.jumpTo };
       const response = await SaveBankAccountDetails(item);
+      console.log(item)
       if (response.status === STATUS.ERROR) {
         apiResponse.status = STATUS.ERROR;
         apiResponse.message = response.message;
         return apiResponse;
       }
     }
-    if (ALL_SCREEN[nextJumpTo] === "bankDetail") {
-      dispatch(updateJumpTo(LeadStage));
-    }
+
+    dispatch(updateJumpTo(stageMaintance));
+
     await SendGeoLocation(6);
     apiResponse.status = STATUS.SUCCESS;
     return apiResponse;
@@ -506,18 +516,19 @@ const BankDetailsScreen = ({ navigation }) => {
 
                   <FontAwesome name="bank" size={30} color={selectedAccountIndex === index ? "#000565" : "#ccc"} />
 
-                  <TouchableOpacity
+                  {index > 0 && <TouchableOpacity
                     style={styles.BankdeleteIcon}
                     onPress={() => confirmDeleteAccount(index)}>
                     <AntDesign name="closecircleo" size={16} color="red" />
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
+
 
                 </TouchableOpacity>
               ))}
               <LinearGradient
-                colors={["#002777", "#00194C"] }
+                colors={addButtonState ? ["#002777", "#00194C"] : ["#E9EEFF", "#D8E2FF"]}
                 style={[styles.addbutton]}>
-                <TouchableOpacity onPress={addAccount} >
+                <TouchableOpacity onPress={addAccount} disabled={!addButtonState}>
                   <Text
                     style={[
                       styles.buttonText,

@@ -18,8 +18,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ALL_SCREEN } from '../services/Utils/Constants';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import CustomDropdown from '../components/Dropdown';
+import useJumpTo from "../components/StageComponent";
 
 const EMandateScreen = ({ navigation }) => {
+
+  const stageMaintance = useJumpTo("eMandate", "loanAgreement", navigation);
+
   const [selectedAccount, setSelectedAccount] = useState('');
   const [ifscCode, setIfscCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -55,20 +59,16 @@ const EMandateScreen = ({ navigation }) => {
     setLoading(true)
     setNewErrorScreen(null)
 
-    
-    let Leadstage = nextJumpTo
-    if (ALL_SCREEN[nextJumpTo] == "eMandate") {
-      Leadstage = nextJumpTo + 1
 
-      const saveLeadStageResponse = await SaveLeadStage(Leadstage)
-      if(saveLeadStageResponse.status == STATUS.ERROR){
-        setLoading(false)
-        setNewErrorScreen(saveLeadStageResponse.message)
-        return
-      }
-
-      dispatch(updateJumpTo(Leadstage))
+    const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
+    if (saveLeadStageResponse.status == STATUS.ERROR) {
+      setLoading(false)
+      setNewErrorScreen(saveLeadStageResponse.message)
+      return
     }
+
+    dispatch(updateJumpTo(stageMaintance))
+
 
 
     console.log("========== fetching location =================");
@@ -183,138 +183,138 @@ const EMandateScreen = ({ navigation }) => {
             </View>
           </View>
         )}
-    <KeyboardAvoidingView
-     style={[styles.rightCOntainer, { flex: 1 }]}
-     behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-    >
-      <LoadingOverlay visible={loading} />
+        <KeyboardAvoidingView
+          style={[styles.rightCOntainer, { flex: 1 }]}
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+        >
+          <LoadingOverlay visible={loading} />
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
-        <View style={styles.container}>
-          <View >
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+            <View style={styles.container}>
+              <View >
 
-            <ProgressBar progress={0.6} />
-            <Text
-              style={[
-                styles.headerText,
-                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-              ]}>
-              eMandate
-            </Text>
-          </View>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-         
-              <View>
+                <ProgressBar progress={0.6} />
                 <Text
                   style={[
-                    styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    styles.headerText,
+                    { fontSize: dynamicFontSize(styles.headerText.fontSize) },
                   ]}>
-                  Bank Account Number{" "}
-                  <Text style={styles.mandatoryStar}>*</Text>
+                  eMandate
                 </Text>
-                <CustomDropdown
-                  options={bankAccounts}
-                  selectedValue={selectedAccount}
-                  onValueChange={(itemValue) => setSelectedAccount(itemValue)}
-                />
-
-                <Text
-                  style={[
-                    styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                  ]}>
-                  Bank Branch IFSC Code{" "}
-                  <Text style={styles.mandatoryStar}>*</Text>
-                </Text>
-                <CustomInput
-                  value={ifscCode}
-                  onChangeText={(text) => setIfscCode(text)}
-                  placeholder="Enter your bank branch IFSC code"
-                  editable={selectedAccount !== ""}
-                  style={selectedAccount === "" ? styles.disabledInput : {}}
-                />
-
-                {renderGradientButton(
-                  "SIGN eMANDATE",
-                  () => {
-                    HandleProcced()
-                  },
-                
-                )}
-
-                <View style={styles.orWrapper}>
-                  <Text
-                    style={[
-                      styles.or,
-                      { fontSize: dynamicFontSize(styles.or.fontSize) },
-                    ]}>
-                    OR
-                  </Text>
-                </View>
-                <TouchableOpacity style={styles.uploadButtonNach}>
-                  <Text
-                    style={[
-                      styles.uploadButtonNachText,
-                      {
-                        fontSize: dynamicFontSize(
-                          styles.uploadButtonNachText.fontSize
-                        ),
-                      },
-                    ]}>
-                    Upload Physical NACH
-                  </Text>
-                  <Icon name="upload" size={16} color="#fff" style={[styles.icon,{backgroundColor:'#FF8600',padding:10}]} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.downloadSamplebutton}>
-                  <Text
-                    style={[
-                      styles.downloadSamplebuttonText,
-                      {
-                        fontSize: dynamicFontSize(
-                          styles.downloadSamplebuttonText.fontSize
-                        ),
-                      },
-                    ]}>
-                    Download NACH Form
-                  </Text>
-                </TouchableOpacity>
               </View>
-          
-          </ScrollView>
-          <View style={[styles.actionContainer, styles.boxShadow, {paddingHorizontal:0}]}>
-            <TouchableOpacity
-              style={[styles.backButton, { marginRight: 10 }]}
-              onPress={() => GoBack(navigation)}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
-                ]}>
-                BACK
-              </Text>
-            </TouchableOpacity>
-            {renderGradientButton(
-              "PROCEED",
-              () => HandleProcced(),
-              
-            )}
-          </View>
-        </View>
-      </ScrollView>
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-      {errorScreen.type != null && (
+                <View>
+                  <Text
+                    style={[
+                      styles.label,
+                      { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    ]}>
+                    Bank Account Number{" "}
+                    <Text style={styles.mandatoryStar}>*</Text>
+                  </Text>
+                  <CustomDropdown
+                    options={bankAccounts}
+                    selectedValue={selectedAccount}
+                    onValueChange={(itemValue) => setSelectedAccount(itemValue)}
+                  />
+
+                  <Text
+                    style={[
+                      styles.label,
+                      { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    ]}>
+                    Bank Branch IFSC Code{" "}
+                    <Text style={styles.mandatoryStar}>*</Text>
+                  </Text>
+                  <CustomInput
+                    value={ifscCode}
+                    onChangeText={(text) => setIfscCode(text)}
+                    placeholder="Enter your bank branch IFSC code"
+                    editable={selectedAccount !== ""}
+                    style={selectedAccount === "" ? styles.disabledInput : {}}
+                  />
+
+                  {renderGradientButton(
+                    "SIGN eMANDATE",
+                    () => {
+                      HandleProcced()
+                    },
+
+                  )}
+
+                  <View style={styles.orWrapper}>
+                    <Text
+                      style={[
+                        styles.or,
+                        { fontSize: dynamicFontSize(styles.or.fontSize) },
+                      ]}>
+                      OR
+                    </Text>
+                  </View>
+                  <TouchableOpacity style={styles.uploadButtonNach}>
+                    <Text
+                      style={[
+                        styles.uploadButtonNachText,
+                        {
+                          fontSize: dynamicFontSize(
+                            styles.uploadButtonNachText.fontSize
+                          ),
+                        },
+                      ]}>
+                      Upload Physical NACH
+                    </Text>
+                    <Icon name="upload" size={16} color="#fff" style={[styles.icon, { backgroundColor: '#FF8600', padding: 10 }]} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.downloadSamplebutton}>
+                    <Text
+                      style={[
+                        styles.downloadSamplebuttonText,
+                        {
+                          fontSize: dynamicFontSize(
+                            styles.downloadSamplebuttonText.fontSize
+                          ),
+                        },
+                      ]}>
+                      Download NACH Form
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+              </ScrollView>
+              <View style={[styles.actionContainer, styles.boxShadow, { paddingHorizontal: 0 }]}>
+                <TouchableOpacity
+                  style={[styles.backButton, { marginRight: 10 }]}
+                  onPress={() => GoBack(navigation)}>
+                  <Text
+                    style={[
+                      styles.backBtnText,
+                      { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                    ]}>
+                    BACK
+                  </Text>
+                </TouchableOpacity>
+                {renderGradientButton(
+                  "PROCEED",
+                  () => HandleProcced(),
+
+                )}
+              </View>
+            </View>
+          </ScrollView>
+
+          {errorScreen.type != null && (
             <ScreenError
               errorObject={errorScreen}
               onTryAgainClick={onTryAgainClick}
               setNewErrorScreen={setNewErrorScreen}
             />
           )}
-    </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
 
-    </View>
+      </View>
     </View>
   );
 };

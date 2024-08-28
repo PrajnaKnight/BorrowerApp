@@ -1,7 +1,7 @@
 import { GetStoreAuthToken } from "../LOCAL/AsyncStroage"
 
 
-const BASE_URL = "https://bankofproductlosapi.azurewebsites.net"
+const BASE_URL = "https://demolosapi-qa.azurewebsites.net"
 export const CREATE_BORROWER_LEAD = `${BASE_URL}/CreateBorrowerLead`
 export const GET_LEADS_DATA = `${BASE_URL}/GetleadsData`
 
@@ -99,6 +99,10 @@ export const GET_E_SIGN_LOAN_AGREEMENT = `${BASE_URL}/GetEsignLoanAgreement`
 
 
 export const DeleteBankDetails = `${BASE_URL}/DeleteBankDetails`
+
+export const SAVE_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/SaveBorrowerPersonalFinaDetail`
+
+export const GET_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/GetBorrowerPersonalFinaDetail`
 
 
 export const RedirectUrl =  "www.knightfintech.com"
