@@ -26,10 +26,10 @@ export default function App() {
 
   const isUserAvailable = async () => {
     const number = await GetBorrowerPhoneNumber()
-    console.log("===== fetching number =========")
-    console.log(number)
     setInitialRouteName(number != null ? "Dashboard" : "Common" )
   }
+
+  
   useEffect(() => {
 
     isUserAvailable()
@@ -50,13 +50,6 @@ export default function App() {
     prepare();
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    // if (appIsReady && fontsLoaded) {
-    //   console.log('App is ready and fonts are loaded');
-    //   // This tells the splash screen to hide immediately
-    //   await ExpoSplashScreen.hideAsync();
-    // }
-  }, [appIsReady, fontsLoaded]);
 
   if (!appIsReady || !fontsLoaded) {
     return <SplashScreen />;
@@ -65,7 +58,7 @@ export default function App() {
   console.log('Rendering main app content');
   return (
     <PortalProvider>
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <View style={{ flex: 1 }}>
         <ReduxProvider store={store}>
           <AppProvider>
             <SafeAreaProvider>

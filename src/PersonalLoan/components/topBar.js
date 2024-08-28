@@ -5,8 +5,9 @@ import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomDropdown from './customDropdown';
 import { Ionicons } from '@expo/vector-icons';
+import { GoBack } from '../services/Utils/ViewValidator';
 
-const Header = ({navigation,  navigate, isOnFAQScreen }) => {
+const Header = ({navigation, isOnFAQScreen }) => {
   const { handleFontSize } = useAppContext();
   const [increaseButtonColor, setIncreaseButtonColor] = useState('#E6EDFF');
 
@@ -27,28 +28,28 @@ const Header = ({navigation,  navigate, isOnFAQScreen }) => {
 
   const handleFAQPress = () => {
     console.log("FAQ button pressed");
-    if (navigate) {
+    if (navigation) {
       console.log("Attempting to navigate to FAQScreen");
-      navigate('FAQScreen');
+      navigation.navigate('FAQScreen');
     } else {
       console.log("Navigate function is not available");
     }
   };
 
   const handleBackPress = () => {
-    if (navigate) {
-      navigate('goBack');
+    if (navigation) {
+      navigation.goBack()
     }
   };
 
   return (
     <View style={styles.TopBar}>
       <View style={styles.logoContainer}>
-        {isOnFAQScreen && (
+        {/* {isOnFAQScreen && (
           <TouchableOpacity onPress={handleBackPress} style={styles.goBackButton}>
              <Ionicons name="chevron-back-circle-outline" size={24} color="#00194c" />
           </TouchableOpacity>
-        )}
+        )} */}
         <TouchableOpacity onPress={()=>{navigation.navigate("Dashboard")}}>
         <Image
           source={require("../../assets/images/your-logo.png")}

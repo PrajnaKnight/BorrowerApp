@@ -117,9 +117,7 @@ function DashboardNavigator() {
     prepare();
   }, [fontsLoaded]);
 
-  const onLayoutRootView = useCallback(async () => {
-   
-  }, [isAppReady]);
+ 
 
   if (!isAppReady) {
     return <SplashScreenComponent />;
@@ -127,7 +125,7 @@ function DashboardNavigator() {
 
   return (
     <TabProvider>
-      <View style={styles.container} onLayout={onLayoutRootView}>
+      <View style={styles.container}>
         {showEMINotification && (
           <EMINotification
             status="due"

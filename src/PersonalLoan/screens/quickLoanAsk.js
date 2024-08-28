@@ -87,19 +87,6 @@ function QuickLoanAsk({ navigation }) {
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
-  useEffect(() => {
-    const backAction = () => {
-      BackHandler.exitApp();
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
 
   useFocusEffect(
     useCallback(() => {

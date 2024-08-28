@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { GetLeadId, GetTokenValidity, StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../services/LOCAL/AsyncStroage';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
@@ -14,11 +14,13 @@ import { Platform } from 'react-native';
 import { Network_Error } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
 
-import { RequestLocationPermission } from '../services/API/LocationApi';  
+import { RequestLocationPermission } from '../services/API/LocationApi';
 import DeviceInfo from 'react-native-device-info';
 import { GetBreEligibility } from '../services/API/LoanEligibility';
 import { updateBreStatus } from '../services/Utils/Redux/ExtraSlices';
 import useJumpTo from "../components/StageComponent";
+import ProgressBar from '../components/progressBar';
+import LoadingOverlay from '../components/FullScreenLoader';
 
 
 const SplashScreen = ({ navigation }) => {
@@ -50,57 +52,49 @@ const SplashScreen = ({ navigation }) => {
 
 
 
-  const shouldShowLogin = async () => {
+  const ShouldShowLogin = async () => {
 
 
-    let response = API_RESPONSE_STATUS(STATUS.SUCCESS, null, null)
+    let response = API_RESPONSE_STATUS(null, null, null)
 
     const leadId = await GetLeadId()
     const tokenValidityTime = await GetTokenValidity()
     const isFuture = isThisIsFutureTime(tokenValidityTime)
 
 
-
-
-
-    if (leadId != null && isFuture) {
-
-      let userAvailable = await GetLookUp()
-
-
-      response.status = STATUS.ERROR
-      response.message = userAvailable.message
-      response.data = {jumpTo : null, isSelfEmployed : true}
-
-      if (userAvailable.status == STATUS.ERROR) {
-        return response
-      }
-
-
-
-      response.data.jumpTo = 0
-
-      if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
-
-        const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
-        response.data.jumpTo = jumpTo
-        response.data.isSelfEmployed = userAvailable.data.EmploymentType == "Self-Employed"
-        dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
-
-      }
-
-    }
-
-    if (!isFuture) {
-      console.log("=== clearing stuff =============")
+    if (leadId == null || !isFuture) {
       await StoreLeadId(null);
       await StoreApplicantId(null)
       await StoreTokenValidity(null)
       await StoreBorrowerPhoneNumber(null)
       await StoreUserPan(null)
       await StoreUserAadhaar(null)
+
+      response.status = STATUS.SUCCESS
+      response.data = { jumpTo: null }
+      return response
     }
 
+
+    let userAvailable = await GetLookUp()
+
+    if (userAvailable.status == STATUS.ERROR) {
+      response.status = STATUS.ERROR
+      response.message = userAvailable.message
+      return response
+    }
+
+
+
+    response.status = STATUS.SUCCESS
+    response.data = { jumpTo: 0 }
+
+    if (userAvailable.data != null && userAvailable.data.IsLeadExisted) {
+      const jumpTo = parseInt(userAvailable.data.LeadStage) || 0
+      response.data.jumpTo = jumpTo
+      response.data.isSelfEmployed = userAvailable.data.EmploymentType == "Self-Employed"
+      dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
+    }
 
 
     return response
@@ -111,86 +105,53 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
 
 
+    if (!fontsLoaded || !refreshPage) {
+      return
+    }
 
-    //  checking versioning
-    if (fontsLoaded) {
+    setRefreshPage(false)
+
+    ShouldShowLogin().then((response) => {
 
 
-
-
-      console.log("============== executing again ===============")
-
-      if (refreshPage == false) {
+      if (response.status == STATUS.ERROR) {
+        setNewErrorScreen(response.message)
         return
       }
 
-      setRefreshPage(false)
+      setNewErrorScreen(null)
 
-
-      shouldShowLogin().then((response) => {
-
-        console.log(response)
-
-
-        console.log("response ", response)
-
-
-        if (response.status == STATUS.ERROR) {
-          if (response.message == Network_Error) {
-            setNewErrorScreen(Network_Error)
-            return
-          }
-
-
-          if (response.data.jumpTo != null) {
-
-            const { jumpTo, isSelfEmployed } = response.data
-            const launchScreenName = getScreenNameAtLaunch(jumpTo, isSelfEmployed)
-            if(!isSelfEmployed){
-              
-              dispatch(updateThingsToRemove({name : "personalFinance", option : OPTION.ADD}))
-            }
-            dispatch(updateJumpTo({ jumpTo, screenName: launchScreenName }))
-
-            console.log("---------------------------- LeadStage -------------------------------------")
-            console.log(response.data)
-            resetNavigationStack(navigation, response.data)
-            console.log("---------------------------- LeadStage -------------------------------------")
-            return
-          }
-          console.log("Splash Screen", response.message)
+      if (response.data.jumpTo != null) {
+        const { jumpTo, isSelfEmployed } = response.data
+        const launchScreenName = getScreenNameAtLaunch(jumpTo, isSelfEmployed)
+        if (!isSelfEmployed) {
+          dispatch(updateThingsToRemove({ name: "personalFinance", option: OPTION.ADD }))
         }
+        dispatch(updateJumpTo({ jumpTo, screenName: launchScreenName }))
+        resetNavigationStack(navigation, response.data)
+        return
+      }
 
 
-        setNewErrorScreen(null)
+      navigation.navigate('welcome');
 
 
-        navigation.navigate('welcome');
-
-
-      })
-
-
-
-
-
-    }
+    })
 
   }, [refreshPage, fontsLoaded]);
 
 
 
-  return (
+return (
 
 
 
-    <View style={styles.container}>
-      {/* <WebCalendar/> */}
-      <Image source={require('../../assets/images/your-logo.png')} />
-      {errorScreen.type != null && <ScreenError errorObject={errorScreen} onTryAgainClick={onTryAgainClick} setNewErrorScreen={setNewErrorScreen} />}
+  <View style={styles.container}>
 
-    </View>
-  );
+    {errorScreen.type == null ? <ActivityIndicator size="large" color="#758BFD" /> : <ScreenError errorObject={errorScreen} onTryAgainClick={onTryAgainClick} setNewErrorScreen={setNewErrorScreen} />}
+
+  </View>
+);
 };
 
 

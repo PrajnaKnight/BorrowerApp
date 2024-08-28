@@ -8,31 +8,25 @@ import GetOTPByPhoneNumber, { GetLoginTopByPhoneRequestModel } from '../../Perso
 import CreateBorrowerLead from '../../PersonalLoan/services/API/CreateBorrowerLead';
 import SetLeadProduct, { CreateSetLeadProductModel } from '../../PersonalLoan/services/API/SetLeadProduct';
 import { API_RESPONSE_STATUS, STATUS } from '../../PersonalLoan/services/API/Constants';
-import { GetLeadId, StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
-import { isValidNumberOnlyFieldWithZero, isValidOtp } from '../../PersonalLoan/services/Utils/FieldVerifier';
+import { GetLeadId, StoreBorrowerPhoneNumber, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
+import { isValidNumberOnlyFieldWithZero } from '../../PersonalLoan/services/Utils/FieldVerifier';
 import LoadingOverlay from '../../PersonalLoan/components/FullScreenLoader';
-import { GoBack, resetNavigationStack } from '../../PersonalLoan/services/Utils/ViewValidator';
-import GetLookUp from '../../PersonalLoan/services/API/GetLookUp';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateJumpTo } from '../../PersonalLoan/services/Utils/Redux/LeadStageSlices';
+import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
 import ScreenError, { useErrorEffect } from '../../PersonalLoan/screens/ScreenError';
-import { Network_Error, Something_Went_Wrong } from '../../PersonalLoan/services/Utils/Constants';
-import { updateBreStatus } from '../../PersonalLoan/services/Utils/Redux/ExtraSlices';
-import { GetBreEligibility } from '../../PersonalLoan/services/API/LoanEligibility';
+import { Network_Error } from '../../PersonalLoan/services/Utils/Constants';
+
 import {
   getHash,
   removeListener,
   startOtpListener,
-  useOtpVerify,
 } from 'react-native-otp-verify';
-import { checkSMSPermission } from '../../PersonalLoan/screens/PermissionScreen';
+
 import Layout from '../components/Layout';
 import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import ProgressBar from '../../Common/components/ControlPanel/progressBar'
 
 const OTPVerificationScreen = ({ navigation, route }) => {
 
-  const dispatch = useDispatch()
   const { fontSize } = useAppContext();
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +40,6 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
 
   const [requestModel, setRequestModel] = useState(GetLoginTopByPhoneRequestModel())
-  const [responseModel, setResponseModel] = useState(null)
 
   const onTryAgainClick = () => {
     submitPhoneNumber()
@@ -83,7 +76,6 @@ const OTPVerificationScreen = ({ navigation, route }) => {
   useEffect(() => {
     let currentRequestModel = { ...requestModel, LeadPhone: route.params.mobileNumber }
     setRequestModel(currentRequestModel)
-    // checkSMSPermission()
   }, [])
 
   useEffect(() => {
@@ -282,7 +274,6 @@ const OTPVerificationScreen = ({ navigation, route }) => {
       }
 
       navigation.navigate("Dashboard")
-      setResponseModel(response)
     })
 
   }
