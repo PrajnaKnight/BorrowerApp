@@ -20,6 +20,7 @@ const bankModel = {
     AccountNumberError : null,
     ReAccountNumberError : null,
     BankBracnchNameError : null,
+    BankNameError : null,
     isAccountNumberMatching : false,
     LeadStage : null,
     isAccountNameVaid : null,

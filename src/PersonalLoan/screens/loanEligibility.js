@@ -509,7 +509,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
       return;
     }
 
- 
+
 
     let reponseModel = { Tenure: tenure, RateOfInterest: rateOfInterest, Amount: loanAmount, EMI: emiAmount, Leadstage: stageMaintance.jumpTo }
     setLoading(true)
@@ -523,7 +523,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
     }
 
     dispatch(updateJumpTo(stageMaintance))
-    
+
 
     let userAvailable = await GetLookUp()
     if (userAvailable.data != null) {
@@ -652,21 +652,21 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
                 <View style={styles.marginBtm}>
                   {loanApproved == true &&
-                    <Text
+                    (<Text
                       style={[
                         styles.description,
                         {
                           fontSize: dynamicFontSize(styles.description.fontSize),
                         },
                       ]}>
-                      Hurray, you’re approved for a loan amount up to{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount?.toLocaleString()}</Text> You can
-                      apply the loan amount in range{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {loanAskAmount?.toLocaleString()}</Text> to{" "}
-                      <Text style={styles.descriptionAmt}>Rs. {maxLoanAmount?.toLocaleString()}</Text>
+                      Hurray your loan is approved up to the loan amount of<Text style={styles.descriptionAmt}> Rs. {loanAskAmount.toLocaleString()} </Text> 
+                      you've requested. You're also eligible to take a higher
+                      loan amount up to{" "}
+                      <Text style={styles.descriptionAmt}>
+                        Rs. {maxLoanAmount.toLocaleString()}
+                      </Text>
                     </Text>
-
-                  }
+                    )}
                 </View>
 
                 {/* Loan Amount Chart */}
@@ -689,9 +689,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       fontSize: dynamicFontSize(styles.description.fontSize),
                     },
                   ]}>
-                  To proceed, kindly confirm and provide the necessary documents
-                  and sign the loan agreement and eMandate.
-                </Text>
+ Kindly confirm the sanctioned loan amount and click the
+                  proceed button to provide necessary documents, and sign loan
+                  agreement and eMandate for disbursal of loan.
+                                  </Text>
                 <View style={styles.loanIdcontainer}>
                   <View style={styles.loanIdiconContainer}>
                     <MaterialCommunityIcons
@@ -751,14 +752,34 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       ]}>
                       Rate of Interest
                     </Text>
-                    <Text
+                    <View
                       style={[
                         styles.input,
                         styles.readonly,
-                        { fontSize: dynamicFontSize(styles.input.fontSize) },
+                        {
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: 8,
+                        },
                       ]}>
-                      {rateOfInterest || 0} %
+                        <Text
+                        style={{
+                          fontSize: dynamicFontSize(styles.input.fontSize),
+                          fontWeight: "500",
+                          color: "#000",
+                        }}>
+                        {rateOfInterest || 0} %
+                      </Text>
+                      <View style={{ alignItems: "flex-end" }}>
+                        <Text style={{ color: "#00194c", fontSize: 10 }}>
+                          Reducing
+                        </Text>
+                        <Text style={{ color: "#00194c", fontSize: 10 }}>
+                          Rate
                     </Text>
+                  </View>
+                  </View>
                   </View>
 
 

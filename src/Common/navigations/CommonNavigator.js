@@ -3,7 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';
 import OTPVerificationScreen from '../screens/otpVerification';
 import ChoiceScreen from '../screens/ChoiceScreen';
-import { AppProvider } from '../components/appContext';
+import { AppProvider } from '../../PersonalLoan/components/appContext';
+
 import FAQScreen from '../screens/Faq';
 import { ProgressBarProvider } from '../../Common/components/ControlPanel/progressContext'; 
 

@@ -29,7 +29,7 @@ const formatValue = (value, isForAmount, isTenure) => {
     if (value >= 10000000) { // 1 crore
       return `${truncateToTwoDigitAfterDecimal(`${value / 10000000}`)} Cr`;
     } else if (value >= 100000) { // 1 lakh
-      return `${truncateToTwoDigitAfterDecimal(`${value / 100000}`)} Lac`;
+      return `${truncateToTwoDigitAfterDecimal(`${value / 100000}`)} Lakh`;
     } else if (value >= 1000000) { // 1 million
       return `${truncateToTwoDigitAfterDecimal(`${value / 1000000}`)} M`;
     } else if (value >= 1000) { // 1 thousand

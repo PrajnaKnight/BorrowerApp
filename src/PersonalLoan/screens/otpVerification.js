@@ -460,7 +460,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
                       },
                     ]}>
                     {" "}
-                    {`+91${requestModel.LeadPhone}`}
+                    {`+91 ${requestModel.LeadPhone}`}
                   </Text>
                   <Text
                     style={[

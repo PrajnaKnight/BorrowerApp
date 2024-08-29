@@ -632,6 +632,8 @@ function SignInScreen({ navigation }) {
                     mobileNumber={requestModel.LeadPhone}
                     setMobileNumber={handleMobileChange}
                     error={mobileError}
+                    placeholder="Enter your mobile number"
+
                   />
                 </View>
                 <View style={styles.termsContainer}>

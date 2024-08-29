@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import { useAppContext } from '../components/useContext';
+import DropDownPicker from 'react-native-dropdown-picker';
 import MaskInput from 'react-native-mask-input';
 import { FlatList } from 'react-native';
 import { ListViewBase } from 'react-native';
@@ -291,63 +292,50 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
   const [isFocused, setIsFocused] = useState(false);
 
 
-  const [suggestionList, setSuggestionList] = useState(listOfData)
+  const [suggestionList, setSuggestionList] = useState(listOfData);
+  const [showList, setShowList] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
 
-  const [showList, setShowList] = useState(false)
-
-
-  // Handle focus only if not read-only
-  const handleFocus = () => {
-    
-      setIsFocused(true);
-    
-  };
-
-
-
-  // Handle blur only if not read-only
-  const handleBlur = () => {
-    
-      setIsFocused(false);
-    
-  };
 
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
 
 
-  const CompanyItem = ({ item, onPress }) => (
-    <TouchableOpacity onPress={() => onPress(item)} style={{ paddingHorizontal: 4, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "black" }}>
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
 
-      <Text>{item.value}</Text>
+  const CompanyItem = ({ item, onPress, isSelected }) => (
+    <TouchableOpacity 
+      onPress={() => onPress(item)} 
+      style={{ 
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+        backgroundColor: isSelected ? "#758BFD" : 'transparent',
+      }}
+    >
+      <Text style={{ 
+        color: isSelected ? '#FFFFFF' : '#333', 
+        fontSize: dynamicFontSize(14),
+      }}>{item.value}</Text>
 
     </TouchableOpacity>
   );
 
-  const handleItemClick = (item, isLastSearch) => {
-    console.log("Item clicked:", item);
-    onChangeText(item)
+  const handleItemClick = (item) => {
+    onChangeText(item);
+    setShowList(false);
+  };
 
-   
-    let listOfCompany = []
-    listOfData?.forEach(element => {
-      console.log(element)
-      if(element.value.includes(item)){
-        listOfCompany.push(element)
-      }
-    });
-  
-    console.log(listOfCompany)
-    setSuggestionList(listOfCompany)
-    
-    if(!isLastSearch){
-      setShowList(false)
-    }
-    
-
-
-    // You can perform any action here when an item is clicked
+  const handleInputChange = (text) => {
+    onChangeText(text);
+    const filteredList = listOfData.filter(item => 
+      item.value.toLowerCase().includes(text.toLowerCase())
+    );
+    setSuggestionList(filteredList);
+    setShowList(true);
   };
 
 
@@ -368,22 +356,13 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
           onTouchEndCapture={()=>{setShowList(!showList)}}
           style={[
             styles.input,
-            isFocused && styles.inputFocused,
-            style, { fontSize: dynamicFontSize(styles.input.fontSize) }
           ]}
-          onChangeText={(e) => {
-           
-              handleItemClick(e, true)
-        
-
-          }} // Disable onChangeText if readOnly
+          onChangeText={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           
           placeholder={placeholder}
-          placeholderTextColor="gray"
-          
-    
+          placeholderTextColor="#999"
           value={value}
         />
 
@@ -393,21 +372,33 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
       
 
       {error && (
-        <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text>
+        <Text style={[styles.errorText, { fontSize: dynamicFontSize(12) }]}>{error}</Text>
       )}
 
-      {showList &&
-        <FlatList
+      {showList && (<FlatList
           data={suggestionList}
           nestedScrollEnabled={true}
           style={{
-            width: "100%", maxHeight: 400, borderWidth: 1, borderColor: "black", borderRadius: 10, zIndex: 100
-          }
-          }
-          renderItem={({ item }) => <CompanyItem item={item} onPress={(e)=>handleItemClick(e.value, false)} />}
-          keyExtractor={(item, index) => index.toString()}
+            width: "100%", 
+            maxHeight: 200,
+            borderWidth: 1,
+            borderColor: '#D7DDEB',
+            borderRadius: 5,
+            marginTop: -10,
+            backgroundColor: '#FFFFFF',
+            zIndex: 100,
+          }}
+          renderItem={({ item }) => (
+            <CompanyItem 
+              item={item} 
+              onPress={(e) => handleItemClick(e.value)} 
+              isSelected={item.value === value}
+            />
+          )}
+            keyExtractor={(item, index) => index.toString()}
         />
-      }
+        )}
+      
 
     </View>
 

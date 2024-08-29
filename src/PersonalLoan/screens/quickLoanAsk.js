@@ -345,7 +345,7 @@ function QuickLoanAsk({ navigation }) {
                     style={[
                       styles.welcomeText,
                       {
-                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),
+                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),marginBottom:0
                       },
                     ]}>
                     <Text
@@ -353,8 +353,16 @@ function QuickLoanAsk({ navigation }) {
                         styles.boldText,
                         { fontSize: dynamicFontSize(styles.boldText.fontSize) },
                       ]}>
-                      Welcome,
-                    </Text>{" "}
+                      Welcome
+                    </Text>
+                  </Text>
+                  <Text
+                    style={[
+                      styles.welcomeText,
+                      {
+                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),
+                      },
+                    ]}>
                     please select the loan amount you require
                   </Text>
                   {otherError && (
