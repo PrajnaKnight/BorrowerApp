@@ -104,6 +104,7 @@ export const SAVE_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/SaveBorrowerPers
 
 export const GET_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/GetBorrowerPersonalFinaDetail`
 
+export const DELETE_USER = `${BASE_URL}/DeleteLeadPhone`
 
 export const RedirectUrl =  "www.knightfintech.com"
 export const STATUS  = {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, FlatList, Image, TextInput, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground, Dimensions, useWindowDimensions, FlatList, Image, TextInput, Animated, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { styles } from '../services/style/gloablStyle';
 import ProgressBar from '../components/progressBar';
@@ -43,7 +43,9 @@ const DocumentUploadScreen = ({ navigation }) => {
   const [downloadPath, setDownloadPath] = useState(null)
   const tabsRef = useRef(null);
   const scrollViewRef = useRef(null);
-
+  const [activeIndex, setActiveIndex] = useState(0);
+  const windowWidth = Dimensions.get('window').width;
+  const itemWidth = 120;
 
   const [selectedDocType, setSelectedDocType] = useState()
   const [selectedSubDocType, setSelectedSubDocType] = useState()
@@ -126,7 +128,7 @@ const DocumentUploadScreen = ({ navigation }) => {
 
     let { DisplayName, DocType, Password } = findCurrentMasterSelectedChild()
 
-    
+
     if (type === 'library') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
@@ -325,7 +327,7 @@ const DocumentUploadScreen = ({ navigation }) => {
 
     console.log(currentRequestModel[currentMasterKey][currentChildKey])
 
-  
+
     dispatch(updateOtherFile(currentRequestModel));
   };
 
@@ -382,35 +384,35 @@ const DocumentUploadScreen = ({ navigation }) => {
     setOtherError(null)
     const realDocs = uploadDocumentSlices.data.OTHER_FILES
     const masterKeys = Object.keys(realDocs)
-    for(let i = 0 ; i < masterKeys.length ; i++){
+    for (let i = 0; i < masterKeys.length; i++) {
       const currentMaster = realDocs[masterKeys[i]]
-      if(currentMaster.MandatoryFlag != 1){
+      if (currentMaster.MandatoryFlag != 1) {
         continue;
       }
 
       const childKeys = Object.keys(realDocs[masterKeys[i]])
       let isFileAvailable = false
-      for(let j = 0 ; j < childKeys.length ; j++){
-        if(realDocs[masterKeys[i]][childKeys[j]].Base64){
+      for (let j = 0; j < childKeys.length; j++) {
+        if (realDocs[masterKeys[i]][childKeys[j]].Base64) {
           isFileAvailable = true
         }
       }
 
-      if(!isFileAvailable){
+      if (!isFileAvailable) {
         setOtherError(`Please provide document for ${masterKeys[i]}`)
         return
       }
     }
     // for (let i = 0; i < uploadDocumentSlices.data.OTHER_FILES.length; i++) {
-      // if (!uploadDocumentSlices.data.OTHER_FILES[i].OriginalFile && uploadDocumentSlices.data.MASTER_OPTION[i].MandatoryFlag == 1) {
-      //   let currentFile = { ...uploadDocumentSlices.data.OTHER_FILES[i], Error: "* Please Provide " + uploadDocumentSlices.data.MASTER_OPTION[i].DoctypeType };
-      //   console.log(currentFile);
-      //   dispatch(updateOtherFile({
-      //     data: currentFile,
-      //     index: i
-      //   }));
-      //   return;
-      // }
+    // if (!uploadDocumentSlices.data.OTHER_FILES[i].OriginalFile && uploadDocumentSlices.data.MASTER_OPTION[i].MandatoryFlag == 1) {
+    //   let currentFile = { ...uploadDocumentSlices.data.OTHER_FILES[i], Error: "* Please Provide " + uploadDocumentSlices.data.MASTER_OPTION[i].DoctypeType };
+    //   console.log(currentFile);
+    //   dispatch(updateOtherFile({
+    //     data: currentFile,
+    //     index: i
+    //   }));
+    //   return;
+    // }
     // }
 
     if (await checkLocationPermission() === false) {
@@ -443,15 +445,15 @@ const DocumentUploadScreen = ({ navigation }) => {
   };
 
 
-  useEffect(()=>{
-    try{
+  useEffect(() => {
+    try {
       scrollViewRef.current?.scrollTo({ x: 0, animated: true });
 
     }
-    catch(e){
+    catch (e) {
 
     }
-  },[uploadDocumentSlices.data.selectedDoc])
+  }, [uploadDocumentSlices.data.selectedDoc])
 
   const renderDocList = (list) => (
 
@@ -468,10 +470,10 @@ const DocumentUploadScreen = ({ navigation }) => {
             onPress={() => {
               console.log("clicked : ", index)
               dispatch(updateMasterSelected(item.DoctypeType))
-              
+
             }}>
             <Text style={[styles.DoctabText, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTabText,
-            { fontSize: dynamicFontSize(styles.DoctabText.fontSize) }]}>
+            ]}>
               {item.DoctypeType}
             </Text>
           </TouchableOpacity>
@@ -484,88 +486,151 @@ const DocumentUploadScreen = ({ navigation }) => {
     </View>
   );
 
+  const handleScroll = (event) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x;
+    const index = Math.round(scrollPosition / itemWidth);
+    setActiveIndex(index);
+  };
+
+  const renderDots = (list) => {
+    const filteredKeys = Object.keys(list).filter((item) => item !== "MandatoryFlag");
+    return (
+      <View style={[styles.dotsContainer, { marginTop: 20 }]}>
+        {filteredKeys.map((_, index) => (
+          <Pressable  key={index} onPress={() => { scrollViewRef.current?.scrollTo({ x: index, animated: true }) }}>
+            <View
+             
+              style={[
+                styles.dot,
+                index === activeIndex ? styles.activeDot : styles.inactiveDot,
+              ]}
+            />
+          </Pressable>
+
+        ))}
+
+      </View>
+
+    );
+  };
+
 
   const renderChildType = (list) => (
-
-    list &&
-    <View style={[{ flexDirection: "column" }]}>
-      <Text style={styles.sectionTitle}>Select ID Type</Text>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
-
-        <ScrollView ref={scrollViewRef} horizontal={true} style={{ flex: 1 }}>
-          {Object.keys(list).filter((item) => item != "MandatoryFlag").map(element => (
-            <TouchableOpacity
-              key={element}
-              style={[styles.docTypeButton, { minWidth: 120 }, uploadDocumentSlices.data.selectedDoc.child === element && styles.selectedDocTypeButton]}
-              onPress={() => changeType(element)}>
-              <View key={element} style={{ flexDirection: "column", alignItems: "center" }}>
-                <Icon name={getIconName(element)} size={24} color={uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"} />
-                <View style={{ height: 4 }}></View>
-                <Text style={{ color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c" }} key={element}>{element}</Text>
-              </View>
-            </TouchableOpacity>
-
-
-          ))}
-
-        </ScrollView>
-
-      </View>
-
-
-    </View>
-  )
-
-
-
-  const RenderDocumentPreviews = (selectedFile) => (
-
-    selectedFile &&
-    <View style={styles.fileUploadContainer}>
-      <View style={styles.uploadPreviewContainer}>
-
-        <View style={styles.previewArea}>
-          <View style={{ flex: 1, width: "100%", height: "100%" }}>
-
-            {
-              selectedFile.Base64 != null && (isImage(selectedFile.Name) ?
-
-                <Image
-                  source={{ uri: `data:image/png;base64,${selectedFile.Base64}` }}
-                  style={{ flex: 1 }}
-                  resizeMode="contain"  // or 'cover', 'stretch', etc.
-                  onError={(e) => console.error('Error loading image', e)}
-                /> :
-
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                  <Icon name={"file"} size={24} />
-                  <View style={{ height: 5 }} />
-                  <Text>{selectedFile.Name}</Text>
-                </View>)
-            }
-
-
-
-            {selectedFile.Base64 != null &&
-              <TouchableOpacity style={styles.closePDF} onPress={() => { handleDeleteFile(selectedFile.Id) }}>
-                <Icon name="times-circle" size={24} color="#FF0000" />
+    list && (
+      <View style={[{ flexDirection: "column", marginVertical: 20 }]}>
+        <Text style={styles.sectionTitle}>Select ID Type</Text>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            style={{ flex: 1 }}
+          >
+            {Object.keys(list).filter((item) => item !== "MandatoryFlag").map(element => (
+              <TouchableOpacity
+                key={element}
+                style={[
+                  styles.docTypeButton,
+                  { minWidth: itemWidth },
+                  uploadDocumentSlices.data.selectedDoc.child === element && styles.selectedDocTypeButton
+                ]}
+                onPress={() => changeType(element)}
+              >
+                <View style={{ flexDirection: "column", alignItems: "center" }}>
+                  <Icon
+                    name={getIconName(element)}
+                    size={24}
+                    color={uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"}
+                  />
+                  <View style={{ height: 4 }} />
+                  <Text
+                    style={{
+                      color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"
+                    }}
+                  >
+                    {element}
+                  </Text>
+                </View>
               </TouchableOpacity>
-            }
+            ))}
+          </ScrollView>
+          {renderDots(list)}
+        </View>
+      </View>
+    )
+  );
 
 
+  const RenderDocumentPreviews = (selectedFile) =>
+    selectedFile ? (
+      <View style={styles.fileUploadContainer}>
+        <View style={styles.uploadPreviewContainer}>
+          <View style={styles.previewArea}>
+            <View style={{ flex: 1, width: "100%", height: "100%" }}>
+              {selectedFile.Base64 != null &&
+                (isImage(selectedFile.Name) ? (
+                  <Image
+                    source={{
+                      uri: `data:image/png;base64,${selectedFile.Base64}`,
+                    }}
+                    style={{ flex: 1 }}
+                    resizeMode="contain" // or 'cover', 'stretch', etc.
+                    onError={(e) => console.error("Error loading image", e)}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}>
+                    <Icon name={"file"} size={24} />
+                    <View style={{ height: 5 }} />
+                    <Text>{selectedFile.Name}</Text>
+                  </View>
+                ))}
+
+              {selectedFile.Base64 != null && (
+                <TouchableOpacity
+                  style={styles.closePDF}
+                  onPress={() => {
+                    handleDeleteFile(selectedFile.Id);
+                  }}>
+                  <Icon name="times-circle" size={24} color="#FF0000" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.uploadButtonsContainer}>
+            <TouchableOpacity
+              style={styles.uploadButton}
+              onPress={() => {
+                handleDocumentPick("library");
+              }}>
+              <Icon name="upload" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.uploadButton}
+              onPress={() => {
+                handleDocumentPick("camera");
+              }}>
+              <Icon name="camera" size={24} color="#fff" />
+            </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.uploadButtonsContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={() => { handleDocumentPick("library") }}>
-            <Icon name="upload" size={24} color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.uploadButton} onPress={() => { handleDocumentPick("camera") }}>
-            <Icon name="camera" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
       </View>
-    </View>)
+    ) : (
+      <View style={styles.previewPlaceholder}>
+        <ImageBackground
+          source={require("../../assets/images/dummyid.png")}
+          style={styles.previewPlaceholder}>
+          <Text style={styles.previewPlaceholderText}>Preview</Text>
+        </ImageBackground>
+      </View>
+    );
 
 
 

@@ -337,14 +337,6 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                   </View>
 
                   <View style={[styles.tableRow]}>
-                    <Text style={styles.tableHeader}>Loan Amount</Text>
-                    <Text style={styles.tableData}>
-                      {requestModel?.LoanAmount &&
-                        `₹ ${formateAmmountValue(requestModel?.LoanAmount)}`}
-                    </Text>
-                  </View>
-
-                  <View style={[styles.tableRow]}>
                     <Text style={styles.tableHeader}>Processing Fee</Text>
                     <Text style={styles.tableData}>
                       {requestModel?.ProcessingFeeAmount &&
@@ -353,7 +345,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                   </View>
 
                   <View style={[styles.tableRow]}>
-                    <Text style={styles.tableHeader}>EMI Start Date</Text>
+                    <Text style={styles.tableHeader}>1st EMI Date</Text>
                     <Text style={styles.tableData}>
                       {requestModel?.FirstEMIDate &&
                         format(requestModel?.FirstEMIDate, "PPP")}
@@ -367,6 +359,24 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                         `₹ ${formateAmmountValue(requestModel?.EmiAmount)}`}
                     </Text>
                   </View>
+                  
+                  <View style={[styles.tableRow]}>
+                    <Text style={styles.tableHeader}>Net Disbursement Amount</Text>
+                    <Text style={styles.tableData}>
+                      {requestModel?.LoanAmount &&
+                        `₹ ${formateAmmountValue(requestModel?.LoanAmount)}`}
+                    </Text>
+                  </View>
+
+                 
+
+                 
+
+              
+
+                  
+
+
                 </View>
               </View>
             </View>

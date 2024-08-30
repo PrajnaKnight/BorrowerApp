@@ -198,7 +198,7 @@ export const styles = applyFontFamily({
     lineHeight: 26,
     borderColor: "#A2ACC6",
     backgroundColor: "#EBEFFF",
-    color: "#000000",
+    color: "#00194C",
     fontSize: 16,
     textAlign: "center",
     shadowColor: "#000",
@@ -545,7 +545,7 @@ export const styles = applyFontFamily({
   or: {
     position: "absolute",
     left: "45%",
-    backgroundColor: "#DDE5FF",
+    backgroundColor: "#fff",
     color: "#00194c",
     textAlign: "center",
     marginVertical: 0,
@@ -726,7 +726,6 @@ export const styles = applyFontFamily({
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "50%",
-    textTransform: "capitalize",
   },
   detailValue: {
     fontSize: 14,
@@ -892,7 +891,7 @@ export const styles = applyFontFamily({
   },
   checkboxContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginTop: 20,
   },
 
@@ -1661,7 +1660,7 @@ export const styles = applyFontFamily({
     width: width * 0.9, // 90% of total screen width
     borderWidth: 1,
     borderColor: "#00194c",
-    padding: 15,
+    padding: 10,
     backgroundColor: "#FFF",
     borderRadius: 10,
     ...Platform.select({
@@ -1920,13 +1919,17 @@ export const styles = applyFontFamily({
   DoctabContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+    alignItems:'center'
+
   },
   Doctab: {
-    padding: 12,
+    paddingHorizontal: 12,
     alignItems: "center",
     backgroundColor: "#D0E4FE",
     borderRadius: 5,
     marginRight: 5,
+    paddingVertical:10
+
   },
   DocselectedTab: {
     borderBottomWidth: 2,
@@ -1942,13 +1945,14 @@ export const styles = applyFontFamily({
   DocaddButton: {
     backgroundColor: "#D0E4FE",
     borderRadius: 5,
-    padding: 12,
+    paddingHorizontal: 12,
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 5,
+    paddingVertical:9
   },
   DocaddButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#002777",
     fontWeight: "bold",
   },
@@ -2275,6 +2279,25 @@ export const styles = applyFontFamily({
   },
   disbursebannerContainer:{
   marginTop:40
+  },
+
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: '#ff8500',
+  },
+  inactiveDot: {
+    backgroundColor: '#A2ACC6',
   },
   //New document upload screen ends
 });

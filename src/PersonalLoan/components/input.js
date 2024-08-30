@@ -66,11 +66,30 @@ const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTe
 
 
 
-export const CustomInputFieldWithSuggestion = ({ style, onFocusChange, placeholder, keyboardType, secureTextEntry, onChangeText, maxLength, readOnly, value, cityOrState = false, error, autoCapitalize, onEndEditing, listOfData }) => {
+export const CustomInputFieldWithSuggestion = ({
+  value,
+  error,
+  style,
+  listOfData,
+  onChangeText,
+  placeholder,
+  onFocusChange,
+  keyboardType,
+  secureTextEntry,
+  maxLength,
+  readOnly,
+  cityOrState,
+  autoCapitalize,
+  onEndEditing
+}) => {
   const [isFocused, setIsFocused] = useState(false);
 
-  const [isLastSelected, setIsLastSelected] = useState(false)
+  const [suggestionList, setSuggestionList] = useState(listOfData);
+  const [showList, setShowList] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
 
+const { fontSize } = useAppContext();
+  const dynamicFontSize = (size) => size + fontSize;
   // Handle focus only if not read-only
   const handleFocus = () => {
     if (!readOnly) {
@@ -87,61 +106,72 @@ export const CustomInputFieldWithSuggestion = ({ style, onFocusChange, placehold
     }
   };
 
-  const { fontSize } = useAppContext();
-  const dynamicFontSize = (size) => size + fontSize;
 
 
-
-  const CompanyItem = ({ item, onPress }) => (
-    <TouchableOpacity onPress={() => onPress(item)} style={{ paddingHorizontal: 4, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "black" }}>
-
-      <Text>{item.Value}</Text>
+  const CompanyItem = ({ item, onPress, isSelected }) => (
+    <TouchableOpacity 
+      onPress={() => onPress(item)} 
+      style={{ 
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+        backgroundColor: isSelected ? "#758BFD" : 'transparent',
+      }}
+    >
+      <Text style={{ 
+        color: isSelected ? '#FFFFFF' : '#333', 
+        fontSize: dynamicFontSize(14),
+      }}>{item.Value}</Text>
 
     </TouchableOpacity>
   );
 
   const handleItemClick = (item) => {
-    console.log("Item clicked:", item.Value);
-    onChangeText(item.Value)
-    setIsLastSelected(true)
-    // You can perform any action here when an item is clicked
+  setInputValue(item.Value);
+    onChangeText(item.Value);
+    setShowList(false);
+  };
+
+  const handleInputChange = (text) => {
+    setInputValue(text);
+    onChangeText(text);
+
+    if (text.length > 0) {
+      const filteredList = listOfData?.filter(item => 
+        item.Value.toLowerCase().includes(text.toLowerCase())
+      );
+      setSuggestionList(filteredList);
+      setShowList(true);
+    } else {
+      setShowList(false);
+    }
   };
 
   return (
     <View style={{ flex: 1 }}>
       <View>
-        <TextInput
-
-          secureTextEntry={secureTextEntry}
+      <TextInput  
+          onTouchEndCapture={() => !readOnly && setShowList(!showList)}
           style={[
             styles.input,
             isFocused && styles.inputFocused,
-            readOnly || cityOrState && styles.inputReadOnly, // Apply read-only style if readOnly is true
-            style, { fontSize: dynamicFontSize(styles.input.fontSize) }
+            (readOnly || cityOrState) && styles.inputReadOnly,
+            style,
+            { fontSize: dynamicFontSize(styles.input.fontSize) }
           ]}
-          onEndEditing={(e) => { onEndEditing != null ? onEndEditing(e) : null }}
-          onChangeText={(e) => {
-            if (readOnly == true) {
-              return null
-            }
-
-            if (isLastSelected == false) {
-              onChangeText(e)
-            }
-            else {
-              setIsLastSelected(false)
-            }
-
-          }} // Disable onChangeText if readOnly
+          secureTextEntry={secureTextEntry}
+          onChangeText={handleInputChange}
+          onEndEditing={onEndEditing}
           onFocus={handleFocus}
           onBlur={handleBlur}
           autoCapitalize={autoCapitalize}
           placeholder={placeholder}
-          placeholderTextColor="gray"
+          placeholderTextColor="#999"
           keyboardType={keyboardType}
           maxLength={maxLength}
-          value={value}
-          editable={!readOnly} // Make input non-editable if readOnly is true
+          value={inputValue}
+          editable={!readOnly}
         />
       </View>
 
@@ -149,18 +179,31 @@ export const CustomInputFieldWithSuggestion = ({ style, onFocusChange, placehold
         <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text>
       )}
 
-      {!isLastSelected  && listOfData != null && listOfData.length > 0 && value != null && value.length>0 &&
-        <FlatList
-          data={listOfData}
+{showList && !readOnly && (
+          <FlatList
+          data={suggestionList}
           nestedScrollEnabled={true}
           style={{
-            width: "100%", maxHeight: 400, borderWidth: 1, borderColor: "black", borderRadius: 10, zIndex: 100
-          }
-          }
-          renderItem={({ item }) => <CompanyItem item={item} onPress={handleItemClick} />}
+            width: "100%", 
+            maxHeight: 200,
+            borderWidth: 1,
+            borderColor: '#D7DDEB',
+            borderRadius: 5,
+            marginTop: -10,
+            backgroundColor: '#FFFFFF',
+            zIndex: 100,
+          }}
+          renderItem={({ item }) => (
+            <CompanyItem 
+              item={item} 
+              onPress={handleItemClick} 
+              isSelected={item.Value === inputValue}
+            />
+          )}
+            
           keyExtractor={(item, index) => index.toString()}
         />
-      }
+      )}
     </View>
 
   );
@@ -331,7 +374,7 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
 
   const handleInputChange = (text) => {
     onChangeText(text);
-    const filteredList = listOfData.filter(item => 
+    const filteredList = listOfData?.filter(item => 
       item.value.toLowerCase().includes(text.toLowerCase())
     );
     setSuggestionList(filteredList);

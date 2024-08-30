@@ -44,7 +44,9 @@ export const StoreBorrowerPhoneNumber= async (value) => {
 }
 
 export const GetBorrowerPhoneNumber = async () => {
-    return await FetchFromStorage(PHONE_NUMBER)
+
+    const number = await FetchFromStorage(PHONE_NUMBER)
+    return  number && number!="null" ? number : null
 }
 
 

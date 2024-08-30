@@ -26,13 +26,14 @@ export default function App() {
 
   const isUserAvailable = async () => {
     const number = await GetBorrowerPhoneNumber()
-    setInitialRouteName(number != null ? "Dashboard" : "Common" )
+    console.log("phone number " +number)
+    setInitialRouteName(number  ? "Dashboard" : "Common" )
   }
 
   
   useEffect(() => {
 
-    isUserAvailable()
+    isUserAvailable().then(()=>{})
     async function prepare() {
       try {
         console.log('App preparation started');

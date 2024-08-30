@@ -6,15 +6,31 @@ import applyFontFamily from '../../assets/style/applyFontFamily';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Layout from './Layout';
+import { DeleteUser } from '../../PersonalLoan/services/API/CreateBorrowerLead';
+import { STATUS } from '../../PersonalLoan/services/API/Constants';
+import { StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
 
-const SideMenu = () => {
-  const navigation = useNavigation();
+const SideMenu = ({navigation}) => {
   const [isWhatsAppEnabled, setIsWhatsAppEnabled] = useState(false);
 
 
   const handleSocialMediaPress = (url) => {
     Linking.openURL(url);
   };
+
+  const HandleLogOut = async() =>{
+      const deleteStatus = await DeleteUser()
+      if(deleteStatus.status == STATUS.SUCCESS){
+        await StoreLeadId(null);
+        await StoreApplicantId(null)
+        await StoreTokenValidity(null)
+        await StoreBorrowerPhoneNumber(null)
+        await StoreUserPan(null)
+        await StoreUserAadhaar(null)
+        navigation.navigate("Common")
+        return
+      }
+  }
 
   const handleLogout = () => {
     Alert.alert(
@@ -28,8 +44,10 @@ const SideMenu = () => {
         { 
           text: "OK", 
           onPress: () => {
+            HandleLogOut()
             // Implement logout logic here
             console.log("User logged out");
+            
             // Navigate to login screen or perform other logout actions
             // navigation.navigate('Login');
           }

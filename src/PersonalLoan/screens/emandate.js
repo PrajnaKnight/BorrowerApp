@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from '../services/style/gloablStyle';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/AntDesign';
 import ProgressBar from '../components/progressBar';
 import { useProgressBar } from '../components/progressContext';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -33,7 +33,7 @@ const EMandateScreen = ({ navigation }) => {
   const onTryAgainClick = () => {
   };
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
- 
+
 
   // Dummy data for bank accounts
   const bankAccounts = [
@@ -55,7 +55,7 @@ const EMandateScreen = ({ navigation }) => {
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
 
-  const HandleProcced = async() =>{
+  const HandleProcced = async () => {
     setLoading(true)
     setNewErrorScreen(null)
 
@@ -79,12 +79,12 @@ const EMandateScreen = ({ navigation }) => {
   }
 
   const renderGradientButton = (text, onPress, disabled = false) => (
-    <TouchableOpacity 
-      onPress={onPress} 
-      disabled={disabled}   
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
       style={{
-        flex: 1, 
-        borderWidth: 1, 
+        flex: 1,
+        borderWidth: 1,
         borderColor: disabled ? '#E9EEFF' : '#002777', // Changed from '#00194c' to '#E9EEFF' for disabled state
         borderRadius: 5,
         overflow: 'hidden',
@@ -95,10 +95,10 @@ const EMandateScreen = ({ navigation }) => {
         style={[styles.button, disabled && styles.disabledButton]}
       >
         <Text style={[
-          styles.buttonText, 
-          { 
+          styles.buttonText,
+          {
             fontSize: dynamicFontSize(styles.buttonText.fontSize),
-            color: disabled ? '#ffffff' : '#FFFFFF' 
+            color: disabled ? '#ffffff' : '#FFFFFF'
           }
         ]}>
           {text}
@@ -186,27 +186,32 @@ const EMandateScreen = ({ navigation }) => {
         <KeyboardAvoidingView
           style={[styles.rightCOntainer, { flex: 1 }]}
           behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-        >
+          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
 
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+
+            <View style={{ padding: 16 }}>
+              <ProgressBar progress={0.6} />
+              <Text
+                style={[
+                  styles.headerText,
+                  {
+                    fontSize: dynamicFontSize(styles.headerText.fontSize),
+                    textTransform: "none",
+                  },
+
+                ]}>
+                eMandate
+              </Text>
+              <Text
+                style={{ fontSize: 14, color: "#00194c", fontWeight: "500" }}>
+                Please sign the e-mandate
+              </Text>
+            </View>
             <View style={styles.container}>
-              <View >
-
-                <ProgressBar progress={0.6} />
-                <Text
-                  style={[
-                    styles.headerText,
-                    { fontSize: dynamicFontSize(styles.headerText.fontSize) , textTransform:'none'},
-                  ]}>
-                  eMandate
-                </Text>
-                <Text style={{fontSize:14, color:'#00194c', fontWeight:'500'}}>Please sign the e-mandate</Text>
-
-              </View>
               <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-
                 <View>
                   <Text
                     style={[
@@ -238,13 +243,9 @@ const EMandateScreen = ({ navigation }) => {
                     style={selectedAccount === "" ? styles.disabledInput : {}}
                   />
 
-                  {renderGradientButton(
-                    "SIGN eMANDATE",
-                    () => {
-                      HandleProcced()
-                    },
-
-                  )}
+                  {renderGradientButton("SIGN eMANDATE", () => {
+                    HandleProcced();
+                  })}
 
                   <View style={styles.orWrapper}>
                     <Text
@@ -267,7 +268,15 @@ const EMandateScreen = ({ navigation }) => {
                       ]}>
                       Upload Physical NACH
                     </Text>
-                    <Icon name="upload" size={16} color="#fff" style={[styles.icon, { backgroundColor: '#FF8600', padding: 10 }]} />
+                    <Icon
+                      name="upload"
+                      size={16}
+                      color="#fff"
+                      style={[
+                        styles.icon,
+                        { backgroundColor: "#FF8600", padding: 10 },
+                      ]}
+                    />
                   </TouchableOpacity>
 
                   <TouchableOpacity style={styles.downloadSamplebutton}>
@@ -277,47 +286,53 @@ const EMandateScreen = ({ navigation }) => {
                         {
                           fontSize: dynamicFontSize(
                             styles.downloadSamplebuttonText.fontSize
-                          ), textTransform:'uppercase'
+                          ),
+                          textTransform: "uppercase",
                         },
                       ]}>
                       Download NACH Form
                     </Text>
                   </TouchableOpacity>
                 </View>
-
               </ScrollView>
-              <View style={[styles.actionContainer, styles.boxShadow, { paddingHorizontal: 0 }]}>
+              <View
+                style={[
+                  styles.actionContainer,
+                  styles.boxShadow,
+                  { paddingHorizontal: 0 },
+                ]}>
                 <TouchableOpacity
                   style={[styles.backButton, { marginRight: 10 }]}
                   onPress={() => GoBack(navigation)}>
                   <Text
                     style={[
                       styles.backBtnText,
-                      { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                      {
+                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                      },
                     ]}>
                     BACK
                   </Text>
                 </TouchableOpacity>
-                {renderGradientButton(
-                  "PROCEED",
-                  () => HandleProcced(),
-
-                )}
+                {renderGradientButton("PROCEED", () => HandleProcced())}
               </View>
-            </View>
+              </View>
+
           </ScrollView>
+          
 
-          {errorScreen.type != null && (
-            <ScreenError
-              errorObject={errorScreen}
-              onTryAgainClick={onTryAgainClick}
-              setNewErrorScreen={setNewErrorScreen}
-            />
-          )}
-        </KeyboardAvoidingView>
-
-      </View>
-    </View>
+          {
+    errorScreen.type != null && (
+      <ScreenError
+        errorObject={errorScreen}
+        onTryAgainClick={onTryAgainClick}
+        setNewErrorScreen={setNewErrorScreen}
+      />
+    )
+  }
+       </KeyboardAvoidingView>
+       </View>
+    </View >
   );
 };
 

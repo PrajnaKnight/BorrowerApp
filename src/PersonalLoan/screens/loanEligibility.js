@@ -659,7 +659,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           fontSize: dynamicFontSize(styles.description.fontSize),
                         },
                       ]}>
-                      Hurray your loan is approved up to the loan amount of<Text style={styles.descriptionAmt}> Rs. {loanAskAmount.toLocaleString()} </Text> 
+                      Hurray your loan is approved up to the loan amount of {" "}
+                      <Text style={styles.descriptionAmt}>
+                        Rs. {loanAskAmount.toLocaleString()}
+                      </Text> {" "}
                       you've requested. You're also eligible to take a higher
                       loan amount up to{" "}
                       <Text style={styles.descriptionAmt}>
@@ -689,10 +692,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       fontSize: dynamicFontSize(styles.description.fontSize),
                     },
                   ]}>
- Kindly confirm the sanctioned loan amount and click the
+                  Kindly confirm the sanctioned loan amount and click the
                   proceed button to provide necessary documents, and sign loan
                   agreement and eMandate for disbursal of loan.
-                                  </Text>
+                </Text>
                 <View style={styles.loanIdcontainer}>
                   <View style={styles.loanIdiconContainer}>
                     <MaterialCommunityIcons
@@ -763,7 +766,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           padding: 8,
                         },
                       ]}>
-                        <Text
+                      <Text
                         style={{
                           fontSize: dynamicFontSize(styles.input.fontSize),
                           fontWeight: "500",
@@ -777,9 +780,9 @@ const LoanEligibilityScreen = ({ navigation }) => {
                         </Text>
                         <Text style={{ color: "#00194c", fontSize: 10 }}>
                           Rate
-                    </Text>
-                  </View>
-                  </View>
+                        </Text>
+                      </View>
+                    </View>
                   </View>
 
 

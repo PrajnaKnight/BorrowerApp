@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { API_RESPONSE_STATUS, STATUS, CREATE_BORROWER_LEAD, GET_MARITAL_STATUS, GetHeader, GET_LEADS_DATA } from "./Constants";
-import { GetBorrowerPhoneNumber, GetLeadId } from '../LOCAL/AsyncStroage';
+import { API_RESPONSE_STATUS, STATUS, CREATE_BORROWER_LEAD, GET_MARITAL_STATUS, GetHeader, GET_LEADS_DATA, DELETE_USER } from "./Constants";
+import { GetBorrowerPhoneNumber, GetLeadId, StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../LOCAL/AsyncStroage';
 import { Network_Error, Something_Went_Wrong } from '../Utils/Constants';
 import { SendGeoLocation } from './LocationApi';
 
@@ -75,6 +75,29 @@ const CreateBorrowerLead = async (requestModel, fromDocument = false, stage = 0)
 }
 
 
+export const DeleteUser = async() =>{
+    let status, data, message;
+    try {
+        const header = await GetHeader()
+        const number = await GetBorrowerPhoneNumber();
+
+        const response = await axios.post(`${DELETE_USER}?LeadPhone=${number}`,null, { headers: header })
+
+        data = response.data
+        status = response.status == 200 && data?.StatusCode == "2000" ? STATUS.SUCCESS : STATUS.ERROR
+      
+
+    }
+    catch(e){
+        status = STATUS.ERROR
+    }
+
+
+
+    return API_RESPONSE_STATUS(status, data, message)
+    
+    
+}
 
 export const GetPersonalData = async () => {
 

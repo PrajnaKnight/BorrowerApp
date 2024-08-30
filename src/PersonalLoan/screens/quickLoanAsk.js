@@ -425,6 +425,8 @@ function QuickLoanAsk({ navigation }) {
                   placeholder="Select"
                   style={[styles.dropdownBorder, { fontSize }]}
                   autoScroll={true}
+                  searchable={true}
+
                 />
                 {purposeError && (
                   <Text style={styles.errorText}>{purposeError}</Text>

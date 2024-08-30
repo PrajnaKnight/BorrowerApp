@@ -106,6 +106,7 @@ const linking = {
 };
 
 function RootNavigator({initialRouteName}) {
+
   return (
     <NavigationContainer linking={linking}>
       <RootStack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
