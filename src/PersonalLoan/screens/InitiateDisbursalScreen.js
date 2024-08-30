@@ -365,6 +365,20 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                         `₹ ${formateAmmountValue(requestModel?.EmiAmount)}`}
                     </Text>
                   </View>
+                  <View style={[styles.tableRow]}>
+                    <Text style={styles.tableHeader}>Insurance</Text>
+                    <Text style={styles.tableData}>
+                      {requestModel?.EmiAmount &&
+                        `₹ ${formateAmmountValue(requestModel?.EmiAmount)}`}
+                    </Text>
+                  </View>
+                  <View style={[styles.tableRow]}>
+                    <Text style={styles.tableHeader}>Net Disbursement Amount</Text>
+                    <Text style={styles.tableData}>
+                      {requestModel?.EmiAmount &&
+                        `₹ ${formateAmmountValue(requestModel?.EmiAmount)}`}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>

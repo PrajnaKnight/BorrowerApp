@@ -669,10 +669,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           ),
                         },
                       ]}>
-                      Hurray your loan is approved up to the loan amount of
+                      Hurray your loan is approved up to the loan amount of {" "}
                       <Text style={styles.descriptionAmt}>
                         Rs. {loanAskAmount.toLocaleString()}
-                      </Text>
+                      </Text> {" "}
                       you've requested. You're also eligible to take a higher
                       loan amount up to{" "}
                       <Text style={styles.descriptionAmt}>

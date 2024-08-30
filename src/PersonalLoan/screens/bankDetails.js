@@ -581,7 +581,7 @@ const BankDetailsScreen = ({ navigation }) => {
                         UpdateBankInfo(selectedAccountIndex, "BRANCH-NAME", text)
                       }
                     />
-                    <Text
+                    {/* <Text
                       style={[
                         styles.label,
                         { fontSize: dynamicFontSize(styles.label.fontSize) },
@@ -595,7 +595,7 @@ const BankDetailsScreen = ({ navigation }) => {
                       onChangeText={(text) =>
                         UpdateBankInfo(selectedAccountIndex, "BRANCH-NAME", text)
                       }
-                    />
+                    /> */}
                     <Text
                       style={[
                         styles.label,

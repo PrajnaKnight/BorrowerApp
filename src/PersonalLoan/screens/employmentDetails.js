@@ -741,7 +741,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                           error={Salaried.JoiningDateError}
                         />
                       </View>
-                      <View style={styles.formGroup}>
+                      {/* <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Current Experience<Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput
                           placeholder=""
@@ -750,7 +750,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                           value={Salaried.Experience}
                           onChangeText={(e) => { updateInfo("Experience", e) }}
                         />
-                      </View>
+                      </View> */}
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Phone Number <Text style={styles.mandatoryStar}>*</Text></Text>
                         <MobileNumberInput placeholder="Enter your work phone number" setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} mobileNumber={Salaried.OfficePhoneNo} error={Salaried.OfficePhoneNoError} />

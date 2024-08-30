@@ -426,11 +426,12 @@ function QuickLoanAsk({ navigation }) {
                 <CustomDropdown
                   value={loanAskDetails.data.PurposeOfLoan}
                   items={items}
-                  setValue={(e) => setPurposeOfLoad(e.label)}
+                  setValue={(e) =>{ setPurposeOfLoad(e.label)}}
                   setItems={setItems}
                   placeholder="Select"
                   style={[styles.dropdownBorder, { fontSize }]}
                   autoScroll={true}
+                  searchable={true}
                 />
                 {purposeError && (
                   <Text style={styles.errorText}>{purposeError}</Text>

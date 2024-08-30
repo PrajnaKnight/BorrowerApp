@@ -294,9 +294,9 @@ const SanctionLetterScreen = ({ navigation }) => {
       case "InterestChargeable":
         return "Interest Chargeable"
         break;
-      case "DateOfResetOfInterest":
-        return "Date Of Reset Of Interest"
-        break;
+      // case "DateOfResetOfInterest":
+      //   return "Date Of Reset Of Interest"
+      //   break;
       case "FeePayable":
         return "Fee Payable"
         break;
