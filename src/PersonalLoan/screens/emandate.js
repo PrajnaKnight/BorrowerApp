@@ -294,11 +294,13 @@ const EMandateScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </ScrollView>
-              <View
+              
+            </View>
+            <View
                 style={[
                   styles.actionContainer,
                   styles.boxShadow,
-                  { paddingHorizontal: 0 },
+                  { paddingHorizontal: 16 },
                 ]}>
                 <TouchableOpacity
                   style={[styles.backButton, { marginRight: 10 }]}
@@ -315,7 +317,6 @@ const EMandateScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 {renderGradientButton("PROCEED", () => HandleProcced())}
               </View>
-            </View>
           </ScrollView>
 
           {errorScreen.type != null && (
