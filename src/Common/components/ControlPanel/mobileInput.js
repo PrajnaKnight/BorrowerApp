@@ -170,6 +170,7 @@ const fieldstyles = applyFontFamily({
     width: 26,
     height: 26,
     marginRight: 5,
+
   },
   countryCode: {
     fontSize: 14,
@@ -202,7 +203,7 @@ const fieldstyles = applyFontFamily({
     paddingHorizontal: 10,
     paddingLeft: 5,
     color: "#00194c",
-    flex: 1,
+    flex: 1, 
   },
   errorText: {
     flex: 1,

@@ -298,7 +298,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                       placeholder="Select an account"
                     />
                   ) : (
-                    <Text style={screenStyles.dropdownButton}>
+                    <Text style={[screenStyles.dropdownButton,{fontFamily:"Poppins_400Regular"}]}>
                       {selectedAccount}
                     </Text>
                   )

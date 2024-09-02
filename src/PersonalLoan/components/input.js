@@ -122,6 +122,8 @@ const { fontSize } = useAppContext();
       <Text style={{ 
         color: isSelected ? '#FFFFFF' : '#333', 
         fontSize: dynamicFontSize(14),
+        fontFamily: 'Poppins_400Regular', 
+
       }}>{item.Value}</Text>
 
     </TouchableOpacity>
@@ -361,6 +363,7 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
       <Text style={{ 
         color: isSelected ? '#FFFFFF' : '#333', 
         fontSize: dynamicFontSize(14),
+        fontFamily: 'Poppins_400Regular', 
       }}>{item.value}</Text>
 
     </TouchableOpacity>

@@ -192,7 +192,7 @@ const EMandateScreen = ({ navigation }) => {
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-            <View style={{ padding: 16 }}>
+            <View style={{ padding:16 }}>
               <ProgressBar progress={0.6} />
               <Text
                 style={[
@@ -206,7 +206,7 @@ const EMandateScreen = ({ navigation }) => {
                 eMandate
               </Text>
               <Text
-                style={{ fontSize: 14, color: "#00194c", fontWeight: "500" }}>
+                style={{ fontSize: 14, color: "#00194c", fontFamily: 'Poppins_400Regular' }}>
                 Please sign the e-mandate
               </Text>
             </View>
@@ -217,6 +217,7 @@ const EMandateScreen = ({ navigation }) => {
                     style={[
                       styles.label,
                       { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      {fontFamily:"Poppins_500Medium"}
                     ]}>
                     Bank Account Number{" "}
                     <Text style={styles.mandatoryStar}>*</Text>
@@ -230,7 +231,7 @@ const EMandateScreen = ({ navigation }) => {
                   <Text
                     style={[
                       styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      { fontSize: dynamicFontSize(styles.label.fontSize), fontFamily:"Poppins_500Medium" },
                     ]}>
                     Bank Branch IFSC Code{" "}
                     <Text style={styles.mandatoryStar}>*</Text>

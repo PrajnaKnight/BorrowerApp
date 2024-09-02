@@ -547,7 +547,8 @@ const DocumentUploadScreen = ({ navigation }) => {
                   <View style={{ height: 4 }} />
                   <Text
                     style={{
-                      color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"
+                      color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c",
+                      fontFamily: 'Poppins_400Regular', 
                     }}
                   >
                     {element}

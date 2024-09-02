@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   dropdownButtonText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Poppins_400Regular'
   },
   dropdownList: {
     maxHeight: 200,
@@ -93,6 +94,8 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Poppins_400Regular'
+
   },
   subLabel: {
     fontSize: 14,

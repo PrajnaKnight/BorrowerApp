@@ -222,6 +222,7 @@ export const styles = applyFontFamily({
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
+    fontWeight:"400",
     fontSize: 14,
     color: "#00194C",
   },

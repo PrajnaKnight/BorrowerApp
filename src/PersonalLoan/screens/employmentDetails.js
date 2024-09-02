@@ -720,7 +720,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Your Current Designation <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <CustomInput placeholder="Enter your current designation" error={Salaried.DesignationError} value={Salaried.Designation} onChangeText={(e) => { updateInfo("Designation", e); }} />
+                        <CustomInput  placeholder="Enter your current designation" error={Salaried.DesignationError} value={Salaried.Designation} onChangeText={(e) => { updateInfo("Designation", e); }} />
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Date of Joining <Text style={styles.mandatoryStar}>*</Text></Text>

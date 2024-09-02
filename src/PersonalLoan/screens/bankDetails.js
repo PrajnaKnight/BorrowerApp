@@ -624,6 +624,7 @@ const BankDetailsScreen = ({ navigation }) => {
                         UpdateBankInfo(selectedAccountIndex, "RE-ACCOUNT-NUMBER", text)
                       }
                       keyboardType="numeric"
+                      
                     />
                     {bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumber != null &&
                       bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumber != null &&

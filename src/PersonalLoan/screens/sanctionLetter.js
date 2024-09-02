@@ -224,7 +224,9 @@ const SanctionLetterScreen = ({ navigation }) => {
 
 
   const renderSanctionDetails = () => {
-    return Object.entries(sanctionDetails).map(([key, value], index) => (
+    return Object.entries(sanctionDetails).filter(([key, value],index)=>value!=null).map(([key, value], index) => (
+
+      
       <View key={key}>
         {index % 2 !== 0 ? (
           <LinearGradient

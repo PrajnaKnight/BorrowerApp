@@ -216,7 +216,7 @@ const ThankYou = ({ navigation }) => {
                   style={screenStyles.successIcon}
                 />
                 <Text style={screenStyles.message}>Done!</Text>
-                <Text style={screenStyles.subMessage}>
+                <Text style={[screenStyles.subMessage,{fontFamily:"Poppins_400Regular"}]}>
                   Thank you for signing the loan agreement. Your loan amount will be disbursed shortly.
                 </Text>
                 <View style={{ height: 10 }}></View>

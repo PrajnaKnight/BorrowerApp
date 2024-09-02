@@ -23,7 +23,7 @@ const RejectionScreen = ({navigation}) => {
           resizeMode="contain"
           style={style.failureIcon}
         />
-        <Text style={style.message}>{"Sorry, your loan application cannot be processed\ndue to non-compliance with our policy. We hope\nto serve you in the future."}</Text>
+        <Text style={[style.message,{fontFamily:"Poppins_400Regular"}]}>{"Sorry, your loan application cannot be processed\ndue to non-compliance with our policy. We hope\nto serve you in the future."}</Text>
       </View>
 
 
