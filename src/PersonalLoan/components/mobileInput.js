@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { useAppContext } from '../components/useContext';
 import { styles } from '../../assets/style/personalStyle';
 import applyFontFamily from '../services/style/applyFontFamily';
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const MobileNumberInput = ({ mobileNumber, setMobileNumber, error, placeholder }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -34,7 +34,7 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error, placeholder }
           onBlur={() => setIsFocused(false)}
         />
          <Text style={[fieldstyles.prefix, { fontSize: dynamicFontSize(fieldstyles.prefix.fontSize), paddingRight: 10 }]}>
-           <Feather name="phone" size={16}  style={[fieldstyles.phoneIcon, isFocused && fieldstyles.phoneIconFocused]} onFocus={() => setIsFocused(true)}
+           <FontAwesome5 name="phone" size={16}  style={[fieldstyles.phoneIcon, isFocused && fieldstyles.phoneIconFocused]} onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)} />
          </Text>
       </View>

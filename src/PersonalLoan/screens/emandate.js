@@ -295,43 +295,43 @@ const EMandateScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </ScrollView>
-              <View
-                style={[
-                  styles.actionContainer,
-                  styles.boxShadow,
-                  { paddingHorizontal: 0 },
-                ]}>
-                <TouchableOpacity
-                  style={[styles.backButton, { marginRight: 10 }]}
-                  onPress={() => GoBack(navigation)}>
-                  <Text
-                    style={[
-                      styles.backBtnText,
-                      {
-                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                      },
-                    ]}>
-                    BACK
-                  </Text>
-                </TouchableOpacity>
-                {renderGradientButton("PROCEED", () => HandleProcced())}
-              </View>
-              </View>
+            </View>
+            <View
+              style={[
+                styles.actionContainer,
+                styles.boxShadow,
+                { paddingHorizontal: 16 },
+              ]}>
+              <TouchableOpacity
+                style={[styles.backButton, { marginRight: 10 }]}
+                onPress={() => GoBack(navigation)}>
+                <Text
+                  style={[
+                    styles.backBtnText,
+                    {
+                      fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                    },
+                  ]}>
+                  BACK
+                </Text>
+              </TouchableOpacity>
+              {renderGradientButton("PROCEED", () => HandleProcced())}
+            </View>
 
           </ScrollView>
-          
+
 
           {
-    errorScreen.type != null && (
-      <ScreenError
-        errorObject={errorScreen}
-        onTryAgainClick={onTryAgainClick}
-        setNewErrorScreen={setNewErrorScreen}
-      />
-    )
-  }
-       </KeyboardAvoidingView>
-       </View>
+            errorScreen.type != null && (
+              <ScreenError
+                errorObject={errorScreen}
+                onTryAgainClick={onTryAgainClick}
+                setNewErrorScreen={setNewErrorScreen}
+              />
+            )
+          }
+        </KeyboardAvoidingView>
+      </View>
     </View >
   );
 };

@@ -49,6 +49,7 @@ export const styles = applyFontFamily({
     zIndex: 9000,
   },
   TopBar: {
+    backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
         zIndex: 100,
@@ -104,6 +105,11 @@ export const styles = applyFontFamily({
     zIndex: 5000,
     paddingHorizontal: 16,
     backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
     ...Platform.select({
       // Additional, web-specific styles
       web: {
@@ -121,7 +127,7 @@ export const styles = applyFontFamily({
   },
   boldText: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: "#00194C",
   },
   LinearGradient: {
@@ -240,7 +246,6 @@ export const styles = applyFontFamily({
   },
   termsContainer: {
     flexDirection: "row",
-    alignItems: "center",
     marginBottom: 10,
   },
   carouselItem: {
@@ -364,7 +369,7 @@ export const styles = applyFontFamily({
   },
   headerText: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: "#00194C",
   },
   WebheaderText: {
@@ -492,7 +497,7 @@ export const styles = applyFontFamily({
   },
   progressBarFill: {
     height: "100%",
-    backgroundColor: "#758BFD",
+    backgroundColor: "#213ACE",
     borderRadius: 5,
   },
   errorText: {
@@ -768,7 +773,7 @@ export const styles = applyFontFamily({
   },
   label: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginTop: 10,
     marginBottom: 5,
     color: "#00194c",
@@ -938,9 +943,10 @@ export const styles = applyFontFamily({
   },
   loanLabel: {
     color: "#00194c",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: 14,
+    fontWeight: "500",
+    marginTop: 10,
+    marginBottom: 5,
   },
   resendButtonDisabled: {
     opacity: 0.5,
@@ -1302,7 +1308,7 @@ export const styles = applyFontFamily({
       web: {
         width: "85%",
         marginHorizontal: "auto",
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "#ffffff",
         flex: 1,
         alignSelf: "center",
         paddingTop: 70,
@@ -1754,7 +1760,7 @@ export const styles = applyFontFamily({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
-  
+    elevation: 5,
     padding: 16,
   },
   docCaptureWrapper: {
@@ -2299,6 +2305,44 @@ export const styles = applyFontFamily({
   inactiveDot: {
     backgroundColor: '#A2ACC6',
   },
+
+  mobilelabel:{
+    color:'#00194C',  
+    fontWeight:'500',
+    fontSize:24,
+  },
+  checkbox:{
+    marginTop:6,
+    marginRight:10
+  },
+  previewHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  docImagePreview: {
+    width: 150,
+    height: 100,
+    borderRadius: 8,
+  },
+  docdeleteButton: {
+    padding: 5,
+  },
+  previewPlaceholder: {
+    width: '100%',
+    height: 130,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderStyle: 'dashed',
+  },
+  previewPlaceholderText: {
+    color: '#888',
+    marginBottom: 10,
+  }
   //New document upload screen ends
 });
 

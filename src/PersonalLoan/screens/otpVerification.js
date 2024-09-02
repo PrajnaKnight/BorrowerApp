@@ -19,6 +19,8 @@ import ScreenError, { useErrorEffect } from './ScreenError';
 import { Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import { updateBreStatus } from '../services/Utils/Redux/ExtraSlices';
 import { GetBreEligibility } from '../services/API/LoanEligibility';
+import { useProgressBar } from "../components/progressContext";
+import ProgressBar from "../components/progressBar";
 import {
   getHash,
   removeListener,
@@ -29,6 +31,12 @@ import { checkSMSPermission } from './PermissionScreen';
 
 const OTPVerificationScreen = ({ navigation, route }) => {
 
+  const { setProgress } = useProgressBar();
+
+  useEffect(() => {
+    setProgress(0.01);
+  }, []);
+  
   const dispatch = useDispatch()
   const { fontSize } = useAppContext();
   const [loading, setLoading] = useState(false);
@@ -436,7 +444,8 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
-              <View>
+            <View style={{paddingTop:16}}>
+            <ProgressBar progress={0.01} />
                 <Text
                   style={[
                     styles.headerText,

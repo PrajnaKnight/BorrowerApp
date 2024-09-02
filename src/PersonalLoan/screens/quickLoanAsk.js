@@ -11,7 +11,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { styles } from "../services/style/gloablStyle";
 import ButtonComponent from "../components/button";
-import CustomDropdown from "../components/dropdownPicker";
+import CustomDropdown from "../../Common/components/ControlPanel/dropdownPicker";
 import { useAppContext } from "../components/useContext";
 import LoanAskDetails, { LoanPurpose } from "../services/API/LoanAskDetails";
 import { GetLeadId } from "../services/LOCAL/AsyncStroage";
@@ -125,14 +125,10 @@ function QuickLoanAsk({ navigation }) {
     }
   }, [loanAskDetails.error]);
 
-  const handleLoanAmountSliderChange = (value, from = null) => {
+  const handleLoanAmountSliderChange = (value) => {
 
    
-    let finalValue = parseInt(properAmmount(value)) || 0;
-    if (from) {
-      if (finalValue > maxLoanAmount) finalValue = maxLoanAmount;
-      else if (finalValue < 0) finalValue = 0;
-    }
+    let finalValue = value || 0;
 
     const currentLoanAsk = { ...loanAskDetails.data, LoanAmount: finalValue };
     dispatch(updateCurrentLoanAsk(currentLoanAsk));
@@ -140,12 +136,8 @@ function QuickLoanAsk({ navigation }) {
   };
 
   const handleSliderTenureChange = (value, from = null) => {
-    let finalValue = parseInt(value) || 0;
-    if (from) {
-      if (finalValue > maxTenure) finalValue = maxTenure;
-      else if (finalValue < 0) finalValue = 0;
-    }
-
+    let finalValue = value || 0;
+  
     const currentLoanAsk = { ...loanAskDetails.data, AskTenure: finalValue };
     dispatch(updateCurrentLoanAsk(currentLoanAsk));
     setTenureError(null);
@@ -376,13 +368,10 @@ function QuickLoanAsk({ navigation }) {
                   min={minLoanAmount}
                   max={maxLoanAmount}
                   steps={10000}
-                  sliderValue={properAmmount(loanAskDetails.data.LoanAmount)}
-                  inputValue={formateAmmountValue(
-                    loanAskDetails.data.LoanAmount.toString()
-                  )}
+                  currentValue = {loanAskDetails.data.LoanAmount}
                   error={loanAmountError}
-                  onChange={(e, from) => handleLoanAmountSliderChange(e, from)}
-                  isForAmount={true}
+                  onChange={(e) => handleLoanAmountSliderChange(e)}
+                  isAmount={true}
                 />
                 <CustomSlider
                   title="Tenure"
@@ -391,10 +380,9 @@ function QuickLoanAsk({ navigation }) {
                   min={minTenure}
                   max={maxTenure}
                   steps={3}
-                  sliderValue={loanAskDetails.data.AskTenure}
-                  inputValue={loanAskDetails.data.AskTenure.toString()}
+                  currentValue={loanAskDetails.data.AskTenure}
                   error={tenureError}
-                  onChange={(e, from) => handleSliderTenureChange(e, from)}
+                  onChange={(e) => handleSliderTenureChange(e)}
                   isTenure={true}
                 />
                 <View style={styles.loanLabel}>
@@ -403,7 +391,7 @@ function QuickLoanAsk({ navigation }) {
                       styles.loanLabel,
                       { fontSize: dynamicFontSize(styles.loanLabel.fontSize) },
                     ]}>
-                    Select a purpose{" "}
+                    Purpose of Loan{" "}
                     <Text
                       style={[
                         styles.mandatoryStar,

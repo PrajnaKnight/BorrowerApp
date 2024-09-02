@@ -187,30 +187,30 @@ export function formateAmmountValue(num) {
     if (numStr.length <= 3) {
         return numStr;
     }
-    else {
-
-        numStr = addCommaAtIndex(numStr, numStr.length - 3)
-        numStr = addingCommas(numStr)
-        return numStr;
-    }
+   
+    numStr = addCommaAtIndex(numStr, numStr.length - 3)
+    numStr = addingCommas(numStr)
+    return numStr;
+    
 }
 
 
 export function properAmmount(num) {
-    try {
+
+    try{
+
         if (num == null) {
             return null
         }
-
+    
         let newAmmount = num.replace(/,/g, '');
         return parseInt(newAmmount)
+    
     }
-    catch (e) {
+    catch(e){
 
     }
-
     return num
-
 }
 
 

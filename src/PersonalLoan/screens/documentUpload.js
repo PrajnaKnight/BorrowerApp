@@ -497,9 +497,9 @@ const DocumentUploadScreen = ({ navigation }) => {
     return (
       <View style={[styles.dotsContainer, { marginTop: 20 }]}>
         {filteredKeys.map((_, index) => (
-          <Pressable  key={index} onPress={() => { scrollViewRef.current?.scrollTo({ x: index, animated: true }) }}>
+          <Pressable key={index} onPress={() => { scrollViewRef.current?.scrollTo({ x: index, animated: true }) }}>
             <View
-             
+
               style={[
                 styles.dot,
                 index === activeIndex ? styles.activeDot : styles.inactiveDot,
@@ -563,74 +563,74 @@ const DocumentUploadScreen = ({ navigation }) => {
   );
 
 
-  const RenderDocumentPreviews = (selectedFile) =>
-    selectedFile ? (
-      <View style={styles.fileUploadContainer}>
-        <View style={styles.uploadPreviewContainer}>
-          <View style={styles.previewArea}>
-            <View style={{ flex: 1, width: "100%", height: "100%" }}>
-              {selectedFile.Base64 != null &&
-                (isImage(selectedFile.Name) ? (
-                  <Image
-                    source={{
-                      uri: `data:image/png;base64,${selectedFile.Base64}`,
-                    }}
-                    style={{ flex: 1 }}
-                    resizeMode="contain" // or 'cover', 'stretch', etc.
-                    onError={(e) => console.error("Error loading image", e)}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}>
-                    <Icon name={"file"} size={24} />
-                    <View style={{ height: 5 }} />
-                    <Text>{selectedFile.Name}</Text>
-                  </View>
-                ))}
-
-              {selectedFile.Base64 != null && (
-                <TouchableOpacity
-                  style={styles.closePDF}
-                  onPress={() => {
-                    handleDeleteFile(selectedFile.Id);
+  const RenderDocumentPreviews = (selectedFile) => (
+    <View style={styles.fileUploadContainer}>
+      <View style={styles.uploadPreviewContainer}>
+        <View style={styles.previewArea}>
+          <View style={{ flex: 1, width: "100%", height: "100%" }}>
+            {selectedFile.Base64 ?
+              (isImage(selectedFile.Name) ? (
+                <Image
+                  source={{
+                    uri: `data:image/png;base64,${selectedFile.Base64}`,
+                  }}
+                  style={{ flex: 1 }}
+                  resizeMode="contain" // or 'cover', 'stretch', etc.
+                  onError={(e) => console.error("Error loading image", e)}
+                />
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}>
-                  <Icon name="times-circle" size={24} color="#FF0000" />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
+                  <Icon name={"file"} size={24} />
+                  <View style={{ height: 5 }} />
+                  <Text>{selectedFile.Name}</Text>
+                </View>
+              )) :
+              <View style={styles.previewPlaceholder}>
+                <ImageBackground
+                  source={require("../../assets/images/dummyid.png")}
+                  style={[styles.previewPlaceholder]}>
+                  <Text style={styles.previewPlaceholderText}>Preview</Text>
+                </ImageBackground>
+              </View>
 
-          <View style={styles.uploadButtonsContainer}>
-            <TouchableOpacity
-              style={styles.uploadButton}
-              onPress={() => {
-                handleDocumentPick("library");
-              }}>
-              <Icon name="upload" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.uploadButton}
-              onPress={() => {
-                handleDocumentPick("camera");
-              }}>
-              <Icon name="camera" size={24} color="#fff" />
-            </TouchableOpacity>
+            }
+
+            {selectedFile.Base64 != null && (
+              <TouchableOpacity
+                style={styles.closePDF}
+                onPress={() => {
+                  handleDeleteFile(selectedFile.Id);
+                }}>
+                <Icon name="times-circle" size={24} color="#FF0000" />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
+
+        <View style={styles.uploadButtonsContainer}>
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={() => {
+              handleDocumentPick("library");
+            }}>
+            <Icon name="upload" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={() => {
+              handleDocumentPick("camera");
+            }}>
+            <Icon name="camera" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
-    ) : (
-      <View style={styles.previewPlaceholder}>
-        <ImageBackground
-          source={require("../../assets/images/dummyid.png")}
-          style={styles.previewPlaceholder}>
-          <Text style={styles.previewPlaceholderText}>Preview</Text>
-        </ImageBackground>
-      </View>
-    );
+    </View>
+  )
 
 
 
@@ -820,7 +820,7 @@ const DocumentUploadScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ paddingHorizontal: 16 }}>
+          <View style={{ padding: 16 }}>
             <ProgressBar progress={0.5} />
             <Text
               style={[

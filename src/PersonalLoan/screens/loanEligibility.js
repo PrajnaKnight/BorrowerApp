@@ -423,26 +423,15 @@ const LoanEligibilityScreen = ({ navigation }) => {
 
     }, [refreshPage]))
 
-  const handleLoanAmountChange = (value, from) => {
-    let finalValue = parseInt(properAmmount(value)) || 0;
-    if (from) {
-      if (finalValue > maxLoanAmount) {
-        finalValue = maxLoanAmount;
-      } else if (finalValue < 0) finalValue = 0;
-
-    }
+  const handleLoanAmountChange = (value) => {
+    let finalValue = value || 0;
+    
     setLoanAmount(finalValue);
     setLoanAmountError(null);
   };
 
-  const handleTenureChange = (value, from) => {
-    let finalValue = parseInt(value) || 0;
-    if (from) {
-      if (finalValue > maxTenure) {
-        finalValue = maxTenure;
-      } else if (finalValue < 0) finalValue = 0;
-
-    }
+  const handleTenureChange = (value) => {
+    let finalValue = value || 0;
     setTenure(finalValue);
     setTenureError(null);
   };
@@ -626,7 +615,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ paddingHorizontal: 16 }}>
+          <View style={{ padding: 16 }}>
             <ProgressBar progress={0.3} />
             <Text
               style={[
@@ -716,11 +705,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   min={minLoanAmount}
                   max={maxLoanAmount}
                   steps={10000}
-                  sliderValue={properAmmount(loanAmount)}
-                  inputValue={formateAmmountValue(loanAmount.toString())}
+                  currentValue={loanAmount}
                   error={loanAmountError}
-                  onChange={(e, from) => handleLoanAmountChange(e, from)}
-                  isForAmount={true}
+                  onChange={(e) => handleLoanAmountChange(e)}
+                  isAmount={true}
                 />
 
                 <CustomSlider
@@ -730,10 +718,9 @@ const LoanEligibilityScreen = ({ navigation }) => {
                   min={minTenure}
                   max={maxTenure}
                   steps={3}
-                  sliderValue={tenure}
-                  inputValue={tenure.toString()}
+                  currentValue={tenure}
                   error={tenureError}
-                  onChange={(e, from) => handleTenureChange(e, from)}
+                  onChange={(e) => handleTenureChange(e)}
                   isTenure={true}
                 />
 

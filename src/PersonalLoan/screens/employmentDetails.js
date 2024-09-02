@@ -204,7 +204,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
   }, [currentSelectedEmploymentOptionId]);
 
   const onEmploymentTypeChange = (itemValue) => {
-    
+
     dispatch(updateEmploymentType(itemValue.label));
     dispatch(updateEmploymentCategory(null));
 
@@ -281,14 +281,8 @@ const EmploymentDetailScreen = ({ navigation }) => {
           currentState.WorkEmailError = null;
           break;
         case "AnnualCTC":
-          let finalValue = parseInt(properAmmount(value)) || 0;
-          if (from != null) {
-            if (finalValue > maxMonthlyIncome) {
-              finalValue = maxMonthlyIncome;
-            } else if (finalValue < 0) {
-              finalValue = 0;
-            }
-          }
+          let finalValue = value || 0;
+          
           currentState.AnnualCTC = finalValue;
           currentState.AnnualCTCError = null;
           break;
@@ -356,14 +350,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
           currentState.WorkEmailError = null;
           break;
         case "AnnualCTC":
-          let finalValue = parseInt(properAmmount(value)) || 0;
-          if (from != null) {
-            if (finalValue > maxMonthlyIncome) {
-              finalValue = maxMonthlyIncome;
-            } else if (finalValue < 0) {
-              finalValue = 0;
-            }
-          }
+          let finalValue = value || 0;
           currentState.CompanyTurnOver = finalValue;
           currentState.AnnualCTCError = null;
           break;
@@ -454,7 +441,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       }
       return null;
     }
-    else{
+    else {
       let experienceValidity = isValidNumberOnlyField(details.BusinessExperience, "Business Experience");
       employmentDetails.ExperienceError = experienceValidity;
       if (experienceValidity != null) {
@@ -466,7 +453,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
         return employmentDetails;
       }
 
-     
+
 
       let joiningDateValidity = isValidField(details.IncorporationDate_CommencementDate, "Incorporation Date Commencement Date");
       employmentDetails.JoiningDateError = joiningDateValidity;
@@ -595,7 +582,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       currentRequestModel.LeadId = LeadId
 
     }
-    
+
 
 
     if (await checkLocationPermission() == false) {
@@ -612,13 +599,13 @@ const EmploymentDetailScreen = ({ navigation }) => {
         return;
       }
       dispatch(updateJumpTo(stageMaintance));
-      
+
       setOtherError(null);
       navigation.navigate(nextScreen);
     });
   };
 
-  
+
 
   const CompanyItem = ({ item, onPress }) => (
     <TouchableOpacity onPress={() => onPress(item)} style={{ paddingHorizontal: 4, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "black" }}>
@@ -630,23 +617,23 @@ const EmploymentDetailScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
 
-    if(EmploymentType == "Self-Employed"){
+      if (EmploymentType == "Self-Employed") {
 
-      dispatch(updateThingsToRemove({name : "personalFinance", option : OPTION.REMOVE}))
-      setNextScreen("personalFinance")
-      return
-    }
-
-    setNextScreen("bankDetail")
-    dispatch(updateThingsToRemove({name : "personalFinance", option : OPTION.ADD}))
-
-    if (EmploymentType == 'Salaried') {
-      if (Salaried.Experience && !Salaried.JoiningDate) {
-        updateInfo("WorkStartDate", calculatePastDate(Salaried.Experience))
+        dispatch(updateThingsToRemove({ name: "personalFinance", option: OPTION.REMOVE }))
+        setNextScreen("personalFinance")
+        return
       }
-    }
-    
-  }, [EmploymentType, Salaried.Experience]))
+
+      setNextScreen("bankDetail")
+      dispatch(updateThingsToRemove({ name: "personalFinance", option: OPTION.ADD }))
+
+      if (EmploymentType == 'Salaried') {
+        if (Salaried.Experience && !Salaried.JoiningDate) {
+          updateInfo("WorkStartDate", calculatePastDate(Salaried.Experience))
+        }
+      }
+
+    }, [EmploymentType, Salaried.Experience]))
 
 
   return (
@@ -689,7 +676,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
         )}
         <KeyboardAvoidingView style={[styles.rightCOntainer, { flex: 1 }]} behavior={Platform.OS === "ios" ? "padding" : null} keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ paddingHorizontal: 16 }}>
+          <View style={{ padding: 16 }}>
             <ProgressBar progress={0.1} />
             <Text style={[styles.headerText, { fontSize: dynamicFontSize(styles.headerText.fontSize) }]}>Employment Details</Text>
           </View>
@@ -701,24 +688,24 @@ const EmploymentDetailScreen = ({ navigation }) => {
                 <CustomDropdown value={EmploymentType} items={employmentTypeOptions} setValue={(e) => onEmploymentTypeChange(e)} placeholder="Select" style={[styles.pickerContainer, { fontSize }]} zIndex={7000} />
                 {EmploymentTypeError && <Text style={styles.errorText}>{EmploymentTypeError}</Text>}
                 <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Occupation Type <Text style={styles.mandatoryStar}>*</Text></Text>
-                
+
                 <View>
-                <CustomInputFieldWithSearchSuggestionForEmplymentDetails
-                  value={EmploymentCategory} 
-                  listOfData={ocupationValueOptions} 
-                  onChangeText={(e) => { console.log(e); onEmploymenCategoryChange(e); }} 
-                  placeholder="Search" 
-                  style={[styles.pickerContainer, { fontSize }]} 
-                  zIndex={2000} 
-                  searchable={true} 
-                />
+                  <CustomInputFieldWithSearchSuggestionForEmplymentDetails
+                    value={EmploymentCategory}
+                    listOfData={ocupationValueOptions}
+                    onChangeText={(e) => { console.log(e); onEmploymenCategoryChange(e); }}
+                    placeholder="Search"
+                    style={[styles.pickerContainer, { fontSize }]}
+                    zIndex={2000}
+                    searchable={true}
+                  />
                 </View>
                 {EmploymentCategoryError && <Text style={styles.errorText}>{EmploymentCategoryError}</Text>}
                 <View>
                   {EmploymentType == 'Salaried' ? (
                     <View style={styles.employmentWrapper}>
                       <View style={styles.formGroup}>
-                      <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience<Text style={styles.mandatoryStar}>*</Text></Text>
+                        <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience<Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput
                           placeholder="Years"
                           keyboardType="numeric"
@@ -749,12 +736,22 @@ const EmploymentDetailScreen = ({ navigation }) => {
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Phone Number <Text style={styles.mandatoryStar}>*</Text></Text>
                         <MobileNumberInput placeholder="Enter your work phone number" setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} mobileNumber={Salaried.OfficePhoneNo} error={Salaried.OfficePhoneNoError} />
-                                                </View>
+                      </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput placeholder="Enter your work email id" error={Salaried.WorkEmailError} value={Salaried.WorkEmail} onChangeText={(e) => { updateInfo("WorkEmail", e); }} keyboardType="email-address" autoCapitalize="none" />
                       </View>
-                      <CustomSlider title="Net Monthly Salary" icon="rupee" keyboardType="numeric" min={minMonthlyIncome} max={maxMonthlyIncome} steps={5000} sliderValue={properAmmount(Salaried.AnnualCTC)} inputValue={formateAmmountValue(Salaried.AnnualCTC.toString())} error={Salaried.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
+                      <CustomSlider
+                        title="Net Monthly Salary"
+                        icon="rupee"
+                        keyboardType="numeric"
+                        min={minMonthlyIncome}
+                        max={maxMonthlyIncome}
+                        steps={5000}
+                        currentValue={Salaried.AnnualCTC}
+                        error={Salaried.AnnualCTCError}
+                        onChange={(e) => updateInfo("AnnualCTC", e)}
+                        isAmount={true} />
                       <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Company Address <Text style={styles.mandatoryStar}>*</Text></Text>
                       <View style={styles.addressForm}>
                         <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
@@ -799,7 +796,18 @@ const EmploymentDetailScreen = ({ navigation }) => {
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
                         <CustomInput placeholder="Work Email ID" value={SelfEmployed.CompanyEmail} onChangeText={(e) => { updateInfo("WorkEmail", e); }} keyboardType="email-address" autoCapitalize="none" error={SelfEmployed.WorkEmailError} />
                       </View>
-                      <CustomSlider title="Net Monthly Turnover" icon="rupee" keyboardType="numeric" min={minMonthlyIncome} max={maxMonthlyIncome} steps={5000} sliderValue={properAmmount(SelfEmployed.CompanyTurnOver)} inputValue={formateAmmountValue(SelfEmployed.CompanyTurnOver.toString())} error={SelfEmployed.AnnualCTCError} onChange={(e, from) => updateInfo("AnnualCTC", e, from)} isForAmount={true} />
+                      <CustomSlider
+                        title="Net Monthly Turnover"
+                        icon="rupee"
+                        keyboardType="numeric"
+                        min={minMonthlyIncome}
+                        max={maxMonthlyIncome}
+                        steps={5000}
+                        currentValue={SelfEmployed.CompanyTurnOver}
+                        error={SelfEmployed.AnnualCTCError}
+                        onChange={(e) => updateInfo("AnnualCTC",e)}
+                        isAmount={true}
+                      />
                       <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Business/Shop/Profession Address <Text style={styles.mandatoryStar}>*</Text></Text>
                       <View style={styles.addressForm}>
                         <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>

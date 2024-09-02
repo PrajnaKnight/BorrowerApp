@@ -4,6 +4,7 @@ import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Slider from '@react-native-community/slider';
 import { useAppContext } from './useContext';
+import { formateAmmountValue, properAmmount } from '../services/Utils/FieldVerifier';
 
 const truncateToTwoDigitAfterDecimal = (resultString) => {
 
@@ -24,8 +25,8 @@ const truncateToTwoDigitAfterDecimal = (resultString) => {
 
 }
 
-const formatValue = (value, isForAmount, isTenure) => {
-  if (isForAmount) {
+const formatValue = (value, isAmount, isTenure) => {
+  if (isAmount) {
     if (value >= 10000000) { // 1 crore
       return `${truncateToTwoDigitAfterDecimal(`${value / 10000000}`)} Cr`;
     } else if (value >= 100000) { // 1 lakh
@@ -38,50 +39,40 @@ const formatValue = (value, isForAmount, isTenure) => {
       return `${value.toLocaleString('en-IN')}`;
     }
   } else if (isTenure) {
-    return `${value}m`;
+    return `${value}M`;
   } else {
     return value.toString();
   }
 };
 
-const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue, inputValue, error, onChange, isForAmount, isTenure }) => {
+const CustomSlider = ({ title, icon, keyboardType, min, max, steps,currentValue, error, onChange, isAmount = false, isTenure = false}) => {
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
-  const [internalValue, setInternalValue] = useState(sliderValue.toString());
 
-  useEffect(() => {
-    setInternalValue(sliderValue.toString());
-  }, [sliderValue]);
+
 
   const handleTextInputChange = (value) => {
-    if (keyboardType === 'numeric' && isNaN(Number(value))) {
-      return;
+    
+    let numericValue = properAmmount(value) || 0;
+    if(numericValue >  max){
+      numericValue = max
     }
+    onChange(numericValue);
+    
+  };
 
-    if (value === '') {
-      onChange(0, 'fromInput');
-    } else {
-      let numericValue = Number(value);
-      if(numericValue >  max){
-        numericValue = max
-      }
-      onChange(numericValue, 'fromInput');
+  const handleSlider  = (value) => {
+    const numericValue = Math.max(min, Math.min(max, value));
+    onChange(numericValue);
+  };
+
+  const TextFieldValue = (value) =>{
+    if(isAmount){
+      return (formateAmmountValue(value) || 0).toString()
     }
-  };
+    return (value || 0).toString();
+  }
 
-  const handleSliderChange = (value) => {
-    const numericValue = Math.max(min, Math.min(max, value));
-    setInternalValue(numericValue.toString());
-    onChange(numericValue, 'fromSlider');
-  };
-
-  const handleSliderComplete = (value) => {
-    const numericValue = Math.max(min, Math.min(max, value));
-    setInternalValue(numericValue.toString());
-    onChange(numericValue, 'fromSlider');
-  };
-
-  const displayValue = formatValue(Number(internalValue), isForAmount, isTenure);
 
   return (
     <View style={styles.sliderContainer}>
@@ -92,7 +83,7 @@ const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue,
           <TextInput
             style={[styles.Input, { fontSize: dynamicFontSize(styles.Input.fontSize) }]}
             onChangeText={handleTextInputChange}
-            value={internalValue}
+            value={TextFieldValue(currentValue)}
             keyboardType={keyboardType}
           />
         </View>
@@ -102,19 +93,18 @@ const CustomSlider = ({ title, icon, keyboardType, min, max, steps, sliderValue,
         minimumValue={min}
         maximumValue={max}
         step={steps || 1}
-        onValueChange={handleSliderChange}
-        onSlidingComplete={handleSliderComplete}
-        value={internalValue === '' ? min : Number(internalValue)}
+        onValueChange={handleSlider}
+        value={currentValue || min}
         minimumTrackTintColor="#0010AC"
         maximumTrackTintColor="#758BFD"
         thumbTintColor="#F38F00"
       />
       <View style={styles.sliderLabels}>
         <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>
-          {isForAmount ? `₹ ${formatValue(min, true, false)}` : formatValue(min, false, isTenure)}
+          {isAmount ? `₹ ${formatValue(min,true, false)}` : formatValue(min, false, isTenure)}
         </Text>
         <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>
-          {isForAmount ? `₹ ${formatValue(max, true, false)}` : formatValue(max, false, isTenure)}
+          {isAmount ? `₹ ${formatValue(max,true, false)}` : formatValue(max, false, isTenure)}
         </Text>
       </View>
       {error && (

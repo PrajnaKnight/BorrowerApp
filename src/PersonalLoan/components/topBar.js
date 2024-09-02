@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useAppContext } from '../components/useContext';
-import { styles } from '../../assets/style/personalStyle';
+import { styles } from '../services/style/gloablStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomDropdown from './customDropdown';
 import { Ionicons } from '@expo/vector-icons';

@@ -337,7 +337,6 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
 
   const [suggestionList, setSuggestionList] = useState(listOfData);
   const [showList, setShowList] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
 
 
   const { fontSize } = useAppContext();
@@ -396,7 +395,7 @@ export const CustomInputFieldWithSearchSuggestionForEmplymentDetails = ({value, 
 
       <View >
       <TextInput  
-          onTouchEndCapture={()=>{setShowList(!showList)}}
+          onTouchEndCapture={() =>  setShowList(!showList)}
           style={[
             styles.input,
           ]}
