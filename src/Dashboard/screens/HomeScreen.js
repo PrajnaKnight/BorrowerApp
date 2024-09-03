@@ -278,7 +278,7 @@ const LoanSliderItem = ({ item, navigation }) => {
       }]}>
       <TouchableOpacity onPress={handlePress}>
         <ImageBackground
-          source={require("../../assets/images/Ellipse-bg.png")}
+          source={require("../../assets/images/repaymentInfo-bg.png")}
           style={styles.background}
           resizeMode="cover">
           <LinearGradient
@@ -386,10 +386,11 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
         { 
           width: itemWidth, 
           borderColor: borderColor,
+          shadowColor: shadowColor,
         },
         Platform.OS === "ios"
           ? {
-              shadowColor: isOdd ? "#FCD5AA" : "#D0E4FE",
+              shadowColor: shadowColor,
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.25,
               shadowRadius: 5,

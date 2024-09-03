@@ -7,15 +7,15 @@ import { styles } from '../../assets/style/globalStyle';
 const { width } = Dimensions.get('window');
 
 const stages = [
-  { id: '1', title: 'Application In Progress', description: 'Application processed', date: '13th Dec 2023', status: 'completed' },
+  { id: '1', title: 'Application Inprogress', description: 'Application Processed', date: '13th Dec 2023', status: 'completed' },
   { id: '2', title: 'Application Submitted', description: 'Application Submitted Successfully', date: '13th Dec 2023', status: 'completed' },
   { id: '3', title: 'Credit Underwriting', description: 'Credit Underwriting Done', date: '20th Dec 2023', status: 'completed' },
-  { id: '4', title: 'Document Verification', description: 'Document Submitted Successfully', date: '14th Dec 2023', status: 'completed' },
+  { id: '4', title: 'Document Verification', description: 'Document Verification Successfully', date: '14th Dec 2023', status: 'completed' },
   { id: '5', title: 'Sanctioned', description: 'The Loan has been Sanctioned', date: '20th Dec 2023', status: 'completed' },
   { id: '6', title: 'E-Mandate', description: 'E-Mandate registration pending', date: '20th Dec 2023', status: 'inprocess' },
-  { id: '7', title: 'Loan Agreement eSign', description: 'E-Sign loan agreement pending', date: '20th Dec 2023', status: 'pending' },
-  { id: '8', title: 'Disbursement Initiated', description: 'Disbursement Initiated', date: '20th Dec 2023', status: 'pending' },
-  { id: '9', title: 'Disbursement Completed', description: 'Disbursement Completed', date: '20th Dec 2023', status: 'pending' },
+  { id: '7', title: 'Loan Agreement eSign', description: 'eSign loan agreement pending', date: '20th Dec 2023', status: 'pending' },
+  { id: '8', title: 'Disbursement Initiated', description: 'Disbursement Initiate pending', date: '20th Dec 2023', status: 'pending' },
+  { id: '9', title: 'Disbursement Completed', description: 'Disbursement Completion pending', date: '20th Dec 2023', status: 'pending' },
 ];
 
 const LoanStagesScreen = ({ navigation }) => {
@@ -79,7 +79,7 @@ const LoanStagesScreen = ({ navigation }) => {
             onPress={() =>
               Linking.openURL("https://demo-loan-journey.knightfintech.com/")
             }>
-            <Text style={styles.continueButtonText}>Continue</Text>
+            <Text style={styles.continueButtonText}>CONTINUE</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -2,21 +2,30 @@ import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import applyFontFamily from '../../assets/style/applyFontFamily';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const LoanDetailsCard = ({ loanAmount, emiAmount, tenure, interestRate }) => {
   const navigation = useNavigation();
 
   return (
     <View>
-      <ImageBackground
-        source={require("../../assets/images/loanEligibilityBanner.png")}
-        style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
-        resizeMode="cover">
-        <View style={styles.bannerText}>
-          <Text style={styles.eligibleLoan}>Eligible Loan Amount</Text>
-          <Text style={styles.loanAmount}>₹ {loanAmount}</Text>
-        </View>
-      </ImageBackground>
+      <View
+        style={{
+          backgroundColor: "#73206d",
+          padding: 3,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
+        <ImageBackground
+          source={require("../../assets/images/loanEligibilityBanner.png")}
+          style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+          resizeMode="cover">
+          <View style={styles.bannerText}>
+            <Text style={styles.eligibleLoan}>Eligible Loan Amount</Text>
+            <Text style={styles.loanAmount}>₹ {loanAmount}</Text>
+          </View>
+        </ImageBackground>
+      </View>
 
       <View style={styles.cardContainer}>
         <View style={styles.detailsRow}>
@@ -25,8 +34,8 @@ const LoanDetailsCard = ({ loanAmount, emiAmount, tenure, interestRate }) => {
             <Text style={styles.emiValue}>₹ {emiAmount}</Text>
           </View>
           <View style={styles.detailText}>
-            <Text style={styles.emiLabel}>Eligible Tenure</Text>
-            <Text style={styles.emiValue}>{tenure}M</Text>
+            <Text style={styles.emiLabel}>Eligible Tenure(M)</Text>
+            <Text style={styles.emiValue}>{tenure}</Text>
           </View>
           <View style={styles.detailText}>
             <Text style={styles.emiLabel}>Interest Rate</Text>
@@ -34,10 +43,16 @@ const LoanDetailsCard = ({ loanAmount, emiAmount, tenure, interestRate }) => {
           </View>
         </View>
         <View style={styles.buttonRow}>
-          <TouchableOpacity onPress={() => navigation.navigate('AmortizationSchedule')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AmortizationSchedule")}>
             <Text style={styles.link}>Amortization Schedule</Text>
           </TouchableOpacity>
-          <Text style={styles.disabledButton}>Apply</Text>
+          <LinearGradient
+            colors={["#E9F0FF", "#BDCEF0"]} style={styles.applyLoanButton}>
+            <TouchableOpacity>
+              <Text style={styles.disabledButton}>Apply Loan</Text>
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
       </View>
     </View>
@@ -63,10 +78,10 @@ const styles = applyFontFamily({
   },
   loanAmount: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: "#fff",
     textAlign: "center",
-    marginBottom: 10,
+    lineHeight:30,
   },
   detailsRow: {
     flexDirection: "row",
@@ -81,6 +96,10 @@ const styles = applyFontFamily({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: 'center',
+    borderTopWidth:1,
+    borderTopColor:'#E9F0FF',
+    flex:1,
+    paddingTop:10
   },
   link: {
     color: "#758BFD",
@@ -88,30 +107,34 @@ const styles = applyFontFamily({
     textDecorationLine: "underline",
   },
   disabledButton: {
-    color: "#E9F0FF",
-    backgroundColor: "#BDCEF0",
+    color: "#A6BAE3",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 5,
     textAlign:'center'
   },
   bannerText: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop:20,
+    paddingBottom:15,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   emiLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#00194c",
     textAlign: "center",
     marginBottom: 2,
   },
   emiValue: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#00194c",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  applyLoanButton:{
+    borderRadius:5
   },
 });
 

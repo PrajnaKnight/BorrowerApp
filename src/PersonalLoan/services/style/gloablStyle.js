@@ -900,7 +900,6 @@ export const styles = applyFontFamily({
     alignItems: "flex-start",
     marginTop: 20,
   },
-
   checkbox: {
     width: 20,
     height: 20,

@@ -43,7 +43,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                   onPress={() => handleSelectOption("currentOutstanding")}
                   style={globalStyles.spaceBetween}>
                   <View style={globalStyles.flexDirectionRow}>
-                    <CustomCheckBox
+                    <CustomCheckBox  style={globalStyles.checkboxRepaymentWrapper}
                       isChecked={selectedOption === "currentOutstanding"}
                       onPress={() => handleSelectOption("currentOutstanding")}
                       label="Current Outstanding"
@@ -70,7 +70,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                           Principal
                         </Text>
                         <Text style={globalStyles.repaymentTextdetail}>
-                          ₹12,224
+                          ₹ 12,224
                         </Text>
                       </View>
                       <View style={globalStyles.repaymentdetailText}>
@@ -78,7 +78,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                           Interest
                         </Text>
                         <Text style={globalStyles.repaymentTextdetail}>
-                          ₹10,000
+                          ₹ 10,000
                         </Text>
                       </View>
                       {isOverdue && (
@@ -96,7 +96,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                               Overdue Charges @ 2%
                             </Text>
                             <Text style={globalStyles.repaymentTextdetail}>
-                              ₹244.48
+                              ₹ 244.48
                             </Text>
                           </View>
                           <View style={globalStyles.repaymentdetailText}>
@@ -104,7 +104,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                               Bounce Charges
                             </Text>
                             <Text style={globalStyles.repaymentTextdetail}>
-                              ₹531
+                              ₹ 531
                             </Text>
                           </View>
                           <View style={globalStyles.repaymentdetailText}>
@@ -112,7 +112,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                               Late Payment Charges
                             </Text>
                             <Text style={globalStyles.repaymentTextdetail}>
-                              ₹444.44
+                              ₹ 444.44
                             </Text>
                           </View>
                           <View style={globalStyles.repaymentdetailText}>
@@ -120,7 +120,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                               GST (18%)
                             </Text>
                             <Text style={globalStyles.repaymentTextdetail}>
-                              ₹95.58
+                              ₹ 95.58
                             </Text>
                           </View>
                         </>
@@ -129,7 +129,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                   )}
                   <TextInput
                     style={globalStyles.repaymentamountInput}
-                    value="₹23,826.02"
+                    value="₹ 23,826.02"
                     editable={false}
                   />
                 </View>
@@ -163,7 +163,7 @@ const RepaymentScreen = ({ navigation, route }) => {
                           Principal
                         </Text>
                         <Text style={globalStyles.repaymentTextdetail}>
-                          ₹10,00,000
+                          ₹ 10,00,000
                         </Text>
                       </View>
                       <View style={globalStyles.repaymentdetailText}>
@@ -171,14 +171,14 @@ const RepaymentScreen = ({ navigation, route }) => {
                           Interest
                         </Text>
                         <Text style={globalStyles.repaymentTextdetail}>
-                          ₹10,000
+                          ₹ 10,000
                         </Text>
                       </View>
                     </View>
                   )}
                   <TextInput
                     style={globalStyles.repaymentamountInput}
-                    value="₹10,10,000"
+                    value="₹ 10,10,000"
                     editable={false}
                   />
                 </View>

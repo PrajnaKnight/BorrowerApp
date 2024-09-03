@@ -78,7 +78,8 @@ const styles = applyFontFamily({
     borderRadius: 100,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    fontWeight: 'bold',
   },
   logo: {
     width: 100,

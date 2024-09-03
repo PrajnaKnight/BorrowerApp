@@ -77,9 +77,9 @@ const styles = applyFontFamily({
     marginBottom: 10,
   },
   success: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: 'green',
+    color: '#27AE60',
     marginBottom: 10,
   },
   message: {
@@ -102,14 +102,14 @@ const styles = applyFontFamily({
     backgroundColor: '#758BFD',
     borderRadius: 5,
     alignItems: 'center',
-    width: '50%',
+    width: '30%',
     paddingHorizontal:16,
     paddingVertical:6
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: '500',
   },
   successIcon:{
     width:100,
@@ -124,6 +124,7 @@ const styles = applyFontFamily({
   noteText:{
     fontSize:10,
     color:'#00194C',
+    fontStyle:'italic'  
   },
   orangeText:{
     color:'#FF8800'

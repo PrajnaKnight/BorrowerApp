@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
-import applyFontFamily from '../../../assets/style/applyFontFamily';
+import applyFontFamily from '../../assets/style/applyFontFamily';
 
-const WhatsAppToggle = ({ isEnabled, onToggle }) => {
+const CustomSwitch = ({ initialValue = false, onToggle }) => {
+  const [isEnabled, setIsEnabled] = useState(initialValue);
   const animation = useRef(new Animated.Value(isEnabled ? 1 : 0)).current;
 
   useEffect(() => {
@@ -13,9 +14,16 @@ const WhatsAppToggle = ({ isEnabled, onToggle }) => {
     }).start();
   }, [isEnabled, animation]);
 
+  const handleToggle = () => {
+    setIsEnabled(prevState => !prevState);
+    if (onToggle) {
+      onToggle(!isEnabled);
+    }
+  };
+
   const backgroundColorInterpolation = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#E5ECFC', '#2CB142']
+    outputRange: ['#E5ECFC', '#758BFD']
   });
 
   const translateX = animation.interpolate({
@@ -25,10 +33,9 @@ const WhatsAppToggle = ({ isEnabled, onToggle }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>WhatsApp</Text>
       <TouchableOpacity 
-        style={styles.toggleContainer} 
-        onPress={onToggle}
+        style={styles.toggleContainer}
+        onPress={handleToggle}
         activeOpacity={0.8}
       >
         <Animated.View 
@@ -71,14 +78,9 @@ const styles = applyFontFamily({
     alignItems: 'center',
     marginVertical: 10,
   },
-  label: {
-    marginRight: 10,
-    fontSize: 12,
-    color: '#00194c',
-  },
   toggleContainer: {
     width: 52,
-    height:20,
+    height: 20,
     borderRadius: 20,
   },
   toggleBackground: {
@@ -106,8 +108,8 @@ const styles = applyFontFamily({
     fontWeight: 'bold',
     position: 'absolute',
     textAlign: 'center',
-    top:2,
+    top: 2,
   },
 });
 
-export default WhatsAppToggle;
+export default CustomSwitch;

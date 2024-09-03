@@ -27,6 +27,7 @@ const styles = applyFontFamily({
   },
   buttonText: {
     color: '#fff',
+    fontWeight: '500',
     fontSize: 16,
   },
 });
