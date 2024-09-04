@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import { styles } from '../../assets/style/globalStyle';
 import TabsComponent from '../components/TabsComponent';
 import { useTab } from '../components/TabContext';
@@ -17,6 +17,8 @@ const Charges = ({ navigation, route }) => {
           <View style={styles.content}>
             <Text style={styles.sectionTitle}>Re-payment Info</Text>
             <View style={[styles.overdueCard, isOverdue ? styles.redOverdueCard : styles.blueOverdueCard]}>
+            <ImageBackground source={require("../../assets/images/repaymentInfo-bg.png")}  style={{backgroundSize:'cover'}}>
+
               <View style={styles.Chargesheader}>
                 <Text style={styles.ChargesoverdueAmount}>
                     { isOverdue ? "Overdue Amount" : "Repayment Amount" }
@@ -29,6 +31,8 @@ const Charges = ({ navigation, route }) => {
                 </Text>
                 <Text style={styles.ChargesrepaymentDate}>05 Sep 2024</Text>
               </View>
+              </ImageBackground>
+
             </View>
             <View style={styles.Chargescard}>
               <View style={styles.Chargesdetails}>

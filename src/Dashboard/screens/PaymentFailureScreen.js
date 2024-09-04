@@ -45,6 +45,7 @@ const styles = applyFontFamily({
     padding: 20,
     alignItems: 'center',
     width: '90%',
+    borderRadius:5,
   },
   failureIcon: {
     width: 100,
@@ -63,9 +64,9 @@ const styles = applyFontFamily({
     marginBottom: 10,
   },
   failure: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: 'red',
+    color: '#DD0000',
     marginBottom: 10,
   },
   message: {
@@ -85,16 +86,16 @@ const styles = applyFontFamily({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#00194C',
+    backgroundColor: '#758BFD',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    width: '80%',
+    width: '30%',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: '500',
   },
 });
 

@@ -656,7 +656,7 @@ function LoginScreen({ navigation }) {
                     <View
                       style={{
                         flex: 1,
-                        justifyContent: "flex-end",
+                        justifyContent: "flex-start",
                       }}>
                       <WhatsAppToggle
                         isEnabled={isWhatsAppEnabled}

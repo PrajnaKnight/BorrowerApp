@@ -144,7 +144,7 @@ const styles = applyFontFamily({
     },
     title: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontWeight: "500",
         color: "white", 
         marginBottom: 10,
     },
@@ -175,7 +175,7 @@ const styles = applyFontFamily({
     },
     loanAmount: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontWeight: "500",
         color: "#00194c",
         marginBottom: 15,
         textAlign: "center",
@@ -194,7 +194,7 @@ const styles = applyFontFamily({
     },
     emiDateValue: {
         fontSize: 14,
-        fontWeight: 'bold',
+        fontWeight: '500',
         color: "#00194c",
     },
     emiAmountText: {
@@ -204,21 +204,21 @@ const styles = applyFontFamily({
     },
     emiAmount: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontWeight: "500",
         color: "white",
         marginVertical: 10,
     },
     actionButton: {
         backgroundColor: "white",
         paddingVertical: 8,
-        paddingHorizontal: 19,
+        paddingHorizontal: 30,
         borderRadius: 5,
         marginTop: 10,
     },
     actionButtonText: {
         color: "#00194c",
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 12,
+        fontWeight: "500",
         textTransform: 'capitalize'
     },
 });

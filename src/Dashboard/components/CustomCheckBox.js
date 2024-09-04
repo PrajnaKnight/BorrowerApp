@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import applyFontFamily from '../../assets/style/applyFontFamily';
+import Icons from 'react-native-vector-icons/FontAwesome';
 
 const CustomCheckBox = ({ label, isChecked, onPress }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={[styles.checkbox, isChecked && styles.checked]}>
-        {isChecked && <Text style={styles.checkmark}>✔</Text>}
+      {isChecked && <Text style={styles.checkmark}>
+          <Icons name="check" size={16} color="#fff" />
+          </Text>}
       </View>
       {label && <Text style={styles.label}>{label}</Text>}
     </TouchableOpacity>
@@ -17,7 +20,6 @@ const styles = applyFontFamily({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
   },
   checkbox: {
     width: 20,

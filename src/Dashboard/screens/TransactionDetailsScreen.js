@@ -20,10 +20,10 @@ const TransactionDetailsScreen = ({ navigation }) => {
   }, [activeTab]);
 
   const transactions = [
-    { date: "20th Dec 2023", description: "Excess Balance Refund",iconRupees:"₹", amount: "6000", type: "Cr",balanceTitle:"Bal: ₹", balance: "00.00", details: { paymentFrom: "Your NBFC", amount: "₹6000.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: true },
-    { date: "13th Dec 2023", description: "Loan Foreclosed", iconRupees:"₹", amount: "884307", type: "Dr", balanceTitle:"Bal: ₹", balance: "00.00", details: { paymentFrom: "Your NBFC", amount: "₹884307.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: false },
-    { date: "10th Dec 2023", description: "Foreclosure Charges", iconRupees:"₹", amount: "8993", type: "Dr", balanceTitle:"Bal: ₹", balance: "890307", details: { paymentFrom: "Your NBFC", amount: "₹8993.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: false },
-    { date: "10th Dec 2023", description: "Late Fee", iconRupees:"₹", amount: "700", type: "Dr", balanceTitle:"Bal: ₹", balance: "890300", details: { paymentFrom: "Your NBFC", amount: "₹700.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: false },
+    { date: "20th Dec 2023", description: "Excess Balance Refund",iconRupees:"₹", amount: "6000", type: "Cr.",balanceTitle:"Bal: ₹", balance: "00.00", details: { paymentFrom: "Your NBFC", amount: "₹6000.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: true },
+    { date: "13th Dec 2023", description: "Loan Foreclosed", iconRupees:"₹", amount: "8,84,307", type: "Dr.", balanceTitle:"Bal: ₹", balance: "00.00", details: { paymentFrom: "Your NBFC", amount: "₹8,84,307.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: false },
+    { date: "10th Dec 2023", description: "Foreclosure Charges", iconRupees:"₹", amount: "8993", type: "Dr.", balanceTitle:"Bal: ₹", balance: "8,90,307", details: { paymentFrom: "Your NBFC", amount: "₹8993.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: false },
+    { date: "10th Dec 2023", description: "Late Fee", iconRupees:"₹", amount: "700", type: "Dr.", balanceTitle:"Bal: ₹", balance: "890300", details: { paymentFrom: "Your NBFC", amount: "₹700.00", transactionID: "17483733872827287288", creditedTo: "HDFC Bank Goregaon (W)", account: "****5123" }, isCredit: false },
   ];
 
   const filteredTransactions = transactions.filter(
@@ -111,7 +111,7 @@ const TransactionDetailsScreen = ({ navigation }) => {
             transparent={true}
             animationType="slide"
             visible={!!selectedTransaction}
-            onRequestClose={closeModal}>
+            onRequestClose={closeModal} style={styles.modalWrapper}>
             <TouchableWithoutFeedback onPress={closeModal}>
               <View style={styles.modalOverlay} />
             </TouchableWithoutFeedback>
@@ -124,7 +124,7 @@ const TransactionDetailsScreen = ({ navigation }) => {
                     style={[
                       {
                         color: selectedTransaction.isCredit
-                          ? "#2FC603"
+                          ? "#DD0000"
                           : "#DD0000",
                       },
                     ]}
@@ -166,7 +166,11 @@ const TransactionDetailsScreen = ({ navigation }) => {
                 <Text style={styles.modalTextTransanctionId}>
                   {selectedTransaction.transactionID}
                 </Text>
-                <Text style={styles.modalText}>Credited to</Text>
+                <Text style={styles.modalText}>
+                  {selectedTransaction.isCredit
+                    ? "Credited to"
+                    : "Debited from"}
+                </Text>
                 <View style={styles.CreditedDetails}>
                   <View style={styles.flex}>
                     <View>

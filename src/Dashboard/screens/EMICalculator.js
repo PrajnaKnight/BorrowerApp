@@ -9,6 +9,17 @@ import Layout from '../components/Layout';
 import { MaterialIcons } from '@expo/vector-icons';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
+const formatIndianCurrency = (value) => {
+  const num = Math.floor(value);
+  const str = num.toString();
+  let lastThree = str.substring(str.length - 3);
+  const otherNumbers = str.substring(0, str.length - 3);
+  if (otherNumbers !== '') {
+    lastThree = ',' + lastThree;
+  }
+  return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+};
+
 const EMICalculator = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('EMI Calculator');
   const [formData, setFormData] = useState({
@@ -54,11 +65,11 @@ const EMICalculator = ({ navigation }) => {
     const totalInterestPayable = totalAmountPayable - loanAmount;
 
     setEmiDetails({
-      emiAmount: emi.toFixed(),
-      principal: loanAmount,
-      interest: totalInterestPayable.toFixed(),
-      totalInterestPayable: totalInterestPayable.toFixed(),
-      totalAmountPayable: totalAmountPayable.toFixed(),
+      emiAmount: formatIndianCurrency(emi),
+      principal: formatIndianCurrency(loanAmount),
+      interest: formatIndianCurrency(totalInterestPayable),
+      totalInterestPayable: formatIndianCurrency(totalInterestPayable),
+      totalAmountPayable: formatIndianCurrency(totalAmountPayable),
     });
   };
 
@@ -99,7 +110,7 @@ const EMICalculator = ({ navigation }) => {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.sectionTitle}>EMI Calculator</Text>
-          <TouchableOpacity onPress={toggleExpand}>
+          <TouchableOpacity onPress={toggleExpand} style={{borderTopLeftRadius:10, borderTopRightRadius:10, padding:3,backgroundColor:'#0d549a'}}> 
             <ImageBackground
               source={require("../../assets/images/emicalculatorbanner.png")}
               style={{
@@ -123,7 +134,7 @@ const EMICalculator = ({ navigation }) => {
                     <MaterialIcons
                       name="keyboard-arrow-down"
                       size={24}
-                      color="#ff8500"
+                      style={isExpanded ? styles.ExpandeddownArrow : styles.downArrow}
                     />
                   </View>
                 </View>
@@ -269,22 +280,28 @@ const calculateEMI = (principal, rate, tenure) => {
 const styles = applyFontFamily({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   content: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#00194c',
+    fontWeight: "500",
+    color: "#00194c",
     marginBottom: 10,
   },
+  ExpandeddownArrow: {
+    color: "#ff8500",
+  },
+  downArrow: {
+    color: "#ffffff",
+  },
   emiDetailsCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 8,
@@ -293,36 +310,34 @@ const styles = applyFontFamily({
   },
   emiLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    color: "#ffffff",
   },
   emiAmount: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontWeight: "500",
+    color: "#ffffff",
     marginRight: 5,
   },
   detailLabel: {
     fontSize: 14,
-    color: '#ffffff',
+    color: "#ffffff",
     marginBottom: 4,
   },
   emiDetail: {
     fontSize: 14,
-    color: '#ffffff',
-    textAlign: 'left',
+    color: "#ffffff",
+    textAlign: "left",
     marginBottom: 4,
-    width: '32%',
+    width: "32%",
   },
   link: {
-    color: '#758BFD',
-    textDecorationLine: 'underline',
-    textAlign: 'left',
+    color: "#00194c",
+    textAlign: "left",
   },
-  emiLinkwrapper:{
+  emiLinkwrapper: {
     marginTop: 15,
     borderTopWidth: 1,
-    borderTopColor: '#f1f1f1',
+    borderTopColor: "#f1f1f1",
     paddingTop: 10,
   },
   formContainer: {
@@ -330,67 +345,69 @@ const styles = applyFontFamily({
   },
   TotalPaybleLabel: {
     fontSize: 12,
-    color: '#00194C',
-    textAlign: 'center',
+    color: "#00194C",
+    textAlign: "center",
   },
   TotalPaybleValue: {
     fontSize: 14,
-    color: '#00194C',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "#00194C",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: '100%',
-    backgroundColor: '#fff',
+    width: "100%",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
   },
   modalTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#00194c',
+    fontWeight: "500",
+    color: "#00194c",
     marginBottom: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f1f1',
+    borderBottomColor: "#f1f1f1",
   },
   modalSubtitle: {
     fontSize: 14,
-    color: '#00194c',
+    color: "#00194c",
     marginBottom: 20,
   },
   dateText: {
-    color: '#00194C',
+    color: "#00194C",
     fontSize: 14,
     padding: 10,
-    borderColor: '#B3B9E1',
+    borderColor: "#B3B9E1",
     borderWidth: 1,
     borderRadius: 5,
   },
   label: {
-    color: '#00194C',
+    color: "#00194C",
     fontSize: 14,
     marginBottom: 5,
   },
   datePicker: {
-    width: '100%',
+    width: "100%",
     marginBottom: 20,
   },
-  viewButton:{
-    backgroundColor:'#00194c',
-    paddingVertical:8,
-    paddingHorizontal:16,
-    borderRadius:10
+  viewButton: {
+    backgroundColor: "#00194c",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    width:120,
   },
-  viewBtnText:{
-    color:'#fff',
-    fontSize:14
+  viewBtnText: {
+    color: "#fff",
+    fontSize: 14,
+    textAlign:'center'
   },
 });
 

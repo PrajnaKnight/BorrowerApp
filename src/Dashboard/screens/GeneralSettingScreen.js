@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomDropdown from '../components/Dropdown';
 import Layout from '../components/Layout';
+import CustomSwitch from '../components/customSwitch';
 import { styles } from '../../assets/style/globalStyle';
 
 const GeneralSettingScreen = () => {
@@ -31,11 +32,9 @@ const GeneralSettingScreen = () => {
           <Text style={styles.Personaltitle}>General Setting</Text>
           <View style={styles.settingRow}>
             <Text style={styles.ScreenLocklabel}>Screen Lock</Text>
-            <Switch
+            <CustomSwitch
               value={screenLock}
               onValueChange={(value) => setScreenLock(value)}
-              thumbColor={screenLock ? "#002674" : "#f4f3f4"}
-              trackColor={{ false: "#767577", true: "#758BFD" }}
             />
           </View>
           <Text style={styles.drpdownlabel}>Languages</Text>

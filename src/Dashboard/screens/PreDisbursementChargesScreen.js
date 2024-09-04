@@ -172,7 +172,7 @@ const styles = applyFontFamily({
   headerTitle: {
     color: '#00194c',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   content: {
     flex: 1,

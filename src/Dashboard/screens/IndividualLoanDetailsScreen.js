@@ -33,13 +33,13 @@ const LoanDetailsScreen = ({ navigation, route }) => {
     { key: '1', label: 'Loan Overview', target: 'LoanOverview' },
     { key: '2', label: 'Pre-Disbursement Charges', target: 'PreDisbursalCharges' },
     { key: '3', label: 'Re-payment Info', target: 'Charges', isOverdue },
-    { key: '4', label: 'Repayment Schedule (RPS)', target: 'LoanRPS' },
+    { key: '4', label: 'Loan Repayment Schedule (RPS)', target: 'LoanRPS' },
   ];
 
   const closedRedirectItems = [
     { key: '1', label: 'Loan Overview', target: 'ClosedLoanOverview' },
     { key: '2', label: 'Pre-Disbursement Charges', target: 'ClosedPreDisbursalCharges' },
-    { key: '3', label: 'Repayment Schedule (RPS)', target: 'ClosedLoanRPS' },
+    { key: '3', label: 'Loan Repayment Schedule (RPS)', target: 'ClosedLoanRPS' },
   ];
 
   const redirectItems = isClosed ? closedRedirectItems : activeRedirectItems;

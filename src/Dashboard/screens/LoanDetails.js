@@ -140,7 +140,7 @@ const LoansScreen = ({ navigation }) => {
                 activeColor="#fff"
                 inactiveColor="#BDBDBD"
                 renderLabel={({ route, focused }) => (
-                  <Text style={[styles.tabLabel, { color: focused ? '#fff' : '#BDBDBD' }]}>
+                  <Text style={[styles.tabLabel,  { color: focused ? '#fff' : '#BDBDBD', fontWeight: focused ? 'bold' : 'normal' }]}>
                     {route.title}
                   </Text>
                 )}
@@ -153,7 +153,7 @@ const LoansScreen = ({ navigation }) => {
                     }}
                     style={styles.tabItem}
                   >
-                    <Text style={[styles.tabLabel, { color: focused ? '#fff' : '#BDBDBD', opacity: (route.key === 'active' && !activeLoans) || (route.key === 'closed' && !closedLoans) ? 0.5 : 1 }]}>
+                    <Text style={[styles.tabLabel, { color: focused ? '#fff' : '#BDBDBD',fontWeight: focused ? 'bold' : 'normal',  opacity: (route.key === 'active' && !activeLoans) || (route.key === 'closed' && !closedLoans) ? 0.5 : 1 }]}>
                       {route.title}
                     </Text>
                   </TouchableOpacity>

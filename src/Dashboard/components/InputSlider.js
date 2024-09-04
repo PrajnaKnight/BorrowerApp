@@ -4,6 +4,15 @@ import Slider from '@react-native-community/slider';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
 const formatIndianCurrency = (value) => {
+  const num = Math.floor(value);
+  const exploded = num.toString().split('');
+  const lastThree = exploded.splice(-3).join('');
+  let formatted = exploded.length ? exploded.join('').match(/.{1,2}/g).join(',') : '';
+  formatted = formatted ? formatted + ',' + lastThree : lastThree;
+  return formatted;
+};
+
+const formatCrLFormat = (value) => {
   if (value >= 10000000) { // 1 Crore
     return `${(value / 10000000).toFixed(2)}Cr`;
   } else if (value >= 100000) { // 1 Lakh
@@ -14,11 +23,17 @@ const formatIndianCurrency = (value) => {
     return value.toString();
   }
 };
-
 const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, suffix }) => {
   const formatDisplayValue = (val) => {
     if (isCurrency) {
-      return `₹${formatIndianCurrency(val)}`;
+      return `₹ ${formatIndianCurrency(val)}`;
+    }
+    return val.toString();
+  };
+
+  const formatSliderLabel = (val) => {
+    if (isCurrency) {
+      return `₹ ${formatCrLFormat(val)}`;
     }
     return val.toString();
   };
@@ -56,8 +71,8 @@ const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, 
         />
       </View>
       <View style={styles.sliderLabelContainer}>
-        <Text style={styles.sliderLabel}>{formatDisplayValue(min)}</Text>
-        <Text style={styles.sliderLabel}>{formatDisplayValue(max)}</Text>
+      <Text style={styles.sliderLabel}>{formatSliderLabel(min)}</Text>
+      <Text style={styles.sliderLabel}>{formatSliderLabel(max)}</Text>
       </View>
     </View>
   );
@@ -81,6 +96,7 @@ const styles = applyFontFamily({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#00194C',
     backgroundColor: '#EBEFFF',
@@ -88,14 +104,15 @@ const styles = applyFontFamily({
     borderRadius: 5,
   },
   inputValue: {
-    width: 120,
-    textAlign: 'right',
+    width: 100,
+    textAlign: 'center',
     paddingRight: 5,
   },
   suffix: {
     fontSize: 14,
     color: '#00194c',
     marginLeft: 5,
+    textAlign: 'center',
   },
   sliderContainer: {
     flexDirection: 'row',

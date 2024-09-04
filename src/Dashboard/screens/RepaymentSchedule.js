@@ -203,7 +203,7 @@ const styles = applyFontFamily({
   RepaymentScheduleheaderTitle: {
     color: '#00194c',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   content: {
     paddingHorizontal: 16,
@@ -238,7 +238,7 @@ const styles = applyFontFamily({
     fontSize: 14,
     width: '20%',
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '500',
     borderRightWidth:1,
     borderRightColor:'#B3B9E1',
     paddingVertical: 10,

@@ -87,13 +87,13 @@ const loanData = [
     key: '4',
     title: 'Personal Loan',
     type: 'applicationProgress',
-    // loanAmount: '₹50,000',
-    // tenure: '12 Months',
+    loanAmount: '₹50,000',
+    tenure: '12 Months',
     steps: [
-      // { label: 'Personal Details', status: 'completed' },
-      // { label: 'Employment', status: 'inprocess' },
-      // { label: 'Document', status: 'pending' },
-      // { label: 'Loan Agreement', status: 'pending' },
+      { label: 'Personal Details', status: 'completed' },
+      { label: 'Employment', status: 'inprocess' },
+      { label: 'Document', status: 'pending' },
+      { label: 'Loan Agreement', status: 'pending' },
     ],
     buttonLabel: 'Continue'
   }
@@ -202,7 +202,7 @@ const LoanSliderItem = ({ item, navigation }) => {
         return null;
     }
   };
-
+ 
   const handlePress = () => {
     navigation.navigate('Loans', {
       screen: 'IndividualLoanDetails',
@@ -253,11 +253,11 @@ const LoanSliderItem = ({ item, navigation }) => {
         </View>
         <View style={styles.loanDetailsRow}>
           <View>
-            {/* <Text style={styles.loanDetailLabel}>Loan Amount</Text> */}
+            <Text style={styles.loanDetailLabel}>Loan Amount</Text>
             <Text style={styles.loanDetailValue}>{item.loanAmount}</Text>
           </View>
           <View>
-            {/* <Text style={styles.loanDetailLabel}>Tenure</Text> */}
+            <Text style={styles.loanDetailLabel}>Tenure</Text>
             <Text style={styles.loanDetailValue}>{item.tenure}</Text>
           </View>
           <TouchableOpacity
@@ -279,7 +279,7 @@ const LoanSliderItem = ({ item, navigation }) => {
           marginBottom: 16,
         }}>
         <View style={styles.boxShadow}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection:'row'}}>
             <View style={styles.offerWrapper}>
               <Text style={styles.SpecialofferBadge}>{item.offerBadge}</Text>
               <Text style={styles.Offertitle}>{item.title}</Text>
@@ -319,7 +319,7 @@ const LoanSliderItem = ({ item, navigation }) => {
       }]}>
       <TouchableOpacity onPress={handlePress}>
         <ImageBackground
-          source={require("../../assets/images/Ellipse-bg.png")}
+          source={require("../../assets/images/repaymentInfo-bg.png")}
           style={styles.background}
           resizeMode="cover">
           <LinearGradient
@@ -448,9 +448,9 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       case 'Loan Eligibility':
         navigation.navigate('LoanEligibilityCalculator');
         break;
-      case 'Pre Disbursement':
-        navigation.navigate('PreDisbursementScreen');
-        break;
+        case 'Pre Disbursement':
+          navigation.navigate('PreDisbursementScreen');
+          break;
       default:
         break;
     }
@@ -461,20 +461,21 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       onPress={handlePress}
       style={[
         styles.cardContainer,
-        {
-          width: itemWidth,
+        { 
+          width: itemWidth, 
           borderColor: borderColor,
+          shadowColor: shadowColor,
         },
         Platform.OS === "ios"
           ? {
-            shadowColor: isOdd ? "#FCD5AA" : "#D0E4FE",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 5,
-          }
+              shadowColor: shadowColor,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
+              shadowRadius: 5,
+            }
           : {
-            elevation: 3,
-          },
+              elevation: 3,
+            },
       ]}
     >
       <ImageBackground
@@ -509,7 +510,7 @@ const BannerItem = ({ item }) => (
   <View style={[{
     width: width * 0.92,
     marginRight: width * 0.03,
-  }, styles.bannerContainer]}>
+  },styles.bannerContainer]}>
     <ImageBackground source={item.imageSource} style={styles.bannerImage} resizeMode="contain">
       <View style={styles.bannerContent}>
         <TouchableOpacity style={styles.applyNowButton}>
@@ -535,17 +536,17 @@ const HomeScreen = ({ navigation }) => {
   return (
     <Layout>
       <View style={styles.header}>
-        <View style={styles.userInfo}>
-          <Text style={styles.welcome}>Welcome,</Text>
-          <Text style={styles.username}>Satat Mishra</Text>
+          <View style={styles.userInfo}>
+            <Text style={styles.welcome}>Welcome,</Text>
+            <Text style={styles.username}>Satat Mishra</Text>
+          </View>
+          <View style={styles.cibilScore}>
+            <Text style={styles.cibilScoreText}>790</Text>
+            <Text style={styles.cibilLabel}>Score</Text>
+          </View>
         </View>
-        <View style={styles.cibilScore}>
-          <Text style={styles.cibilScoreText}>790</Text>
-          <Text style={styles.cibilLabel}>Score</Text>
-        </View>
-      </View>
       <ScrollView style={styles.container}>
-
+        
 
         <View>
           <FlatList
@@ -557,7 +558,7 @@ const HomeScreen = ({ navigation }) => {
               <LoanSliderItem item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item.key}
-            onScrollToIndexFailed={() => { }} // This function can be used to handle errors if scrollToIndex fails
+            onScrollToIndexFailed={() => {}} // This function can be used to handle errors if scrollToIndex fails
             onViewableItemsChanged={onViewRef.current}
             viewabilityConfig={viewConfigRef.current}
           />
@@ -585,7 +586,7 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
           />
         </View>
-        <View style={{ marginHorizontal: 16 }}>
+        <View style={{marginHorizontal:16}}>
           <FlatList
             horizontal
             pagingEnabled

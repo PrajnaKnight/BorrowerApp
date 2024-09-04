@@ -57,7 +57,7 @@ const TabsComponent = () => {
               style={
                 activeTab === "Loan Documents" ? styles.activeTab : styles.tab
               }>
-              Loan Documents
+              Loan Docs
             </Text>
           </TouchableOpacity>
         </View>

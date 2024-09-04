@@ -63,6 +63,7 @@ const styles = applyFontFamily({
   selected: {
     color: '#ff8c00',
     fontWeight: 'bold',
+    FontFize:14
   },
   unselected: {
     color: '#333',
