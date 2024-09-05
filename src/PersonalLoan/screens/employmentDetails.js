@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, useWindowDimensions, KeyboardAvoidingView, Platform, StyleSheet, FlatList } from 'react-native';
-import CustomDropdown from '../components/dropdownPicker';
+import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import { styles } from '../services/style/gloablStyle';
 import CustomInput, { CustomInputFieldWithSearchSuggestionForEmplymentDetails, CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
 import DatePickerComponent from '../components/datePicker';

@@ -285,7 +285,9 @@ const DisbursementScreen = ({ navigation }) => {
             <LinearGradient
               colors={["#002777", "#00194C"]}
               style={styles.homeButton}>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => {
+                 navigation.navigate("Dashboard")
+              }}>
                 <Text style={styles.homeButtonText}>HOME PAGE</Text>
               </TouchableOpacity>
             </LinearGradient>

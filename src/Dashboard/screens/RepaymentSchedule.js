@@ -192,6 +192,9 @@ const styles = applyFontFamily({
     flex: 1,
     backgroundColor: '#fff',
   },
+  cellText: {
+    fontWeight: '400',
+  },
   RepaymentScheduleheader: {
     paddingTop:20,
     paddingBottom: 20,

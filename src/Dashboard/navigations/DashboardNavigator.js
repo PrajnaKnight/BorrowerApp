@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import HomeScreen from '../screens/HomeScreen';
 import BottomBar from '../components/BottomTabBar';
 import LoanDetails from '../screens/LoanDetails';
@@ -25,7 +24,6 @@ import PaymentMethodScreen from '../screens/PaymentMethodScreen';
 import PaymentSuccessScreen from '../screens/PaymentSuccessScreen';
 import PaymentFailureScreen from '../screens/PaymentFailureScreen';
 import NoLoans from '../screens/NoLoans';
-import SplashScreenComponent from '../screens/SplashScreen'; 
 import LoanEligibilityCalculator from '../screens/LoanEligibilityCalculator';
 import EMICalculator from '../screens/EMICalculator';
 import RepaymentSchedule from '../screens/RepaymentSchedule';
@@ -91,37 +89,14 @@ const TabNavigator = () => (
 );
 
 function DashboardNavigator() {
-  const [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_700Bold,
-  });
+ 
 
-  const [isAppReady, setIsAppReady] = useState(false);
   const [showEMINotification, setShowEMINotification] = useState(false);
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        if (fontsLoaded) {
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          setIsAppReady(true);
-        }
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        
-      }
-    }
-
-    prepare();
-  }, [fontsLoaded]);
+  
 
  
 
-  if (!isAppReady) {
-    return <SplashScreenComponent />;
-  }
 
   return (
     <TabProvider>

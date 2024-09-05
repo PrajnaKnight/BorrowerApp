@@ -50,7 +50,7 @@ const LoanAmountGauge = ({ loanAmount, minLoanAmount, maxLoanAmount }) => {
           fontSize="14"
           fill="#00194c"
           textAnchor="middle"
-          fontFamily={regularFont}
+          style={{fontFamily:"Poppins_400Regular"}}
         >
           Loan Amount
         </Text>
@@ -60,9 +60,8 @@ const LoanAmountGauge = ({ loanAmount, minLoanAmount, maxLoanAmount }) => {
           y={centerY - 5}
           fontSize="18"
           fill="#00194c"
-          fontWeight="bold"
           textAnchor="end"
-          fontFamily={boldFont}
+          style={{fontFamily:"Poppins_500Medium"}}
         >
           ₹
         </Text>
@@ -72,9 +71,9 @@ const LoanAmountGauge = ({ loanAmount, minLoanAmount, maxLoanAmount }) => {
           y={centerY - 6}
           fontSize="18"
           fill="#00194c"
-          fontWeight="bold"
           textAnchor="start"
-          fontFamily={boldFont}
+          style={{fontFamily:"Poppins_500Medium"}}
+
         >
           {loanAmount?.toLocaleString() || 0}
         </Text>
@@ -85,7 +84,8 @@ const LoanAmountGauge = ({ loanAmount, minLoanAmount, maxLoanAmount }) => {
           fontSize="12"
           fill="#00194c"
           textAnchor="start"
-          fontFamily={regularFont}
+          style={{fontFamily:"Poppins_500Medium"}}
+
         >
           ₹{minLoanAmount.toLocaleString()}
         </Text>
@@ -95,9 +95,8 @@ const LoanAmountGauge = ({ loanAmount, minLoanAmount, maxLoanAmount }) => {
           y={centerY + 25}
           fontSize="12"
           fill="#00194c"
-          fontWeight="bold"
           textAnchor="end"
-          fontFamily={boldFont}
+          style={{fontFamily:"Poppins_500Medium"}}
         >
           ₹
         </Text>
@@ -107,7 +106,7 @@ const LoanAmountGauge = ({ loanAmount, minLoanAmount, maxLoanAmount }) => {
           fontSize="12"
           fill="#00194c"
           textAnchor="start"
-          fontFamily={regularFont}
+          style={{fontFamily:"Poppins_500Medium"}}
         >
           {maxLoanAmount?.toLocaleString() || 0}
         </Text>

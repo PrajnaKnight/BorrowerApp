@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Linking, SafeAreaView, ImageBackground,Alert, Switch } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -20,22 +20,28 @@ const SideMenu = ({navigation}) => {
 
   const HandleLogOut = async() =>{
       const deleteStatus = await DeleteUser()
-      if(deleteStatus.status == STATUS.SUCCESS){
-        await StoreLeadId(null);
+      
+
+      await StoreLeadId(null);
         await StoreApplicantId(null)
         await StoreTokenValidity(null)
         await StoreBorrowerPhoneNumber(null)
         await StoreUserPan(null)
         await StoreUserAadhaar(null)
-        navigation.navigate("Common")
-        return
-      }
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0, // The index of the active route
+          routes: [
+            { name: 'Common' }, // Name of the screen you want to navigate to
+          ],
+        })
+      );
   }
 
   const handleLogout = () => {
     Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
+      "Delete Number",
+      "Are you sure you want to Delete Number?",
       [
         {
           text: "Cancel",
@@ -108,7 +114,7 @@ const SideMenu = ({navigation}) => {
             toggleValue={isWhatsAppEnabled}
             onToggle={toggleWhatsApp}
           />
-          <MenuItem icon="logout" label="Logout" onPress={handleLogout} />
+          <MenuItem icon="logout" label="Delete Number" onPress={handleLogout} />
           
         </View>
         <View style={styles.socialMediaContainer}>

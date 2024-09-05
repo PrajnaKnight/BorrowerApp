@@ -252,7 +252,6 @@ const AddressScreen = ({ navigation }) => {
       dispatch(updateMailingAddress(updatedAddress));
     }
 
-    validateForm();
   };
 
   const validateAddress = (address, type, showError = true) => {

@@ -730,7 +730,6 @@ export const styles = applyFontFamily({
   stageTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    fontFamily: "500",
     color: "#00194C",
   },
   stageDescription: {
@@ -1603,7 +1602,7 @@ export const styles = applyFontFamily({
     color: "red",
     fontSize: 14,
     marginLeft: 5,
-    fontStyle: "italic",
+    fontWeight: '400'
   },
   //repayment screen style ends
   //payment method screen style starts

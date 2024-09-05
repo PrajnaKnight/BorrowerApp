@@ -216,7 +216,7 @@ const ThankYou = ({ navigation }) => {
                   style={screenStyles.successIcon}
                 />
                 <Text style={screenStyles.message}>Done!</Text>
-                <Text style={[screenStyles.subMessage,{fontFamily:"Poppins_400Regular"}]}>
+                <Text style={screenStyles.subMessage}>
                   Thank you for signing the loan agreement. Your loan amount will be disbursed shortly.
                 </Text>
                 <View style={{ height: 10 }}></View>
@@ -281,15 +281,16 @@ const screenStyles = StyleSheet.create({
   },
   message: {
     fontSize: 22,
-    fontWeight: 'bold',
     color: 'green',
     marginBottom: 10,
+    fontFamily:"Poppins_500Medium"
   },
   subMessage: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
     color: '#00194C',
+    fontFamily:"Poppins_400Regular"
   },
   backButtonDisabled: {
     backgroundColor: '#e0e0e0',

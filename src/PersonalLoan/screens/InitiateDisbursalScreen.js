@@ -153,7 +153,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
     setLoading(false)
 
     if (createLaResponse.status == STATUS.ERROR) {
-      setNewErrorScreen(response.message)
+      setNewErrorScreen(createLaResponse.message)
       return
     }
 
@@ -165,8 +165,8 @@ const InitiateDisbursalScreen = ({ navigation }) => {
     const saveLeadStageResponse = await SaveLeadStage(stageMaintance.jumpTo)
     setLoading(false)
 
-    if (saveLeadStageResponse == STATUS.ERROR) {
-      setNewErrorScreen(response.message)
+    if (saveLeadStageResponse.status == STATUS.ERROR) {
+      setNewErrorScreen(saveLeadStageResponse.message)
       return
     }
 

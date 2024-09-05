@@ -648,11 +648,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           fontSize: dynamicFontSize(styles.description.fontSize),
                         },
                       ]}>
-                      Hurray your loan is approved up to the loan amount of {" "}
+                      Hurray, You are eligible for the loan amount of {" "}
                       <Text style={styles.descriptionAmt}>
                         Rs. {loanAskAmount.toLocaleString()}
-                      </Text> {" "}
-                      you've requested. You're also eligible to take a higher
+                      </Text> . You're also eligible to take a higher
                       loan amount up to{" "}
                       <Text style={styles.descriptionAmt}>
                         Rs. {maxLoanAmount.toLocaleString()}
@@ -754,18 +753,18 @@ const LoanEligibilityScreen = ({ navigation }) => {
                         },
                       ]}>
                       <Text
-                        style={{
+                        style={[{
                           fontSize: dynamicFontSize(styles.input.fontSize),
-                          fontWeight: "500",
                           color: "#000",
-                        }}>
+                          fontFamily:"Poppins_400Regular"
+                        }]}>
                         {rateOfInterest || 0} %
                       </Text>
                       <View style={{ alignItems: "flex-end" }}>
-                        <Text style={{ color: "#00194c", fontSize: 10 }}>
+                        <Text style={{ color: "#00194c", fontSize: 10,fontFamily:"Poppins_500Medium"}}>
                           Reducing
                         </Text>
-                        <Text style={{ color: "#00194c", fontSize: 10 }}>
+                        <Text style={{ color: "#00194c", fontSize: 10,fontFamily:"Poppins_500Medium" }}>
                           Rate
                         </Text>
                       </View>

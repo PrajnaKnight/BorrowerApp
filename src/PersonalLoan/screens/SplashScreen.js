@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { GetLeadId, GetTokenValidity, StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../services/LOCAL/AsyncStroage';
-import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
 import { generatePdf, isThisIsFutureTime } from '../services/Utils/FieldVerifier';
 import { getScreenNameAtLaunch, resetNavigationStack } from '../services/Utils/ViewValidator';
@@ -26,11 +25,6 @@ import LoadingOverlay from '../components/FullScreenLoader';
 const SplashScreen = ({ navigation }) => {
 
 
-  const [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_700Bold,
-  });
 
 
 
@@ -105,7 +99,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
 
 
-    if (!fontsLoaded || !refreshPage) {
+    if (!refreshPage) {
       return
     }
 
@@ -138,7 +132,7 @@ const SplashScreen = ({ navigation }) => {
 
     })
 
-  }, [refreshPage, fontsLoaded]);
+  }, [refreshPage]);
 
 
 

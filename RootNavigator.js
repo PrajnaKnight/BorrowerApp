@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CommonNavigator from './src/Common/navigations/CommonNavigator';
@@ -106,6 +106,9 @@ const linking = {
 };
 
 function RootNavigator({initialRouteName}) {
+
+  
+
 
   return (
     <NavigationContainer linking={linking}>

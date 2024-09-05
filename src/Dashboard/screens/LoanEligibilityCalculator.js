@@ -153,7 +153,7 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         <Header activeTab={activeTab} onTabPress={handleTabPress} />
         {errorMessage && (
           <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
+            <Text style={[styles.errorText,{fontFamily:"Poppins_400Regular"}]}>{errorMessage}</Text>
           </View>
         )}
         <View style={globalStyles.content}>

@@ -588,7 +588,7 @@ const DocumentUploadScreen = ({ navigation }) => {
                   }}>
                   <Icon name={"file"} size={24} />
                   <View style={{ height: 5 }} />
-                  <Text>{selectedFile.Name}</Text>
+                  <Text style={{ fontFamily:"Poppins_400Regular"}}>{selectedFile.Name}</Text>
                 </View>
               )) :
               <View style={styles.previewPlaceholder}>
@@ -724,10 +724,11 @@ const DocumentUploadScreen = ({ navigation }) => {
         <View style={styles.passwordInputContainer}>
           <TextInput
 
-            style={styles.passwordInput}
+            style={[styles.passwordInput,{ fontFamily:"Poppins_400Regular"}]}
             secureTextEntry={true}
             value={selectedFile.Password}
             onChangeText={updatePassword}
+
             editable={selectedFile.EnablePassword}
           />
         </View>

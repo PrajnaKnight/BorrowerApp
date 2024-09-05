@@ -140,7 +140,7 @@ const LoansScreen = ({ navigation }) => {
                 activeColor="#fff"
                 inactiveColor="#BDBDBD"
                 renderLabel={({ route, focused }) => (
-                  <Text style={[styles.tabLabel,  { color: focused ? '#fff' : '#BDBDBD', fontWeight: focused ? 'bold' : 'normal' }]}>
+                  <Text style={[styles.tabLabel,  { color: focused ? '#fff' : '#BDBDBD', fontWeight: 'normal' }]}>
                     {route.title}
                   </Text>
                 )}

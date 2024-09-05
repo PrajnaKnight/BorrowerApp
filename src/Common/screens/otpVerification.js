@@ -24,6 +24,7 @@ import {
 import Layout from '../components/Layout';
 import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import ProgressBar from '../../Common/components/ControlPanel/progressBar'
+import { CommonActions } from '@react-navigation/native';
 
 const OTPVerificationScreen = ({ navigation, route }) => {
 
@@ -273,7 +274,14 @@ const OTPVerificationScreen = ({ navigation, route }) => {
 
       }
 
-      navigation.navigate("Dashboard")
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0, // The index of the active route
+          routes: [
+            { name: 'Dashboard' }, // Name of the screen you want to navigate to
+          ],
+        })
+      );
     })
 
   }
