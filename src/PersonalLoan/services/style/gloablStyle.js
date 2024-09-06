@@ -80,7 +80,6 @@ export const styles = applyFontFamily({
     marginBottom: 20,
     textAlign: "left",
     color: "#00194c",
-    lineHeight: 24,
   },
   sliderContainer: {
     marginBottom: 20,
