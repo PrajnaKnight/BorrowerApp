@@ -16,7 +16,10 @@ const initialState = {
         PAN: null,
         AADHAAR: null,
         PAN_FILES: [],
-        AADHAAR_FILES: [],
+        AADHAAR_FILES: {
+            Front : null,
+            Back : null
+        },
         OTHER_FILES : []
     }
 }
@@ -57,8 +60,11 @@ const UploadFileSlice = createSlice({
             const newOtherList = []
             
             response.bundle.UploadedFiles?.forEach(element => {
-                if (element.DocType == AADHAAR_FRONT_CODE || element.DocType == AADHAAR_BACK_CODE) {
-                    newAadhaarList.push({ ...element })
+                if (element.DocType == AADHAAR_FRONT_CODE) {
+                    state.data.AADHAAR_FILES = {...state.data.AADHAAR_FILES, Front : { ...element }}
+                }
+                else if(element.DocType == AADHAAR_BACK_CODE){
+                    state.data.AADHAAR_FILES = {...state.data.AADHAAR_FILES, Back : { ...element }}
                 }
                 else if (element.DocType == PAN_CODE) {
                     newPanList.push({ ...element })
@@ -68,7 +74,6 @@ const UploadFileSlice = createSlice({
                 }
             });
 
-            state.data.AADHAAR_FILES = newAadhaarList
 
             state.data.PAN_FILES = newPanList
 
@@ -100,13 +105,15 @@ const UploadFileSlice = createSlice({
             }
             else{
 
-                let newAadharList = [...state.data.AADHAAR_FILES]
-                for(let i = 0 ;i < newAadharList.length ; i++){
-                    if(newAadharList[i].DocType == docId){
-                        newAadharList[i] = {}
-                    }
+                let newAadharList = {...state.data.AADHAAR_FILES}
+                if(docId == AADHAAR_FRONT_CODE){
+                    newAadharList = {...newAadharList, Front : null}
                 }
+                else{
+                    newAadharList = {...newAadharList, Back : null}
 
+                }
+             
                 state.data.AADHAAR_FILES = newAadharList
                 state.data.AADHAAR = null
             }
@@ -122,7 +129,10 @@ const UploadFileSlice = createSlice({
                 PAN: null,
                 AADHAAR: null,
                 PAN_FILES: [],
-                AADHAAR_FILES: []
+                AADHAAR_FILES: {
+                    Front : null,
+                    Back : null
+                },
             }
 
             state.error = null,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, useWindowDimensions, KeyboardAvoidingView, Platform, StyleSheet, FlatList } from 'react-native';
 import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import { styles } from '../services/style/gloablStyle';
-import CustomInput, { CustomInputFieldWithSearchSuggestionForEmplymentDetails, CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
+import CustomInput, { CustomDropDownWithSearch, CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
 import DatePickerComponent from '../components/datePicker';
 import Slider from '@react-native-community/slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -20,7 +20,7 @@ import LoadingOverlay from '../components/FullScreenLoader';
 import { GoBack } from '../services/Utils/ViewValidator';
 import { useDispatch, useSelector } from 'react-redux';
 import { OPTION, updateCurrentStage, updateJumpTo, updateThingsToRemove } from '../services/Utils/Redux/LeadStageSlices';
-import { fetchGetEmploymentDetails, updateEmploymentCategory, updateEmploymentCategoryError, updateEmploymentType, updateEmploymentTypeError, updateSalaried, updateSelfEmployed } from '../services/Utils/Redux/EmploymentDetailSlices';
+import { cleanPreviousData, fetchGetEmploymentDetails, loadDataSet, updateEmploymentCategory, updateEmploymentCategoryError, updateEmploymentType, updateEmploymentTypeError, updateSalaried, updateSelfEmployed } from '../services/Utils/Redux/EmploymentDetailSlices';
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import CustomSlider from '../components/CustomSlider';
@@ -36,7 +36,6 @@ const EmploymentDetailScreen = ({ navigation }) => {
   const [nextScreen, setNextScreen] = useState("bankDetail")
   const stageMaintance = useJumpTo("employmentDetail", nextScreen, navigation);
 
-  const nextJumpTo = useSelector(state => state.leadStageSlice.jumpTo);
   const EmploymentDetailSlice = useSelector(state => state.employmentDetailSlices);
   const EmploymentType = useSelector(state => state.employmentDetailSlices.data.EmploymentType);
   const EmploymentCategory = useSelector(state => state.employmentDetailSlices.data.EmploymentCategory);
@@ -54,7 +53,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
 
   const [ocupationValueOptions, setOcupationValueOptions] = useState([]);
 
-  const [currentSelectedEmploymentOptionId, setCurrentSelectedEmploymentOptionId] = useState()
+  const [currentSelectedEmploymentOptionId, setCurrentSelectedEmploymentOptionId] = useState(null)
 
 
   const [LeadId, setLeadId] = useState(null);
@@ -113,6 +112,9 @@ const EmploymentDetailScreen = ({ navigation }) => {
     if (response.data.length > 1) {
       city = response.data[1].Text;
     }
+
+    updateCityAndState(city, state)
+    
     return { city, state };
   };
 
@@ -120,7 +122,6 @@ const EmploymentDetailScreen = ({ navigation }) => {
     if (EmploymentType == null || employmentTypeOptions == null || employmentTypeOptions.length == 0) {
       return;
     }
-    let id = null;
     for (let i = 0; i < employmentTypeOptions.length; i++) {
       if (employmentTypeOptions[i].label == EmploymentType) {
         setCurrentSelectedEmploymentOptionId(employmentTypeOptions[i].extra);
@@ -148,6 +149,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
       }
       setLoading(true);
       setProgress(0.1);
+      dispatch(cleanPreviousData())
       dispatch(fetchGetEmploymentDetails());
       GetUserDob().then(response => {
         SetUserDob(response);
@@ -214,11 +216,27 @@ const EmploymentDetailScreen = ({ navigation }) => {
     dispatch(updateEmploymentCategory(itemValue));
   };
 
-  function formatJoiningDate(date) {
-    return new Date(date).toISOString().slice(0, 10);
-  }
+  const updateCityAndState = (city, state) =>{
+    if (EmploymentType == 'Salaried') {
+      const currentState = { ...Salaried }; // Shallow copy of previous state
+      currentState.EmpCity = city;
+      currentState.CityError = null;
+      currentState.EmpState = state;
+      currentState.StateError = null;
+      dispatch(updateSalaried(currentState));
 
-  const updateInfo = async (type, value, from = null) => {
+    }
+
+    else {
+      const currentState = { ...SelfEmployed };
+      currentState.EmpCity = city;
+      currentState.CityError = null;
+      currentState.EmpState = state;
+      currentState.StateError = null;
+      dispatch(updateSelfEmployed(currentState));
+    }
+  }
+  const updateInfo = async (type, value) => {
 
     if (EmploymentType == 'Salaried') {
       const currentState = { ...Salaried }; // Shallow copy of previous state
@@ -253,13 +271,6 @@ const EmploymentDetailScreen = ({ navigation }) => {
         case "EmpZipCode":
           const pincode = value.replace(/[^0-9]/g, '');
           currentState.EmpZipCode = pincode;
-          let cityAndState = await GetCityAndStateByPincode(pincode);
-          if (cityAndState != null) {
-            currentState.EmpCity = cityAndState.city;
-            currentState.CityError = null;
-            currentState.EmpState = cityAndState.state;
-            currentState.StateError = null;
-          }
           currentState.ZipCodeError = null;
           break;
         case "WorkStartDate":
@@ -291,7 +302,10 @@ const EmploymentDetailScreen = ({ navigation }) => {
           break;
       }
       dispatch(updateSalaried(currentState));
-    } else {
+
+      
+    }
+     else {
       const currentState = { ...SelfEmployed };
       switch (type) {
         case "EmployerName":
@@ -323,13 +337,6 @@ const EmploymentDetailScreen = ({ navigation }) => {
         case "EmpZipCode":
           const pincode = value.replace(/[^0-9]/g, '');
           currentState.Pincode = pincode;
-          let cityAndState = await GetCityAndStateByPincode(pincode);
-          if (cityAndState != null) {
-            currentState.EmpCity = cityAndState.city;
-            currentState.CityError = null;
-            currentState.EmpState = cityAndState.state;
-            currentState.StateError = null;
-          }
           currentState.ZipCodeError = null;
           break;
         case "WorkStartDate":
@@ -364,6 +371,21 @@ const EmploymentDetailScreen = ({ navigation }) => {
       fetchCompanyList(value);
     }
   }
+
+  useEffect(()=>{
+
+    let pincode = null
+    if (EmploymentType == 'Salaried') {
+      pincode = Salaried.EmpZipCode
+    }
+    else if(EmploymentType == 'Self-Employed'){
+      pincode = SelfEmployed.Pincode
+
+    }
+
+   
+    GetCityAndStateByPincode(pincode)
+  },[Salaried.EmpZipCode, SelfEmployed.Pincode])
 
 
   const employmentValidity = (details, type) => {
@@ -515,28 +537,6 @@ const EmploymentDetailScreen = ({ navigation }) => {
   };
 
 
-
-
-
-  const isFormValid = () => {
-    let employmentTypeValidity = isValidField(EmploymentType, "Employment Type");
-    let employmentOccupationValidity = isValidField(EmploymentCategory, "Occupation Type");
-    if (employmentTypeValidity != null || employmentOccupationValidity != null) {
-      return false;
-    }
-    if (EmploymentType == 'salaried') {
-      let employmentDetail = employmentValidity(Salaried, 'salaried');
-      if (employmentDetail != null) {
-        return false;
-      }
-    } else if (EmploymentType == 'Self-Employed') {
-      let employmentDetail = employmentValidity(SelfEmployed, 'Self-Employed');
-      if (employmentDetail != null) {
-        return false;
-      }
-    }
-    return true;
-  };
 
   const submitEmploymentDetails = async () => {
 
@@ -690,7 +690,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                 <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Occupation Type <Text style={styles.mandatoryStar}>*</Text></Text>
 
                 <View>
-                  <CustomInputFieldWithSearchSuggestionForEmplymentDetails
+                  <CustomDropDownWithSearch
                     value={EmploymentCategory}
                     listOfData={ocupationValueOptions}
                     onChangeText={(e) => { console.log(e); onEmploymenCategoryChange(e); }}
@@ -716,7 +716,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Current Company Name <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <CustomInputFieldWithSuggestion placeholder="Enter your current company name" error={Salaried.CompanyNameError} value={Salaried.CompanyName} listOfData={salariedCompanySearchResult} onChangeText={(e) => { updateInfo("EmployerName", e); }} />
+                        <CustomInputFieldWithSuggestion placeholder="Enter your company name" error={Salaried.CompanyNameError} value={Salaried.CompanyName} listOfData={salariedCompanySearchResult} onChangeText={(e) => { updateInfo("EmployerName", e); }} />
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Your Current Designation <Text style={styles.mandatoryStar}>*</Text></Text>
@@ -790,7 +790,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Phone Number <Text style={styles.mandatoryStar}>*</Text></Text>
-                        <MobileNumberInput setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} mobileNumber={SelfEmployed.CompanyPhone} error={SelfEmployed.OfficePhoneNoError} />
+                        <MobileNumberInput placeholder="Enter your work phone number" setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} mobileNumber={SelfEmployed.CompanyPhone} error={SelfEmployed.OfficePhoneNoError} />
                       </View>
                       <View style={styles.formGroup}>
                         <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>

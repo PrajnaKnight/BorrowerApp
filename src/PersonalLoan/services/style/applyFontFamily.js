@@ -9,10 +9,19 @@ const applyFontFamily = (styles) => {
         ...styles[key],
         fontWeight: undefined  // Remove fontWeight as it's handled by the font
       };
-    } else {
+    }else if (styles[key].fontWeight === '500') {
+      newStyles[key] = { 
+        fontFamily: 'Poppins_500Medium', 
+        ...styles[key],
+        fontWeight: undefined  // Remove fontWeight as it's handled by the font
+      };
+    }
+    else {
       newStyles[key] = { 
         fontFamily: 'Poppins_400Regular', 
-        ...styles[key] 
+        ...styles[key],
+        fontWeight: undefined  // Remove fontWeight as it's handled by the font
+
       };
     }
   });

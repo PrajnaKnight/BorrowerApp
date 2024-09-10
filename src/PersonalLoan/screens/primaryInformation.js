@@ -94,16 +94,16 @@ const PrimaryInfo = ({ navigation }) => {
     useCallback(() => {
 
 
-    setProgress(0.02);
+      setProgress(0.02);
 
-    if (!refreshPage) {
-      return;
-    }
-    setSubmitStart(null)
-    dispatch(sagaFetchFileRequest(true))
-    setRefreshPage(false)
+      if (!refreshPage) {
+        return;
+      }
+      setSubmitStart(null)
+      dispatch(sagaFetchFileRequest(true))
+      setRefreshPage(false)
 
-  }, [refreshPage]))
+    }, [refreshPage]))
 
 
   useEffect(() => {
@@ -184,7 +184,7 @@ const PrimaryInfo = ({ navigation }) => {
 
     console.log("====== PRESS TO GO AHEAD ======")
 
-    if (submitStart!=null) {
+    if (submitStart != null) {
       setLoading(true)
       console.log("====== PRESS TO GO AHEAD : LOADER STARTED ======")
 
@@ -239,19 +239,19 @@ const PrimaryInfo = ({ navigation }) => {
     dispatch(updateAadhaarNumber(aadhaar));
   };
 
-  const handleDeleteDocument = async(docId) => {
-    if(docId){
+  const handleDeleteDocument = async (docId) => {
+    if (docId) {
       setLoading(true)
-      const deleteResponse =  await DeleteUploadFiles(docId)
+      const deleteResponse = await DeleteUploadFiles(docId)
       setLoading(false)
-      if(deleteResponse.status == STATUS.ERROR){
+      if (deleteResponse.status == STATUS.ERROR) {
         setNewErrorScreen(deleteResponse.message)
         return;
       }
 
-      
+
       dispatch(updateFileRemove(docId))
-      
+
 
     }
   };
@@ -319,11 +319,8 @@ const PrimaryInfo = ({ navigation }) => {
                 if (documentType === 'pan') {
                   dispatch(sagaSubmitFileRquest(document, docCode));
                 } else if (documentType === 'aadhaar') {
-                  if (!uploadDocumentSlices.data.AADHAAR_FILES.length) {
-                    dispatch(sagaSubmitFileRquest(document, docCode));
-                  } else {
-                    dispatch(sagaSubmitFileRquest(document, docCode));
-                  }
+                  dispatch(sagaSubmitFileRquest(document, docCode));
+                  
                 }
               }
             },
@@ -353,11 +350,7 @@ const PrimaryInfo = ({ navigation }) => {
         if (documentType === 'pan') {
           dispatch(sagaSubmitFileRquest(document, docCode));
         } else if (documentType === 'aadhaar') {
-          if (!uploadDocumentSlices.data.AADHAAR_FILES.length) {
-            dispatch(sagaSubmitFileRquest(document, docCode));
-          } else {
-            dispatch(sagaSubmitFileRquest(document, docCode));
-          }
+          dispatch(sagaSubmitFileRquest(document, docCode));
         }
       }
     } catch (error) {
@@ -365,9 +358,9 @@ const PrimaryInfo = ({ navigation }) => {
     }
   };
 
- 
 
-  const renderDocumentPreviews = (doc, type) => {
+
+  const renderDocumentPreviews = (doc, placeHolderText) => {
 
     if (doc?.OriginalFile) {
       return (
@@ -387,23 +380,23 @@ const PrimaryInfo = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        
+
         </View>
-     
-    );
-  } else {
-    // Placeholder preview when no document is uploaded
+
+      );
+    }
+
     return (
       <View style={styles.previewPlaceholder}>
         <ImageBackground source={require('../../assets/images/dummyid.png')} style={styles.previewPlaceholder}>
-        <Text style={styles.previewPlaceholderText}>
-          Preview {type === 'aadhaar' ? 'Aadhaar' : 'PAN'}
-        </Text>
+          <Text style={styles.previewPlaceholderText}>
+          {placeHolderText}
+          </Text>
         </ImageBackground>
       </View>
     );
-  }
-};
+
+  };
 
 
 
@@ -457,7 +450,7 @@ const PrimaryInfo = ({ navigation }) => {
     }
 
     dispatch(updateJumpTo(stageMaintance));
-    
+
     response.data = 'personalInfo';
 
     return response;
@@ -471,12 +464,12 @@ const PrimaryInfo = ({ navigation }) => {
     }
 
     setLoading(true)
-    
+
     const downloadResponse = await DownloadMyFileWithBase64(uri, name)
 
     setLoading(false)
 
-    if(downloadResponse!=null)[
+    if (downloadResponse != null) [
       setDownloadPath(downloadResponse)
     ]
 
@@ -563,7 +556,7 @@ const PrimaryInfo = ({ navigation }) => {
       navigation.navigate("PermissionsScreen", { permissionStatus: "denied", permissionType: "location" })
       return
     }
-    if(!uploadDocumentSlices.data.PAN){
+    if (!uploadDocumentSlices.data.PAN) {
       setOtherError("Please provide the PAN number")
       return
     }
@@ -586,7 +579,7 @@ const PrimaryInfo = ({ navigation }) => {
       return
     }
 
-    if(!uploadDocumentSlices.data.PAN){
+    if (!uploadDocumentSlices.data.PAN) {
       setOtherError("Please provide the PAN number")
       return
     }
@@ -734,13 +727,13 @@ const PrimaryInfo = ({ navigation }) => {
 
                       {renderDocumentPreviews(
                         uploadDocumentSlices.data.PAN_FILES[0],
-                        "pan"
+                        "Preview PAN"
                       )}
                     </View>
                     <View style={styles.docButtonWrapper}>
                       <TouchableOpacity
                         style={styles.docButton}
-                        onPress={() => handleDocumentAction("pan", "upload", PAN_CODE )}>
+                        onPress={() => handleDocumentAction("pan", "upload", PAN_CODE)}>
                         <Feather name="upload" size={24} color="#ffffff" />
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -786,8 +779,8 @@ const PrimaryInfo = ({ navigation }) => {
                   <View style={styles.docFlex}>
                     <View style={styles.previewWrapper}>
                       {renderDocumentPreviews(
-                        uploadDocumentSlices.data.AADHAAR_FILES[0],
-                        "aadhaar"
+                        uploadDocumentSlices.data.AADHAAR_FILES.Front,
+                        "Preview Aadhaar Front"
                       )}
                     </View>
                     <View style={styles.docButtonWrapper}>
@@ -810,8 +803,8 @@ const PrimaryInfo = ({ navigation }) => {
                   <View style={styles.docFlex}>
                     <View style={styles.previewWrapper}>
                       {renderDocumentPreviews(
-                        uploadDocumentSlices.data.AADHAAR_FILES[1],
-                        "aadhaar"
+                        uploadDocumentSlices.data.AADHAAR_FILES.Back,
+                         "Preview Aadhaar Back"
                       )}
                     </View>
                     <View style={styles.docButtonWrapper}>
@@ -873,8 +866,8 @@ const PrimaryInfo = ({ navigation }) => {
             </TouchableOpacity>
             <LinearGradient
               colors={
-               
-                  ["#002777", "#00194C"]
+
+                ["#002777", "#00194C"]
               }
               style={styles.verifyButton}>
               <TouchableOpacity
@@ -896,7 +889,7 @@ const PrimaryInfo = ({ navigation }) => {
               setNewErrorScreen={setNewErrorScreen}
             />
           )}
-                    <DownloadPopup path={downloadPath} onClose={()=>{setDownloadPath(null)}}/>
+          <DownloadPopup path={downloadPath} onClose={() => { setDownloadPath(null) }} />
 
         </KeyboardAvoidingView>
       </View>

@@ -45,6 +45,7 @@ import { useProgressBar } from "../components/progressContext";
 import ProgressBar from "../components/progressBar";
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from "../components/StageComponent";
+import { CustomDropDownWithSearch } from "../components/input";
 
 function QuickLoanAsk({ navigation }) {
 
@@ -405,17 +406,16 @@ function QuickLoanAsk({ navigation }) {
                     </Text>
                   </Text>
                 </View>
-                <CustomDropdown
-                  value={loanAskDetails.data.PurposeOfLoan}
-                  items={items}
-                  setValue={(e) => setPurposeOfLoad(e.label)}
-                  setItems={setItems}
-                  placeholder="Select"
-                  style={[styles.dropdownBorder, { fontSize }]}
-                  autoScroll={true}
-                  searchable={true}
 
-                />
+                <CustomDropDownWithSearch
+                    value={loanAskDetails.data.PurposeOfLoan}
+                    listOfData={items}
+                    onChangeText={(e) => {setPurposeOfLoad(e)}}
+                    placeholder="Search"
+                    style={[styles.pickerContainer, { fontSize }]}
+                    searchable={true}
+                  />
+              
                 {purposeError && (
                   <Text style={styles.errorText}>{purposeError}</Text>
                 )}
@@ -429,7 +429,7 @@ function QuickLoanAsk({ navigation }) {
                 }
                 style={[styles.proceedbutton, styles.BlueBorder,  { fontSize }]}>
                 <ButtonComponent
-                  title="PROCEED"
+                  title="SUBMIT"
                   onPress={handleProceed}
                   textStyle={
                   

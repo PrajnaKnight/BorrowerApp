@@ -86,16 +86,26 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
             isFocused && fieldstyles.inputContainerFocused,
           ]}>
           <Text style={fieldstyles.countryCode}>{selectedCountry.code}</Text>
-          <TextInput
-            style={[fieldstyles.input, { fontSize: dynamicFontSize(14) }]}
-            onChangeText={handleMobileNumberChange}
-            value={mobileNumber}
-            placeholder="Enter mobile number"
-            keyboardType="phone-pad"
-            maxLength={10}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-          />
+          <View style={{flex:1}}>
+            {!mobileNumber && 
+            
+              <Text style={fieldstyles.inputPlaceholder}>
+                {"Enter mobile number"}
+              </Text>
+            }
+            
+            <TextInput
+              style={[fieldstyles.input, { fontSize: dynamicFontSize(14)}]}
+              onChangeText={handleMobileNumberChange}
+              value={mobileNumber}
+              keyboardType="phone-pad"
+              maxLength={10}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+
+            />
+          </View>
+
         </View>
       </View>
       {error && (
@@ -199,12 +209,14 @@ const fieldstyles = applyFontFamily({
   },
   input: {
     fontSize: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    paddingLeft: 5,
+    paddingVertical: 8,   
     color: "#00194c",
-    flex: 1, 
+    flex: 1,
   },
+  inputPlaceholder : {
+    position:"absolute",width:"100%",height:"100%", paddingVertical:10,color:"grey"
+  },
+  
   errorText: {
     flex: 1,
   },

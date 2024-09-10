@@ -19,7 +19,9 @@ const applyFontFamily = (styles) => {
     else {
       newStyles[key] = { 
         fontFamily: 'Poppins_400Regular', 
-        ...styles[key] 
+        ...styles[key],
+        fontWeight: undefined  // Remove fontWeight as it's handled by the font
+
       };
     }
   });

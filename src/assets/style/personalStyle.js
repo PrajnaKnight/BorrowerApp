@@ -226,6 +226,15 @@ export const styles = applyFontFamily({
     fontSize: 14,
     color: "#00194C",
   },
+  inputPlaceholder : {
+    position:"absolute",
+    width:"100%",
+    height:"100%", 
+    color:"grey",
+    paddingVertical:13,
+    paddingHorizontal:10,
+  },
+  
   termsContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -394,6 +403,7 @@ export const styles = applyFontFamily({
     textAlign: "center",
     borderRadius: 5,
     fontSize: 14,
+    fontWeight : '500',
     ...Platform.select({
       web: {
         marginRight: 5,

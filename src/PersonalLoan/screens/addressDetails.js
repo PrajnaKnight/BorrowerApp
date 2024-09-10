@@ -39,6 +39,7 @@ const AddressScreen = ({ navigation }) => {
   const [refreshPage, setRefreshPage] = useState(true);
   const [activeTab, setActiveTab] = useState('permanent');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [currentPincode, setCurrentPincode] = useState(null)
   
   const onTryAgainClick = () => {
     setRefreshPage(true);
@@ -196,8 +197,35 @@ const AddressScreen = ({ navigation }) => {
       city = response.data[1].Text;
     }
 
-    return { city, state };
+    updateCityAndState(city, state)
   };
+
+
+  
+  const updateCityAndState = (city, state) =>{
+    let updatedAddress;
+    if (activeTab === 'permanent') {
+      updatedAddress = { ...AddressDetailSlice.data[0] };
+    } else if (activeTab === 'current') {
+      updatedAddress = { ...AddressDetailSlice.data[1] };
+    } else {
+      updatedAddress = { ...AddressDetailSlice.data[2] };
+    }
+
+    updatedAddress.City = city;
+    updatedAddress.CityError = null;
+    updatedAddress.State = state;
+    updatedAddress.StateError = null;
+
+    if (activeTab === 'permanent') {
+      dispatch(updatePermanentAddress(updatedAddress));
+    } else if (activeTab === 'current') {
+      dispatch(updateCurrentAddress(updatedAddress));
+    } else {
+      dispatch(updateMailingAddress(updatedAddress));
+    }
+  }
+
 
   const handleAddressUpdate = async (type, value, addressType) => {
     let updatedAddress;
@@ -213,14 +241,8 @@ const AddressScreen = ({ navigation }) => {
       case "PIN-CODE":
         const pincode = value.replace(/[^0-9]/g, '');
         updatedAddress.PostalCode = pincode;
-        const cityAndState = await GetCityAndStateByPincode(pincode);
-        if (cityAndState != null) {
-          updatedAddress.City = cityAndState.city;
-          updatedAddress.CityError = null;
-          updatedAddress.State = cityAndState.state;
-          updatedAddress.StateError = null;
-        }
         updatedAddress.PostalCodeError = null;
+        setCurrentPincode(pincode)
         break;
       case "CITY":
         updatedAddress.City = value;
@@ -252,7 +274,8 @@ const AddressScreen = ({ navigation }) => {
       dispatch(updateMailingAddress(updatedAddress));
     }
 
-  };
+  }
+
 
   const validateAddress = (address, type, showError = true) => {
     const postalCodeValidity = isValidPostalCodeNumber(address.PostalCode, "Pin Code");
@@ -378,6 +401,12 @@ const AddressScreen = ({ navigation }) => {
       navigation.navigate('employmentDetail');
     });
   };
+
+  useEffect(()=>{
+
+    GetCityAndStateByPincode(currentPincode)
+    
+  },[currentPincode])
 
   const { setProgress } = useProgressBar();
 

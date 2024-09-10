@@ -417,6 +417,8 @@ export const styles = applyFontFamily({
         marginRight: 5,
       },
     }),
+    fontWeight:'500', 
+
   },
   resendText: {
     marginVertical: 10,
@@ -872,7 +874,6 @@ export const styles = applyFontFamily({
     padding: 10,
     fontSize: 14,
     fontWeight: "bold",
-    textTransform: "uppercase",
   },
 
   signbuttonText: {
@@ -1161,7 +1162,7 @@ export const styles = applyFontFamily({
   optional: {
     fontSize: 12,
     color: "#ff8500",
-    fontStyle: "italic",
+    fontWeight: "400"
   },
   tablecontainer: {
     borderWidth: 1,

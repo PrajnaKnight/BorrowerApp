@@ -288,7 +288,6 @@ const EMandateScreen = ({ navigation }) => {
                           fontSize: dynamicFontSize(
                             styles.downloadSamplebuttonText.fontSize
                           ),
-                          textTransform: "uppercase",
                         },
                       ]}>
                       Download NACH Form

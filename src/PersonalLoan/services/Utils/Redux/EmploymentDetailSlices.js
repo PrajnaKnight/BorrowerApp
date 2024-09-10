@@ -143,6 +143,11 @@ export const EmploymentDetailSlice = createSlice({
     updateSelfEmployed(state, payload) {
       state.data.SelfEmployed = payload.payload
     },
+    cleanPreviousData(state, payload){
+      
+      state.data = requestModel
+      
+    }
   },
   extraReducers: (builder) => {
 
@@ -259,5 +264,5 @@ export const EmploymentDetailSlice = createSlice({
 })
 
 
-export const { updateEmploymentType, updateEmploymentCategory, updateSalaried, updateSelfEmployed, updateEmploymentTypeError, updateEmploymentCategoryError } = EmploymentDetailSlice.actions
+export const { updateEmploymentType, updateEmploymentCategory, updateSalaried, updateSelfEmployed, updateEmploymentTypeError, updateEmploymentCategoryError,cleanPreviousData } = EmploymentDetailSlice.actions
 export default EmploymentDetailSlice.reducer

@@ -39,11 +39,13 @@ const BankDetailsScreen = ({ navigation }) => {
 
   const [addButtonState, setAddButtonState] = useState(true)
 
+  const [currentTypingAccount, setCurrentTypingAccount] = useState(0)
+
   const addAccount = () => {
-  
-      dispatch(addBankAccount());
-      setSelectedAccountIndex(bankAccountSlices.data.BankList.length);
-    
+
+    dispatch(addBankAccount());
+    setSelectedAccountIndex(bankAccountSlices.data.BankList.length);
+
   };
 
   const confirmDeleteAccount = (index) => {
@@ -58,21 +60,21 @@ const BankDetailsScreen = ({ navigation }) => {
     );
   };
 
-  const deleteAccount = async(index) => {
+  const deleteAccount = async (index) => {
 
     const primaryId = bankAccountSlices.data.BankList[index].PrimaryId
 
-    if(primaryId){
+    if (primaryId) {
       console.log(primaryId)
       setLoading(true)
       const deleteBankAccoountResponse = await DeleteBankAccount(primaryId)
       setLoading(false)
-      if(deleteBankAccoountResponse.status == STATUS.ERROR){
+      if (deleteBankAccoountResponse.status == STATUS.ERROR) {
         setNewErrorScreen(deleteBankAccoountResponse.message)
         return
       }
     }
-    
+
 
     dispatch(deleteBankAccount(index));
     setSelectedAccountIndex(Math.max(0, index - 1));
@@ -95,8 +97,8 @@ const BankDetailsScreen = ({ navigation }) => {
 
       setAddButtonState(bankAccountSlices.data.BankList.length < 3)
 
-      
-    },[bankAccountSlices.data.BankList]))
+
+    }, [bankAccountSlices.data.BankList]))
 
   useFocusEffect(
     useCallback(() => {
@@ -136,35 +138,15 @@ const BankDetailsScreen = ({ navigation }) => {
 
   const UpdateBankInfo = async (index, key, value) => {
 
+    setCurrentTypingAccount(index)
+
     let bankAcc = { ...bankAccountSlices.data.BankList[index] }
-    let nameResponse
     console.log("UpdateBankInfo", `${index}, ${key}, ${value}`)
     switch (key) {
       case "IFSC-CODE":
         bankAcc.IFSC = value;
         bankAcc.IFSCError = null;
-        nameResponse = await fetchAccountNumber(bankAcc, value);
-        if (nameResponse != null) {
 
-          const isValidName = isValidBankAccountName(bankAccountSlices.data.LeadName, nameResponse)
-
-          if (!isValidName) {
-            bankAcc.isAccountNameVaid = false
-          }
-          else {
-            bankAcc.isAccountNameVaid = true
-          }
-
-          bankAcc.AccountHolderName = nameResponse
-          bankAcc.AccountHolderNameError = null
-        }
-        const branchName = await GetBranchName(value);
-        if (branchName != null) {
-          bankAcc.BankBrachName = branchName.BranchName;
-          bankAcc.BankName = branchName.BankName;
-          bankAcc.BankCode = branchName.BankID;
-        }
-        bankAcc.BankBracnchNameError = null;
         break;
       case "BRANCH-NAME":
         bankAcc.BankBrachName = value;
@@ -174,51 +156,12 @@ const BankDetailsScreen = ({ navigation }) => {
         let accountNumber = value.replace(/[^0-9]/g, '');
         bankAcc.AccountNumber = accountNumber;
         bankAcc.AccountNumberError = null;
-        if (bankAcc.ReAccountNumber && bankAcc.ReAccountNumber.length > 0) {
-          bankAcc.isAccountNumberMatching = bankAcc.ReAccountNumber === bankAcc.AccountNumber;
-        }
-        nameResponse = await fetchAccountNumber(bankAcc, null, value);
-        if (nameResponse != null) {
-          const isValidName = isValidBankAccountName(bankAccountSlices.data.LeadName, nameResponse)
-
-          if (!isValidName) {
-
-            bankAcc.isAccountNameVaid = false
-          }
-          else {
-
-            bankAcc.isAccountNameVaid = true
-
-          }
-
-
-          bankAcc.AccountHolderName = nameResponse
-          bankAcc.AccountHolderNameError = null
-        }
         break;
       case "RE-ACCOUNT-NUMBER":
         let reAccountNumber = value.replace(/[^0-9]/g, '');
         bankAcc.ReAccountNumber = reAccountNumber;
         bankAcc.ReAccountNumberError = null;
-        if (bankAcc.AccountNumber && bankAcc.AccountNumber.length > 0) {
-          bankAcc.isAccountNumberMatching = bankAcc.ReAccountNumber === bankAcc.AccountNumber;
-        }
-        nameResponse = await fetchAccountNumber(bankAcc, null, null, value);
-        if (nameResponse != null) {
-          const isValidName = isValidBankAccountName(bankAccountSlices.data.LeadName, nameResponse)
-          if (!isValidName) {
 
-            bankAcc.isAccountNameVaid = false
-          }
-          else {
-
-            bankAcc.isAccountNameVaid = true
-
-          }
-
-          bankAcc.AccountHolderName = nameResponse
-          bankAcc.AccountHolderNameError = null
-        }
         break;
       case "HOLDER-NAME":
         bankAcc.AccountHolderName = value;
@@ -228,6 +171,78 @@ const BankDetailsScreen = ({ navigation }) => {
     dispatch(updateBankDetails({ index, data: bankAcc }));
   };
 
+  useEffect(() => {
+
+
+    const fetchBranchNameAndUserInfo = async () => {
+      let bankAcc = { ...bankAccountSlices.data.BankList[currentTypingAccount] }
+
+
+      let nameResponse = await fetchAccountNumber(bankAcc);
+      if (nameResponse != null) {
+
+        const isValidName = isValidBankAccountName(bankAccountSlices.data.LeadName, nameResponse)
+
+        if (!isValidName) {
+          bankAcc.isAccountNameVaid = false
+        }
+        else {
+          bankAcc.isAccountNameVaid = true
+        }
+
+        bankAcc.AccountHolderName = nameResponse
+        bankAcc.AccountHolderNameError = null
+      }
+
+
+      const branchName = await GetBranchName(bankAcc.IFSC);
+      if (branchName != null) {
+        bankAcc.BankBrachName = branchName.BranchName;
+        bankAcc.BankName = branchName.BankName;
+        bankAcc.BankCode = branchName.BankID;
+      }
+      bankAcc.BankBracnchNameError = null;
+
+      dispatch(updateBankDetails({index : currentTypingAccount, data: bankAcc }));
+    }
+
+
+    fetchBranchNameAndUserInfo()
+
+  }, [bankAccountSlices.data.BankList[currentTypingAccount].IFSC])
+
+
+  useEffect(() => {
+
+    const fetchUserInfo = async () => {
+      let bankAcc = { ...bankAccountSlices.data.BankList[currentTypingAccount] }
+
+      if (bankAcc.AccountNumber && bankAcc.AccountNumber.length > 0) {
+        bankAcc.isAccountNumberMatching = bankAcc.ReAccountNumber === bankAcc.AccountNumber;
+      }
+      nameResponse = await fetchAccountNumber(bankAcc);
+      if (nameResponse != null) {
+        const isValidName = isValidBankAccountName(bankAccountSlices.data.LeadName, nameResponse)
+        if (!isValidName) {
+
+          bankAcc.isAccountNameVaid = false
+        }
+        else {
+
+          bankAcc.isAccountNameVaid = true
+
+        }
+
+        bankAcc.AccountHolderName = nameResponse
+        bankAcc.AccountHolderNameError = null
+
+        dispatch(updateBankDetails({ index :currentTypingAccount, data: bankAcc }));
+      }
+    }
+
+    fetchUserInfo()
+  }, [bankAccountSlices.data.BankList[currentTypingAccount].AccountNumber, bankAccountSlices.data.BankList[currentTypingAccount].ReAccountNumber])
+
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
@@ -236,10 +251,10 @@ const BankDetailsScreen = ({ navigation }) => {
     return similarity * 100 >= 75;
   };
 
-  const fetchAccountNumber = async (item, ifsc, accountNumberTemp, reAccountNumberTemp) => {
-    const accountNumber = accountNumberTemp || item.AccountNumber;
-    const reAccountNumber = reAccountNumberTemp || item.ReAccountNumber;
-    if (item.isAccountNameVaid || isValidIfsc(ifsc || item.IFSC) != null ||
+  const fetchAccountNumber = async (item) => {
+    const accountNumber =  item.AccountNumber;
+    const reAccountNumber =  item.ReAccountNumber;
+    if (item.isAccountNameVaid || isValidIfsc(item.IFSC) != null ||
       isValidNumberOnlyField(accountNumber) != null ||
       isValidNumberOnlyField(reAccountNumber) != null ||
       accountNumber !== reAccountNumber) {
@@ -502,7 +517,7 @@ const BankDetailsScreen = ({ navigation }) => {
                 styles.headerText,
                 { fontSize: dynamicFontSize(styles.headerText.fontSize) },
               ]}>
-              Bank Details <Text style={{fontSize:14, fontWeight:'500'}}>(Salary Account)</Text>
+              Bank Details <Text style={{ fontSize: 14, fontWeight: '500' }}>(Salary Account)</Text>
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10, alignItems: 'center' }}>
               {bankAccountSlices.data.BankList.map((account, index) => (
@@ -624,7 +639,7 @@ const BankDetailsScreen = ({ navigation }) => {
                         UpdateBankInfo(selectedAccountIndex, "RE-ACCOUNT-NUMBER", text)
                       }
                       keyboardType="numeric"
-                      
+
                     />
                     {bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumber != null &&
                       bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumber != null &&

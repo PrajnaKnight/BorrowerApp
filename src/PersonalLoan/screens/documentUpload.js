@@ -475,6 +475,8 @@ const DocumentUploadScreen = ({ navigation }) => {
             <Text style={[styles.DoctabText, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTabText,
             ]}>
               {item.DoctypeType}
+              
+              {item.MandatoryFlag == "1" && <Text style={styles.mandatoryStar}> *</Text>}
             </Text>
           </TouchableOpacity>
         )}
