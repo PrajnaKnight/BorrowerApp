@@ -329,10 +329,7 @@ function QuickLoanAsk({ navigation }) {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-                <View>
+          <View style={{padding:16}}>
                   <ProgressBar progress={0.01} />
                   <Text
                     style={[
@@ -362,6 +359,10 @@ function QuickLoanAsk({ navigation }) {
                     <Text style={styles.errorText}>{otherError}</Text>
                   )}
                 </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={styles.container}>
+              <View>
+              
                 <CustomSlider
                   title="Loan Amount"
                   icon="rupee"
@@ -447,6 +448,7 @@ function QuickLoanAsk({ navigation }) {
             />
           )}
         </KeyboardAvoidingView>
+
       </View>
     </View>
   );
