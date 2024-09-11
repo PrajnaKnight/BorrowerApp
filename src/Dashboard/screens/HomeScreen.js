@@ -62,7 +62,7 @@ const loanData = [
     subtitle: '****1234',
     loanAmount: '₹ 10,00,000',
     emiAmount: '₹ 56,786',
-    nextEmiDate: '05 Sep 2024',
+    nextEmiDate: '05 Sep 2025',
   },
   {
     key: '2',
