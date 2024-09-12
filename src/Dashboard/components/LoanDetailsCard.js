@@ -31,8 +31,8 @@ const LoanDetailsCard = ({ loanAmount, emiAmount, tenure, interestRate }) => {
       <View style={styles.cardContainer}>
         <View style={styles.detailsRow}>
           <View style={styles.detailText}>
-          <Text style={styles.emiLabel}>Eligible Tenure(M)</Text>
-          <Text style={styles.emiValue}>{tenure}</Text>
+          <Text style={styles.emiLabel}>EMI Amount</Text>
+          <Text style={styles.emiValue}>{emiAmount}</Text>
           </View>
           <View style={styles.detailText}>
             <Text style={styles.emiLabel}>Eligible Tenure</Text>

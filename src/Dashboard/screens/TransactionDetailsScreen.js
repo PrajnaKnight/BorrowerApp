@@ -33,7 +33,7 @@ const TransactionDetailsScreen = ({ navigation }) => {
   );
 
   const TransactionItem = ({ date, description, amount, type, balance,iconRupees,balanceTitle, onPress }) => {
-    const isCredit = type === "Cr";
+    const isCredit = type === "Cr.";
     return (
       <TouchableOpacity style={styles.transactionItem} onPress={onPress}>
         {isCredit ? (
@@ -50,7 +50,7 @@ const TransactionDetailsScreen = ({ navigation }) => {
           <Text style={styles.transactionAmount}>
             {iconRupees} {amount}
           </Text>
-          <Text style={[styles.transactionType, , isCredit ? styles.creditAmount : styles.debitAmount]}>{type}</Text>
+          <Text style={[styles.transactionType, , isCredit ? styles.creditAmount : styles.debitAmount]}>{type} </Text>
           </View>
           <Text style={styles.transactionBalance}>{balanceTitle} {balance}</Text>
         </View>

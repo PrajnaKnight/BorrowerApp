@@ -22,7 +22,7 @@ const NotificationScreen = () => {
   const currentNotifications = notifications[selectedTab];
 
   const renderTabs = () => (
-    <View style={styles.IndividualtabBar}>
+    <View style={[styles.IndividualtabBar,{marginBottom:10}]}>
       <TouchableOpacity
         style={[
           styles.Notificationtab,
@@ -58,45 +58,40 @@ const NotificationScreen = () => {
 
   return (
     <Layout>
-      <FlatList
-        ListHeaderComponent={renderTabs}
-        data={currentNotifications}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.notificationCard}>
-            {item.image && (
-              <Image
-                source={item.image}
-                style={styles.notificationImage}
-              />
-            )}
-            <View style={styles.notificationContent}>
-              <Text style={styles.notificationMessage}>
-                {item.message}
-              </Text>
-              {item.action && (
-                <Text style={styles.notificationAction}>
-                  {item.action}
-                </Text>
+      <View style={{ backgroundColor: "#fff", flex: 1 }}>
+        <FlatList
+          ListHeaderComponent={renderTabs}
+          data={currentNotifications}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.notificationCard}>
+              {item.image && (
+                <Image source={item.image} style={styles.notificationImage} />
               )}
-              <Text style={styles.notificationDate}>
-                {item.date} | {item.time}
-              </Text>
+              <View style={styles.notificationContent}>
+                <Text style={styles.notificationMessage}>{item.message}</Text>
+                {item.action && (
+                  <Text style={styles.notificationAction}>{item.action}</Text>
+                )}
+                <Text style={styles.notificationDate}>
+                  {item.date} | {item.time}
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
-        ListEmptyComponent={
-          <View style={styles.noNotificationsContainer}>
-            <Icon
-              name="bell-off-outline"
-              size={80}
-              color="#a0c1d1"
-              style={styles.noNotificationsIcon}
-            />
-            <Text style={styles.noNotificationsText}>No Notifications</Text>
-          </View>
-        }
-      />
+          )}
+          ListEmptyComponent={
+            <View style={styles.noNotificationsContainer}>
+              <Icon
+                name="bell-off-outline"
+                size={80}
+                color="#a0c1d1"
+                style={styles.noNotificationsIcon}
+              />
+              <Text style={styles.noNotificationsText}>No Notifications</Text>
+            </View>
+          }
+        />
+      </View>
     </Layout>
   );
 };

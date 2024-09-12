@@ -16,6 +16,9 @@ const TopBar = () => {
   ]);
   const route = useRoute();
   const showBackButton = route.name !== 'Home';
+  const showNotificationIcon = route.name !== 'Notifications';
+
+
 
   return (
     <View style={styles.container}>
@@ -33,6 +36,7 @@ const TopBar = () => {
         />
       </View>
       <View style={styles.iconsContainer}>
+      {showNotificationIcon && (
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => navigation.navigate('Notifications')}>
@@ -42,6 +46,7 @@ const TopBar = () => {
             } />
           {notifications.length > 0 && <View style={styles.notificationDot} />}
         </TouchableOpacity>
+         )}
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => setModalVisible(true)}>

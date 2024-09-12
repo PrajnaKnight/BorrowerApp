@@ -20,7 +20,7 @@ const LoanDirectDownloadScreen = ({ navigation }) => {
   }, [activeTab]);
 
   const documents = [
-    { title: 'Welcome Kit' },
+    { title: 'Welcome KIT' },
     { title: 'KFS' },
   ];
 
