@@ -470,11 +470,15 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
           ? {
               shadowColor: shadowColor,
               shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
+              shadowOpacity: 0.35,
               shadowRadius: 5,
             }
           : {
-              elevation: 3,
+              elevation: 5,
+                shadowColor: shadowColor,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3,
             },
       ]}
     >

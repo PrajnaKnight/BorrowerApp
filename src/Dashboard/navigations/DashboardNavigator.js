@@ -91,7 +91,7 @@ const TabNavigator = () => (
 function DashboardNavigator() {
  
 
-  const [showEMINotification, setShowEMINotification] = useState(false);
+  const [showEMINotification, setShowEMINotification] = useState(true);
 
   
 

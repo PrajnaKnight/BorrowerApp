@@ -1,57 +1,82 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
-const LoanTenureSlider = ({ label, value, min, max, step, onValueChange, toggle, onToggle }) => {
+const LoanTenureSlider = ({
+  label,
+  value,
+  min,
+  max,
+  step,
+  onValueChange,
+  toggle,
+  onToggle,
+  sliderLabels,
+  layout = 'default' // New prop to control layout
+}) => {
+  const renderToggleButtons = () => (
+    <View style={styles.toggleContainer}>
+      <TouchableOpacity
+        style={[
+          styles.toggleButton,
+          toggle === "Yr" && styles.activeToggle,
+          layout === 'compact' && styles.compactToggleButton
+        ]}
+        onPress={() => onToggle("Yr")}>
+        <Text
+          style={[
+            styles.toggleButtonText,
+            toggle === "Yr" && styles.activeToggleText,
+          ]}>
+          Yr
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.toggleButton,
+          toggle === "Mo" && styles.activeToggle,
+          layout === 'compact' && styles.compactToggleButton
+        ]}
+        onPress={() => onToggle("Mo")}>
+        <Text
+          style={[
+            styles.toggleButtonText,
+            toggle === "Mo" && styles.activeToggleText,
+          ]}>
+          Mo
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.sliderContainerWrapper}>
-      <View style={styles.sliderDetails}>
-        <Text style={styles.label}>{label}</Text>
-        <View style={{flexDirection:"row"}}>
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity
-              style={[
-                styles.toggleButton,
-                toggle === "Yr" && styles.activeToggle,
-              ]}
-              onPress={() => onToggle("Yr")}>
-              <Text
-                style={[
-                  styles.toggleButtonText,
-                  toggle === "Yr" && styles.activeToggleText,
-                ]}>
-                Yr
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.toggleButton,
-                toggle === "Mo" && styles.activeToggle,
-              ]}
-              onPress={() => onToggle("Mo")}>
-              <Text
-                style={[
-                  styles.toggleButtonText,
-                  toggle === "Mo" && styles.activeToggleText,
-                ]}>
-                Mo
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.inputValue}
-              value={String(value)}
-              keyboardType="numeric"
-              onChangeText={(text) => onValueChange(Number(text))}
-            />
+      {layout === 'default' && (
+        <View style={styles.sliderDetails}>
+          <Text style={styles.label}>{label}</Text>
+          <View style={styles.toggleAndValueContainer}>
+            {renderToggleButtons()}
+            <View style={styles.valueContainer}>
+              <Text style={styles.valueText}>{value}</Text>
+            </View>
           </View>
         </View>
-      </View>
-
+      )}
+      
+      {layout === 'compact' && (
+        <>
+          <View style={styles.compactHeader}>
+            <Text style={styles.label}>{label}</Text>
+            {renderToggleButtons()}
+          </View>
+          <View style={styles.valueContainer}>
+            <Text style={styles.valueText}>{value}</Text>
+          </View>
+        </>
+      )}
+      
       <View style={styles.sliderContainer}>
-       
         <Slider
           style={styles.slider}
           minimumValue={min}
@@ -63,11 +88,13 @@ const LoanTenureSlider = ({ label, value, min, max, step, onValueChange, toggle,
           maximumTrackTintColor="#758BFD"
           thumbTintColor="#F38F00"
         />
-       
       </View>
-      <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-      <Text style={styles.sliderLabel}>{min}</Text>
-      <Text style={styles.sliderLabel}>{max}</Text>
+      <View style={styles.sliderLabelContainer}>
+        {sliderLabels.map((label, index) => (
+          <Text key={index} style={styles.sliderLabel}>
+            {label}
+          </Text>
+        ))}
       </View>
     </View>
   );
@@ -81,59 +108,74 @@ const styles = applyFontFamily({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 10,
+  },
+  compactHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   label: {
     fontSize: 14,
-    marginBottom: 5,
     color: '#00194c',
     fontWeight: '500',
   },
-  inputWrapper: {
+  toggleAndValueContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems:'center',
-  },
-  inputValue: {
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#00194C',
-    backgroundColor: '#EBEFFF',
+    alignItems: 'center',
   },
   toggleContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems:'center',
+    marginRight: 10,
   },
   toggleButton: {
-    paddingHorizontal: 10,
-    paddingVertical:4,
-    borderRadius: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
     borderWidth: 1,
     borderColor: '#00194C',
-    marginRight: 5,
+  },
+  compactToggleButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 2,
   },
   activeToggle: {
     backgroundColor: '#00194C',
   },
   toggleButtonText: {
     color: '#00194C',
+    fontSize: 12,
   },
   activeToggleText: {
     color: '#fff',
   },
+  valueContainer: {
+    borderWidth: 1,
+    borderColor: '#00194C',
+    backgroundColor: '#EBEFFF',
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderRadius: 5,
+    alignSelf: 'flex-end',
+  },
+  valueText: {
+    color: '#00194C',
+    fontSize: 14,
+  },
   sliderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
   },
   slider: {
     flex: 1,
   },
+  sliderLabelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 5,
+  },
   sliderLabel: {
-    width: 'auto',
-    textAlign: 'center',
-    fontSize: 14,
+    fontSize: 12,
     color: '#00194c',
   },
 });

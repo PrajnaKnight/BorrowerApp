@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, ImageBackground, Modal, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../components/Header';
-import InputSlider from '../components/InputSlider';
+import InputSlider from '../components/EmiInputSlider';
 import LoanTenureSlider from '../components/LoanTenureSlider';
 import ProceedButton from '../components/ProceedButton';
 import Layout from '../components/Layout';
@@ -110,7 +110,14 @@ const EMICalculator = ({ navigation }) => {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.sectionTitle}>EMI Calculator</Text>
-          <TouchableOpacity onPress={toggleExpand} style={{borderTopLeftRadius:10, borderTopRightRadius:10, padding:3,backgroundColor:'#0d549a'}}> 
+          <TouchableOpacity
+            onPress={toggleExpand}
+            style={{
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              padding: 3,
+              backgroundColor: "#0d549a",
+            }}>
             <ImageBackground
               source={require("../../assets/images/emicalculatorbanner.png")}
               style={{
@@ -134,7 +141,9 @@ const EMICalculator = ({ navigation }) => {
                     <MaterialIcons
                       name="keyboard-arrow-down"
                       size={24}
-                      style={isExpanded ? styles.ExpandeddownArrow : styles.downArrow}
+                      style={
+                        isExpanded ? styles.ExpandeddownArrow : styles.downArrow
+                      }
                     />
                   </View>
                 </View>
@@ -189,12 +198,16 @@ const EMICalculator = ({ navigation }) => {
               </View>
             </View>
             <View
-              style={[{ flexDirection: "row", justifyContent: "space-between", alignItems:"center" }, styles.emiLinkwrapper]}>
-              <Text style={styles.link} >
-                Repayment Schedule
-              </Text>
-              <TouchableOpacity style={styles.viewButton}
-                onPress={openModal}>
+              style={[
+                {
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                },
+                styles.emiLinkwrapper,
+              ]}>
+              <Text style={styles.link}>Repayment Schedule</Text>
+              <TouchableOpacity style={styles.viewButton} onPress={openModal}>
                 <Text style={styles.viewBtnText}>View</Text>
               </TouchableOpacity>
             </View>
@@ -203,11 +216,25 @@ const EMICalculator = ({ navigation }) => {
             <InputSlider
               label="Loan Amount"
               value={formData.loanAmount}
-              min={10000}
-              max={10000000}
+              min={20000}
+              max={30000000}
               step={10000}
               onValueChange={(value) => handleSliderChange("loanAmount", value)}
               isCurrency={true}
+              sliderLabels={[
+                "20K",
+                "1L",
+                "5L",
+                "7L",
+                "10L",
+                "15L",
+                "20L",
+                "30L",
+              ]}
+              labelValues={[
+                20000, 100000, 500000, 700000, 1000000, 1500000, 2000000,
+                3000000,
+              ]}
             />
             <InputSlider
               label="Rate of Interest (ROI)"
@@ -219,7 +246,10 @@ const EMICalculator = ({ navigation }) => {
                 handleSliderChange("interestRate", value)
               }
               suffix="%"
+              sliderLabels={["0", "10", "15", "20", "25", "30", "40", "50"]}
+              labelValues={[0, 10, 15, 20, 25, 30, 40, 50]}
             />
+
             <LoanTenureSlider
               label="Loan Tenure"
               value={formData.loanTenure}
@@ -229,9 +259,10 @@ const EMICalculator = ({ navigation }) => {
               onValueChange={(value) => handleSliderChange("loanTenure", value)}
               toggle={tenureUnit}
               onToggle={handleTenureToggle}
+              sliderLabels={tenureUnit === 'Yr' ? ['1', '10', '15', '20', '30'] : ['1', '120', '240', '360']}
             />
           </View>
-          {/* <ProceedButton onPress={() => {}} text="CALCULATE" /> */}
+          <ProceedButton onPress={() => {}} text="CALCULATE" />
         </View>
       </ScrollView>
       <Modal

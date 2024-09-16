@@ -42,7 +42,7 @@ const NoLoans = ({ navigation }) => {
               <Text
                 style={[
                   styles.tabLabel,
-                  { color: focused ? '#fff' : '#BDBDBD', opacity: 0.5 },
+                  { color: focused ? '#fff' : '#BDBDBD'},
                 ]}
               >
                 {route.title}
@@ -50,7 +50,7 @@ const NoLoans = ({ navigation }) => {
             )}
             renderTab={({ route }) => (
               <TouchableOpacity style={styles.tabItem} activeOpacity={1}>
-                <Text style={[styles.tabLabel, { opacity: 0.5 }]}>
+                <Text style={[styles.tabLabel]}>
                   {route.title}
                 </Text>
               </TouchableOpacity>

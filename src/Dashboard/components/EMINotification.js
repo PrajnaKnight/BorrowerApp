@@ -149,7 +149,7 @@ const styles = applyFontFamily({
         marginBottom: 10,
     },
     description: {
-        fontSize: 16,
+        fontSize: 14,
         color: "white",
         textAlign: "center",
         marginBottom: 40,
@@ -218,8 +218,8 @@ const styles = applyFontFamily({
     actionButtonText: {
         color: "#00194c",
         fontSize: 12,
-        fontWeight: "500",
-        textTransform: 'capitalize'
+        fontWeight: "bold",
+        
     },
 });
 

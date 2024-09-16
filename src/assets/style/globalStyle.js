@@ -377,10 +377,10 @@ export const styles = applyFontFamily({
     marginBottom: 5,
     borderRadius: 10,
     borderWidth: 1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
     shadowRadius: 5,
-    elevation: 3,
+    elevation: 5,
   },
   featureBackground: {
     justifyContent: "center",
@@ -770,13 +770,11 @@ export const styles = applyFontFamily({
     marginVertical: 5,
     backgroundColor: "#ffffff",
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#00000029",
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3, // Shadow for Android
+    elevation: 5, // Shadow for Android
   },
   redirectItemText: {
     fontSize: 16,
@@ -867,7 +865,6 @@ export const styles = applyFontFamily({
     fontSize: 14,
     fontWeight: "bold",
     marginLeft: 2,
-    fontFamily: "Poppins_700Bold",
   },
   modalWrapper: {
     position: "relative",
@@ -1272,8 +1269,7 @@ export const styles = applyFontFamily({
   headerCell: {
     flex: 1,
     color: "#fff",
-    fontWeight: "bold",
-    fontFamily: "Poppins_700Bold",
+    fontWeight: "500",
     textAlign: "center",
     paddingVertical: 8,
   },
@@ -1292,23 +1288,18 @@ export const styles = applyFontFamily({
   },
   statusPaid: {
     color: "#2FC603",
-    fontWeight: "500",
   },
   statusOverdue: {
     color: "#DD0000",
-    fontWeight: "500",
   },
   statusDue: {
     color: "#FCAC00",
-    fontWeight: "500",
   },
   statusUpcoming: {
     color: "#1E90FF",
-    fontWeight: "500",
   },
   statusPending: {
     color: "#00194c",
-    fontWeight: "500",
   },
   //loan repayment screen style ends
   //Request Document screen style starts
@@ -1454,8 +1445,8 @@ export const styles = applyFontFamily({
     flexDirection: "row",
     backgroundColor: "#ffffff",
     padding: 15,
-    marginVertical: 5,
-    marginHorizontal: 5,
+    marginVertical: 8,
+    marginHorizontal: 16,
     borderRadius: 10,
     elevation: 2,
   },
@@ -1712,12 +1703,12 @@ export const styles = applyFontFamily({
     fontSize: 14,
     width: "20%",
     textAlign: "center",
-    fontWeight: "bold",
-    fontFamily: "Poppins_700Bold",
+    fontWeight: "500",
     paddingVertical: 10,
     borderRightWidth: 1,
     borderRightColor: "#00194c",
   },
+ 
   AmortizationSchedulecell: {
     fontSize: 14,
     color: "#00194c",
@@ -1811,16 +1802,23 @@ export const styles = applyFontFamily({
     textAlign: "center",
   },
   messageContainer: {
-    padding: 10,
+    // position:'absolute',
+    // top:43,
+    // zIndex:1000,
+    // left:0,
+    // right:0,
+    padding: 5,
     marginBottom: 10,
   },
   messageText: {
     color: "#fff",
     textAlign: "center",
+    fontSize:12
   },
   backgroundImage: {
     width: "100%",
     overflow: "hidden",
   },
+
   //LOan pre disbursal charges screen style ends
 });

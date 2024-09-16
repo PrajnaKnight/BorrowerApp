@@ -42,9 +42,9 @@ const AmortizationSchedule = ({ navigation }) => {
         <View style={styles.content }>
           <View style={styles.tableHeader}>
             <Text style={[styles.tableHeaderText]}>Year</Text>
-            <Text style={styles.tableHeaderText}>EMI {'\n'} (A+B)</Text>
-            <Text style={styles.tableHeaderText}>Principal  {'\n'} (A)</Text>
-            <Text style={styles.tableHeaderText}>Interest  {'\n'} (B)</Text>
+            <Text style={styles.tableHeaderText}>EMI{'\n'}(A+B)</Text>
+            <Text style={styles.tableHeaderText}>Principal{'\n'}(A)</Text>
+            <Text style={styles.tableHeaderText}>Interest{'\n'}(B)</Text>
             <Text style={[styles.tableHeaderText, styles.noborderRight]}>Balance</Text>
           </View>
           <FlatList

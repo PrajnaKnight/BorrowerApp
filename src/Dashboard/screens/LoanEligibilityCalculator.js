@@ -8,6 +8,7 @@ import RadioButtonGroup from '../components/RadioButtonGroup';
 import ProceedButton from '../components/ProceedButton';
 import Layout from '../components/Layout';
 import { styles as globalStyles } from '../../assets/style/globalStyle';
+import EmiInputSlider from '../components/EmiInputSlider';
 
 const LoanEligibilityCalculator = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Personal Loan');
@@ -177,7 +178,7 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               step={1}
               onValueChange={(value) => handleSliderChange("age", value)}
             />
-            <InputSlider
+            <EmiInputSlider
               label="Credit Score"
               value={formData.creditScore}
               min={300}
@@ -186,6 +187,10 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               onValueChange={(value) =>
                 handleSliderChange("creditScore", value)
               }
+              sliderLabels={['-1','300', '500', '700', '900']}
+              labelValues={[
+                -1, 300, 500, 700, 900
+              ]}
             />
             <LoanTenureSlider
               label="Loan Tenure"
@@ -196,6 +201,7 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               onValueChange={(value) => handleSliderChange("loanTenure", value)}
               toggle={tenureUnit}
               onToggle={setTenureUnit}
+              sliderLabels={tenureUnit === 'Yr' ? ['1', '240'] : ['6', '60']}
             />
             <InputSlider
               label={

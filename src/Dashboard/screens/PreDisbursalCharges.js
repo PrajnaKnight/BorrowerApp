@@ -100,8 +100,8 @@ const PreDisbursalChargesScreen = () => {
               <TouchableOpacity
                 style={[styles.row, index % 2 === 0 ? styles.evenRow : styles.oddRow]}
                 onPress={() => charge.expandable && toggleExpand(index)}>
-                <View style={[styles.cell, styles.chargeTypeCell]}>
-                  <Text style={styles.cellText}>{charge.type}</Text>
+                <View style={[styles.cell, styles.chargeTypeCell, styles.boldText]}>
+                  <Text style={[styles.cellText, styles.boldText]}>{charge.type}</Text>
                   {charge.expandable && (
                     <MaterialIcons
                       name={expandedItems[index] ? "keyboard-arrow-up" : "keyboard-arrow-down"}
@@ -110,12 +110,13 @@ const PreDisbursalChargesScreen = () => {
                     />
                   )}
                 </View>
-                <Text style={[styles.cell, styles.amountCell]}>{charge.amount}</Text>
-                <Text style={[styles.cell, styles.paymentTypeCell]}>{charge.paymentType}</Text>
+                <Text style={[styles.cell, styles.amountCell, styles.boldText]}>{charge.amount}</Text>
+                <Text style={[styles.cell, styles.paymentTypeCell, styles.boldText]}>{charge.paymentType}</Text>
                 <Text style={[
                   styles.cell,
                   styles.statusCell,
                   styles.noBorderRight,
+                  styles.boldText,
                   charge.status === "Paid" ? styles.paidStatus : styles.notApplicableStatus,
                 ]}>
                   {charge.status}
@@ -125,10 +126,10 @@ const PreDisbursalChargesScreen = () => {
                 <View style={styles.expandedContent}>
                   {charge.details.map((detail, detailIndex) => (
                     <View key={detailIndex} style={styles.detailRow}>
-                      <Text style={[styles.detailCell, styles.detailType]}>{detail.type}</Text>
-                      <Text style={[styles.detailCell, styles.detailAmount]}>{detail.amount}</Text>
-                      <Text style={[styles.detailCell, styles.detailPaymentType]}></Text>
-                      <Text style={[styles.detailCell, styles.detailStatus, styles.noBorderRight]}></Text>
+                      <Text style={[styles.detailCell, styles.detailType,  styles.boldText]}>{detail.type}</Text>
+                      <Text style={[styles.detailCell, styles.detailAmount,  styles.boldText]}>{detail.amount}</Text>
+                      <Text style={[styles.detailCell, styles.detailPaymentType,  styles.boldText]}></Text>
+                      <Text style={[styles.detailCell, styles.detailStatus, styles.noBorderRight,  styles.boldText]}></Text>
                     </View>
                   ))}
                 </View>
@@ -137,10 +138,10 @@ const PreDisbursalChargesScreen = () => {
           ))}
           </View>
           <View style={styles.note}>
-            <Text style={styles.noteText}>
+            <View style={styles.noteTextWrapper}>
               <Text style={styles.noteHighlight}>Note: </Text>
-              Above Pre-disbursal charges are included/excluded from the loan amount
-            </Text>
+              <Text style={styles.noteText}>Above Pre-disbursal charges are included/excluded from the loan amount</Text>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -236,6 +237,8 @@ const styles = applyFontFamily({
   },
   statusCell: {
     flex: 1,
+    textAlign:'center',
+    fontWeight:'500'
   },
   cellText: {
     color: '#00194c',
@@ -253,9 +256,15 @@ const styles = applyFontFamily({
   },
   expandedContent: {
     backgroundColor: '#f7f9ff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
   detailRow: {
     flexDirection: 'row',
+    borderBottomWidth: 0,
+    borderBottomColor: '#e0e0e0',
+  },
+  bottomBorder:{
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
@@ -281,15 +290,24 @@ const styles = applyFontFamily({
     flex: 1,
   },
   note: {
-    padding: 16,
+    paddingVertical: 16,
+  },
+  noteTextWrapper:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    flex:1,
   },
   noteText: {
-    color: '#00194c',
+    color: '#00194C',
     fontSize: 12,
   },
   noteHighlight: {
+    fontSize: 12,
     color: '#ff8500',
     fontWeight: '500',
+  },
+  boldText:{
+    fontWeight:"500",
   },
 });
 
