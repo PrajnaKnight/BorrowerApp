@@ -696,7 +696,6 @@ const EmploymentDetailScreen = ({ navigation }) => {
                     onChangeText={(e) => { console.log(e); onEmploymenCategoryChange(e); }}
                     placeholder="Search"
                     style={[styles.pickerContainer, { fontSize }]}
-                    zIndex={2000}
                     searchable={true}
                   />
                 </View>

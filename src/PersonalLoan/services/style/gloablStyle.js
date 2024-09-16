@@ -1,6 +1,5 @@
 import { StyleSheet, Platform, Dimensions } from "react-native";
 import applyFontFamily from "./applyFontFamily";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 // Get the device's width and height
 const window = Dimensions.get('window');

@@ -206,7 +206,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
   
 
   const handleVerifyPress = () => {
-    navigation.navigate("ChoiceScreen")
+    // navigation.navigate("ChoiceScreen")
 
     // let otpVerification = isValidOtp(OTP)
 
@@ -214,7 +214,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
     // if (otpVerification != null) {
     //   return
     // }
-    // submitOtp()
+    submitOtp()
   };
 
 
@@ -278,7 +278,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
         CommonActions.reset({
           index: 0, // The index of the active route
           routes: [
-            { name: 'Dashboard' }, // Name of the screen you want to navigate to
+            { name: 'PersonalLoan' }, // Name of the screen you want to navigate to
           ],
         })
       );
