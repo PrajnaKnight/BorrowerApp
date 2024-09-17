@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Linking, SafeAreaView, ImageBackground,Alert, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Linking, SafeAreaView, ImageBackground,Alert, Switch, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import applyFontFamily from '../../assets/style/applyFontFamily';
@@ -70,7 +70,7 @@ const SideMenu = ({navigation}) => {
 
   return (
     <Layout>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
       <ImageBackground
           source={require("../../assets/images/menuBg.png")}
           style={styles.background}
@@ -80,6 +80,8 @@ const SideMenu = ({navigation}) => {
             <Text style={styles.profilePhone}>+91 9938391919</Text>
           </View>
         </ImageBackground>
+
+        <ScrollView>
         <View style={styles.menuWrapper}>
           <MenuItem
             icon="account-outline"
@@ -139,7 +141,9 @@ const SideMenu = ({navigation}) => {
             style={styles.footerLogo}
           />
         </View>
-      </SafeAreaView>
+        </ScrollView>
+        
+      </View>
     </Layout>
   );
 };
@@ -170,6 +174,7 @@ const styles = applyFontFamily({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    flexDirection:"column"
   },
   linearGradient: {
     padding: 20,
@@ -192,7 +197,7 @@ const styles = applyFontFamily({
   },
   menuWrapper: {
     padding: 20,
-    flex: 1,
+    
   },
   menuItem: {
     flexDirection: 'row',
@@ -215,7 +220,6 @@ const styles = applyFontFamily({
   socialMediaContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
     marginBottom:20
   },
   socialMediaIcon: {

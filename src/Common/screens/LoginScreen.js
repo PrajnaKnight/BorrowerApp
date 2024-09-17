@@ -153,7 +153,9 @@ function LoginScreen({ navigation }) {
 
   const modalContentA = (
     <View style={{ flex: 1 }}>
-      <ScrollView >
+      <ScrollView showsVerticalScrollIndicator={false} // Hides vertical scrollbar
+        showsHorizontalScrollIndicator={false} // Hides horizontal scrollbar
+         >
         <Text
           style={[
             styles.Modaltitle,

@@ -356,6 +356,9 @@ const LoanAgreementScreen = ({ navigation }) => {
         originWhitelist={['*']}
         source={{ html: loanWebView?.HTMLContent || "" }}
         style={styles.webViewcontent}
+        scrollEnabled={true} 
+        nestedScrollEnabled={true}
+
       />
     </View>
   );

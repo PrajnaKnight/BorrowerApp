@@ -1587,7 +1587,7 @@ export const styles = applyFontFamily({
     fontSize: 16,
   },
   tableContainer: {
-    marginTop: 20,
+    marginTop: 3,
     backgroundColor: "#F9F9F9",
     borderRadius: 10,
   },
