@@ -540,7 +540,7 @@ const DocumentUploadScreen = ({ navigation }) => {
     if (filteredKeys.length === 0) return null;
 
     return (
-      <View style={[{ flexDirection: "column", marginVertical: 20 }]}>
+      <View style={[{ flexDirection: "column", marginVertical: 10 }]}>
         <Text style={styles.sectionTitle}>Select ID Type</Text>
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <ScrollView
@@ -697,13 +697,13 @@ const DocumentUploadScreen = ({ navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={styles.passwordToggleTextEnabled}>YES</Text>
               <View style={{ width: 10 }}></View>
-              <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "white" }}>
+              <View style={{ width: 10, height: 10, borderRadius: 10, backgroundColor: "white" }}>
 
               </View>
             </View>
             :
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "white" }} />
+              <View style={{ width: 10, height: 10, borderRadius: 10, backgroundColor: "white" }} />
               <View style={{ width: 10 }}></View>
               <Text style={styles.passwordToggleTextDisabled}>NO</Text>
 
@@ -867,7 +867,7 @@ const DocumentUploadScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingBottom:5 }}>
             <ProgressBar progress={0.5} />
             <Text
               style={[

@@ -506,12 +506,12 @@ function SignInScreen({ navigation }) {
   {
     isWeb && (isDesktop || (isTablet && width > height)) && (
       useEffect(() => {
-        const style = document.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = ` .r-4gszlv, .r-backgroundSize-4gszlv {
-        background-size: contain;
-        background-position: 10%;
-    }`;
+            const style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerHTML = ` .r-4gszlv, .r-backgroundSize-4gszlv {
+            background-size: contain;
+            background-position: 10%;
+        }`;
         document.head.appendChild(style);
 
         return () => {

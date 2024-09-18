@@ -192,7 +192,7 @@ const EMandateScreen = ({ navigation }) => {
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-            <View style={{ padding:16 }}>
+            <View style={{ padding:16, paddingBottom:10 }}>
               <ProgressBar progress={0.6} />
               <Text
                 style={[
@@ -200,13 +200,15 @@ const EMandateScreen = ({ navigation }) => {
                   {
                     fontSize: dynamicFontSize(styles.headerText.fontSize),
                     textTransform: "none",
+                    lineHeight:24,
+                    marginTop:10
                   },
 
                 ]}>
                 eMandate
               </Text>
               <Text
-                style={{ fontSize: 14, color: "#00194c", fontFamily: 'Poppins_400Regular' }}>
+                style={{ fontSize: 14, color: "#00194c", fontFamily: '400' }}>
                 Please sign the e-mandate
               </Text>
             </View>

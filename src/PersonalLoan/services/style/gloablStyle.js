@@ -78,15 +78,14 @@ export const styles = applyFontFamily({
   },
   welcomeText: {
     fontSize: 16,
-    marginBottom: 20,
     textAlign: "left",
     color: "#00194c",
   },
   sliderContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   slider: {
-    height: 40,
+    height: 20,
     borderRadius: 5,
     flexDirection: "row",
   },
@@ -135,9 +134,11 @@ export const styles = applyFontFamily({
   },
   GrayBOrder: {
     borderColor: "#E9EEFF",
+    borderRadius: 5,
   },
   BlueBorder: {
     borderColor: "#00194c",
+    borderRadius: 5,
   },
   button: {
     padding: 10,
@@ -456,8 +457,7 @@ export const styles = applyFontFamily({
   },
   skipbuttonpress: {
     backgroundColor: "#ffffff",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
     flex: 1,
   },
   backBtnText: {
@@ -495,7 +495,7 @@ export const styles = applyFontFamily({
     width: "100%",
     backgroundColor: "#D2E1FF",
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   progressBarFill: {
     height: "100%",
@@ -776,7 +776,6 @@ export const styles = applyFontFamily({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    marginTop: 10,
     marginBottom: 5,
     color: "#00194c",
   },
@@ -885,7 +884,7 @@ export const styles = applyFontFamily({
     borderColor: "#FFBB70",
     borderRadius: 5,
     paddingLeft: 10,
-    marginVertical: 10,
+    marginVertical: 5,
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "row",
@@ -940,13 +939,12 @@ export const styles = applyFontFamily({
     opacity: 0.5,
   },
   accountContainer: {
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   loanLabel: {
     color: "#00194c",
     fontSize: 14,
     fontWeight: "500",
-    marginTop: 10,
     marginBottom: 5,
   },
   resendButtonDisabled: {
@@ -1769,7 +1767,7 @@ export const styles = applyFontFamily({
     borderColor: "#A2ACC6",
     padding: 16,
     borderRadius: 10,
-    marginBottom:10
+    marginBottom:16
   },
   docFlex: {
     flexDirection: "row",
@@ -1825,11 +1823,20 @@ export const styles = applyFontFamily({
 
   tabsContainer: {
     flexDirection: "row",
-    marginBottom: 10,
+    marginBottom: 16,
   },
   tabScrollView: {
     flexGrow: 0,
     marginHorizontal: 16,
+    maxHeight:100
+  },
+  fixedHeaderAddressDetails: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    zIndex: 1,
   },
   tab: {
     paddingVertical: 10,
@@ -1919,7 +1926,6 @@ export const styles = applyFontFamily({
   },
   gradientRow: {
     borderRadius: 8,
-    marginBottom: 8,
     padding: 8,
   },
   // New document upload screen style starts
@@ -1960,13 +1966,13 @@ export const styles = applyFontFamily({
   },
   DocaddButtonText: {
     fontSize: 16,
-    color: "#002777",
+    color: "#00194C",
     fontWeight: "bold",
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#002777",
+    fontWeight: "500",
+    color: "#00194C",
     marginBottom: 4,
   },
   sectionTitleHindi: {
@@ -2107,8 +2113,8 @@ export const styles = applyFontFamily({
     justifyContent: "space-between",
   },
   toggleKnob: {
-    width: 20,
-    height: 20,
+    width: 10,
+    height: 10,
     borderRadius: 10,
     backgroundColor: "white",
     position: "absolute",
@@ -2119,17 +2125,19 @@ export const styles = applyFontFamily({
     shadowRadius: 1,
   },
   passwordToggleText: {
-    fontSize: 12,
-    fontWeight: "bold",
+    fontSize: 10,
+    fontWeight: "500",
     position: "absolute",
     right: 5,
   },
   passwordToggleTextEnabled: {
     color: "#fff",
     left: 5,
+    fontSize: 10,
   },
   passwordToggleTextDisabled: {
     color: "#666",
+    fontSize: 10,
   },
   passwordToggleKnobEnabled: {
     backgroundColor: "#758BFD",
@@ -2146,12 +2154,13 @@ export const styles = applyFontFamily({
   passwordInputContainer: {
     borderWidth: 1,
     borderColor: "#E0E0E0",
-    borderRadius: 8,
-    marginTop: 8,
+    borderRadius: 5,
   },
   passwordInput: {
-    padding: 12,
-    fontSize: 16,
+    padding: 10,
+    fontWeight:"400",
+    fontSize: 14,
+    color: "#00194C",
   },
   FileControllerContainer: {
     borderWidth: 1,
