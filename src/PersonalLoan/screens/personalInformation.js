@@ -355,7 +355,7 @@ const PersonalInformationScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingBottom: 0 }}>
             <ProgressBar progress={0.05} />
             <Text
               style={[

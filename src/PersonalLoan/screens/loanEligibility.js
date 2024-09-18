@@ -615,7 +615,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingBottom: 0 }}>
             <ProgressBar progress={0.3} />
             <Text
               style={[
@@ -757,10 +757,10 @@ const LoanEligibilityScreen = ({ navigation }) => {
                         {rateOfInterest || 0} %
                       </Text>
                       <View style={{ alignItems: "flex-end" }}>
-                        <Text style={{ color: "#00194c", fontSize: 10, lineHeight:12, fontWeight:'500', opacity:0.6 }}>
+                        <Text style={{ color: "#00194c", fontSize: 9, lineHeight:12, fontWeight:'500', opacity:0.6 }}>
                           Reducing
                         </Text>
-                        <Text style={{ color: "#00194c", fontSize: 10,lineHeight:12, fontWeight:'500', opacity:0.6 }}>
+                        <Text style={{ color: "#00194c", fontSize: 9,lineHeight:12, fontWeight:'500', opacity:0.6 }}>
                           Rate
                         </Text>
                       </View>
