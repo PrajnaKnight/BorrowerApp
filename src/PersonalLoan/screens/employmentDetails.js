@@ -614,8 +614,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
   );
 
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
 
       if (EmploymentType == "Self-Employed") {
 
@@ -633,7 +632,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
         }
       }
 
-    }, [EmploymentType, Salaried.Experience]))
+    }, [EmploymentType, Salaried.Experience])
 
 
     const renderContent = () => (

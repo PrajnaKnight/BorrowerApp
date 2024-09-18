@@ -190,6 +190,14 @@ function QuickLoanAsk({ navigation }) {
     setPurposeError(purposeValidity);
     if (purposeValidity) return;
 
+    if(!items.find(item => item.value === loanAskDetails.data.PurposeOfLoan)){
+      setPurposeError("please provide valid purpose of loan");
+
+      return
+    }
+    
+
+
     await submitLoanAsk();
   };
 
@@ -429,6 +437,7 @@ function QuickLoanAsk({ navigation }) {
             />
           )}
         </KeyboardAvoidingView>
+
       </View>
     </View>
   );

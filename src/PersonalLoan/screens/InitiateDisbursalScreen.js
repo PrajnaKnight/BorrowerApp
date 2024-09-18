@@ -309,7 +309,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    { fontSize: dynamicFontSize(styles.label.fontSize), marginTop:15 },
                   ]}>
                   eMandate URN <Text style={styles.mandatoryStar}>*</Text>
                 </Text>
@@ -325,7 +325,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    { fontSize: dynamicFontSize(styles.label.fontSize), marginTop:5 },
                   ]}>
                   Repayment Scheduled
                 </Text>
