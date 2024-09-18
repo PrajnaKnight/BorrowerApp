@@ -509,7 +509,7 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
           borderRadius: 5,
           marginTop: -10,
           backgroundColor: '#FFFFFF',
-          zIndex: 100,
+          zIndex: 10000,
         }}
         renderItem={({ item }) => (
           <CompanyItem

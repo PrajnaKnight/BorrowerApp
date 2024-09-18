@@ -52,6 +52,11 @@ export const styles = applyFontFamily({
     ...Platform.select({
       web: {
         zIndex: 100,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
       },
     }),
   },
@@ -101,18 +106,18 @@ export const styles = applyFontFamily({
     justifyContent: "space-between",
     alignItems: "center",
     zIndex: 5000,
-    paddingHorizontal: 16,
-    backgroundColor: "#ffffff",
+    zIndex: 5000,
+    paddingHorizontal: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
     elevation: 3,
     ...Platform.select({
       // Additional, web-specific styles
       web: {
-        paddingHorizontal: 20,
-        backgroundColor: "#00194c",
+        ppaddingHorizontal: 20,
+        backgroundColor: "#ffffff",
         width: "100%",
         margin: "auto",
         right: 0,
@@ -120,6 +125,11 @@ export const styles = applyFontFamily({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingVertical: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
       },
     }),
   },
@@ -174,7 +184,7 @@ export const styles = applyFontFamily({
     //   web: {
     //     position: 'fixed',
     //     bottom: '10px',
-    //     left: 0,
+    //     left: 0,fv
     //     right: 0,
     //     boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
     //     maxWidth: '1200px',
@@ -371,11 +381,10 @@ export const styles = applyFontFamily({
     color: "#00194C",
   },
   WebheaderText: {
-    fontSize: 30,
+    fontSize: 49,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
-    textAlign: "center",
   },
   subText: {
     fontSize: 16,
@@ -416,8 +425,7 @@ export const styles = applyFontFamily({
         marginRight: 5,
       },
     }),
-    fontWeight:'500', 
-
+    fontWeight: "500",
   },
   resendText: {
     marginVertical: 10,
@@ -432,12 +440,7 @@ export const styles = applyFontFamily({
     fontWeight: "bold",
     fontSize: 16,
   },
-  actionContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    alignItems: "center",
-  },
+  
   addAnotherBank: {
     flex: 1,
     justifyContent: "flex-end",
@@ -619,7 +622,7 @@ export const styles = applyFontFamily({
     marginBottom: 10,
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 15,
   },
   icon: {
     fontSize: 24,
@@ -739,7 +742,6 @@ export const styles = applyFontFamily({
     paddingHorizontal: 10,
     textAlign: "left",
     fontWeight: "600",
-
   },
   downloadButtonLink: {
     borderRadius: 5,
@@ -989,7 +991,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -997,7 +999,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -1161,7 +1163,7 @@ export const styles = applyFontFamily({
   optional: {
     fontSize: 12,
     color: "#ff8500",
-    fontWeight: "400"
+    fontWeight: "400",
   },
   tablecontainer: {
     borderWidth: 1,
@@ -1206,9 +1208,9 @@ export const styles = applyFontFamily({
     lineHeight: 20,
     ...Platform.select({
       web: {
-        padding: 9,
-        color: "#ffffff",
-        borderColor: "#ffffff",
+        padding: 6.2,
+        color: "#00194c",
+        borderColor: "#00194c",
       },
     }),
   },
@@ -1292,6 +1294,22 @@ export const styles = applyFontFamily({
       web: {
         // backgroundColor:'#c9d9fa',
         backgroundColor: "#000565",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+    }),
+  },
+  centerAlignedContainer: {
+    ...Platform.select({
+      web: {
+        width: "70%",
+        backgroundColor: "#ffffff",
+        marginLeft: "auto",
+        marginRight: "auto",
+        position:'relative'
       },
     }),
   },
@@ -1299,6 +1317,14 @@ export const styles = applyFontFamily({
     ...Platform.select({
       web: {
         backgroundColor: "#ffffff",
+        width: "50%",
+        marginLeft: "auto",
+        marginRight: "auto",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
       },
     }),
   },
@@ -1322,11 +1348,10 @@ export const styles = applyFontFamily({
     }),
   },
   webheader: {
-    alignItems: "center",
     marginBottom: 20,
   },
   websubtitleText: {
-    fontSize: 16,
+    fontSize: 22,
     color: "#fff",
   },
   webinterestButton: {
@@ -1383,7 +1408,8 @@ export const styles = applyFontFamily({
   },
   mincontainer: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 80,
+    paddingVertical: 20,
     justifyContent: "center",
   },
   featureIcon: {
@@ -1391,7 +1417,8 @@ export const styles = applyFontFamily({
   },
   bottomFixed: {
     position: "absolute",
-    bottom: 10,
+    bottom: 80,
+    right: 80,
   },
 
   mainContainer: {
@@ -1754,20 +1781,42 @@ export const styles = applyFontFamily({
     fontWeight: "bold",
     color: "#00194c",
   },
+
   boxShadow: {
     backgroundColor: "#FFF",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    elevation: 5,
     padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
+     
+    }),
+  },
+  actionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center",
+    ...Platform.select({
+      web: {
+        width: "100%",
+        marginLeft: "auto",
+        marginRight: "auto",
+      },
+    }),
   },
   docCaptureWrapper: {
     borderWidth: 1,
     borderColor: "#A2ACC6",
     padding: 16,
     borderRadius: 10,
-    marginBottom:10
+    marginBottom: 10,
   },
   docFlex: {
     flexDirection: "row",
@@ -1924,8 +1973,7 @@ export const styles = applyFontFamily({
   DoctabContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems:'center'
-
+    alignItems: "center",
   },
   Doctab: {
     paddingHorizontal: 12,
@@ -1933,8 +1981,7 @@ export const styles = applyFontFamily({
     backgroundColor: "#D0E4FE",
     borderRadius: 5,
     marginRight: 5,
-    paddingVertical:10
-
+    paddingVertical: 10,
   },
   DocselectedTab: {
     borderBottomWidth: 2,
@@ -1954,7 +2001,7 @@ export const styles = applyFontFamily({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 5,
-    paddingVertical:9
+    paddingVertical: 9,
   },
   DocaddButtonText: {
     fontSize: 16,
@@ -2208,9 +2255,9 @@ export const styles = applyFontFamily({
     flex: 1,
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor:'#ffffff',
-    borderTopRightRadius:10,
-    borderBottomRightRadius:10,
+    backgroundColor: "#ffffff",
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   disbursedetailLabel: {
     fontSize: 14,
@@ -2222,7 +2269,7 @@ export const styles = applyFontFamily({
     paddingHorizontal: 10,
     width: "50%",
   },
- 
+
   disbursestatusText: {
     fontSize: 16,
     fontWeight: "600",
@@ -2282,14 +2329,14 @@ export const styles = applyFontFamily({
     color: "#8A99B8",
     fontSize: 14,
   },
-  disbursebannerContainer:{
-  marginTop:40
+  disbursebannerContainer: {
+    marginTop: 40,
   },
 
   dotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   dot: {
@@ -2299,25 +2346,25 @@ export const styles = applyFontFamily({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: '#ff8500',
+    backgroundColor: "#ff8500",
   },
   inactiveDot: {
-    backgroundColor: '#A2ACC6',
+    backgroundColor: "#A2ACC6",
   },
 
-  mobilelabel:{
-    color:'#00194C',  
-    fontWeight:'500',
-    fontSize:24,
+  mobilelabel: {
+    color: "#00194C",
+    fontWeight: "500",
+    fontSize: 24,
   },
-  checkbox:{
-    marginTop:6,
-    marginRight:10
+  checkbox: {
+    marginTop: 6,
+    marginRight: 10,
   },
   previewHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
   },
   docImagePreview: {
     width: 150,
@@ -2328,21 +2375,77 @@ export const styles = applyFontFamily({
     padding: 5,
   },
   previewPlaceholder: {
-    width: '100%',
+    width: "100%",
     height: 130,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderStyle: 'dashed',
+    borderColor: "#ddd",
+    borderStyle: "dashed",
   },
   previewPlaceholderText: {
-    color: '#888',
+    color: "#888",
     marginBottom: 10,
-  }
+  },
   //New document upload screen ends
+  //web chnages starts
+  step: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  stepiconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 16,
+  },
+  stepiconContainerDone: {
+    backgroundColor: "#213ACE",
+  },
+  stepiconContainerCurrent: {
+    backgroundColor: "#FF8500",
+  },
+  stepiconContainerDisabled: {
+    backgroundColor: "#213ACE",
+    opacity: 0.5,
+  },
+  steptextContainer: {
+    flex: 1,
+  },
+  steptitle: {
+    color: "#FFFFFF",
+    fontSize: 22,
+  },
+  stepsubtitle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+  },
+  steptextDisabled: {
+    color: "#9CA3AF",
+  },
+  connectorContainer: {
+    position: "absolute",
+    left: 20,
+    top: 40,
+    bottom: -24,
+    width: 2,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    zIndex: -1,
+  },
+  dashItem: {
+    width: 1.5,
+    height: 1,
+    backgroundColor: "#9CA3AF",
+  },
+  dashItemDone: {
+    backgroundColor: "#ffffff",
+  },
 });
 
 

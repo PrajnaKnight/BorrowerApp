@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
+import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions, Image } from 'react-native';
 import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import { styles } from '../services/style/gloablStyle';
 import CustomInput from '../components/input';
@@ -25,6 +25,7 @@ import ScreenError, { useErrorEffect } from './ScreenError';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 const PersonalInformationScreen = ({ navigation }) => {
 
@@ -275,7 +276,14 @@ const PersonalInformationScreen = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
 
   return (
     <View style={styles.mainContainer}>
@@ -284,68 +292,65 @@ const PersonalInformationScreen = ({ navigation }) => {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                // button Linear Gradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -355,7 +360,7 @@ const PersonalInformationScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={[styles.centerAlignedContainer, { padding: 16 }]}>
             <ProgressBar progress={0.05} />
             <Text
               style={[
@@ -367,57 +372,10 @@ const PersonalInformationScreen = ({ navigation }) => {
           </View>
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-                {otherError && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
-                    ]}>
-                    {otherError}
-                  </Text>
-                )}
-
-                <View style={styles.formGroup}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Name <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <CustomInput
-                    placeholder="Enter your name"
-                    value={personalDetails.data.LeadName}
-                    error={personalDetails.data.LeadNameError}
-                    onChangeText={(e) => {
-                      handleUserNameChange(e);
-                    }}
-                  />
-                </View>
-
-                <View style={{ zIndex: 4000 }}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Date Of Birth <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <DatePickerComponent
-                    onDateChange={(newDate) => handleDateChange(newDate)}
-                    maximumDate={
-                      new Date(
-                        new Date().getFullYear() - 18,
-                        new Date().getMonth(),
-                        new Date().getDate()
-                      )
-                    }
-                    minimumDate={new Date(null)}
-                    initialDate={personalDetails.data.LeadDOB}
-                  />
-                  {personalDetails.data.LeadDOBError && (
+            <View style={styles.centerAlignedContainer}>
+              <View style={styles.container}>
+                <View>
+                  {otherError && (
                     <Text
                       style={[
                         styles.errorText,
@@ -425,144 +383,201 @@ const PersonalInformationScreen = ({ navigation }) => {
                           fontSize: dynamicFontSize(styles.errorText.fontSize),
                         },
                       ]}>
-                      {personalDetails.data.LeadDOBError}
+                      {otherError}
                     </Text>
                   )}
-                </View>
-                <View style={styles.formGroup}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Gender <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <View style={styles.InlineGender}>
-                    {genders.map((gender) => (
-                      <RadioButton
-                        key={gender}
-                        label={gender}
-                        isSelected={personalDetails.data.LeadGender === gender}
-                        onPress={() => handleGenderChange(gender)}
-                      />
-                    ))}
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Name <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Enter your name"
+                      value={personalDetails.data.LeadName}
+                      error={personalDetails.data.LeadNameError}
+                      onChangeText={(e) => {
+                        handleUserNameChange(e);
+                      }}
+                    />
                   </View>
 
-                  {personalDetails.data.LeadGenderError && (
+                  <View style={{ zIndex: 4000 }}>
                     <Text
                       style={[
-                        styles.errorText,
-                        {
-                          fontSize: dynamicFontSize(styles.errorText.fontSize),
-                        },
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
                       ]}>
-                      {personalDetails.data.LeadGenderError}
+                      Date Of Birth <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
-                  )}
-                </View>
-                <View style={styles.formGroup}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Email ID <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <CustomInput
-                    placeholder="Enter your email ID"
-                    onChangeText={handleEmailChange}
-                    error={personalDetails.data.LeadEmailError}
-                    value={personalDetails.data.LeadEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                  />
-                </View>
-                <View style={styles.formGroup}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Father's Name <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <CustomInput
-                    value={personalDetails.data.FatherName}
-                    placeholder="Enter your father's name"
-                    error={personalDetails.data.FatherNameError}
-                    onChangeText={(e) => {
-                      handleFatherNameChange(e);
-                    }}
-                  />
-                </View>
-                <View style={styles.formGroup}>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                    ]}>
-                    Marital Status <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <CustomDropdown
-                    value={personalDetails.data.LeadMaritalStatus}
-                    items={items}
-                    setValue={(e) => {
-                      handleMaritalStatusChange(e.label);
-                    }}
-                    setItems={setItems}
-                    placeholder="Select"
-                    style={styles.dropdownBorder}
-                  />
-                  {personalDetails.data.LeadMaritalStatusError && (
+                    <DatePickerComponent
+                      onDateChange={(newDate) => handleDateChange(newDate)}
+                      maximumDate={
+                        new Date(
+                          new Date().getFullYear() - 18,
+                          new Date().getMonth(),
+                          new Date().getDate()
+                        )
+                      }
+                      minimumDate={new Date(null)}
+                      initialDate={personalDetails.data.LeadDOB}
+                    />
+                    {personalDetails.data.LeadDOBError && (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.errorText.fontSize
+                            ),
+                          },
+                        ]}>
+                        {personalDetails.data.LeadDOBError}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={styles.formGroup}>
                     <Text
                       style={[
-                        styles.errorText,
-                        {
-                          fontSize: dynamicFontSize(styles.errorText.fontSize),
-                        },
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
                       ]}>
-                      {personalDetails.data.LeadMaritalStatusError}
+                      Gender <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
-                  )}
-                  <View style={{ height: 20 }}></View>
+                    <View style={styles.InlineGender}>
+                      {genders.map((gender) => (
+                        <RadioButton
+                          key={gender}
+                          label={gender}
+                          isSelected={
+                            personalDetails.data.LeadGender === gender
+                          }
+                          onPress={() => handleGenderChange(gender)}
+                        />
+                      ))}
+                    </View>
+
+                    {personalDetails.data.LeadGenderError && (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.errorText.fontSize
+                            ),
+                          },
+                        ]}>
+                        {personalDetails.data.LeadGenderError}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Email ID <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Enter your email ID"
+                      onChangeText={handleEmailChange}
+                      error={personalDetails.data.LeadEmailError}
+                      value={personalDetails.data.LeadEmail}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                    />
+                  </View>
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Father's Name <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      value={personalDetails.data.FatherName}
+                      placeholder="Enter your father's name"
+                      error={personalDetails.data.FatherNameError}
+                      onChangeText={(e) => {
+                        handleFatherNameChange(e);
+                      }}
+                    />
+                  </View>
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Marital Status <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomDropdown
+                      value={personalDetails.data.LeadMaritalStatus}
+                      items={items}
+                      setValue={(e) => {
+                        handleMaritalStatusChange(e.label);
+                      }}
+                      setItems={setItems}
+                      placeholder="Select"
+                      style={styles.dropdownBorder}
+                    />
+                    {personalDetails.data.LeadMaritalStatusError && (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.errorText.fontSize
+                            ),
+                          },
+                        ]}>
+                        {personalDetails.data.LeadMaritalStatusError}
+                      </Text>
+                    )}
+                    <View style={{ height: 20 }}></View>
+                  </View>
                 </View>
               </View>
             </View>
           </ScrollView>
-          <View style={[styles.actionContainer, styles.boxShadow]}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => {
-                GoBack(navigation);
-              }}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  {
-                    fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                  },
-                ]}>
-                BACK
-              </Text>
-            </TouchableOpacity>
-            <LinearGradient
-              colors={["#002777", "#00194C"]}
-              style={[styles.verifyButton]}
-            >
-              <TouchableOpacity 
-                onPress={() => handleOnProceed()}
-              >
+          <View style={styles.centerAlignedContainer}>
+            <View style={[styles.actionContainer, styles.boxShadow]}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => {
+                  GoBack(navigation);
+                }}>
                 <Text
                   style={[
-                    styles.buttonText,
+                    styles.backBtnText,
                     {
-                      fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                      fontSize: dynamicFontSize(styles.backBtnText.fontSize),
                     },
-                  ]}
-                >
-                  PROCEED
+                  ]}>
+                  BACK
                 </Text>
               </TouchableOpacity>
-            </LinearGradient>
+              <LinearGradient
+                colors={["#002777", "#00194C"]}
+                style={[styles.verifyButton]}>
+                <TouchableOpacity onPress={() => handleOnProceed()}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      {
+                        fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                      },
+                    ]}>
+                    PROCEED
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </View>
 
           {errorScreen.type != null && (

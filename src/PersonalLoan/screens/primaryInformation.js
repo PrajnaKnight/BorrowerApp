@@ -60,6 +60,7 @@ import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { StoreUserAadhaar, StoreUserPan } from '../services/LOCAL/AsyncStroage';
 import { DeleteUploadFiles } from '../services/API/DocumentUpload';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 
 const PrimaryInfo = ({ navigation }) => {
@@ -613,7 +614,15 @@ const PrimaryInfo = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
+  
 
   return (
     <View style={styles.mainContainer}>
@@ -622,65 +631,65 @@ const PrimaryInfo = ({ navigation }) => {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -690,7 +699,7 @@ const PrimaryInfo = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={[styles.centerAlignedContainer, { padding: 16 }]}>
             <ProgressBar progress={0.02} />
             <Text
               style={[
@@ -700,187 +709,212 @@ const PrimaryInfo = ({ navigation }) => {
               Primary Information
             </Text>
           </View>
+
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-                {otherError && (
+            <View style={styles.centerAlignedContainer}>
+              <View style={styles.container}>
+                <View>
+                  {otherError && (
+                    <Text
+                      style={[
+                        styles.errorText,
+                        {
+                          fontSize: dynamicFontSize(styles.errorText.fontSize),
+                        },
+                      ]}>
+                      {otherError}
+                    </Text>
+                  )}
+                  {/* PAN Upload Section */}
                   <Text
                     style={[
-                      styles.errorText,
-                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                      styles.label,
+                      { fontSize: dynamicFontSize(styles.label.fontSize) },
                     ]}>
-                    {otherError}
+                    PAN <Text style={styles.mandatoryStar}>*</Text>
                   </Text>
-                )}
-                {/* PAN Upload Section */}
-                <Text
-                  style={[
-                    styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                  ]}>
-                  PAN <Text style={styles.mandatoryStar}>*</Text>
-                </Text>
-                <View style={styles.docCaptureWrapper}>
-                  <View style={styles.docFlex}>
-                    <View style={styles.previewWrapper}>
-
-
-                      {renderDocumentPreviews(
-                        uploadDocumentSlices.data.PAN_FILES[0],
-                        "Preview PAN"
-                      )}
+                  <View style={styles.docCaptureWrapper}>
+                    <View style={styles.docFlex}>
+                      <View style={styles.previewWrapper}>
+                        {renderDocumentPreviews(
+                          uploadDocumentSlices.data.PAN_FILES[0],
+                          "Preview PAN"
+                        )}
+                      </View>
+                      <View style={styles.docButtonWrapper}>
+                        <TouchableOpacity
+                          style={styles.docButton}
+                          onPress={() =>
+                            handleDocumentAction("pan", "upload", PAN_CODE)
+                          }>
+                          <Feather name="upload" size={24} color="#ffffff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.docButton}
+                          onPress={() =>
+                            handleDocumentAction("pan", "camera", PAN_CODE)
+                          }>
+                          <Entypo name="camera" size={24} color="#ffffff" />
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                    <View style={styles.docButtonWrapper}>
-                      <TouchableOpacity
-                        style={styles.docButton}
-                        onPress={() => handleDocumentAction("pan", "upload", PAN_CODE)}>
-                        <Feather name="upload" size={24} color="#ffffff" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.docButton}
-                        onPress={() => handleDocumentAction("pan", "camera", PAN_CODE)}>
-                        <Entypo name="camera" size={24} color="#ffffff" />
-                      </TouchableOpacity>
-                    </View>
+                    <CustomInput
+                      onChangeText={handlePanChange}
+                      value={maskPanNumber(uploadDocumentSlices.data.PAN)}
+                      placeholder="Enter PAN"
+                      keyboardType="default"
+                      autoCapitalize="characters"
+                      maxLength={10}
+                    />
                   </View>
-                  <CustomInput
-                    onChangeText={handlePanChange}
-                    value={maskPanNumber(uploadDocumentSlices.data.PAN)}
-                    placeholder="Enter PAN"
-                    keyboardType="default"
-                    autoCapitalize="characters"
-                    maxLength={10}
-                  />
+                  {panMessage && documentationKycStatus.panStatus && (
+                    <Text
+                      style={[
+                        styles.errorText,
+                        {
+                          fontSize: dynamicFontSize(styles.errorText.fontSize),
+                          color:
+                            documentationKycStatus.panStatus === STATUS.SUCCESS
+                              ? "green"
+                              : "red",
+                        },
+                      ]}>
+                      {panMessage}
+                    </Text>
+                  )}
+                  {/* Aadhaar Upload Section */}
+                  <Text
+                    style={[
+                      styles.label,
+                      { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    ]}>
+                    Aadhaar <Text style={styles.optional}>(optional)</Text>
+                  </Text>
+                  <View style={styles.docCaptureWrapper}>
+                    <View style={styles.docFlex}>
+                      <View style={styles.previewWrapper}>
+                        {renderDocumentPreviews(
+                          uploadDocumentSlices.data.AADHAAR_FILES.Front,
+                          "Preview Aadhaar Front"
+                        )}
+                      </View>
+                      <View style={styles.docButtonWrapper}>
+                        <TouchableOpacity
+                          style={styles.docButton}
+                          onPress={() =>
+                            handleDocumentAction(
+                              "aadhaar",
+                              "upload",
+                              AADHAAR_FRONT_CODE
+                            )
+                          }>
+                          <Feather name="upload" size={24} color="#ffffff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.docButton]}
+                          onPress={() =>
+                            handleDocumentAction(
+                              "aadhaar",
+                              "camera",
+                              AADHAAR_FRONT_CODE
+                            )
+                          }>
+                          <Entypo name="camera" size={24} color="#ffffff" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={styles.docFlex}>
+                      <View style={styles.previewWrapper}>
+                        {renderDocumentPreviews(
+                          uploadDocumentSlices.data.AADHAAR_FILES.Back,
+                          "Preview Aadhaar Back"
+                        )}
+                      </View>
+                      <View style={styles.docButtonWrapper}>
+                        <TouchableOpacity
+                          style={styles.docButton}
+                          onPress={() =>
+                            handleDocumentAction(
+                              "aadhaar",
+                              "upload",
+                              AADHAAR_BACK_CODE
+                            )
+                          }>
+                          <Feather name="upload" size={24} color="#ffffff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.docButton]}
+                          onPress={() =>
+                            handleDocumentAction(
+                              "aadhaar",
+                              "camera",
+                              AADHAAR_BACK_CODE
+                            )
+                          }>
+                          <Entypo name="camera" size={24} color="#ffffff" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <AadharMaskedCustomInput
+                      value={maskAadharNumber(
+                        uploadDocumentSlices.data.AADHAAR
+                      )}
+                      placeholder="Enter Aadhaar"
+                      keyboardType="numeric"
+                      maxLength={12}
+                      onChangeText={(masked, unmasked) => {
+                        handleAadhaarChange(masked);
+                      }}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={[{ alignItems: "flex-end" }, styles.skipbuttonpress]}
+                    onPress={() => skipbuttonpress()}>
+                    <Text
+                      style={[
+                        styles.backBtnText,
+                        {
+                          fontSize: dynamicFontSize(
+                            styles.backBtnText.fontSize
+                          ),
+                          color: "orange",
+                        },
+                      ]}>
+                      Skip Aadhaar OTP
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-                {panMessage && documentationKycStatus.panStatus && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      {
-                        fontSize: dynamicFontSize(styles.errorText.fontSize),
-                        color:
-                          documentationKycStatus.panStatus === STATUS.SUCCESS
-                            ? "green"
-                            : "red",
-                      },
-                    ]}>
-                    {panMessage}
-                  </Text>
-                )}
-                {/* Aadhaar Upload Section */}
-                <Text
-                  style={[
-                    styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                  ]}>
-                  Aadhaar <Text style={styles.optional}>(optional)</Text>
-                </Text>
-                <View style={styles.docCaptureWrapper}>
-                  <View style={styles.docFlex}>
-                    <View style={styles.previewWrapper}>
-                      {renderDocumentPreviews(
-                        uploadDocumentSlices.data.AADHAAR_FILES.Front,
-                        "Preview Aadhaar Front"
-                      )}
-                    </View>
-                    <View style={styles.docButtonWrapper}>
-                      <TouchableOpacity
-                        style={styles.docButton}
-                        onPress={() =>
-                          handleDocumentAction("aadhaar", "upload", AADHAAR_FRONT_CODE)
-                        }>
-                        <Feather name="upload" size={24} color="#ffffff" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={[styles.docButton]}
-                        onPress={() =>
-                          handleDocumentAction("aadhaar", "camera", AADHAAR_FRONT_CODE)
-                        }>
-                        <Entypo name="camera" size={24} color="#ffffff" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View style={styles.docFlex}>
-                    <View style={styles.previewWrapper}>
-                      {renderDocumentPreviews(
-                        uploadDocumentSlices.data.AADHAAR_FILES.Back,
-                         "Preview Aadhaar Back"
-                      )}
-                    </View>
-                    <View style={styles.docButtonWrapper}>
-                      <TouchableOpacity
-                        style={styles.docButton}
-                        onPress={() =>
-                          handleDocumentAction("aadhaar", "upload", AADHAAR_BACK_CODE)
-                        }>
-                        <Feather name="upload" size={24} color="#ffffff" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={[styles.docButton]}
-                        onPress={() =>
-                          handleDocumentAction("aadhaar", "camera", AADHAAR_BACK_CODE)
-                        }>
-                        <Entypo name="camera" size={24} color="#ffffff" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <AadharMaskedCustomInput
-                    value={maskAadharNumber(uploadDocumentSlices.data.AADHAAR)}
-                    placeholder="Enter Aadhaar"
-                    keyboardType="numeric"
-                    maxLength={12}
-                    onChangeText={(masked, unmasked) => {
-                      handleAadhaarChange(masked);
-                    }}
-                  />
-                </View>
-                <TouchableOpacity
-                  style={[{ alignItems: "flex-end" }, styles.skipbuttonpress]}
-                  onPress={() => skipbuttonpress()}>
-                  <Text
-                    style={[
-                      styles.backBtnText,
-                      {
-                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                        color: "orange",
-                      },
-                    ]}>
-                    Skip Aadhaar OTP
-                  </Text>
-                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
-          <View style={[styles.actionContainer, styles.boxShadow]}>
-            <View style={{ height: 10 }} />
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => GoBack(navigation)}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
-                ]}>
-                Back
-              </Text>
-            </TouchableOpacity>
-            <LinearGradient
-              colors={
-
-                ["#002777", "#00194C"]
-              }
-              style={styles.verifyButton}>
+          <View style={styles.centerAlignedContainer}>
+            <View style={[styles.actionContainer, styles.boxShadow]}>
+              <View style={{ height: 10 }} />
               <TouchableOpacity
-                onPress={() => handleProceed()}>
+                style={styles.backButton}
+                onPress={() => GoBack(navigation)}>
                 <Text
                   style={[
-                    styles.buttonText,
-                    { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    styles.backBtnText,
+                    { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
                   ]}>
-                  Proceed
+                  Back
                 </Text>
               </TouchableOpacity>
-            </LinearGradient>
+              <LinearGradient
+                colors={["#002777", "#00194C"]}
+                style={styles.verifyButton}>
+                <TouchableOpacity onPress={() => handleProceed()}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    ]}>
+                    Proceed
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </View>
           {errorScreen.type !== null && (
             <ScreenError
@@ -889,8 +923,12 @@ const PrimaryInfo = ({ navigation }) => {
               setNewErrorScreen={setNewErrorScreen}
             />
           )}
-          <DownloadPopup path={downloadPath} onClose={() => { setDownloadPath(null) }} />
-
+          <DownloadPopup
+            path={downloadPath}
+            onClose={() => {
+              setDownloadPath(null);
+            }}
+          />
         </KeyboardAvoidingView>
       </View>
     </View>

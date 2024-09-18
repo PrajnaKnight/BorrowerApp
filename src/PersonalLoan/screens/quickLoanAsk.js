@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   useWindowDimensions,
+  Image
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { styles } from "../services/style/gloablStyle";
@@ -46,6 +47,7 @@ import ProgressBar from "../components/progressBar";
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from "../components/StageComponent";
 import { CustomDropDownWithSearch } from "../components/input";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 function QuickLoanAsk({ navigation }) {
 
@@ -252,7 +254,15 @@ function QuickLoanAsk({ navigation }) {
     : isMobile
     ? styles.mobileContainer
     : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: "50%" } : { width: "100%" };
+  const imageContainerStyle = isDesktop ? { width: "60%" } : { width: "100%" };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
+  
 
   return (
     <View style={styles.mainContainer}>
@@ -261,65 +271,65 @@ function QuickLoanAsk({ navigation }) {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -329,117 +339,117 @@ function QuickLoanAsk({ navigation }) {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{padding:16}}>
-                  <ProgressBar progress={0.01} />
-                  <Text
-                    style={[
-                      styles.welcomeText,
-                      {
-                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),marginBottom:0
-                      },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.boldText,
-                        { fontSize: dynamicFontSize(styles.boldText.fontSize) },
-                      ]}>
-                      Welcome
-                    </Text>
-                  </Text>
-                  <Text
-                    style={[
-                      styles.welcomeText,
-                      {
-                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),
-                      },
-                    ]}>
-                    please select the loan amount you require
-                  </Text>
-                  {otherError && (
-                    <Text style={styles.errorText}>{otherError}</Text>
-                  )}
-                </View>
+          <View style={[styles.centerAlignedContainer, { padding: 16 }]}>
+            <ProgressBar progress={0.01} />
+            <Text
+              style={[
+                styles.welcomeText,
+                {
+                  fontSize: dynamicFontSize(styles.welcomeText.fontSize),
+                  marginBottom: 0,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.boldText,
+                  { fontSize: dynamicFontSize(styles.boldText.fontSize) },
+                ]}>
+                Welcome
+              </Text>
+            </Text>
+            <Text
+              style={[
+                styles.welcomeText,
+                {
+                  fontSize: dynamicFontSize(styles.welcomeText.fontSize),
+                },
+              ]}>
+              please select the loan amount you require
+            </Text>
+            {otherError && <Text style={styles.errorText}>{otherError}</Text>}
+          </View>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-              
-                <CustomSlider
-                  title="Loan Amount"
-                  icon="rupee"
-                  keyboardType="numeric"
-                  min={minLoanAmount}
-                  max={maxLoanAmount}
-                  steps={10000}
-                  currentValue = {loanAskDetails.data.LoanAmount}
-                  error={loanAmountError}
-                  onChange={(e) => handleLoanAmountSliderChange(e)}
-                  isAmount={true}
-                />
-                <CustomSlider
-                  title="Tenure"
-                  icon="calendar"
-                  keyboardType="numeric"
-                  min={minTenure}
-                  max={maxTenure}
-                  steps={3}
-                  currentValue={loanAskDetails.data.AskTenure}
-                  error={tenureError}
-                  onChange={(e) => handleSliderTenureChange(e)}
-                  isTenure={true}
-                />
-                <View style={styles.loanLabel}>
-                  <Text
-                    style={[
-                      styles.loanLabel,
-                      { fontSize: dynamicFontSize(styles.loanLabel.fontSize) },
-                    ]}>
-                    Purpose of Loan{" "}
+            <View style={styles.centerAlignedContainer}>
+              <View style={styles.container}>
+                <View>
+                  <CustomSlider
+                    title="Loan Amount"
+                    icon="rupee"
+                    keyboardType="numeric"
+                    min={minLoanAmount}
+                    max={maxLoanAmount}
+                    steps={10000}
+                    currentValue={loanAskDetails.data.LoanAmount}
+                    error={loanAmountError}
+                    onChange={(e) => handleLoanAmountSliderChange(e)}
+                    isAmount={true}
+                  />
+                  <CustomSlider
+                    title="Tenure"
+                    icon="calendar"
+                    keyboardType="numeric"
+                    min={minTenure}
+                    max={maxTenure}
+                    steps={3}
+                    currentValue={loanAskDetails.data.AskTenure}
+                    error={tenureError}
+                    onChange={(e) => handleSliderTenureChange(e)}
+                    isTenure={true}
+                  />
+                  <View style={styles.loanLabel}>
                     <Text
                       style={[
-                        styles.mandatoryStar,
+                        styles.loanLabel,
                         {
-                          fontSize: dynamicFontSize(
-                            styles.mandatoryStar.fontSize
-                          ),
+                          fontSize: dynamicFontSize(styles.loanLabel.fontSize),
                         },
                       ]}>
-                      *
+                      Purpose of Loan{" "}
+                      <Text
+                        style={[
+                          styles.mandatoryStar,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.mandatoryStar.fontSize
+                            ),
+                          },
+                        ]}>
+                        *
+                      </Text>
                     </Text>
-                  </Text>
-                </View>
+                  </View>
 
-                <CustomDropDownWithSearch
+                  <CustomDropDownWithSearch
                     value={loanAskDetails.data.PurposeOfLoan}
                     listOfData={items}
-                    onChangeText={(e) => {setPurposeOfLoad(e)}}
+                    onChangeText={(e) => {
+                      setPurposeOfLoad(e);
+                    }}
                     placeholder="Search"
                     style={[styles.pickerContainer, { fontSize }]}
                     searchable={true}
                   />
-              
-                {purposeError && (
-                  <Text style={styles.errorText}>{purposeError}</Text>
-                )}
+
+                  {purposeError && (
+                    <Text style={styles.errorText}>{purposeError}</Text>
+                  )}
+                </View>
               </View>
             </View>
+          </ScrollView>
+          <View style={styles.centerAlignedContainer}>
             <View style={styles.boxShadow}>
               <LinearGradient
-                colors={
-                  
-                    ["#002777", "#00194C"]
-                }
-                style={[styles.proceedbutton, styles.BlueBorder,  { fontSize }]}>
+                colors={["#002777", "#00194C"]}
+                style={[styles.proceedbutton, styles.BlueBorder, { fontSize }]}>
                 <ButtonComponent
                   title="SUBMIT"
                   onPress={handleProceed}
-                  textStyle={
-                  
-                      styles.buttonEnabledText
-                  }
+                  textStyle={styles.buttonEnabledText}
                 />
               </LinearGradient>
             </View>
-          </ScrollView>
+          </View>
           {errorScreen.type != null && (
             <ScreenError
               errorObject={errorScreen}
@@ -448,7 +458,6 @@ function QuickLoanAsk({ navigation }) {
             />
           )}
         </KeyboardAvoidingView>
-
       </View>
     </View>
   );

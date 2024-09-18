@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions, Alert, Image } from 'react-native';
 import CustomInput from '../components/input';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
@@ -25,6 +25,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 const BankDetailsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -455,52 +456,81 @@ const BankDetailsScreen = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
 
   return (
     <View style={styles.mainContainer}>
       <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
-        {isWeb && (isDesktop || (isTablet && width > height)) && (
+      {isWeb && (isDesktop || (isTablet && width > height)) && (
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>%</Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>3</Text>
-                  <Text style={styles.webfeatureText}>3-Step Instant approval in 30 minutes</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>⏳</Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -510,7 +540,7 @@ const BankDetailsScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={[styles.centerAlignedContainer, { padding: 16 }]}>
             <ProgressBar progress={0.2} />
             <Text
               style={[
@@ -559,6 +589,7 @@ const BankDetailsScreen = ({ navigation }) => {
           </View>
 
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={styles.centerAlignedContainer}>
             <View style={styles.container}>
               <View>
                 {otherError && (
@@ -697,7 +728,9 @@ const BankDetailsScreen = ({ navigation }) => {
                 )}
               </View>
             </View>
+            </View>
           </ScrollView>
+          <View style={styles.centerAlignedContainer}>
           <View style={[styles.actionContainer, styles.boxShadow]}>
             <TouchableOpacity
               style={styles.backButton}
@@ -727,6 +760,7 @@ const BankDetailsScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </LinearGradient>
+          </View>
           </View>
 
           {errorScreen.type != null && (

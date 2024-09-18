@@ -3,8 +3,6 @@ import { View, StatusBar } from 'react-native';
 import { NavigationContainer, useFocusEffect, useNavigationContainerRef, useNavigationState } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import QuickLoanAsk from '../screens/quickLoanAsk';
-import SignInScreen from '../screens/signInScreen';
-import OtpVerification from '../screens/otpVerification';
 import PrimaryInfo from '../screens/primaryInformation';
 import PersonalInfo from '../screens/personalInformation';
 import EKycVerify from '../screens/eKyc';
@@ -71,8 +69,7 @@ const PersonalLoanNavigator = ({ navigation }) => {
 
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
-            <Stack.Screen name="welcome" component={SignInScreen} />
-            <Stack.Screen name="otpverification" component={OtpVerification} />
+           
             <Stack.Screen name="QLA" component={QuickLoanAsk} />
             <Stack.Screen name="primaryInfo" component={PrimaryInfo} />
             <Stack.Screen name="personalInfo" component={PersonalInfo} />
