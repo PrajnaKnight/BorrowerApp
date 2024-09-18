@@ -63,10 +63,11 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
-    const changeType = (value, index) => {
+  const changeType = (value, index) => {
     dispatch(updateChildSelected(value));
-    setActiveIndex(index);
-    scrollToIndex(index);
+    if (pagerViewRef.current) {
+      pagerViewRef.current.setPage(Math.floor(index / 3));
+    }
   };
 
 
@@ -529,7 +530,7 @@ const DocumentUploadScreen = ({ navigation }) => {
       const filteredKeys = getFilteredKeys();
       const index = filteredKeys.indexOf(selectedChild);
       if (index !== -1) {
-        pagerViewRef.current.setPage(index);
+        pagerViewRef.current.setPage(Math.floor(index / 3));
       }
     }
   }, [uploadDocumentSlices.data?.selectedDoc?.child]);
@@ -538,67 +539,90 @@ const DocumentUploadScreen = ({ navigation }) => {
     const filteredKeys = getFilteredKeys();
     if (filteredKeys.length === 0) return null;
   
+    // Group filteredKeys into sets of 3
+    const groupedKeys = filteredKeys.reduce((resultArray, item, index) => { 
+      const chunkIndex = Math.floor(index/3);
+      if(!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [] // start a new chunk
+      }
+      resultArray[chunkIndex].push(item);
+      return resultArray
+    }, []);
+  
     return (
-      <View style={[{ flexDirection: "column", marginVertical: 10 }]}>
+      <View style={[{ flexDirection: "column" }]}>
         <Text style={styles.sectionTitle}>Select ID Type</Text>
-        <View style={{ height: 120 }}>
+        <View style={{ height: 80 }}>
           <PagerView
             style={styles.pagerView}
             initialPage={0}
             onPageSelected={(e) => {
-              setActiveIndex(e.nativeEvent.position);
-              changeType(filteredKeys[e.nativeEvent.position], e.nativeEvent.position);
+              // You might want to add logic here if needed
             }}
+            pageMargin={10}
+            ref={pagerViewRef}
           >
-            {filteredKeys.map((element, index) => (
-              <View key={element} style={styles.pageStyle}>
-                <TouchableOpacity
-                  style={[
-                    styles.docTypeButton,
-                    activeIndex === index && styles.selectedDocTypeButton
-                  ]}
-                  onPress={() => changeType(element, index)}
-                >
-                  <View style={{ flexDirection: "column", alignItems: "center" }}>
-                    <Icon
-                      name={getIconName(element)}
-                      size={24}
-                      color={activeIndex === index ? "#fff" : "#00194c"}
-                    />
-                    <View style={{ height: 4 }} />
-                    <Text
-                      style={{
-                        color: activeIndex === index ? "#fff" : "#00194c",
-                        fontFamily: 'Poppins_400Regular', 
-                      }}
+            {groupedKeys.map((group, pageIndex) => (
+              <View key={pageIndex} style={styles.pageStyle}>
+                {group.map((element) => {
+                  const isSelected = uploadDocumentSlices.data.selectedDoc.child === element;
+                  return (
+                    <TouchableOpacity
+                      key={element}
+                      style={[
+                        styles.docTypeButton,
+                        isSelected && styles.selectedDocTypeButton
+                      ]}
+                      onPress={() => changeType(element, filteredKeys.indexOf(element))}
                     >
-                      {element}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                      <View style={{ flexDirection: "column", alignItems: "center" }}>
+                        <Icon
+                          name={getIconName(element)}
+                          size={24}
+                          color={isSelected ? "#fff" : "#00194c"}
+                        />
+                        <View style={{ height: 4 }} />
+                        <Text
+                          style={{
+                            color: isSelected ? "#fff" : "#00194c",
+                            fontFamily: 'Poppins_400Regular',
+                            fontSize: 10,
+                          }}
+                        >
+                          {element}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             ))}
           </PagerView>
         </View>
-        {renderDots(filteredKeys)}
+        {renderDots(groupedKeys)}
       </View>
     );
   };
 
-  const renderDots = (filteredKeys) => {
+  const renderDots = (groupedKeys) => {
+    const selectedChild = uploadDocumentSlices.data.selectedDoc.child;
+    const filteredKeys = getFilteredKeys();
+    const selectedIndex = filteredKeys.indexOf(selectedChild);
+    const currentPage = Math.floor(selectedIndex / 3);
+  
     return (
-      <View style={[styles.dotsContainer, { marginTop: 20 }]}>
-        {filteredKeys.map((_, index) => (
+      <View style={[styles.dotsContainer, { marginTop: 10 }]}>
+        {groupedKeys.map((_, index) => (
           <Pressable 
             key={index} 
             onPress={() => {
-              changeType(filteredKeys[index], index);
+              pagerViewRef.current?.setPage(index);
             }}
           >
             <View
               style={[
                 styles.dot,
-                index === activeIndex ? styles.activeDot : styles.inactiveDot,
+                currentPage === index ? styles.activeDot : styles.inactiveDot,
               ]}
             />
           </Pressable>
@@ -606,7 +630,6 @@ const DocumentUploadScreen = ({ navigation }) => {
       </View>
     );
   };
-
 
   const RenderDocumentPreviews = (selectedFile) => (
     <View style={styles.fileUploadContainer}>
