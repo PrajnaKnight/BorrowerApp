@@ -2362,6 +2362,13 @@ export const styles = applyFontFamily({
   flatListContent: {
     flexGrow: 1,
   },
+  pagerView: {
+    flex: 1,
+  },
+  pageStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   //New document upload screen ends
 });
 

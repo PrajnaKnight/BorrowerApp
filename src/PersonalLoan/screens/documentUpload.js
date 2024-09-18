@@ -28,6 +28,7 @@ import applyFontFamily from '../services/style/applyFontFamily';
 import { AntDesign } from '@expo/vector-icons';
 import { retry } from 'redux-saga/effects';
 import useJumpTo from "../components/StageComponent";
+import PagerView from 'react-native-pager-view';
 
 
 const DocumentUploadScreen = ({ navigation }) => {
@@ -519,69 +520,67 @@ const DocumentUploadScreen = ({ navigation }) => {
     }
     return [];
   };
+  const pagerViewRef = useRef(null);
 
 
- useEffect(() => {
+  useEffect(() => {
     const selectedChild = uploadDocumentSlices.data?.selectedDoc?.child;
-    if (selectedChild) {
+    if (selectedChild && pagerViewRef.current) {
       const filteredKeys = getFilteredKeys();
       const index = filteredKeys.indexOf(selectedChild);
       if (index !== -1) {
-        setActiveIndex(index);
-        scrollToIndex(index);
+        pagerViewRef.current.setPage(index);
       }
     }
   }, [uploadDocumentSlices.data?.selectedDoc?.child]);
 
-
-
   const renderChildType = () => {
     const filteredKeys = getFilteredKeys();
     if (filteredKeys.length === 0) return null;
-
+  
     return (
       <View style={[{ flexDirection: "column", marginVertical: 10 }]}>
         <Text style={styles.sectionTitle}>Select ID Type</Text>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <ScrollView
-            ref={scrollViewRef}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-            style={{ flex: 1 }}
+        <View style={{ height: 120 }}>
+          <PagerView
+            style={styles.pagerView}
+            initialPage={0}
+            onPageSelected={(e) => {
+              setActiveIndex(e.nativeEvent.position);
+              changeType(filteredKeys[e.nativeEvent.position], e.nativeEvent.position);
+            }}
           >
             {filteredKeys.map((element, index) => (
-              <TouchableOpacity
-                key={element}
-                style={[
-                  styles.docTypeButton,
-                  { minWidth: itemWidth },
-                  activeIndex === index && styles.selectedDocTypeButton
-                ]}
-                onPress={() => changeType(element, index)}
-              >
-                <View style={{ flexDirection: "column", alignItems: "center" }}>
-                  <Icon
-                    name={getIconName(element)}
-                    size={24}
-                    color={activeIndex === index ? "#fff" : "#00194c"}
-                  />
-                  <View style={{ height: 4 }} />
-                  <Text
-                    style={{
-                      color: activeIndex === index ? "#fff" : "#00194c",
-                      fontFamily: 'Poppins_400Regular', 
-                    }}
-                  >
-                    {element}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <View key={element} style={styles.pageStyle}>
+                <TouchableOpacity
+                  style={[
+                    styles.docTypeButton,
+                    activeIndex === index && styles.selectedDocTypeButton
+                  ]}
+                  onPress={() => changeType(element, index)}
+                >
+                  <View style={{ flexDirection: "column", alignItems: "center" }}>
+                    <Icon
+                      name={getIconName(element)}
+                      size={24}
+                      color={activeIndex === index ? "#fff" : "#00194c"}
+                    />
+                    <View style={{ height: 4 }} />
+                    <Text
+                      style={{
+                        color: activeIndex === index ? "#fff" : "#00194c",
+                        fontFamily: 'Poppins_400Regular', 
+                      }}
+                    >
+                      {element}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             ))}
-          </ScrollView>
-          {renderDots(filteredKeys)}
+          </PagerView>
         </View>
+        {renderDots(filteredKeys)}
       </View>
     );
   };
