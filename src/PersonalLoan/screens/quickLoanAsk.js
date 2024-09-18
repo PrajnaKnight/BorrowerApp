@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   useWindowDimensions,
+  FlatList
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { styles } from "../services/style/gloablStyle";
@@ -254,6 +255,52 @@ function QuickLoanAsk({ navigation }) {
     : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: "50%" } : { width: "100%" };
 
+  const renderContent = () => (
+    <>
+   
+      <View style={styles.container}>
+        <CustomSlider
+          title="Loan Amount"
+          icon="rupee"
+          keyboardType="numeric"
+          min={minLoanAmount}
+          max={maxLoanAmount}
+          steps={10000}
+          currentValue={loanAskDetails.data.LoanAmount}
+          error={loanAmountError}
+          onChange={(e) => handleLoanAmountSliderChange(e)}
+          isAmount={true}
+        />
+        <CustomSlider
+          title="Tenure"
+          icon="calendar"
+          keyboardType="numeric"
+          min={minTenure}
+          max={maxTenure}
+          steps={3}
+          currentValue={loanAskDetails.data.AskTenure}
+          error={tenureError}
+          onChange={(e) => handleSliderTenureChange(e)}
+          isTenure={true}
+        />
+        <View style={styles.loanLabel}>
+          <Text style={[styles.loanLabel, { fontSize: dynamicFontSize(styles.loanLabel.fontSize) }]}>
+            Purpose of Loan <Text style={[styles.mandatoryStar, { fontSize: dynamicFontSize(styles.mandatoryStar.fontSize) }]}>*</Text>
+          </Text>
+        </View>
+        <CustomDropDownWithSearch
+          value={loanAskDetails.data.PurposeOfLoan}
+          listOfData={items}
+          onChangeText={(e) => {setPurposeOfLoad(e)}}
+          placeholder="Search"
+          style={[styles.pickerContainer, { fontSize }]}
+          searchable={true}
+        />
+        {purposeError && <Text style={styles.errorText}>{purposeError}</Text>}
+      </View>
+    </>
+  );
+
   return (
     <View style={styles.mainContainer}>
       <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
@@ -329,117 +376,51 @@ function QuickLoanAsk({ navigation }) {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{padding:16}}>
-                  <ProgressBar progress={0.01} />
-                  <Text
-                    style={[
-                      styles.welcomeText,
-                      {
-                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),marginBottom:0
-                      },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.boldText,
-                        { fontSize: dynamicFontSize(styles.boldText.fontSize) },
-                      ]}>
-                      Welcome
-                    </Text>
-                  </Text>
-                  <Text
-                    style={[
-                      styles.welcomeText,
-                      {
-                        fontSize: dynamicFontSize(styles.welcomeText.fontSize),
-                      },
-                    ]}>
-                    please select the loan amount you require
-                  </Text>
-                  {otherError && (
-                    <Text style={styles.errorText}>{otherError}</Text>
-                  )}
-                </View>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-              
-                <CustomSlider
-                  title="Loan Amount"
-                  icon="rupee"
-                  keyboardType="numeric"
-                  min={minLoanAmount}
-                  max={maxLoanAmount}
-                  steps={10000}
-                  currentValue = {loanAskDetails.data.LoanAmount}
-                  error={loanAmountError}
-                  onChange={(e) => handleLoanAmountSliderChange(e)}
-                  isAmount={true}
-                />
-                <CustomSlider
-                  title="Tenure"
-                  icon="calendar"
-                  keyboardType="numeric"
-                  min={minTenure}
-                  max={maxTenure}
-                  steps={3}
-                  currentValue={loanAskDetails.data.AskTenure}
-                  error={tenureError}
-                  onChange={(e) => handleSliderTenureChange(e)}
-                  isTenure={true}
-                />
-                <View style={styles.loanLabel}>
-                  <Text
-                    style={[
-                      styles.loanLabel,
-                      { fontSize: dynamicFontSize(styles.loanLabel.fontSize) },
-                    ]}>
-                    Purpose of Loan{" "}
-                    <Text
-                      style={[
-                        styles.mandatoryStar,
-                        {
-                          fontSize: dynamicFontSize(
-                            styles.mandatoryStar.fontSize
-                          ),
-                        },
-                      ]}>
-                      *
-                    </Text>
-                  </Text>
-                </View>
-
-                <CustomDropDownWithSearch
-                    value={loanAskDetails.data.PurposeOfLoan}
-                    listOfData={items}
-                    onChangeText={(e) => {setPurposeOfLoad(e)}}
-                    placeholder="Search"
-                    style={[styles.pickerContainer, { fontSize }]}
-                    searchable={true}
-                  />
-              
-                {purposeError && (
-                  <Text style={styles.errorText}>{purposeError}</Text>
-                )}
-              </View>
-            </View>
-            <View style={styles.boxShadow}>
-              <LinearGradient
-                colors={
-                  
-                    ["#002777", "#00194C"]
-                }
-                style={[styles.proceedbutton, styles.BlueBorder,  { fontSize }]}>
-                <ButtonComponent
-                  title="SUBMIT"
-                  onPress={handleProceed}
-                  textStyle={
-                  
-                      styles.buttonEnabledText
-                  }
-                />
-              </LinearGradient>
-            </View>
-          </ScrollView>
+          <View style={{ padding: 16 }}>
+            <ProgressBar progress={0.01} />
+            <Text
+              style={[
+                styles.welcomeText,
+                {
+                  fontSize: dynamicFontSize(styles.welcomeText.fontSize),
+                  marginBottom: 0,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.boldText,
+                  { fontSize: dynamicFontSize(styles.boldText.fontSize) },
+                ]}>
+                Welcome
+              </Text>
+            </Text>
+            <Text
+              style={[
+                styles.welcomeText,
+                { fontSize: dynamicFontSize(styles.welcomeText.fontSize) },
+              ]}>
+              please select the loan amount you require
+            </Text>
+            {otherError && <Text style={styles.errorText}>{otherError}</Text>}
+          </View>
+          <View style={styles.contentContainer}>
+            <FlatList
+              data={[{ key: "content" }]}
+              renderItem={() => renderContent()}
+              keyExtractor={(item) => item.key}
+            />
+          </View>
+          <View style={styles.boxShadow}>
+            <LinearGradient
+              colors={["#002777", "#00194C"]}
+              style={[styles.proceedbutton, styles.BlueBorder, { fontSize }]}>
+              <ButtonComponent
+                title="SUBMIT"
+                onPress={handleProceed}
+                textStyle={styles.buttonEnabledText}
+              />
+            </LinearGradient>
+          </View>
           {errorScreen.type != null && (
             <ScreenError
               errorObject={errorScreen}

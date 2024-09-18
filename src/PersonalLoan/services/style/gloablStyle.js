@@ -7,6 +7,7 @@ const window = Dimensions.get('window');
 const deviceWidth = window.width;
 
 const { width, height } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 
 // You can create your own "media query" functions
@@ -2342,7 +2343,16 @@ export const styles = applyFontFamily({
   previewPlaceholderText: {
     color: '#888',
     marginBottom: 10,
-  }
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  flatListContent: {
+    flexGrow: 1,
+  },
   //New document upload screen ends
 });
 

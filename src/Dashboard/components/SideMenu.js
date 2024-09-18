@@ -197,7 +197,7 @@ const styles = applyFontFamily({
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 12,
     justifyContent: 'space-between', 
   },
   menuIcon: {
@@ -234,8 +234,8 @@ const styles = applyFontFamily({
     marginRight: 10,
   },
   footerLogo: {
-    width: 100,
-    height: 40,
+    width: 80,
+    height: 30,
     resizeMode: 'contain',
   },
 });

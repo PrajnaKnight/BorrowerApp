@@ -749,22 +749,18 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           flexDirection: "row",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          padding: 8,
+                          padding: 10,
                         },
                       ]}>
                       <Text
-                        style={[{
-                          fontSize: dynamicFontSize(styles.input.fontSize),
-                          color: "#000",
-                          fontFamily:"Poppins_400Regular"
-                        }]}>
+                        style={{fontSize: 16, color: "#00194C",lineHeight:26,}}>
                         {rateOfInterest || 0} %
                       </Text>
                       <View style={{ alignItems: "flex-end" }}>
-                        <Text style={{ color: "#00194c", fontSize: 10,fontFamily:"Poppins_500Medium"}}>
+                        <Text style={{ color: "#00194c", fontSize: 10, lineHeight:12, fontWeight:'500', opacity:0.6 }}>
                           Reducing
                         </Text>
-                        <Text style={{ color: "#00194c", fontSize: 10,fontFamily:"Poppins_500Medium" }}>
+                        <Text style={{ color: "#00194c", fontSize: 10,lineHeight:12, fontWeight:'500', opacity:0.6 }}>
                           Rate
                         </Text>
                       </View>
