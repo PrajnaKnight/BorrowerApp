@@ -62,17 +62,8 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
-    const changeType = (value, index) => {
+  const changeType = (value) => {
     dispatch(updateChildSelected(value));
-    setActiveIndex(index);
-    scrollToIndex(index);
-  };
-
-
-  const scrollToIndex = (index) => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ x: index * itemWidth, animated: true });
-    }
   };
 
 
@@ -462,7 +453,7 @@ const DocumentUploadScreen = ({ navigation }) => {
     catch (e) {
 
     }
-  }, [uploadDocumentSlices.data.selectedDoc])
+  }, [uploadDocumentSlices.data.selectedDoc.master])
 
   const renderDocList = (list) => (
 
@@ -499,47 +490,35 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
-    const maxScrollPosition = event.nativeEvent.contentSize.width - windowWidth;
-    
-    if (scrollPosition >= maxScrollPosition) {
-      // We're at the end, select the last item
-      const filteredKeys = getFilteredKeys();
-      setActiveIndex(filteredKeys.length - 1);
-    } else {
-      const index = Math.round(scrollPosition / itemWidth);
-      setActiveIndex(index);
-    }
+    const index = Math.round(scrollPosition / itemWidth);
+    setActiveIndex(index);
   };
 
-  const getFilteredKeys = () => {
-    const selectedMaster = uploadDocumentSlices.data?.selectedDoc?.master;
-    const otherFiles = uploadDocumentSlices.data?.OTHER_FILES;
-    if (selectedMaster && otherFiles && otherFiles[selectedMaster]) {
-      return Object.keys(otherFiles[selectedMaster]).filter(item => item !== "MandatoryFlag");
-    }
-    return [];
-  };
-
-
- useEffect(() => {
-    const selectedChild = uploadDocumentSlices.data?.selectedDoc?.child;
-    if (selectedChild) {
-      const filteredKeys = getFilteredKeys();
-      const index = filteredKeys.indexOf(selectedChild);
-      if (index !== -1) {
-        setActiveIndex(index);
-        scrollToIndex(index);
-      }
-    }
-  }, [uploadDocumentSlices.data?.selectedDoc?.child]);
-
-
-
-  const renderChildType = () => {
-    const filteredKeys = getFilteredKeys();
-    if (filteredKeys.length === 0) return null;
-
+  const renderDots = (list) => {
+    const filteredKeys = Object.keys(list).filter((item) => item !== "MandatoryFlag");
     return (
+      <View style={[styles.dotsContainer, { marginTop: 20 }]}>
+        {filteredKeys.map((_, index) => (
+          <Pressable key={index} onPress={() => { scrollViewRef.current?.scrollTo({ x: index, animated: true }) }}>
+            <View
+
+              style={[
+                styles.dot,
+                index === activeIndex ? styles.activeDot : styles.inactiveDot,
+              ]}
+            />
+          </Pressable>
+
+        ))}
+
+      </View>
+
+    );
+  };
+
+
+  const renderChildType = (list) => (
+    list && (
       <View style={[{ flexDirection: "column", marginVertical: 20 }]}>
         <Text style={styles.sectionTitle}>Select ID Type</Text>
         <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -551,26 +530,26 @@ const DocumentUploadScreen = ({ navigation }) => {
             scrollEventThrottle={16}
             style={{ flex: 1 }}
           >
-            {filteredKeys.map((element, index) => (
+            {Object.keys(list).filter((item) => item !== "MandatoryFlag").map(element => (
               <TouchableOpacity
                 key={element}
                 style={[
                   styles.docTypeButton,
                   { minWidth: itemWidth },
-                  activeIndex === index && styles.selectedDocTypeButton
+                  uploadDocumentSlices.data.selectedDoc.child === element && styles.selectedDocTypeButton
                 ]}
-                onPress={() => changeType(element, index)}
+                onPress={() => changeType(element)}
               >
                 <View style={{ flexDirection: "column", alignItems: "center" }}>
                   <Icon
                     name={getIconName(element)}
                     size={24}
-                    color={activeIndex === index ? "#fff" : "#00194c"}
+                    color={uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"}
                   />
                   <View style={{ height: 4 }} />
                   <Text
                     style={{
-                      color: activeIndex === index ? "#fff" : "#00194c",
+                      color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c",
                       fontFamily: 'Poppins_400Regular', 
                     }}
                   >
@@ -580,33 +559,11 @@ const DocumentUploadScreen = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          {renderDots(filteredKeys)}
+          {renderDots(list)}
         </View>
       </View>
-    );
-  };
-
-  const renderDots = (filteredKeys) => {
-    return (
-      <View style={[styles.dotsContainer, { marginTop: 20 }]}>
-        {filteredKeys.map((_, index) => (
-          <Pressable 
-            key={index} 
-            onPress={() => {
-              changeType(filteredKeys[index], index);
-            }}
-          >
-            <View
-              style={[
-                styles.dot,
-                index === activeIndex ? styles.activeDot : styles.inactiveDot,
-              ]}
-            />
-          </Pressable>
-        ))}
-      </View>
-    );
-  };
+    )
+  );
 
 
   const RenderDocumentPreviews = (selectedFile) => (
@@ -893,9 +850,8 @@ const DocumentUploadScreen = ({ navigation }) => {
 
 
               {renderDocList(uploadDocumentSlices.data.MASTER_OPTION)}
-              {/* {renderChildType(uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master])}
-   */}
-   {renderChildType()}
+              {renderChildType(uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master])}
+
               {uploadDocumentSlices.data.selectedDoc.master && uploadDocumentSlices.data.selectedDoc.child && <>
                 <View>
                   <Text style={styles.sectionTitle}>File Upload OR Take Photo</Text>

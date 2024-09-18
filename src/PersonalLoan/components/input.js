@@ -579,6 +579,7 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
 
   const handleInputChange = (text) => {
     setInputValue(text);
+    onChangeText(text);
     if (searchable) {
       if (text.length > 0 && listOfData) {
         const filteredList = listOfData.filter(item =>
@@ -590,8 +591,6 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
         setSuggestionList([]);
         setShowList(false);
       }
-    } else {
-      onChangeText(text);
     }
   };
 
@@ -622,7 +621,6 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
           onFocus={handleFocus}
           onBlur={handleBlur}
           value={inputValue}
-          placeholder={placeholder}
         />
       </View>
 
