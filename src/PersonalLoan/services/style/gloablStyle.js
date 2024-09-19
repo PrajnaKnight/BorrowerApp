@@ -1991,7 +1991,8 @@ export const styles = applyFontFamily({
   },
   docTypeButton: {
     alignItems: "center",
-    padding: 12,
+    paddingVertical:12,
+    paddingHorizontal: 5,
     borderWidth: 1,
     borderColor: "#E0E0E0",
     borderRadius: 8,
@@ -2362,7 +2363,25 @@ export const styles = applyFontFamily({
   flatListContent: {
     flexGrow: 1,
   },
+  pagerView: {
+    flex: 1,
+  },
+  pageStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  doctypeWrapperPAgeView: {
+    width: '30%',
+    aspectRatio: 0.8, // Changed from 1 to 0.8 to make buttons slightly taller
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    padding: 2,
+  },
+  selectedDocTypeButton: {
+    backgroundColor: '#00194c',
+  },
   //New document upload screen ends
 });
-
 
