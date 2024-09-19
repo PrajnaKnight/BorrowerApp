@@ -500,6 +500,8 @@ const AddressScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
+          <View style={styles.fixedHeaderAddressDetails}>
+
           <View style={[styles.centerAlignedContainer, { padding: 16 }]}>
             <ProgressBar progress={0.09} />
             <Text
@@ -538,9 +540,11 @@ const AddressScreen = ({ navigation }) => {
             </TouchableOpacity>
           </ScrollView>
           </View>
+          </View>
 
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.centerAlignedContainer}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1,paddingTop: 150  }}>
+          <View style={styles.centerAlignedContainer}>
+
             <View style={styles.container}>
               {otherError && (
                 <Text

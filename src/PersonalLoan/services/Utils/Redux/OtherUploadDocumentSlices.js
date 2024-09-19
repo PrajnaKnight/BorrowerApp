@@ -57,6 +57,7 @@ const UploadOtherFileSlice = createSlice({
                 state.data.selectedDoc = {master : newMasterKey, child : newChildKey[0] }
             }
         
+            
         },
 
         updateChildSelected(state, payload) {
@@ -163,9 +164,8 @@ const UploadOtherFileSlice = createSlice({
 
            
 
-            console.log(resultArray)
        
-
+            
 
 
             state.data.OTHER_FILES = resultArray
@@ -244,7 +244,6 @@ function* deleteFile(action) {
 
     const docType = action.payload.docType
 
-    console.log(docType)
 
     const deleteResponse = yield call(DeleteUploadFiles, docType);
     if (deleteResponse.status == STATUS.ERROR) {

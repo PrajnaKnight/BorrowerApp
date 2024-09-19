@@ -356,6 +356,9 @@ const LoanAgreementScreen = ({ navigation }) => {
         originWhitelist={['*']}
         source={{ html: loanWebView?.HTMLContent || "" }}
         style={styles.webViewcontent}
+        scrollEnabled={true} 
+        nestedScrollEnabled={true}
+
       />
     </View>
   );
@@ -451,7 +454,7 @@ const LoanAgreementScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingBottom:5 }}>
             <ProgressBar progress={0.7} />
             <Text
               style={[

@@ -7,7 +7,8 @@ import {
   Platform,
   ScrollView,
   useWindowDimensions,
-  Image
+  Image,
+  FlatList
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { styles } from "../services/style/gloablStyle";
@@ -191,6 +192,14 @@ function QuickLoanAsk({ navigation }) {
     setPurposeError(purposeValidity);
     if (purposeValidity) return;
 
+    if(!items.find(item => item.value === loanAskDetails.data.PurposeOfLoan)){
+      setPurposeError("please provide valid purpose of loan");
+
+      return
+    }
+    
+
+
     await submitLoanAsk();
   };
 
@@ -263,6 +272,52 @@ function QuickLoanAsk({ navigation }) {
     { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
   ];
   
+
+  const renderContent = () => (
+    <>
+   
+      <View style={styles.container}>
+        <CustomSlider
+          title="Loan Amount"
+          icon="rupee"
+          keyboardType="numeric"
+          min={minLoanAmount}
+          max={maxLoanAmount}
+          steps={10000}
+          currentValue={loanAskDetails.data.LoanAmount}
+          error={loanAmountError}
+          onChange={(e) => handleLoanAmountSliderChange(e)}
+          isAmount={true}
+        />
+        <CustomSlider
+          title="Tenure"
+          icon="calendar"
+          keyboardType="numeric"
+          min={minTenure}
+          max={maxTenure}
+          steps={3}
+          currentValue={loanAskDetails.data.AskTenure}
+          error={tenureError}
+          onChange={(e) => handleSliderTenureChange(e)}
+          isTenure={true}
+        />
+        <View style={styles.loanLabel}>
+          <Text style={[styles.loanLabel, { fontSize: dynamicFontSize(styles.loanLabel.fontSize) }]}>
+            Purpose of Loan <Text style={[styles.mandatoryStar, { fontSize: dynamicFontSize(styles.mandatoryStar.fontSize) }]}>*</Text>
+          </Text>
+        </View>
+        <CustomDropDownWithSearch
+          value={loanAskDetails.data.PurposeOfLoan}
+          listOfData={items}
+          onChangeText={(e) => {setPurposeOfLoad(e)}}
+          placeholder="Search"
+          style={[styles.pickerContainer, { fontSize }]}
+          searchable={true}
+        />
+        {purposeError && <Text style={styles.errorText}>{purposeError}</Text>}
+      </View>
+    </>
+  );
 
   return (
     <View style={styles.mainContainer}>

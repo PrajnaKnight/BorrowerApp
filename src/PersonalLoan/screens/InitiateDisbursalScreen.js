@@ -267,7 +267,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingBottom:0 }}>
             <ProgressBar progress={0.8} />
             <Text
               style={[
@@ -309,7 +309,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    { fontSize: dynamicFontSize(styles.label.fontSize), marginTop:15 },
                   ]}>
                   eMandate URN <Text style={styles.mandatoryStar}>*</Text>
                 </Text>
@@ -325,7 +325,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.label,
-                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                    { fontSize: dynamicFontSize(styles.label.fontSize), marginTop:5 },
                   ]}>
                   Repayment Scheduled
                 </Text>

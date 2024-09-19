@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Text } from 'react-native';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -7,12 +8,10 @@ import { AppProvider } from './src/Common/components/appContext';
 import RootNavigator from './RootNavigator';
 import SplashScreen from './src/Common/screens/SplashScreen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
-// import * as ExpoSplashScreen from 'expo-splash-screen';
 import { PortalProvider } from '@gorhom/portal';
 import { GetBorrowerPhoneNumber } from './src/PersonalLoan/services/LOCAL/AsyncStroage';
 
 // Keep the splash screen visible while we fetch resources
-// ExpoSplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);

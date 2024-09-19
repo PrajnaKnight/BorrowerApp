@@ -48,23 +48,23 @@ const CustomDropdown = ({ options, selectedValue, onValueChange }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginBottom: 10,
   },
   dropdownButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     backgroundColor: '#fff',
   },
   dropdownButtonText: {
-    fontSize: 16,
-    color: '#333',
-    fontFamily: 'Poppins_400Regular'
+    fontSize: 15,
+    color: '#00194c',
+    fontFamily: '400'
   },
   dropdownList: {
     maxHeight: 200,
@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   optionText: {
-    fontSize: 16,
-    color: '#333',
-    fontFamily: 'Poppins_400Regular'
+    fontSize: 15,
+    color: '#00194c',
+    fontFamily: '400'
 
   },
   subLabel: {

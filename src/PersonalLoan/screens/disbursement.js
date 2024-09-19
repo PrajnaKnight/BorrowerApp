@@ -224,8 +224,7 @@ const DisbursementScreen = ({ navigation }) => {
           {disbursalInfo != null &&
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={[styles.container]}>
-                <ProgressBar progress={10} />
-              <View style={[styles.disursecontent,{marginVertical:10}]}>
+              <View style={[styles.disursecontent]}>
               <ImageBackground
                   source={require("../../assets/images/Confetti.png")}
                   style={styles.disbursebackgroundImage}>

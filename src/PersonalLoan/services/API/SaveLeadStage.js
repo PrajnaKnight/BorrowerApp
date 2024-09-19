@@ -14,7 +14,6 @@ const SaveLeadStage = async (Leadstage) => {
         const leadId = await GetLeadId()
         const header = await GetHeader()
 
-    
 
         let response = await axios.post(`${SAVED_LEAD_STAGE}?leadid=${leadId}&Leadstage=${Leadstage}`, null, { headers: header })
         data = response.data

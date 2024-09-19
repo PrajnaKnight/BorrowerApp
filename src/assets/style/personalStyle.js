@@ -78,16 +78,16 @@ export const styles = applyFontFamily({
   },
   welcomeText: {
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 16,
     textAlign: "left",
     color: "#00194c",
     lineHeight: 24,
   },
   sliderContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   slider: {
-    height: 40,
+    height: 20,
     borderRadius: 5,
     flexDirection: "row",
   },
@@ -222,7 +222,7 @@ export const styles = applyFontFamily({
     borderColor: "#D8DFF2",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 16,
     fontWeight:"400",
     fontSize: 14,
     color: "#00194C",
@@ -475,14 +475,13 @@ export const styles = applyFontFamily({
     paddingHorizontal: 5,
     borderWidth: 1,
     borderColor: "#00194c",
-    borderRadius: 5,
   },
   progressBarBackground: {
     height: 5,
     width: "100%",
     backgroundColor: "#E2ECFF",
     borderRadius: 5,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   progressBarFill: {
     height: "100%",
@@ -768,7 +767,6 @@ export const styles = applyFontFamily({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    marginTop: 10,
     marginBottom: 5,
     color: "#00194c",
   },

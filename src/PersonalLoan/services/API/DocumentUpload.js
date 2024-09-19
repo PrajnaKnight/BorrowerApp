@@ -308,7 +308,6 @@ export const GetDocType = async () => {
 export const GetDocTypeMasterOption = async () => {
     
 
-
     let status, data, message;
 
     try {

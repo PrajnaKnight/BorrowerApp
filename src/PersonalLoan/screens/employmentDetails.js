@@ -615,8 +615,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
   );
 
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
 
       if (EmploymentType == "Self-Employed") {
 
@@ -634,7 +633,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
         }
       }
 
-    }, [EmploymentType, Salaried.Experience]))
+    }, [EmploymentType, Salaried.Experience])
 
     const steps = [
       { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },

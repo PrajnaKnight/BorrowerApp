@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { View, StatusBar } from 'react-native';
-import { NavigationContainer, useFocusEffect, useNavigationContainerRef, useNavigationState } from '@react-navigation/native';
+import { useNavigationState } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import QuickLoanAsk from '../screens/quickLoanAsk';
 import PrimaryInfo from '../screens/primaryInformation';

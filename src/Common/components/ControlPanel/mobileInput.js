@@ -103,7 +103,7 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
               style={[fieldstyles.input, { fontSize: dynamicFontSize(14)}]}
               onChangeText={handleMobileNumberChange}
               value={mobileNumber}
-              placeholder={isWeb && "Enter mobile number"}
+              placeholder={isWeb ? "Enter mobile number" : null}
               keyboardType="phone-pad"
               maxLength={10}
               onFocus={() => setIsFocused(true)}
@@ -140,7 +140,7 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
                 position: 'absolute',
                 top: dropdownPosition.top,
                 left: dropdownPosition.left,
-                width: dropdownPosition.width,
+                width: dropdownPosition.width + 15, // Added 15 to ensure the dropdown fits properly
               }
             ]}
           >
@@ -183,10 +183,10 @@ const fieldstyles = applyFontFamily({
     position: 'relative'
   },
   flagIcon: {
-    width: 26,
-    height: 26,
+    width: 39,  // Changed from 26 to 39 (3:2 ratio)
+    height: 26, // Kept at 26
     marginRight: 5,
-
+    resizeMode: 'contain', // Added to ensure the flag fits properly
   },
   countryCode: {
     fontSize: 14,

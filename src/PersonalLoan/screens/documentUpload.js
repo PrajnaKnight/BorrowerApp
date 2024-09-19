@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground, Dimensions, useWindowDimensions, FlatList, Image, TextInput, Animated, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground, Dimensions, useWindowDimensions, FlatList, Image, TextInput, Animated, Pressable, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { styles } from '../services/style/gloablStyle';
 import ProgressBar from '../components/progressBar';
@@ -28,6 +28,7 @@ import applyFontFamily from '../services/style/applyFontFamily';
 import { AntDesign } from '@expo/vector-icons';
 import { retry } from 'redux-saga/effects';
 import useJumpTo from "../components/StageComponent";
+import PagerView from 'react-native-pager-view';
 
 
 const DocumentUploadScreen = ({ navigation }) => {
@@ -62,8 +63,18 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
-  const changeType = (value) => {
+  const changeType = (value, index) => {
     dispatch(updateChildSelected(value));
+    if (pagerViewRef.current) {
+      pagerViewRef.current.setPage(Math.floor(index / 3));
+    }
+  };
+
+
+  const scrollToIndex = (index) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ x: index * itemWidth, animated: true });
+    }
   };
 
 
@@ -166,17 +177,14 @@ const DocumentUploadScreen = ({ navigation }) => {
       if (Platform.OS === "web") {
         navigation.navigate('WebCameraScreen', {
           onGoBack: (data) => {
-            console.log("============== navigate back ===================");
-            console.log(data);
+          
 
             if (data != null) {
-              console.log("data ");
 
               const mimeType = data.uri.split(';')[0].split(':')[1];
               const fileName = generateUniqueAddress(DisplayName, null, "png");
               document = base64ToFile(data.uri, mimeType, fileName);
 
-              console.log(data);
 
               setLoading(true);
               UploadFile(document, DocType, Password).then((response) => {
@@ -198,7 +206,6 @@ const DocumentUploadScreen = ({ navigation }) => {
           },
         });
 
-        console.log("=== execute  below ==");
 
         return;
       }
@@ -225,7 +232,6 @@ const DocumentUploadScreen = ({ navigation }) => {
 
     if (document != null) {
 
-      console.log("final DocType ", DocType)
       setLoading(true);
       const response = await UploadFile(document, DocType, Password);
       setLoading(false);
@@ -325,7 +331,6 @@ const DocumentUploadScreen = ({ navigation }) => {
     const currentChildKey = uploadDocumentSlices.data.selectedDoc.child
     currentRequestModel[currentMasterKey][currentChildKey].EnablePassword = !currentRequestModel[currentMasterKey][currentChildKey].EnablePassword
 
-    console.log(currentRequestModel[currentMasterKey][currentChildKey])
 
 
     dispatch(updateOtherFile(currentRequestModel));
@@ -380,7 +385,6 @@ const DocumentUploadScreen = ({ navigation }) => {
     return iconNames[type] || "file";
   };
   const goToEmandate = async () => {
-    console.log(uploadDocumentSlices.data.OTHER_FILES)
     setOtherError(null)
     const realDocs = uploadDocumentSlices.data.OTHER_FILES
     const masterKeys = Object.keys(realDocs)
@@ -468,7 +472,6 @@ const DocumentUploadScreen = ({ navigation }) => {
           <TouchableOpacity
             style={[styles.Doctab, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTab]}
             onPress={() => {
-              console.log("clicked : ", index)
               dispatch(updateMasterSelected(item.DoctypeType))
 
             }}>
@@ -490,81 +493,137 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
-    const index = Math.round(scrollPosition / itemWidth);
-    setActiveIndex(index);
+    const maxScrollPosition = event.nativeEvent.contentSize.width - windowWidth;
+    
+    if (scrollPosition >= maxScrollPosition) {
+      // We're at the end, select the last item
+      const filteredKeys = getFilteredKeys();
+      setActiveIndex(filteredKeys.length - 1);
+    } else {
+      const index = Math.round(scrollPosition / itemWidth);
+      setActiveIndex(index);
+    }
   };
 
-  const renderDots = (list) => {
-    const filteredKeys = Object.keys(list).filter((item) => item !== "MandatoryFlag");
+  const getFilteredKeys = () => {
+    const selectedMaster = uploadDocumentSlices.data?.selectedDoc?.master;
+    const otherFiles = uploadDocumentSlices.data?.OTHER_FILES;
+    if (selectedMaster && otherFiles && otherFiles[selectedMaster]) {
+      return Object.keys(otherFiles[selectedMaster]).filter(item => item !== "MandatoryFlag");
+    }
+    return [];
+  };
+  const pagerViewRef = useRef(null);
+
+
+  useEffect(() => {
+    const selectedChild = uploadDocumentSlices.data?.selectedDoc?.child;
+    if (selectedChild && pagerViewRef.current) {
+      const filteredKeys = getFilteredKeys();
+      const index = filteredKeys.indexOf(selectedChild);
+      if (index !== -1) {
+        pagerViewRef.current.setPage(Math.floor(index / 3));
+      }
+    }
+  }, [uploadDocumentSlices.data?.selectedDoc?.child]);
+
+
+  const renderChildType = () => {
+    const filteredKeys = getFilteredKeys();
+    if (filteredKeys.length === 0) return null;
+  
+    // Group filteredKeys into sets of 3
+    const groupedKeys = filteredKeys.reduce((resultArray, item, index) => { 
+      const chunkIndex = Math.floor(index/3);
+      if(!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [] // start a new chunk
+      }
+      resultArray[chunkIndex].push(item);
+      return resultArray
+    }, []);
+  
     return (
-      <View style={[styles.dotsContainer, { marginTop: 20 }]}>
-        {filteredKeys.map((_, index) => (
-          <Pressable key={index} onPress={() => { scrollViewRef.current?.scrollTo({ x: index, animated: true }) }}>
-            <View
+      <View style={[{ flexDirection: "column", paddingVertical:10 }]}>
+        <Text style={styles.sectionTitle}>Select ID Type</Text>
+        <View style={{ height: 80 }}>
+          <PagerView
+            style={styles.pagerView}
+            initialPage={0}
+            onPageSelected={(e) => {
+              setActiveIndex(e.nativeEvent.position || 0)
+            }}
+            ref={pagerViewRef}
+          >
+            {groupedKeys.map((group, pageIndex) => (
+              <View key={pageIndex} style={styles.pageStyle}>
+                {group.map((element) => {
+                  const isSelected = uploadDocumentSlices.data.selectedDoc.child === element;
+                  const truncatedText = element.length > 12 ? element.slice(0, 12) + '...' : element;
 
-              style={[
-                styles.dot,
-                index === activeIndex ? styles.activeDot : styles.inactiveDot,
-              ]}
-            />
-          </Pressable>
-
-        ))}
-
+                  return (
+                    <TouchableOpacity
+                      key={element}
+                      style={[
+                        styles.docTypeButton,
+                        isSelected && styles.selectedDocTypeButton
+                      ]}
+                      onPress={() => changeType(element, filteredKeys.indexOf(element))}
+                    >
+                      <View style={{ flexDirection: "column", alignItems: "center" }}>
+                        <Icon
+                          name={getIconName(element)}
+                          size={24}
+                          color={isSelected ? "#fff" : "#00194c"}
+                        />
+                        <View style={{ height: 4 }} />
+                        <Text
+                          style={{
+                            color: isSelected ? "#fff" : "#00194c",
+                            fontFamily: 'Poppins_400Regular',
+                            fontSize: 11,
+                            overflow: 'hidden', // Hide overflow
+                            textOverflow: 'ellipsis', // Show ellipsis
+                            whiteSpace: 'nowrap', // Prevent text wrapping (for web, not for React Native)
+                          }}
+                          numberOfLines={1} // Limit to one line
+                        >
+                          {truncatedText}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ))}
+          </PagerView>
+        </View>
+        {renderDots(groupedKeys)}
       </View>
-
     );
   };
 
-
-  const renderChildType = (list) => (
-    list && (
-      <View style={[{ flexDirection: "column", marginVertical: 20 }]}>
-        <Text style={styles.sectionTitle}>Select ID Type</Text>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <ScrollView
-            ref={scrollViewRef}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-            style={{ flex: 1 }}
+  const renderDots = (groupedKeys) => {
+  
+    return (
+      <View style={[styles.dotsContainer, { marginTop: 10 }]}>
+        {groupedKeys.map((_, index) => (
+          <Pressable 
+            key={index} 
+            onPress={() => {
+              pagerViewRef.current?.setPage(index);
+            }}
           >
-            {Object.keys(list).filter((item) => item !== "MandatoryFlag").map(element => (
-              <TouchableOpacity
-                key={element}
-                style={[
-                  styles.docTypeButton,
-                  { minWidth: itemWidth },
-                  uploadDocumentSlices.data.selectedDoc.child === element && styles.selectedDocTypeButton
-                ]}
-                onPress={() => changeType(element)}
-              >
-                <View style={{ flexDirection: "column", alignItems: "center" }}>
-                  <Icon
-                    name={getIconName(element)}
-                    size={24}
-                    color={uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c"}
-                  />
-                  <View style={{ height: 4 }} />
-                  <Text
-                    style={{
-                      color: uploadDocumentSlices.data.selectedDoc.child === element ? "#fff" : "#00194c",
-                      fontFamily: 'Poppins_400Regular', 
-                    }}
-                  >
-                    {element}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          {renderDots(list)}
-        </View>
+            <View
+              style={[
+                styles.dot,
+                activeIndex === index ? styles.activeDot : styles.inactiveDot,
+              ]}
+            />
+          </Pressable>
+        ))}
       </View>
-    )
-  );
-
+    );
+  };
 
   const RenderDocumentPreviews = (selectedFile) => (
     <View style={styles.fileUploadContainer}>
@@ -654,13 +713,13 @@ const DocumentUploadScreen = ({ navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={styles.passwordToggleTextEnabled}>YES</Text>
               <View style={{ width: 10 }}></View>
-              <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "white" }}>
+              <View style={{ width: 10, height: 10, borderRadius: 10, backgroundColor: "white" }}>
 
               </View>
             </View>
             :
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "white" }} />
+              <View style={{ width: 10, height: 10, borderRadius: 10, backgroundColor: "white" }} />
               <View style={{ width: 10 }}></View>
               <Text style={styles.passwordToggleTextDisabled}>NO</Text>
 
@@ -824,7 +883,7 @@ const DocumentUploadScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingBottom:5 }}>
             <ProgressBar progress={0.5} />
             <Text
               style={[
@@ -850,8 +909,9 @@ const DocumentUploadScreen = ({ navigation }) => {
 
 
               {renderDocList(uploadDocumentSlices.data.MASTER_OPTION)}
-              {renderChildType(uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master])}
-
+              {/* {renderChildType(uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master])}
+   */}
+   {renderChildType()}
               {uploadDocumentSlices.data.selectedDoc.master && uploadDocumentSlices.data.selectedDoc.child && <>
                 <View>
                   <Text style={styles.sectionTitle}>File Upload OR Take Photo</Text>
