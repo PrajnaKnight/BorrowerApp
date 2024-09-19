@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground, Dimensions, useWindowDimensions, FlatList, Image, TextInput, Animated, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground, Dimensions, useWindowDimensions, FlatList, Image, TextInput, Animated, Pressable, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { styles } from '../services/style/gloablStyle';
 import ProgressBar from '../components/progressBar';
@@ -177,17 +177,14 @@ const DocumentUploadScreen = ({ navigation }) => {
       if (Platform.OS === "web") {
         navigation.navigate('WebCameraScreen', {
           onGoBack: (data) => {
-            console.log("============== navigate back ===================");
-            console.log(data);
+          
 
             if (data != null) {
-              console.log("data ");
 
               const mimeType = data.uri.split(';')[0].split(':')[1];
               const fileName = generateUniqueAddress(DisplayName, null, "png");
               document = base64ToFile(data.uri, mimeType, fileName);
 
-              console.log(data);
 
               setLoading(true);
               UploadFile(document, DocType, Password).then((response) => {
@@ -209,7 +206,6 @@ const DocumentUploadScreen = ({ navigation }) => {
           },
         });
 
-        console.log("=== execute  below ==");
 
         return;
       }
@@ -236,7 +232,6 @@ const DocumentUploadScreen = ({ navigation }) => {
 
     if (document != null) {
 
-      console.log("final DocType ", DocType)
       setLoading(true);
       const response = await UploadFile(document, DocType, Password);
       setLoading(false);
@@ -336,7 +331,6 @@ const DocumentUploadScreen = ({ navigation }) => {
     const currentChildKey = uploadDocumentSlices.data.selectedDoc.child
     currentRequestModel[currentMasterKey][currentChildKey].EnablePassword = !currentRequestModel[currentMasterKey][currentChildKey].EnablePassword
 
-    console.log(currentRequestModel[currentMasterKey][currentChildKey])
 
 
     dispatch(updateOtherFile(currentRequestModel));
@@ -391,7 +385,6 @@ const DocumentUploadScreen = ({ navigation }) => {
     return iconNames[type] || "file";
   };
   const goToEmandate = async () => {
-    console.log(uploadDocumentSlices.data.OTHER_FILES)
     setOtherError(null)
     const realDocs = uploadDocumentSlices.data.OTHER_FILES
     const masterKeys = Object.keys(realDocs)
@@ -479,7 +472,6 @@ const DocumentUploadScreen = ({ navigation }) => {
           <TouchableOpacity
             style={[styles.Doctab, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTab]}
             onPress={() => {
-              console.log("clicked : ", index)
               dispatch(updateMasterSelected(item.DoctypeType))
 
             }}>
@@ -535,6 +527,7 @@ const DocumentUploadScreen = ({ navigation }) => {
     }
   }, [uploadDocumentSlices.data?.selectedDoc?.child]);
 
+
   const renderChildType = () => {
     const filteredKeys = getFilteredKeys();
     if (filteredKeys.length === 0) return null;
@@ -550,22 +543,23 @@ const DocumentUploadScreen = ({ navigation }) => {
     }, []);
   
     return (
-      <View style={[{ flexDirection: "column" }]}>
+      <View style={[{ flexDirection: "column", paddingVertical:10 }]}>
         <Text style={styles.sectionTitle}>Select ID Type</Text>
         <View style={{ height: 80 }}>
           <PagerView
             style={styles.pagerView}
             initialPage={0}
             onPageSelected={(e) => {
-              // You might want to add logic here if needed
+              setActiveIndex(e.nativeEvent.position || 0)
             }}
-            pageMargin={10}
             ref={pagerViewRef}
           >
             {groupedKeys.map((group, pageIndex) => (
               <View key={pageIndex} style={styles.pageStyle}>
                 {group.map((element) => {
                   const isSelected = uploadDocumentSlices.data.selectedDoc.child === element;
+                  const truncatedText = element.length > 12 ? element.slice(0, 12) + '...' : element;
+
                   return (
                     <TouchableOpacity
                       key={element}
@@ -586,10 +580,14 @@ const DocumentUploadScreen = ({ navigation }) => {
                           style={{
                             color: isSelected ? "#fff" : "#00194c",
                             fontFamily: 'Poppins_400Regular',
-                            fontSize: 10,
+                            fontSize: 11,
+                            overflow: 'hidden', // Hide overflow
+                            textOverflow: 'ellipsis', // Show ellipsis
+                            whiteSpace: 'nowrap', // Prevent text wrapping (for web, not for React Native)
                           }}
+                          numberOfLines={1} // Limit to one line
                         >
-                          {element}
+                          {truncatedText}
                         </Text>
                       </View>
                     </TouchableOpacity>
@@ -605,10 +603,6 @@ const DocumentUploadScreen = ({ navigation }) => {
   };
 
   const renderDots = (groupedKeys) => {
-    const selectedChild = uploadDocumentSlices.data.selectedDoc.child;
-    const filteredKeys = getFilteredKeys();
-    const selectedIndex = filteredKeys.indexOf(selectedChild);
-    const currentPage = Math.floor(selectedIndex / 3);
   
     return (
       <View style={[styles.dotsContainer, { marginTop: 10 }]}>
@@ -622,7 +616,7 @@ const DocumentUploadScreen = ({ navigation }) => {
             <View
               style={[
                 styles.dot,
-                currentPage === index ? styles.activeDot : styles.inactiveDot,
+                activeIndex === index ? styles.activeDot : styles.inactiveDot,
               ]}
             />
           </Pressable>

@@ -163,7 +163,6 @@ const UploadOtherFileSlice = createSlice({
 
            
 
-            console.log(resultArray)
        
 
 
@@ -244,7 +243,6 @@ function* deleteFile(action) {
 
     const docType = action.payload.docType
 
-    console.log(docType)
 
     const deleteResponse = yield call(DeleteUploadFiles, docType);
     if (deleteResponse.status == STATUS.ERROR) {

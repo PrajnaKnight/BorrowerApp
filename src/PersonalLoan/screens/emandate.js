@@ -197,13 +197,7 @@ const EMandateScreen = ({ navigation }) => {
               <Text
                 style={[
                   styles.headerText,
-                  {
-                    fontSize: dynamicFontSize(styles.headerText.fontSize),
-                    textTransform: "none",
-                    lineHeight:24,
-                    marginTop:10
-                  },
-
+                  { fontSize: dynamicFontSize(styles.headerText.fontSize) },
                 ]}>
                 eMandate
               </Text>
