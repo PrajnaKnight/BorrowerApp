@@ -18,6 +18,7 @@ import { Network_Error, Something_Went_Wrong } from '../services/Utils/Constants
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../components/topBar';
 
+
 function SignInScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +50,7 @@ function SignInScreen({ navigation }) {
 
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
 
 
   useEffect(() => {

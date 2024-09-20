@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, KeyboardAvoidingView, Platform , useWindowDimensions} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, KeyboardAvoidingView, Platform , useWindowDimensions, Image} from 'react-native';
 import { styles } from '../services/style/gloablStyle';
 import CustomInput from '../components/input';
 import { useProgressBar } from '../components/progressContext';
@@ -22,6 +22,7 @@ import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 
 const AddressScreen = ({ navigation }) => {
@@ -417,7 +418,14 @@ const AddressScreen = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
 
   return (
     <View style={styles.mainContainer}>
@@ -426,67 +434,65 @@ const AddressScreen = ({ navigation }) => {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -496,318 +502,446 @@ const AddressScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={styles.fixedHeaderAddressDetails}>
-          <View style={{ padding: 16, paddingBottom : 5}}>
-            <ProgressBar progress={0.09} />
-            <Text
-              style={[
-                styles.headerText,
-                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-              ]}>
-              Address Details
-            </Text>
-          </View>
-
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsContainer} style={styles.tabScrollView}>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === 'permanent' && styles.activeTab]}
-              onPress={() => setActiveTab('permanent')}>
-              <Text style={[styles.tabText, activeTab === 'permanent' && styles.activeTabText]}>Permanent <Text style={styles.mandatoryStar}>*</Text></Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === 'current' && styles.activeTab]}
-              onPress={() => setActiveTab('current')}>
-              <Text style={[styles.tabText, activeTab === 'current' && styles.activeTabText]}>Current <Text style={styles.mandatoryStar}>*</Text></Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === 'mailing' && styles.activeTab]}
-              onPress={() => setActiveTab('mailing')}>
-              <Text style={[styles.tabText, activeTab === 'mailing' && styles.activeTabText]}>Mailing <Text style={styles.mandatoryStar}>*</Text></Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === 'add' && styles.activeTab]}
-              disabled={true}
-              onPress={() =>{}}>
-              <Text style={[styles.tabText, activeTab === 'add' && styles.activeTabText]}>
-                <FontAwesome5 name="plus" size={16} /> Add
+          <View
+            style={[
+              styles.fixedHeaderAddressDetails,
+              styles.centerAlignedContainer,
+            ]}>
+            <View style={{ padding: 16, paddingBottom: 5 }}>
+              <ProgressBar progress={0.09} />
+              <Text
+                style={[
+                  styles.headerText,
+                  { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                ]}>
+                Address Details
               </Text>
-            </TouchableOpacity>
-          </ScrollView>
-          </View>
+            </View>
 
-          <ScrollView contentContainerStyle={{ flexGrow: 1,paddingTop: 150 }}>
-            <View style={styles.container}>
-              {otherError && (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.tabsContainer}
+              style={styles.tabScrollView}>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  activeTab === "permanent" && styles.activeTab,
+                ]}
+                onPress={() => setActiveTab("permanent")}>
                 <Text
                   style={[
-                    styles.errorText,
-                    { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                    styles.tabText,
+                    activeTab === "permanent" && styles.activeTabText,
                   ]}>
-                  {otherError}
+                  Permanent <Text style={styles.mandatoryStar}>*</Text>
                 </Text>
-              )}
-              {activeTab === 'permanent' && (
-                <View style={styles.addressForm}>
-                  <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
-                    <CustomInput
-                      widthPercentage={"48%"}
-                      maxLength={6}
-                      value={AddressDetailSlice.data[0].PostalCode}
-                      error={AddressDetailSlice.data[0].PostalCodeError}
-                      onChangeText={(e) => handleAddressUpdate("PIN-CODE", e, "permanent")}
-                      placeholder="PIN Code"
-                      keyboardType="numeric"
-                    />
-                    <CustomInput
-                      widthPercentage={"48%"}
-                      value={AddressDetailSlice.data[0].City}
-                      error={AddressDetailSlice.data[0].CityError}
-                      onChangeText={(e) => handleAddressUpdate("CITY", e, "permanent")}
-                      placeholder="City"
-                      cityOrState={true}
-                    />
-                  </View>
-                  <CustomInput
-                    placeholder="State"
-                    error={AddressDetailSlice.data[0].StateError}
-                    value={AddressDetailSlice.data[0].State}
-                    onChangeText={(e) => handleAddressUpdate("STATE", e, "permanent")}
-                    cityOrState={true}
-                  />
-                  <CustomInput
-                    placeholder="Address line 1"
-                    error={AddressDetailSlice.data[0].AddressLine1Error}
-                    value={AddressDetailSlice.data[0].AddressLine1}
-                    onChangeText={(e) => handleAddressUpdate("ADD-1", e, "permanent")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 2"
-                    value={AddressDetailSlice.data[0].AddressLine2}
-                    onChangeText={(e) => handleAddressUpdate("ADD-2", e, "permanent")}
-                  />
-                  <CustomInput
-                    placeholder="Landmark"
-                    value={AddressDetailSlice.data[0].landmark}
-                    onChangeText={(e) => handleAddressUpdate("landmark", e, "permanent")}
-                  />
-                </View>
-              )}
-              {activeTab === 'current' && (
-                <View style={styles.addressForm}>
-                  <View style={styles.RadioWrapper}>
-                    <RadioButton
-                      label="Same as Permanent Address"
-                      isSelected={selectedCurrent === 'Same as Permanent Address'}
-                      onPress={() => {
-                        setSelectedCurrent('Same as Permanent Address');
-                        dispatch(updateCurrentAddress({ ...AddressDetailSlice.data[0], Id: AddressDetailSlice.data[1].Id }));
-                      }}
-                      style={{ marginBottom: 5 }}
-                    />
-                    <RadioButton
-                      label="Different Address"
-                      isSelected={selectedCurrent === 'Different Address'}
-                      onPress={() => setSelectedCurrent('Different Address')}
-                      style={{ marginBottom: 5 }}
-                    />
-                  </View>
-                  <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
-                    <CustomInput
-                      widthPercentage={"48%"}
-                      maxLength={6}
-                      placeholder="PIN Code"
-                      keyboardType="numeric"
-                      value={AddressDetailSlice.data[1].PostalCode}
-                      error={AddressDetailSlice.data[1].PostalCodeError}
-                      onChangeText={(e) => handleAddressUpdate("PIN-CODE", e, "current")}
-                    />
-                    <CustomInput
-                      widthPercentage={"48%"}
-                      placeholder="City"
-                      cityOrState={true}
-                      value={AddressDetailSlice.data[1].City}
-                      error={AddressDetailSlice.data[1].CityError}
-                      onChangeText={(e) => handleAddressUpdate("CITY", e, "current")}
-                    />
-                  </View>
-                  <CustomInput
-                    placeholder="State"
-                    error={AddressDetailSlice.data[1].StateError}
-                    cityOrState={true}
-                    value={AddressDetailSlice.data[1].State}
-                    onChangeText={(e) => handleAddressUpdate("STATE", e, "current")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 1"
-                    error={AddressDetailSlice.data[1].AddressLine1Error}
-                    value={AddressDetailSlice.data[1].AddressLine1}
-                    onChangeText={(e) => handleAddressUpdate("ADD-1", e, "current")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 2"
-                    value={AddressDetailSlice.data[1].AddressLine2}
-                    onChangeText={(e) => handleAddressUpdate("ADD-2", e, "current")}
-                  />
-                  <CustomInput
-                    placeholder="Landmark"
-                    value={AddressDetailSlice.data[1].landmark}
-                    onChangeText={(e) => handleAddressUpdate("landmark", e, "current")}
-                  />
-                </View>
-              )}
-              {activeTab === 'mailing' && (
-                <View style={styles.addressForm}>
-                  <View style={styles.RadioWrapper}>
-                    <RadioButton
-                      label="Same as Permanent Address"
-                      isSelected={selectedMailing === 'Same as Permanent Address'}
-                      onPress={() => {
-                        setSelectedMailing('Same as Permanent Address');
-                        dispatch(updateMailingAddress({ ...AddressDetailSlice.data[0], Id: AddressDetailSlice.data[2].Id }));
-                      }}
-                      style={{ marginBottom: 5 }}
-                    />
-                    <RadioButton
-                      label="Same as Current Address"
-                      isSelected={selectedMailing === 'Same as Current Address'}
-                      onPress={() => {
-                        setSelectedMailing('Same as Current Address');
-                        dispatch(updateMailingAddress({ ...AddressDetailSlice.data[1], Id: AddressDetailSlice.data[2].Id }));
-                      }}
-                      style={{ marginBottom: 5 }}
-                    />
-                    <RadioButton
-                      label="Different Address"
-                      isSelected={selectedMailing === 'Different Address'}
-                      onPress={() => setSelectedMailing('Different Address')}
-                      style={{ marginBottom: 5 }}
-                    />
-                  </View>
-                  <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
-                    <CustomInput
-                      widthPercentage={"48%"}
-                      maxLength={6}
-                      placeholder="PIN Code"
-                      keyboardType="numeric"
-                      value={AddressDetailSlice.data[2].PostalCode}
-                      error={AddressDetailSlice.data[2].PostalCodeError}
-                      onChangeText={(e) => handleAddressUpdate("PIN-CODE", e, "mailing")}
-                    />
-                    <CustomInput
-                      widthPercentage={"48%"}
-                      placeholder="City"
-                      cityOrState={true}
-                      value={AddressDetailSlice.data[2].City}
-                      error={AddressDetailSlice.data[2].CityError}
-                      onChangeText={(e) => handleAddressUpdate("CITY", e, "mailing")}
-                    />
-                  </View>
-                  <CustomInput
-                    placeholder="State"
-                    error={AddressDetailSlice.data[2].StateError}
-                    cityOrState={true}
-                    value={AddressDetailSlice.data[2].State}
-                    onChangeText={(e) => handleAddressUpdate("STATE", e, "mailing")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 1"
-                    error={AddressDetailSlice.data[2].AddressLine1Error}
-                    value={AddressDetailSlice.data[2].AddressLine1}
-                    onChangeText={(e) => handleAddressUpdate("ADD-1", e, "mailing")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 2"
-                    value={AddressDetailSlice.data[2].AddressLine2}
-                    onChangeText={(e) => handleAddressUpdate("ADD-2", e, "mailing")}
-                  />
-                  <CustomInput
-                    placeholder="Landmark"
-                    value={AddressDetailSlice.data[2].landmark}
-                    onChangeText={(e) => handleAddressUpdate("landmark", e, "mailing")}
-                  />
-                </View>
-              )}
-              {activeTab === 'add' && (
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  activeTab === "current" && styles.activeTab,
+                ]}
+                onPress={() => setActiveTab("current")}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === "current" && styles.activeTabText,
+                  ]}>
+                  Current <Text style={styles.mandatoryStar}>*</Text>
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  activeTab === "mailing" && styles.activeTab,
+                ]}
+                onPress={() => setActiveTab("mailing")}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === "mailing" && styles.activeTabText,
+                  ]}>
+                  Mailing <Text style={styles.mandatoryStar}>*</Text>
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tab, activeTab === "add" && styles.activeTab]}
+                disabled={true}
+                onPress={() => {}}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === "add" && styles.activeTabText,
+                  ]}>
+                  <FontAwesome5 name="plus" size={16} /> Add
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+
+          <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 150 }}>
+            <View style={styles.centerAlignedContainer}>
+              <View style={styles.container}>
+                {otherError && (
+                  <Text
+                    style={[
+                      styles.errorText,
+                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                    ]}>
+                    {otherError}
+                  </Text>
+                )}
+                {activeTab === "permanent" && (
                   <View style={styles.addressForm}>
-                  <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
+                    <View
+                      style={[
+                        styles.flexContent,
+                        { flex: 1, alignItems: "baseline" },
+                      ]}>
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        maxLength={6}
+                        value={AddressDetailSlice.data[0].PostalCode}
+                        error={AddressDetailSlice.data[0].PostalCodeError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("PIN-CODE", e, "permanent")
+                        }
+                        placeholder="PIN Code"
+                        keyboardType="numeric"
+                      />
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        value={AddressDetailSlice.data[0].City}
+                        error={AddressDetailSlice.data[0].CityError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("CITY", e, "permanent")
+                        }
+                        placeholder="City"
+                        cityOrState={true}
+                      />
+                    </View>
                     <CustomInput
-                      widthPercentage={"48%"}
-                      maxLength={6}
-                      placeholder="PIN Code"
-                      keyboardType="numeric"
-                      value={AddressDetailSlice.data[2].PostalCode}
-                      error={AddressDetailSlice.data[2].PostalCodeError}
-                      onChangeText={(e) => handleAddressUpdate("PIN-CODE", e, "mailing")}
+                      placeholder="State"
+                      error={AddressDetailSlice.data[0].StateError}
+                      value={AddressDetailSlice.data[0].State}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("STATE", e, "permanent")
+                      }
+                      cityOrState={true}
                     />
                     <CustomInput
-                      widthPercentage={"48%"}
-                      placeholder="City"
-                      cityOrState={true}
-                      value={AddressDetailSlice.data[2].City}
-                      error={AddressDetailSlice.data[2].CityError}
-                      onChangeText={(e) => handleAddressUpdate("CITY", e, "mailing")}
+                      placeholder="Address line 1"
+                      error={AddressDetailSlice.data[0].AddressLine1Error}
+                      value={AddressDetailSlice.data[0].AddressLine1}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-1", e, "permanent")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 2"
+                      value={AddressDetailSlice.data[0].AddressLine2}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-2", e, "permanent")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Landmark"
+                      value={AddressDetailSlice.data[0].landmark}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("landmark", e, "permanent")
+                      }
                     />
                   </View>
-                  <CustomInput
-                    placeholder="State"
-                    error={AddressDetailSlice.data[2].StateError}
-                    cityOrState={true}
-                    value={AddressDetailSlice.data[2].State}
-                    onChangeText={(e) => handleAddressUpdate("STATE", e, "mailing")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 1"
-                    error={AddressDetailSlice.data[2].AddressLine1Error}
-                    value={AddressDetailSlice.data[2].AddressLine1}
-                    onChangeText={(e) => handleAddressUpdate("ADD-1", e, "mailing")}
-                  />
-                  <CustomInput
-                    placeholder="Address line 2"
-                    value={AddressDetailSlice.data[2].AddressLine2}
-                    onChangeText={(e) => handleAddressUpdate("ADD-2", e, "mailing")}
-                  />
-                  <CustomInput
-                    placeholder="Landmark"
-                    value={AddressDetailSlice.data[2].landmark}
-                    onChangeText={(e) => handleAddressUpdate("landmark", e, "mailing")}
-                  />
-                </View>
-              )}
+                )}
+                {activeTab === "current" && (
+                  <View style={styles.addressForm}>
+                    <View style={styles.RadioWrapper}>
+                      <RadioButton
+                        label="Same as Permanent Address"
+                        isSelected={
+                          selectedCurrent === "Same as Permanent Address"
+                        }
+                        onPress={() => {
+                          setSelectedCurrent("Same as Permanent Address");
+                          dispatch(
+                            updateCurrentAddress({
+                              ...AddressDetailSlice.data[0],
+                              Id: AddressDetailSlice.data[1].Id,
+                            })
+                          );
+                        }}
+                        style={{ marginBottom: 5 }}
+                      />
+                      <RadioButton
+                        label="Different Address"
+                        isSelected={selectedCurrent === "Different Address"}
+                        onPress={() => setSelectedCurrent("Different Address")}
+                        style={{ marginBottom: 5 }}
+                      />
+                    </View>
+                    <View
+                      style={[
+                        styles.flexContent,
+                        { flex: 1, alignItems: "baseline" },
+                      ]}>
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        maxLength={6}
+                        placeholder="PIN Code"
+                        keyboardType="numeric"
+                        value={AddressDetailSlice.data[1].PostalCode}
+                        error={AddressDetailSlice.data[1].PostalCodeError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("PIN-CODE", e, "current")
+                        }
+                      />
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        placeholder="City"
+                        cityOrState={true}
+                        value={AddressDetailSlice.data[1].City}
+                        error={AddressDetailSlice.data[1].CityError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("CITY", e, "current")
+                        }
+                      />
+                    </View>
+                    <CustomInput
+                      placeholder="State"
+                      error={AddressDetailSlice.data[1].StateError}
+                      cityOrState={true}
+                      value={AddressDetailSlice.data[1].State}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("STATE", e, "current")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 1"
+                      error={AddressDetailSlice.data[1].AddressLine1Error}
+                      value={AddressDetailSlice.data[1].AddressLine1}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-1", e, "current")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 2"
+                      value={AddressDetailSlice.data[1].AddressLine2}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-2", e, "current")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Landmark"
+                      value={AddressDetailSlice.data[1].landmark}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("landmark", e, "current")
+                      }
+                    />
+                  </View>
+                )}
+                {activeTab === "mailing" && (
+                  <View style={styles.addressForm}>
+                    <View style={styles.RadioWrapper}>
+                      <RadioButton
+                        label="Same as Permanent Address"
+                        isSelected={
+                          selectedMailing === "Same as Permanent Address"
+                        }
+                        onPress={() => {
+                          setSelectedMailing("Same as Permanent Address");
+                          dispatch(
+                            updateMailingAddress({
+                              ...AddressDetailSlice.data[0],
+                              Id: AddressDetailSlice.data[2].Id,
+                            })
+                          );
+                        }}
+                        style={{ marginBottom: 5 }}
+                      />
+                      <RadioButton
+                        label="Same as Current Address"
+                        isSelected={
+                          selectedMailing === "Same as Current Address"
+                        }
+                        onPress={() => {
+                          setSelectedMailing("Same as Current Address");
+                          dispatch(
+                            updateMailingAddress({
+                              ...AddressDetailSlice.data[1],
+                              Id: AddressDetailSlice.data[2].Id,
+                            })
+                          );
+                        }}
+                        style={{ marginBottom: 5 }}
+                      />
+                      <RadioButton
+                        label="Different Address"
+                        isSelected={selectedMailing === "Different Address"}
+                        onPress={() => setSelectedMailing("Different Address")}
+                        style={{ marginBottom: 5 }}
+                      />
+                    </View>
+                    <View
+                      style={[
+                        styles.flexContent,
+                        { flex: 1, alignItems: "baseline" },
+                      ]}>
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        maxLength={6}
+                        placeholder="PIN Code"
+                        keyboardType="numeric"
+                        value={AddressDetailSlice.data[2].PostalCode}
+                        error={AddressDetailSlice.data[2].PostalCodeError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("PIN-CODE", e, "mailing")
+                        }
+                      />
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        placeholder="City"
+                        cityOrState={true}
+                        value={AddressDetailSlice.data[2].City}
+                        error={AddressDetailSlice.data[2].CityError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("CITY", e, "mailing")
+                        }
+                      />
+                    </View>
+                    <CustomInput
+                      placeholder="State"
+                      error={AddressDetailSlice.data[2].StateError}
+                      cityOrState={true}
+                      value={AddressDetailSlice.data[2].State}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("STATE", e, "mailing")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 1"
+                      error={AddressDetailSlice.data[2].AddressLine1Error}
+                      value={AddressDetailSlice.data[2].AddressLine1}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-1", e, "mailing")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 2"
+                      value={AddressDetailSlice.data[2].AddressLine2}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-2", e, "mailing")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Landmark"
+                      value={AddressDetailSlice.data[2].landmark}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("landmark", e, "mailing")
+                      }
+                    />
+                  </View>
+                )}
+                {activeTab === "add" && (
+                  <View style={styles.addressForm}>
+                    <View
+                      style={[
+                        styles.flexContent,
+                        { flex: 1, alignItems: "baseline" },
+                      ]}>
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        maxLength={6}
+                        placeholder="PIN Code"
+                        keyboardType="numeric"
+                        value={AddressDetailSlice.data[2].PostalCode}
+                        error={AddressDetailSlice.data[2].PostalCodeError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("PIN-CODE", e, "mailing")
+                        }
+                      />
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        placeholder="City"
+                        cityOrState={true}
+                        value={AddressDetailSlice.data[2].City}
+                        error={AddressDetailSlice.data[2].CityError}
+                        onChangeText={(e) =>
+                          handleAddressUpdate("CITY", e, "mailing")
+                        }
+                      />
+                    </View>
+                    <CustomInput
+                      placeholder="State"
+                      error={AddressDetailSlice.data[2].StateError}
+                      cityOrState={true}
+                      value={AddressDetailSlice.data[2].State}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("STATE", e, "mailing")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 1"
+                      error={AddressDetailSlice.data[2].AddressLine1Error}
+                      value={AddressDetailSlice.data[2].AddressLine1}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-1", e, "mailing")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Address line 2"
+                      value={AddressDetailSlice.data[2].AddressLine2}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("ADD-2", e, "mailing")
+                      }
+                    />
+                    <CustomInput
+                      placeholder="Landmark"
+                      value={AddressDetailSlice.data[2].landmark}
+                      onChangeText={(e) =>
+                        handleAddressUpdate("landmark", e, "mailing")
+                      }
+                    />
+                  </View>
+                )}
+              </View>
             </View>
           </ScrollView>
 
-          <View style={[styles.actionContainer, styles.boxShadow]}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => {
-                GoBack(navigation);
-              }}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  {
-                    fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                  },
-                ]}>
-                BACK
-              </Text>
-            </TouchableOpacity>
-            <LinearGradient
-             colors={["#002777", "#00194C"]}
-              style={[styles.verifyButton]}
-            >
-              <TouchableOpacity onPress={() => handleProcessed()}>
+          <View style={[ styles.boxShadow]}>
+            <View
+              style={[styles.actionContainer, styles.centerAlignedContainer]}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => {
+                  GoBack(navigation);
+                }}>
                 <Text
                   style={[
-                    styles.buttonText,
+                    styles.backBtnText,
                     {
-                      fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                      fontSize: dynamicFontSize(styles.backBtnText.fontSize),
                     },
                   ]}>
-                  PROCEED
+                  BACK
                 </Text>
               </TouchableOpacity>
-            </LinearGradient>
+              <LinearGradient
+                colors={["#002777", "#00194C"]}
+                style={[styles.verifyButton]}>
+                <TouchableOpacity onPress={() => handleProcessed()}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      {
+                        fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                      },
+                    ]}>
+                    PROCEED
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </View>
           {errorScreen.type != null && (
             <ScreenError

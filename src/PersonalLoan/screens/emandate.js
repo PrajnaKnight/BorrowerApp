@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, useWindowDimensions, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from '../services/style/gloablStyle';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -19,6 +19,7 @@ import { ALL_SCREEN } from '../services/Utils/Constants';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import CustomDropdown from '../components/Dropdown';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 const EMandateScreen = ({ navigation }) => {
 
@@ -53,7 +54,7 @@ const EMandateScreen = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
 
   const HandleProcced = async () => {
     setLoading(true)
@@ -107,6 +108,14 @@ const EMandateScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+    
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
+
   return (
     <View style={styles.mainContainer}>
       <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
@@ -114,72 +123,66 @@ const EMandateScreen = ({ navigation }) => {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                // button Linear Gradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
-              {/* <View style={styles.bottomFixed}>
-         <Image source={require('../assets/images/poweredby.png')} style={styles.logo} />
-      </View> */}
             </View>
           </View>
         )}
@@ -189,10 +192,12 @@ const EMandateScreen = ({ navigation }) => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
 
-
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-
-            <View style={{ padding:16, paddingBottom:10 }}>
+            <View
+              style={[
+                styles.centerAlignedContainerHeader,
+                { padding: 16, paddingBottom: 10 },
+              ]}>
               <ProgressBar progress={0.6} />
               <Text
                 style={[
@@ -202,133 +207,135 @@ const EMandateScreen = ({ navigation }) => {
                 eMandate
               </Text>
               <Text
-                style={{ fontSize: 14, color: "#00194c", fontFamily: '400' }}>
+                style={{ fontSize: 14, color: "#00194c", fontFamily: "400" }}>
                 Please sign the e-mandate
               </Text>
             </View>
+
             <View style={styles.container}>
-              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <View>
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      {fontFamily:"Poppins_500Medium"}
-                    ]}>
-                    Bank Account Number{" "}
-                    <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <CustomDropdown
-                    options={bankAccounts}
-                    selectedValue={selectedAccount}
-                    onValueChange={(itemValue) => setSelectedAccount(itemValue)}
-                  />
-
-                  <Text
-                    style={[
-                      styles.label,
-                      { fontSize: dynamicFontSize(styles.label.fontSize), fontFamily:"Poppins_500Medium" },
-                    ]}>
-                    Bank Branch IFSC Code{" "}
-                    <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <CustomInput
-                    value={ifscCode}
-                    onChangeText={(text) => setIfscCode(text)}
-                    placeholder="Enter your bank branch IFSC code"
-                    editable={selectedAccount !== ""}
-                    style={selectedAccount === "" ? styles.disabledInput : {}}
-                  />
-
-                  {renderGradientButton("SIGN eMANDATE", () => {
-                    HandleProcced();
-                  })}
-
-                  <View style={styles.orWrapper}>
+              <View style={styles.centerAlignedContainer}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                  <View>
                     <Text
                       style={[
-                        styles.or,
-                        { fontSize: dynamicFontSize(styles.or.fontSize) },
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        { fontFamily: "Poppins_500Medium" },
                       ]}>
-                      OR
+                      Bank Account Number{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
-                  </View>
-                  <TouchableOpacity style={styles.uploadButtonNach}>
-                    <Text
-                      style={[
-                        styles.uploadButtonNachText,
-                        {
-                          fontSize: dynamicFontSize(
-                            styles.uploadButtonNachText.fontSize
-                          ),
-                        },
-                      ]}>
-                      Upload Physical NACH
-                    </Text>
-                    <Icon
-                      name="upload"
-                      size={16}
-                      color="#fff"
-                      style={[
-                        styles.icon,
-                        { backgroundColor: "#FF8600", padding: 10 },
-                      ]}
+                    <CustomDropdown
+                      options={bankAccounts}
+                      selectedValue={selectedAccount}
+                      onValueChange={(itemValue) =>
+                        setSelectedAccount(itemValue)
+                      }
                     />
-                  </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.downloadSamplebutton}>
                     <Text
                       style={[
-                        styles.downloadSamplebuttonText,
+                        styles.label,
                         {
-                          fontSize: dynamicFontSize(
-                            styles.downloadSamplebuttonText.fontSize
-                          ),
+                          fontSize: dynamicFontSize(styles.label.fontSize),
+                          fontFamily: "Poppins_500Medium",
                         },
                       ]}>
-                      Download NACH Form
+                      Bank Branch IFSC Code{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
                     </Text>
-                  </TouchableOpacity>
-                </View>
-              </ScrollView>
-            </View>
-            <View
-              style={[
-                styles.actionContainer,
-                styles.boxShadow,
-                { paddingHorizontal: 16 },
-              ]}>
-              <TouchableOpacity
-                style={[styles.backButton, { marginRight: 10 }]}
-                onPress={() => GoBack(navigation)}>
-                <Text
-                  style={[
-                    styles.backBtnText,
-                    {
-                      fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                    },
-                  ]}>
-                  BACK
-                </Text>
-              </TouchableOpacity>
-              {renderGradientButton("PROCEED", () => HandleProcced())}
-            </View>
+                    <CustomInput
+                      value={ifscCode}
+                      onChangeText={(text) => setIfscCode(text)}
+                      placeholder="Enter your bank branch IFSC code"
+                      editable={selectedAccount !== ""}
+                      style={selectedAccount === "" ? styles.disabledInput : {}}
+                    />
 
+                    {renderGradientButton("SIGN eMANDATE", () => {
+                      HandleProcced();
+                    })}
+
+                    <View style={styles.orWrapper}>
+                      <Text
+                        style={[
+                          styles.or,
+                          { fontSize: dynamicFontSize(styles.or.fontSize) },
+                        ]}>
+                        OR
+                      </Text>
+                    </View>
+                    <TouchableOpacity style={styles.uploadButtonNach}>
+                      <Text
+                        style={[
+                          styles.uploadButtonNachText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.uploadButtonNachText.fontSize
+                            ),
+                          },
+                        ]}>
+                        Upload Physical NACH
+                      </Text>
+                      <Icon
+                        name="upload"
+                        size={16}
+                        color="#fff"
+                        style={[
+                          styles.icon,
+                          { backgroundColor: "#FF8600", padding: 10 },
+                        ]}
+                      />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.downloadSamplebutton}>
+                      <Text
+                        style={[
+                          styles.downloadSamplebuttonText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.downloadSamplebuttonText.fontSize
+                            ),
+                          },
+                        ]}>
+                        Download NACH Form
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+              </View>
+            </View>
+            <View style={[styles.boxShadow, { paddingHorizontal: 16 }]}>
+              <View
+                style={[styles.actionContainer,styles.centerAlignedContainer]}>
+                <TouchableOpacity
+                  style={[styles.backButton, { marginRight: 10 }]}
+                  onPress={() => GoBack(navigation)}>
+                  <Text
+                    style={[
+                      styles.backBtnText,
+                      {
+                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                      },
+                    ]}>
+                    BACK
+                  </Text>
+                </TouchableOpacity>
+                {renderGradientButton("PROCEED", () => HandleProcced())}
+              </View>
+            </View>
           </ScrollView>
 
-
-          {
-            errorScreen.type != null && (
-              <ScreenError
-                errorObject={errorScreen}
-                onTryAgainClick={onTryAgainClick}
-                setNewErrorScreen={setNewErrorScreen}
-              />
-            )
-          }
+          {errorScreen.type != null && (
+            <ScreenError
+              errorObject={errorScreen}
+              onTryAgainClick={onTryAgainClick}
+              setNewErrorScreen={setNewErrorScreen}
+            />
+          )}
         </KeyboardAvoidingView>
       </View>
-    </View >
+    </View>
   );
 };
 

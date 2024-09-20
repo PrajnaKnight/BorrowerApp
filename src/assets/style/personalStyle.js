@@ -17,7 +17,7 @@ export const styles = applyFontFamily({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: "#F8FAFF",
+    backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
         width: "100%",
@@ -90,6 +90,11 @@ export const styles = applyFontFamily({
     height: 20,
     borderRadius: 5,
     flexDirection: "row",
+    ...Platform.select({
+     web: {
+       height: 40,
+     },
+    }),
   },
   sliderLabels: {
     flexDirection: "row",
@@ -1295,6 +1300,7 @@ outlineStyle: 'solid',
     }),
   },
   centerAlignedContainer: { 
+   
     ...Platform.select({
       web: {
         width: "70%",

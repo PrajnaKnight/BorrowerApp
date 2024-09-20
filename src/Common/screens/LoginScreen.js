@@ -719,7 +719,13 @@ function LoginScreen({ navigation }) {
                       />
                     </View>
                   </View>
-                  <ButtonComponent
+                  
+                </View>
+                </View>
+              </ScrollView>
+              <View style={styles.boxShadow}>
+              <View style={[styles.actionContainer, styles.centerAlignedContainer]}>
+              <ButtonComponent
                     title="Proceed"
                     onPress={handleSubmit}
                     disabled={!termsAccepted}
@@ -734,9 +740,8 @@ function LoginScreen({ navigation }) {
                         : styles.buttonEnabledText,
                     }}
                   />
-                </View>
-                </View>
-              </ScrollView>
+              </View>
+              </View>
               {errorScreen.type != null && (
                 <ScreenError
                   errorObject={errorScreen}

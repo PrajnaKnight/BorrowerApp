@@ -686,6 +686,9 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
               marginTop: -10,
               backgroundColor: '#FFFFFF',
               zIndex: 100,
+              ...(Platform.OS === 'web' ? {
+               overflow: 'scroll'
+              } : {}),
             }}
             renderItem={({ item }) => (
               <CompanyItem

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { View, Text, StyleSheet } from 'react-native';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
+import { min } from 'date-fns';
 
 const CustomDropdown = ({
   value,
@@ -36,9 +37,10 @@ const CustomDropdown = ({
       borderWidth: 1,
       borderColor: "#D8DFF2",
       color: "#fff",
-      fontSize: 16,
-      backgroundColor: "#fff",
-      zIndex: 1000,
+      fontSize: 15,
+      backgroundColor: "#ffffff",
+      zIndex: 10000,
+      minHeight: 42,
     },
     dropdownText: {
       color: '#333',

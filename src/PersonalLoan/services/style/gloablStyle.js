@@ -89,6 +89,11 @@ export const styles = applyFontFamily({
     height: 20,
     borderRadius: 5,
     flexDirection: "row",
+    ...Platform.select({
+      web: {
+        height: 40,
+      },
+    }),
   },
   sliderLabels: {
     flexDirection: "row",
@@ -378,11 +383,10 @@ outlineStyle: 'solid',
     color: "#00194C",
   },
   WebheaderText: {
-    fontSize: 30,
+    fontSize: 49,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
-    textAlign: "center",
   },
   subText: {
     fontSize: 16,
@@ -493,6 +497,11 @@ outlineStyle: 'solid',
     paddingHorizontal: 5,
     borderWidth: 1,
     borderRadius: 5,
+    ...Platform.select({
+      web: {
+        borderWidth:0
+      },
+    }),
   },
   progressBarBackground: {
     height: 5,
@@ -1210,7 +1219,7 @@ outlineStyle: 'solid',
     lineHeight: 20,
     ...Platform.select({
       web: {
-        padding: 9,
+        padding: 7,
         color: "#00194c",
         borderColor: "#00194c",
       },
@@ -1306,6 +1315,17 @@ outlineStyle: 'solid',
         backgroundColor: "#ffffff",
         marginLeft: "auto",
         marginRight: "auto",
+        flexGrow:1
+      },
+    }),
+  },
+  centerAlignedContainerHeader:{
+    ...Platform.select({
+      web: {
+        width: "70%",
+        backgroundColor: "#ffffff",
+        marginLeft: "auto",
+        marginRight: "auto",
       },
     }),
   },
@@ -1336,7 +1356,6 @@ outlineStyle: 'solid',
     }),
   },
   webheader: {
-    alignItems: "center",
     marginBottom: 20,
   },
   websubtitleText: {
@@ -1397,15 +1416,17 @@ outlineStyle: 'solid',
   },
   mincontainer: {
     flex: 1,
-    padding: 20,
-    justifyContent: "center",
+    justifyContent :'center',
+    paddingHorizontal: 80,
+    paddingVertical:20
   },
   featureIcon: {
     color: "#ffffff",
   },
   bottomFixed: {
     position: "absolute",
-    bottom: 10,
+    bottom: 80,
+    right:80,
   },
 
   mainContainer: {
@@ -1633,6 +1654,14 @@ outlineStyle: 'solid',
     borderRadius: 8,
     alignItems: "center",
     alignItems: "center",
+    width: "100%",
+    ...Platform.select({
+      web: {
+        width: "100%",
+        marginLeft: "auto",
+        marginRight: "auto",
+      },
+    }),
   },
   inputIcon: {
     backgroundColor: "#758BFD",
@@ -1777,7 +1806,7 @@ outlineStyle: 'solid',
     padding: 16,
   },
   docCaptureWrapper: {
-    borderWidth: 1,
+    borderWidth: 1  ,
     borderColor: "#A2ACC6",
     padding: 16,
     borderRadius: 10,
@@ -2450,5 +2479,20 @@ outlineStyle: 'solid',
   dashItemDone: {
     backgroundColor: '#ffffff',
   },
+  scrollViewContentWrapper:{
+    flexGrow: 1,
+  
+  },
+  containerScroll:{
+    ...Platform.select({
+      web: {
+        height:"90%",
+      },
+    }),
+  },
+  dropdownContainerWrapper:{
+    zIndex: 1000,
+  },
+
 });
 

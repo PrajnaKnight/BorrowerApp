@@ -7,7 +7,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  useWindowDimensions
+  useWindowDimensions,
+  Image
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { styles } from '../services/style/gloablStyle';
@@ -39,6 +40,8 @@ import CustomProgressChart from '../components/CustomProgressChart';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SubmitBorrowerLoanApplicationAsyncSubmit } from '../services/API/SaveBankAccountDetail';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
+
 
 const LoanEligibilityScreen = ({ navigation }) => {
   const route = useRoute();
@@ -540,7 +543,14 @@ const LoanEligibilityScreen = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
 
   return (
     <View style={styles.mainContainer}>
@@ -549,67 +559,65 @@ const LoanEligibilityScreen = ({ navigation }) => {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    %
-                  </Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    3
-                  </Text>
-                  <Text style={styles.webfeatureText}>
-                    3-Step Instant approval in 30 minutes
-                  </Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text
-                    style={[
-                      styles.webfeatureIcon,
-                      { fontSize: 30, marginBottom: 5 },
-                    ]}>
-                    ⏳
-                  </Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that
-                  isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click
-                    here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -619,207 +627,239 @@ const LoanEligibilityScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16, paddingBottom: 0 }}>
-            <ProgressBar progress={0.3} />
-            <Text
-              style={[
-                styles.headerText,
-                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-              ]}>
-              Loan Eligibility
-            </Text>
+          <View style={[styles.centerAlignedContainer]}>
+            <View style={{ padding: 16, paddingBottom: 0 }}>
+              <ProgressBar progress={0.3} />
+              <Text
+                style={[
+                  styles.headerText,
+                  { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                ]}>
+                Loan Eligibility
+              </Text>
+            </View>
           </View>
-
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
-              <View>
-                {otherError && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
-                    ]}>
-                    {otherError}
-                  </Text>
-                )}
-
-                <View style={styles.marginBtm}>
-                  {loanApproved == true &&
-                    (<Text
+              <View style={styles.centerAlignedContainer}>
+                <View>
+                  {otherError && (
+                    <Text
                       style={[
-                        styles.description,
+                        styles.errorText,
                         {
-                          fontSize: dynamicFontSize(styles.description.fontSize),
+                          fontSize: dynamicFontSize(styles.errorText.fontSize),
                         },
                       ]}>
-                      Hurray, You are eligible for the loan amount of {" "}
-                      <Text style={styles.descriptionAmt}>
-                        Rs. {loanAskAmount.toLocaleString()}
-                      </Text> . You're also eligible to take a higher
-                      loan amount up to{" "}
-                      <Text style={styles.descriptionAmt}>
-                        Rs. {maxLoanAmount.toLocaleString()}
-                      </Text>
+                      {otherError}
                     </Text>
+                  )}
+
+                  <View style={styles.marginBtm}>
+                    {loanApproved == true && (
+                      <Text
+                        style={[
+                          styles.description,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.description.fontSize
+                            ),
+                          },
+                        ]}>
+                        Hurray, You are eligible for the loan amount of{" "}
+                        <Text style={styles.descriptionAmt}>
+                          Rs. {loanAskAmount.toLocaleString()}
+                        </Text>{" "}
+                        . You're also eligible to take a higher loan amount up
+                        to{" "}
+                        <Text style={styles.descriptionAmt}>
+                          Rs. {maxLoanAmount.toLocaleString()}
+                        </Text>
+                      </Text>
                     )}
-                </View>
+                  </View>
 
-                {/* Loan Amount Chart */}
-                <View
-                  style={[
-                    styles.ChartContainer,
-                    { alignItems: "center", marginTop: 10, marginBottom: 20 },
-                  ]}>
-                  <CustomProgressChart
-                    loanAmount={properAmmount(loanAmount)}
-                    minLoanAmount={0}
-                    maxLoanAmount={maxLoanAmount}
-                  />
-                </View>
-
-                <Text
-                  style={[
-                    styles.description,
-                    {
-                      fontSize: dynamicFontSize(styles.description.fontSize),
-                    },
-                  ]}>
-                  Kindly confirm the sanctioned loan amount and click the
-                  proceed button to provide necessary documents, and sign loan
-                  agreement and eMandate for disbursal of loan.
-                </Text>
-                <View style={styles.loanIdcontainer}>
-                  <View style={styles.loanIdiconContainer}>
-                    <MaterialCommunityIcons
-                      name="hand-coin-outline"
-                      size={24}
-                      color="#ffffff"
+                  {/* Loan Amount Chart */}
+                  <View
+                    style={[
+                      styles.ChartContainer,
+                      { alignItems: "center", marginTop: 10, marginBottom: 20 },
+                    ]}>
+                    <CustomProgressChart
+                      loanAmount={properAmmount(loanAmount)}
+                      minLoanAmount={0}
+                      maxLoanAmount={maxLoanAmount}
                     />
                   </View>
-                  <Text style={styles.loanId}>
-                    Loan ID:{" "}
-                    <Text style={styles.loanIdValue}>{ApplicationID}</Text>
-                  </Text>
-                </View>
-                <CustomSlider
-                  title="Loan Amount"
-                  icon="rupee"
-                  keyboardType="numeric"
-                  min={minLoanAmount}
-                  max={maxLoanAmount}
-                  steps={10000}
-                  currentValue={loanAmount}
-                  error={loanAmountError}
-                  onChange={(e) => handleLoanAmountChange(e)}
-                  isAmount={true}
-                />
 
-                <CustomSlider
-                  title="Tenure"
-                  icon="calendar"
-                  keyboardType="numeric"
-                  min={minTenure}
-                  max={maxTenure}
-                  steps={3}
-                  currentValue={tenure}
-                  error={tenureError}
-                  onChange={(e) => handleTenureChange(e)}
-                  isTenure={true}
-                />
-
-                {!isEligible && (
-                  <Text style={styles.errorText}>
-                    You are not eligible for selected loan amount
+                  <Text
+                    style={[
+                      styles.description,
+                      {
+                        fontSize: dynamicFontSize(styles.description.fontSize),
+                      },
+                    ]}>
+                    Kindly confirm the sanctioned loan amount and click the
+                    proceed button to provide necessary documents, and sign loan
+                    agreement and eMandate for disbursal of loan.
                   </Text>
-                )}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}>
-                  <View style={{ flex: 1, paddingRight: 5 }}>
-                    <Text
-                      style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      ]}>
-                      Rate of Interest
+                  <View style={styles.loanIdcontainer}>
+                    <View style={styles.loanIdiconContainer}>
+                      <MaterialCommunityIcons
+                        name="hand-coin-outline"
+                        size={24}
+                        color="#ffffff"
+                      />
+                    </View>
+                    <Text style={styles.loanId}>
+                      Loan ID:{" "}
+                      <Text style={styles.loanIdValue}>{ApplicationID}</Text>
                     </Text>
-                    <View
-                      style={[
-                        styles.input,
-                        styles.readonly,
-                        {
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: 10,
-                        },
-                      ]}>
+                  </View>
+                  <CustomSlider
+                    title="Loan Amount"
+                    icon="rupee"
+                    keyboardType="numeric"
+                    min={minLoanAmount}
+                    max={maxLoanAmount}
+                    steps={10000}
+                    currentValue={loanAmount}
+                    error={loanAmountError}
+                    onChange={(e) => handleLoanAmountChange(e)}
+                    isAmount={true}
+                  />
+
+                  <CustomSlider
+                    title="Tenure"
+                    icon="calendar"
+                    keyboardType="numeric"
+                    min={minTenure}
+                    max={maxTenure}
+                    steps={3}
+                    currentValue={tenure}
+                    error={tenureError}
+                    onChange={(e) => handleTenureChange(e)}
+                    isTenure={true}
+                  />
+
+                  {!isEligible && (
+                    <Text style={styles.errorText}>
+                      You are not eligible for selected loan amount
+                    </Text>
+                  )}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}>
+                    <View style={{ flex: 1, paddingRight: 5 }}>
                       <Text
-                        style={{fontSize: 16, color: "#00194C",lineHeight:26,}}>
-                        {rateOfInterest || 0} %
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Rate of Interest
                       </Text>
-                      <View style={{ alignItems: "flex-end" }}>
-                        <Text style={{ color: "#00194c", fontSize: 9, lineHeight:12, fontWeight:'500', opacity:0.6 }}>
-                          Reducing
+                      <View
+                        style={[
+                          styles.input,
+                          styles.readonly,
+                          {
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: 10,
+                          },
+                        ]}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: "#00194C",
+                            lineHeight: 26,
+                          }}>
+                          {rateOfInterest || 0} %
                         </Text>
-                        <Text style={{ color: "#00194c", fontSize: 9,lineHeight:12, fontWeight:'500', opacity:0.6 }}>
-                          Rate
-                        </Text>
+                        <View style={{ alignItems: "flex-end" }}>
+                          <Text
+                            style={{
+                              color: "#00194c",
+                              fontSize: 9,
+                              lineHeight: 12,
+                              fontWeight: "500",
+                              opacity: 0.6,
+                            }}>
+                            Reducing
+                          </Text>
+                          <Text
+                            style={{
+                              color: "#00194c",
+                              fontSize: 9,
+                              lineHeight: 12,
+                              fontWeight: "500",
+                              opacity: 0.6,
+                            }}>
+                            Rate
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
 
-
-
-                  <View style={[styles.emiContainer, { flex: 1, paddingLeft: 5 }]}>
-                    <Text
+                    <View
                       style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        styles.emiContainer,
+                        { flex: 1, paddingLeft: 5 },
                       ]}>
-                      EMI Amount
-                    </Text>
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        EMI Amount
+                      </Text>
 
-                    <Text
-                      style={[
-                        styles.input,
-                        styles.readonly,
-                        { fontSize: dynamicFontSize(styles.input.fontSize) },
-                      ]}>
-                      ₹ {emiAmount || 0}
-                    </Text>
+                      <Text
+                        style={[
+                          styles.input,
+                          styles.readonly,
+                          { fontSize: dynamicFontSize(styles.input.fontSize) },
+                        ]}>
+                        ₹ {emiAmount || 0}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
           </ScrollView>
-          <View style={[styles.actionContainer, styles.boxShadow]}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => GoBack(navigation)}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
-                ]}>
-                BACK
-              </Text>
-            </TouchableOpacity>
-            <LinearGradient
-              colors={["#002777", "#00194C"]}
-              style={styles.verifyButton}>
-              <TouchableOpacity onPress={handleProceed}>
+
+          <View style={styles.boxShadow}>
+            <View
+              style={[styles.actionContainer, styles.centerAlignedContainer]}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => GoBack(navigation)}>
                 <Text
                   style={[
-                    styles.buttonText,
-                    { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    styles.backBtnText,
+                    { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
                   ]}>
-                  PROCEED
+                  BACK
                 </Text>
               </TouchableOpacity>
-            </LinearGradient>
+              <LinearGradient
+                colors={["#002777", "#00194C"]}
+                style={styles.verifyButton}>
+                <TouchableOpacity onPress={handleProceed}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    ]}>
+                    PROCEED
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </View>
 
           {errorScreen.type != null && (
