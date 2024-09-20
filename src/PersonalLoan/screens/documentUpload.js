@@ -28,7 +28,7 @@ import applyFontFamily from '../services/style/applyFontFamily';
 import { AntDesign } from '@expo/vector-icons';
 import { retry } from 'redux-saga/effects';
 import useJumpTo from "../components/StageComponent";
-// import PagerView from 'react-native-pager-view';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 
 
 const DocumentUploadScreen = ({ navigation }) => {
@@ -65,16 +65,7 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const changeType = (value, index) => {
     dispatch(updateChildSelected(value));
-    if (pagerViewRef.current) {
-      pagerViewRef.current.setPage(Math.floor(index / 3));
-    }
-  };
-
-
-  const scrollToIndex = (index) => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ x: index * itemWidth, animated: true });
-    }
+   
   };
 
 
@@ -177,7 +168,7 @@ const DocumentUploadScreen = ({ navigation }) => {
       if (Platform.OS === "web") {
         navigation.navigate('WebCameraScreen', {
           onGoBack: (data) => {
-          
+
 
             if (data != null) {
 
@@ -451,13 +442,13 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   useEffect(() => {
     try {
-      scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+      pagerViewRef.current?.scrollToIndex({ index: 0, animated: true });
 
     }
     catch (e) {
 
     }
-  }, [uploadDocumentSlices.data.selectedDoc])
+  }, [uploadDocumentSlices.data.selectedDoc.master])
 
   const renderDocList = (list) => (
 
@@ -478,7 +469,7 @@ const DocumentUploadScreen = ({ navigation }) => {
             <Text style={[styles.DoctabText, uploadDocumentSlices.data.selectedDoc.master == item.DoctypeType && styles.DocselectedTabText,
             ]}>
               {item.DoctypeType}
-              
+
               {item.MandatoryFlag == "1" && <Text style={styles.mandatoryStar}> *</Text>}
             </Text>
           </TouchableOpacity>
@@ -494,7 +485,7 @@ const DocumentUploadScreen = ({ navigation }) => {
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
     const maxScrollPosition = event.nativeEvent.contentSize.width - windowWidth;
-    
+
     if (scrollPosition >= maxScrollPosition) {
       // We're at the end, select the last item
       const filteredKeys = getFilteredKeys();
@@ -522,31 +513,78 @@ const DocumentUploadScreen = ({ navigation }) => {
       const filteredKeys = getFilteredKeys();
       const index = filteredKeys.indexOf(selectedChild);
       if (index !== -1) {
-        pagerViewRef.current.setPage(Math.floor(index / 3));
+        // pagerViewRef.current?.scrollToIndex(Math.floor(index / 3) || 0, false);
       }
     }
   }, [uploadDocumentSlices.data?.selectedDoc?.child]);
 
 
+  const TabsView = ({ items = [], filteredKeys }) => (<View style={{ height: 100, width: swiperWidth, flexDirection: "row", justifyContent: "space-between" }}>
+    {items.map((element, idx) => {
+      const isSelected = uploadDocumentSlices.data.selectedDoc.child === element;
+      const truncatedText = element.length > 12 ? element.slice(0, 12) + '...' : element;
+
+      <View style={{ height: 100, width: 200, backgroundColor: "red" }}>
+        <Text>{truncatedText}</Text>
+
+      </View>
+      // <TouchableOpacity
+      //   key={element}
+      //   style={[
+      //     styles.docTypeButton,
+      //     isSelected && styles.selectedDocTypeButton
+      //   ]}
+      //   onPress={() => changeType(element, filteredKeys.indexOf(element))}
+      // >
+      //   <View style={{ flexDirection: "column", alignItems: "center" }}>
+      //     <Icon
+      //       name={getIconName(element)}
+      //       size={24}
+      //       color={isSelected ? "#fff" : "#00194c"}
+      //     />
+      //     <View style={{ height: 4 }} />
+      //     <Text
+      //       style={{
+      //         color: isSelected ? "#fff" : "#00194c",
+      //         fontFamily: 'Poppins_400Regular',
+      //         fontSize: 11,
+      //         overflow: 'hidden', // Hide overflow
+      //         textOverflow: 'ellipsis', // Show ellipsis
+      //         whiteSpace: 'nowrap', // Prevent text wrapping (for web, not for React Native)
+      //       }}
+      //       numberOfLines={1} // Limit to one line
+      //     >
+      //       {truncatedText}
+      //     </Text>
+      //   </View>
+      // </TouchableOpacity>
+    })}
+  </View>
+  )
+
+
   const renderChildType = () => {
     const filteredKeys = getFilteredKeys();
     if (filteredKeys.length === 0) return null;
-  
+
     // Group filteredKeys into sets of 3
-    const groupedKeys = filteredKeys.reduce((resultArray, item, index) => { 
-      const chunkIndex = Math.floor(index/3);
-      if(!resultArray[chunkIndex]) {
+    const groupedKeys = filteredKeys.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / 3);
+      if (!resultArray[chunkIndex]) {
         resultArray[chunkIndex] = [] // start a new chunk
       }
       resultArray[chunkIndex].push(item);
+      console.log(resultArray)
       return resultArray
     }, []);
-  
+
     return (
-      <View style={[{ flexDirection: "column", paddingVertical:10 }]}>
+
+
+      <View style={[{ flexDirection: "column", paddingVertical: 10 }]}>
         <Text style={styles.sectionTitle}>Select ID Type</Text>
-        <View style={{ height: 80 }}>
-          <PagerView
+        <View>
+          {/* <PagerView
             style={styles.pagerView}
             initialPage={0}
             onPageSelected={(e) => {
@@ -595,23 +633,80 @@ const DocumentUploadScreen = ({ navigation }) => {
                 })}
               </View>
             ))}
-          </PagerView>
+          </PagerView> */}
+
+          <SwiperFlatList
+            ref={pagerViewRef}
+            onLayout={(event) => {
+              const { width } = event.nativeEvent.layout;
+              setSwiperWidth(width); // Update the width when layout changes
+            }}
+
+            onChangeIndex={({index, preIndex})=>{setActiveIndex(index)}}
+            
+            index={0}
+            scrollEnabled={true}
+            horizontal
+            data={groupedKeys}
+            
+            renderItem={({ item, index }) => {
+              return (
+                <View key={index} style={{ flexDirection: 'row' , width:swiperWidth}}>
+                  {item.map((element, idx) => {
+                    const isSelected = uploadDocumentSlices.data.selectedDoc.child === element;
+                    const truncatedText = element.length > 12 ? element.slice(0, 12) + '...' : element;
+
+                    return (
+                      <TouchableOpacity
+                        key={element}
+                        style={[
+                          styles.docTypeButton,
+                          isSelected && styles.selectedDocTypeButton,
+                          {width:"30%", marginHorizontal:7}
+                        ]}
+                        onPress={() => changeType(element, filteredKeys.indexOf(element))}
+                      >
+                        <View style={{ flexDirection: "column", alignItems: "center" }}>
+                          <Icon
+                            name={getIconName(element)}
+                            size={24}
+                            color={isSelected ? "#fff" : "#00194c"}
+                          />
+                          <View style={{ height: 4 }} />
+                          <Text
+                            style={{
+                              color: isSelected ? "#fff" : "#00194c",
+                              fontFamily: 'Poppins_400Regular',
+                              fontSize: 11,
+                              overflow: 'hidden', // Hide overflow
+                              textOverflow: 'ellipsis', // Show ellipsis
+                              whiteSpace: 'nowrap', // Prevent text wrapping (for web, not for React Native)
+                            }}
+                            numberOfLines={1} // Limit to one line
+                          >
+                            {truncatedText}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              );
+            }}
+          />
         </View>
-        {renderDots(groupedKeys)}
+        <RenderDots groupedKeys = {groupedKeys}/>
       </View>
     );
   };
 
-  const renderDots = (groupedKeys) => {
-  
+  const RenderDots = ({groupedKeys}) => {
+
     return (
       <View style={[styles.dotsContainer, { marginTop: 10 }]}>
         {groupedKeys.map((_, index) => (
-          <Pressable 
-            key={index} 
-            onPress={() => {
-              pagerViewRef.current?.setPage(index);
-            }}
+          <Pressable
+            key={index}
           >
             <View
               style={[
@@ -649,7 +744,7 @@ const DocumentUploadScreen = ({ navigation }) => {
                   }}>
                   <Icon name={"file"} size={24} />
                   <View style={{ height: 5 }} />
-                  <Text style={{ fontFamily:"Poppins_400Regular"}}>{selectedFile.Name}</Text>
+                  <Text style={{ fontFamily: "Poppins_400Regular" }}>{selectedFile.Name}</Text>
                 </View>
               )) :
               <View style={styles.previewPlaceholder}>
@@ -785,7 +880,7 @@ const DocumentUploadScreen = ({ navigation }) => {
         <View style={styles.passwordInputContainer}>
           <TextInput
 
-            style={[styles.passwordInput,{ fontFamily:"Poppins_400Regular"}]}
+            style={[styles.passwordInput, { fontFamily: "Poppins_400Regular" }]}
             secureTextEntry={true}
             value={selectedFile.Password}
             onChangeText={updatePassword}
@@ -805,6 +900,9 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+
+  const [swiperWidth, setSwiperWidth] = useState(Dimensions.get('window').width); // Default to screen width
+
 
   return (
     <View style={styles.mainContainer}>
@@ -883,7 +981,7 @@ const DocumentUploadScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16, paddingBottom:5 }}>
+          <View style={{ padding: 16, paddingBottom: 5 }}>
             <ProgressBar progress={0.5} />
             <Text
               style={[
@@ -911,7 +1009,9 @@ const DocumentUploadScreen = ({ navigation }) => {
               {renderDocList(uploadDocumentSlices.data.MASTER_OPTION)}
               {/* {renderChildType(uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master])}
    */}
-   {renderChildType()}
+              {renderChildType()}
+
+
               {uploadDocumentSlices.data.selectedDoc.master && uploadDocumentSlices.data.selectedDoc.child && <>
                 <View>
                   <Text style={styles.sectionTitle}>File Upload OR Take Photo</Text>

@@ -1998,9 +1998,7 @@ outlineStyle: 'solid',
     paddingHorizontal: 5,
     borderWidth: 1,
     borderColor: "#E0E0E0",
-    borderRadius: 8,
-    marginRight: 10,
-    minWidth: "30%",
+    borderRadius: 8
   },
   dotIndicatorContainer: {
     flexDirection: "row",
