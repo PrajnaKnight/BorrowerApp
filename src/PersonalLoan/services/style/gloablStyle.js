@@ -1,6 +1,6 @@
 import { StyleSheet, Platform, Dimensions } from "react-native";
 import applyFontFamily from "./applyFontFamily";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+
 
 // Get the device's width and height
 const window = Dimensions.get('window');
@@ -215,7 +215,10 @@ export const styles = applyFontFamily({
     elevation: 2,
     ...Platform.select({
       web: {
-        outline: "none",
+        // outline: "none",
+        outlineWidth: 1,
+outlineColor: 'black',
+outlineStyle: 'solid',
         "&:focus": {
           borderColor: "#0056b3",
         },

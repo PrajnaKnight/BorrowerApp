@@ -71,15 +71,19 @@ const LoanEligibilityScreen = ({ navigation }) => {
   const [loanApproved, setLoanApproved] = useState(null);
   const [ApplicationID, setApplicationID] = useState(null);
   const [refreshPage, setRefreshPage] = useState(true);
+
+
+  const onTryAgainClick = () => {
+    setRefreshPage(true);
+  };
+
+  
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
   useEffect(() => {
     setProgress(0.3);
   }, []);
 
-  const onTryAgainClick = () => {
-    setRefreshPage(true);
-  };
 
   const ProcessTheLoanApplication = async () => {
     let apiResponse = API_RESPONSE_STATUS();

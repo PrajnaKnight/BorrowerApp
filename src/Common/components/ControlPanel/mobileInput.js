@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Dimensions, Platform } from 'react-native';
 import { useAppContext } from '../useContext';
 import { styles } from '../../../assets/style/personalStyle';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
@@ -13,6 +13,7 @@ const countries = [
 ];
 
 const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
+  const [isWeb, setIsWeb] = useState(false)
   const [isFocused, setIsFocused] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -66,6 +67,10 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
     };
   }, [isDropdownVisible]);
 
+  useEffect(()=>{
+    setIsWeb(Platform.OS === "web")
+  },[])
+
   return (
     <View>
       <View style={fieldstyles.container}>
@@ -87,7 +92,7 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
           ]}>
           <Text style={fieldstyles.countryCode}>{selectedCountry.code}</Text>
           <View style={{flex:1}}>
-            {!mobileNumber && 
+            {!mobileNumber && !isWeb && 
             
               <Text style={fieldstyles.inputPlaceholder}>
                 {"Enter mobile number"}
@@ -98,6 +103,7 @@ const MobileNumberInput = ({ mobileNumber, setMobileNumber, error }) => {
               style={[fieldstyles.input, { fontSize: dynamicFontSize(14)}]}
               onChangeText={handleMobileNumberChange}
               value={mobileNumber}
+              placeholder={isWeb ? "Enter mobile number" : null}
               keyboardType="phone-pad"
               maxLength={10}
               onFocus={() => setIsFocused(true)}

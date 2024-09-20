@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, Dimensions, ScrollView, Platform } from 'react-native';
+
 import { styles } from '../../assets/style/personalStyle';
 import { useAppContext } from '../components/useContext';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -13,6 +14,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTextEntry, onChangeText, maxLength, readOnly, value, cityOrState = false, error, autoCapitalize, onEndEditing, widthPercentage = "100%" }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isWeb, setIsWeb] = useState(false)
 
   // Handle focus only if not read-only
   const handleFocus = () => {
@@ -33,12 +35,16 @@ const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTe
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
+  useEffect(() => {
+    setIsWeb(Platform.OS === "web")
+  }, [])
+
 
   return (
     <View style={{ width: widthPercentage }}>
       <View>
 
-        {!readOnly && isValidField(value) != null &&
+        {!readOnly && isValidField(value) != null && !isWeb &&
 
           <Text style={styles.inputPlaceholder}>
             {placeholder}
@@ -61,10 +67,12 @@ const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTe
           keyboardType={keyboardType}
           maxLength={maxLength}
           value={value || ""}
+          placeholder={isWeb ? placeholder : null}
+          placeholderTextColor={isWeb ? "grey" : null}
           editable={!readOnly} // Make input non-editable if readOnly is true
         />
 
-        {readOnly && isValidField(value) != null &&
+        {readOnly && isValidField(value) != null && !isWeb &&
 
           <Text style={styles.inputPlaceholder}>
             {placeholder}
@@ -254,6 +262,9 @@ export const CustomInputFieldWithSuggestion = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [suggestionList, setSuggestionList] = useState([]);
+  const [isWeb, setIsWeb] = useState(false)
+
+
   const [showList, setShowList] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
@@ -314,7 +325,6 @@ export const CustomInputFieldWithSuggestion = ({
       setShowList(false);
     }
   };
-
   useEffect(() => {
     // Update suggestionList when listOfData changes
     if (listOfData) {
@@ -328,12 +338,21 @@ export const CustomInputFieldWithSuggestion = ({
     console.log("Read only:", readOnly);
   }, [suggestionList, showList, readOnly])
 
+
+  useEffect(() => {
+    setIsWeb(Platform.OS === "web")
+  }, [])
+
+
   return (
     <View style={{ flex: 1 }}>
       <View>
-        {!readOnly && isValidField(value) != null && (
-          <Text style={styles.inputPlaceholder}>{placeholder}</Text>
-        )}
+        {!readOnly && isValidField(value) != null && !isWeb &&
+
+          <Text style={styles.inputPlaceholder}>
+            {placeholder}
+          </Text>
+        }
         <TextInput
           onTouchEndCapture={() => !readOnly && setShowList(!showList)}
           style={[
@@ -348,15 +367,20 @@ export const CustomInputFieldWithSuggestion = ({
           onEndEditing={onEndEditing}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          placeholder={isWeb ? placeholder : null}
+          placeholderTextColor={isWeb ? "grey" : null}
           autoCapitalize={autoCapitalize}
           keyboardType={keyboardType}
           maxLength={maxLength}
           value={inputValue}
           editable={!readOnly}
         />
-        {readOnly && isValidField(value) != null && (
-          <Text style={styles.inputPlaceholder}>{placeholder}</Text>
-        )}
+        {readOnly && isValidField(value) != null && !isWeb &&
+
+          <Text style={styles.inputPlaceholder}>
+            {placeholder}
+          </Text>
+        }
       </View>
 
       {error && (
@@ -379,26 +403,26 @@ export const CustomInputFieldWithSuggestion = ({
             marginTop: -10,
             backgroundColor: "#FFFFFF",
             zIndex: 100,
-            overflow:'hidden'
+            overflow: 'hidden'
           }}>
-         <ScrollView 
-      nestedScrollEnabled={true}
-      contentContainerStyle={{ flexGrow: 1,}}
-    >
-      <FlatList
-        data={suggestionList}
-        renderItem={({ item }) => (
-          <CompanyItem
-            item={item}
-            onPress={handleItemClick}
-            isSelected={item.Value === inputValue}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        scrollEnabled={false}
-        showsVerticalScrollIndicator={false}
-      />
-    </ScrollView>
+          <ScrollView
+            nestedScrollEnabled={true}
+            contentContainerStyle={{ flexGrow: 1, }}
+          >
+            <FlatList
+              data={suggestionList}
+              renderItem={({ item }) => (
+                <CompanyItem
+                  item={item}
+                  onPress={handleItemClick}
+                  isSelected={item.Value === inputValue}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              scrollEnabled={false}
+              showsVerticalScrollIndicator={false}
+            />
+          </ScrollView>
         </View>
       )}
     </View>
@@ -407,6 +431,7 @@ export const CustomInputFieldWithSuggestion = ({
 
 export const AadharMaskedCustomInput = ({ style, onFocusChange, placeholder, keyboardType, onChangeText, maxLength, readOnly, value, error, autoCapitalize, onEndEditing }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isWeb, setIsWeb] = useState(false)
 
   // Handle focus only if not read-only
   const handleFocus = () => {
@@ -427,11 +452,15 @@ export const AadharMaskedCustomInput = ({ style, onFocusChange, placeholder, key
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
+  useEffect(() => {
+    setIsWeb(Platform.OS === "web")
+  }, [])
+
   return (
     <View style={{ flex: 1 }}>
       <View>
 
-        {!readOnly && isValidField(value) != null &&
+        {!readOnly && isValidField(value) != null && !isWeb &&
 
           <Text style={styles.inputPlaceholder}>
             {placeholder}
@@ -453,13 +482,15 @@ export const AadharMaskedCustomInput = ({ style, onFocusChange, placeholder, key
           autoCapitalize={autoCapitalize}
           keyboardType={keyboardType}
           maxLength={maxLength}
+          placeholder={isWeb ? placeholder : null}
+          placeholderTextColor={isWeb ? "grey" : null}
           value={value}
           editable={!readOnly} // Make input non-editable if readOnly is true
           mask={isValidField(value) == null && [[/\d/], [/\d/], [/\d/], [/\d/], [/\d/], [/\d/], [/\d/], [/\d/], /\d/, /\d/, /\d/, /\d/]}
 
         />
 
-        {readOnly && isValidField(value) != null &&
+        {readOnly && isValidField(value) != null && !isWeb &&
 
           <Text style={styles.inputPlaceholder}>
             {placeholder}
@@ -478,6 +509,7 @@ export const AadharMaskedCustomInput = ({ style, onFocusChange, placeholder, key
 
 export const DateOfJoiningMaskedCustomInput = ({
   style, error, onDateChange, initialDate, placeholder = "DD/MM/YYYY" }) => {
+  const [isWeb, setIsWeb] = useState(false)
 
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
@@ -500,17 +532,15 @@ export const DateOfJoiningMaskedCustomInput = ({
   }
 
   useEffect(() => {
-
-    console.log("reloading")
-    // setValue(reverseDateFormat())
-
+    setIsWeb(Platform.OS === "web")
   }, [])
+
 
   return (
     <View style={{ flex: 1 }}>
       <View >
 
-        {isValidField(initialDate) &&
+        {isValidField(initialDate) && !isWeb &&
           <Text style={styles.inputPlaceholder}>
             {placeholder}
           </Text>
@@ -522,6 +552,8 @@ export const DateOfJoiningMaskedCustomInput = ({
             style, { fontSize: dynamicFontSize(styles.input.fontSize) }
           ]}
 
+          placeholder={isWeb ? placeholder : null}
+          placeholderTextColor={isWeb ? "grey" : null}
           onChangeText={onDateChange} // Disable onChangeText if readOnly
           keyboardType={"numeric"}
           value={initialDate?.includes("-") ? reverseDateFormat(initialDate) : initialDate}
@@ -542,7 +574,10 @@ export const DateOfJoiningMaskedCustomInput = ({
 
 export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onChangeText, placeholder, searchable }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isWeb, setIsWeb] = useState(false)
   const [suggestionList, setSuggestionList] = useState([]);
+
+
   const [showList, setShowList] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
@@ -600,59 +635,74 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
     } else {
       setSuggestionList([]);
     }
+
   }, [showList, listOfData]);
 
   useEffect(() => {
     setInputValue(value);
   }, [value]);
 
+
+  useEffect(() => {
+    setIsWeb(Platform.OS === "web")
+  }, [])
+
+
+
   return (
     <View style={{ flex: 1 }}>
-      <View>
-        {isValidField(value) && (
-          <Text style={styles.inputPlaceholder}>
-            {placeholder}
-          </Text>
-        )}
-        <TextInput
-          onTouchEndCapture={() => setShowList(!showList)}
-          style={[styles.input,]}
-          onChangeText={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          value={inputValue}
-        />
-      </View>
+      {isValidField(value) && !isWeb &&
 
+        <Text style={styles.inputPlaceholder}>
+          {placeholder}
+        </Text>
+      }
+      <TextInput
+        onTouchEndCapture={() => setShowList(!showList)}
+        style={[
+          styles.input,
+        ]}
+        placeholder={isWeb ? placeholder : null}
+
+        onChangeText={handleInputChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        value={inputValue}
+      />
       {error && (
-        <Text style={[styles.errorText, { fontSize: dynamicFontSize(12) }]}>{error}</Text>
+        <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text>
       )}
-
-      {showList && suggestionList.length > 0 && (
-        <FlatList
-          data={suggestionList}
-          nestedScrollEnabled={true}
-          style={{
-            width: "100%",
-            maxHeight: 200,
-            borderWidth: 1,
-            borderColor: '#D7DDEB',
-            borderRadius: 5,
-            marginTop: -10,
-            backgroundColor: '#FFFFFF',
-            zIndex: 100,
-          }}
-          renderItem={({ item }) => (
-            <CompanyItem
-              item={item}
-              onPress={(e) => handleItemClick(e)}
-              isSelected={item.value === inputValue}
-            />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      )}
+      {
+        showList && suggestionList.length > 0 && (
+          <FlatList
+            data={suggestionList}
+            nestedScrollEnabled={true}
+            style={{
+              width: "100%",
+              maxHeight: 200,
+              borderWidth: 1,
+              borderColor: '#D7DDEB',
+              borderRadius: 5,
+              marginTop: -10,
+              backgroundColor: '#FFFFFF',
+              zIndex: 100,
+            }}
+            renderItem={({ item }) => (
+              <CompanyItem
+                item={item}
+                onPress={(e) => handleItemClick(e)}
+                isSelected={item.value === inputValue}
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />)
+      }
     </View>
+
+
+
+
+
   );
 };
 

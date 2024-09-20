@@ -195,7 +195,11 @@ export const styles = applyFontFamily({
     textAlign: "center",
     ...Platform.select({
       web: {
-        outline: "none",
+        // outline: "none",
+        // Use this:
+outlineWidth: 1,
+outlineColor: 'black',
+outlineStyle: 'solid',
         "&:focus": {
           borderColor: "#0056b3",
         },

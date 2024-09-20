@@ -28,7 +28,7 @@ import applyFontFamily from '../services/style/applyFontFamily';
 import { AntDesign } from '@expo/vector-icons';
 import { retry } from 'redux-saga/effects';
 import useJumpTo from "../components/StageComponent";
-import PagerView from 'react-native-pager-view';
+// import PagerView from 'react-native-pager-view';
 
 
 const DocumentUploadScreen = ({ navigation }) => {
