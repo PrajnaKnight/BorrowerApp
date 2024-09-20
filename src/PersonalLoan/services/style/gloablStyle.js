@@ -23,6 +23,7 @@ export const styles = applyFontFamily({
       web: {
         width: "100%",
         alignSelf: "center",
+        backgroundColor: "#ffffff",
       },
     }),
   },
@@ -113,7 +114,7 @@ export const styles = applyFontFamily({
       // Additional, web-specific styles
       web: {
         paddingHorizontal: 20,
-        backgroundColor: "#00194c",
+        backgroundColor: "#ffffff",
         width: "100%",
         margin: "auto",
         right: 0,
@@ -992,7 +993,7 @@ outlineStyle: 'solid',
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -1000,7 +1001,7 @@ outlineStyle: 'solid',
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -1210,8 +1211,8 @@ outlineStyle: 'solid',
     ...Platform.select({
       web: {
         padding: 9,
-        color: "#ffffff",
-        borderColor: "#ffffff",
+        color: "#00194c",
+        borderColor: "#00194c",
       },
     }),
   },
@@ -1295,6 +1296,16 @@ outlineStyle: 'solid',
       web: {
         // backgroundColor:'#c9d9fa',
         backgroundColor: "#000565",
+      },
+    }),
+  },
+  centerAlignedContainer: { 
+    ...Platform.select({
+      web: {
+        width: "70%",
+        backgroundColor: "#ffffff",
+        marginLeft: "auto",
+        marginRight: "auto",
       },
     }),
   },
@@ -2386,5 +2397,60 @@ outlineStyle: 'solid',
     backgroundColor: '#00194c',
   },
   //New document upload screen ends
+  step: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  stepiconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  stepiconContainerDone: {
+    backgroundColor: '#213ACE',
+  },
+  stepiconContainerCurrent: {
+    backgroundColor: '#FF8500',
+  },
+  stepiconContainerDisabled: {
+    backgroundColor: '#213ACE',
+    opacity: 0.5,
+  },
+  steptextContainer: {
+    flex: 1,
+  },
+  steptitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+  },
+  stepsubtitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  steptextDisabled: {
+    color: '#9CA3AF',
+  },
+  connectorContainer: {
+    position: 'absolute',
+    left: 20,
+    top: 40,
+    bottom: -24,
+    width: 2,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    zIndex: -1,
+  },
+  dashItem: {
+    width: 1.5,
+    height: 1,
+    backgroundColor: '#9CA3AF',
+  },
+  dashItemDone: {
+    backgroundColor: '#ffffff',
+  },
 });
 
