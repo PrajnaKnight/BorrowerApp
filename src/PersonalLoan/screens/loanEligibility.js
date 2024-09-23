@@ -779,7 +779,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                           }}>
                           {rateOfInterest || 0} %
                         </Text>
-                        <View style={{ alignItems: "flex-end" }}>
+                        <View style={{ alignItems: "flex-end", marginRight:10 }}>
                           <Text
                             style={{
                               color: "#00194c",
