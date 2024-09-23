@@ -263,7 +263,7 @@ const EMICalculator = ({ navigation }) => {
               sliderLabels={tenureUnit === 'Yr' ? ['1', '10', '15', '20', '30'] : ['1', '120', '240', '360']}
             />
           </View>
-          <ProceedButton onPress={() => {}} text="CALCULATE" />
+          {/* <ProceedButton onPress={() => {}} text="CALCULATE" /> */}
         </View>
       </ScrollView>
       <Modal
