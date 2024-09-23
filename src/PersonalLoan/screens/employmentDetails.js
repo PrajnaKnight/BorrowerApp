@@ -638,7 +638,8 @@ const EmploymentDetailScreen = ({ navigation }) => {
 
     const renderContent = () => (
       <>
-        <ScrollView contentContainerStyle={styles.scrollViewContentWrapper}>
+       <View style={styles.containerScroll}>
+        <ScrollView contentContainerStyle={styles.scrollViewContentWrapper}   nestedScrollEnabled={true}>
           <View style={styles.centerAlignedContainer}>
             <View style={styles.container}>
               {otherError && (
@@ -650,7 +651,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                   {otherError}
                 </Text>
               )}
-              <View style={styles.dropdownContainerWrapper}>
+             <View style={[styles.dropdownContainerWrapper, { zIndex: 3000 }]}>
                 <Text
                   style={[
                     styles.label,
@@ -664,7 +665,8 @@ const EmploymentDetailScreen = ({ navigation }) => {
                   setValue={(e) => onEmploymentTypeChange(e)}
                   placeholder="Select"
                   style={[styles.pickerContainer, { fontSize }]}
-                  zIndex={10000}
+                  zIndex={3000}
+                  dropdownStyle={{ maxHeight: 200 }}
                 />
                 {EmploymentTypeError && (
                   <Text style={styles.errorText}>{EmploymentTypeError}</Text>
@@ -1045,6 +1047,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
             </View>
           </View>
         </ScrollView>
+        </View>
       </>
     );
 
@@ -1151,6 +1154,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
                   renderItem={() => renderContent()}
                   keyExtractor={(item) => item.key}
                   contentContainerStyle={styles.flatListContent}
+                  nestedScrollEnabled={true}
                 />
             
               </View>

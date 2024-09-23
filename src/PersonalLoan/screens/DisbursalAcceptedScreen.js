@@ -241,17 +241,16 @@ const DisbursementAcceptedScreen = ({ navigation }) => {
           <View style={[styles.boxShadow]}>
             <View style={[styles.actioncontainer,styles.centerAlignedContainer]}>
             <LinearGradient
-              // button Linear Gradient
+              // button Linear Gradient 
               colors={["#002777", "#00194C"]}
-              style={styles.agreebutton}>
+              style={styles.homeButton}>
               <TouchableOpacity onPress={() => {
-
-navigation.navigate("Dashboard")
+              navigation.navigate("Dashboard")
               }}>
                 <Text
                   style={[
-                    styles.buttonText,
-                    { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                    styles.homeButtonText,
+                    { fontSize: dynamicFontSize(styles.homeButtonText.fontSize) },
                   ]}>
                   Home Page
                 </Text>

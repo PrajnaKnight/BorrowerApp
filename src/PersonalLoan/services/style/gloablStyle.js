@@ -754,6 +754,11 @@ outlineStyle: 'solid',
     paddingHorizontal: 10,
     textAlign: "left",
     fontWeight: "600",
+    ...Platform.select({
+      web: {
+        fontSize: 12,
+      },
+    }),
 
   },
   downloadButtonLink: {
@@ -2256,6 +2261,11 @@ outlineStyle: 'solid',
     backgroundColor: "#758BFD",
     justifyContent: "center",
     alignItems: "center",
+    ...Platform.select({
+      web: {
+        padding:10,
+      },
+    }),
   },
   detailTextContainer: {
     flex: 1,
@@ -2274,6 +2284,11 @@ outlineStyle: 'solid',
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "50%",
+    ...Platform.select({
+     web: {
+       fontSize: 12,
+     },
+    }),
   },
  
   disbursestatusText: {
@@ -2397,6 +2412,7 @@ outlineStyle: 'solid',
   },
   contentContainer: {
     flex: 1,
+    minHeight:'50%'
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -2484,9 +2500,11 @@ outlineStyle: 'solid',
   
   },
   containerScroll:{
+    minHeight:'50%',
     ...Platform.select({
       web: {
-        height:"90%",
+        height:"auto",
+        minHeight:'auto',
       },
     }),
   },

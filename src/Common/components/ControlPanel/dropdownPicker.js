@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
 import { min } from 'date-fns';
 
@@ -32,6 +32,7 @@ const CustomDropdown = ({
     dropdownBorder: {
       borderColor: "#D8DFF2",
       marginBottom: 15,
+      maxHeight: 200,
     },
     dropdown: {
       borderWidth: 1,
@@ -40,7 +41,11 @@ const CustomDropdown = ({
       fontSize: 15,
       backgroundColor: "#ffffff",
       zIndex: 10000,
-      minHeight: 42,
+      ...Platform.select({
+        web: {
+          minHeight: 42,
+        },
+      }),
     },
     dropdownText: {
       color: '#333',
@@ -63,7 +68,7 @@ const CustomDropdown = ({
   return (
     <View style={{ flex: 1 }}>
       <DropDownPicker
-        listMode='SCROLLVIEW'
+        listMode={Platform.OS === 'android' ? 'SCROLLVIEW' : 'FLATLIST'}
         open={open}
         value={value}
         items={items}
@@ -115,6 +120,14 @@ const CustomDropdown = ({
           },
         ]}
         zIndex={zIndex}
+        scrollViewProps={{
+          nestedScrollEnabled: true,
+          scrollEnabled: true,
+          persistentScrollbar: Platform.OS === 'android',
+        }}
+        flatListProps={{
+          nestedScrollEnabled: true,
+        }}
       />
       {error && (
         <Text style={styles.errorText}>{error}</Text>

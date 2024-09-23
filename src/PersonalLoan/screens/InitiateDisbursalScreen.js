@@ -396,7 +396,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
           </ScrollView>
           <View style={styles.boxShadow}>
             <View
-              style={[styles.actionContainer, styles.centerAlignedContainer]}>
+              style={[styles.centerAlignedContainer]}>
               <LinearGradient
                 colors={["#002777", "#00194C"]}
                 style={styles.initiateButton}>

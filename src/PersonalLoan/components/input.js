@@ -652,18 +652,14 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
   return (
     <View style={{ flex: 1 }}>
       {isValidField(value) && !isWeb &&
-
         <Text style={styles.inputPlaceholder}>
           {placeholder}
         </Text>
       }
       <TextInput
         onTouchEndCapture={() => setShowList(!showList)}
-        style={[
-          styles.input,
-        ]}
+        style={[styles.input]}
         placeholder={isWeb ? placeholder : null}
-
         onChangeText={handleInputChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -672,24 +668,21 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
       {error && (
         <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text>
       )}
-      {
-        showList && suggestionList.length > 0 && (
+      {showList && suggestionList.length > 0 && (
+        <ScrollView
+          nestedScrollEnabled={true}
+          style={{
+            maxHeight: 200,
+            borderWidth: 1,
+            borderColor: '#D7DDEB',
+            borderRadius: 5,
+            marginTop: -10,
+            backgroundColor: '#FFFFFF',
+            zIndex: 100,
+          }}
+        >
           <FlatList
             data={suggestionList}
-            nestedScrollEnabled={true}
-            style={{
-              width: "100%",
-              maxHeight: 200,
-              borderWidth: 1,
-              borderColor: '#D7DDEB',
-              borderRadius: 5,
-              marginTop: -10,
-              backgroundColor: '#FFFFFF',
-              zIndex: 100,
-              ...(Platform.OS === 'web' ? {
-               overflow: 'scroll'
-              } : {}),
-            }}
             renderItem={({ item }) => (
               <CompanyItem
                 item={item}
@@ -698,14 +691,11 @@ export const CustomDropDownWithSearch = ({ value, error, style, listOfData, onCh
               />
             )}
             keyExtractor={(item, index) => index.toString()}
-          />)
-      }
+            nestedScrollEnabled={true}
+          />
+        </ScrollView>
+      )}
     </View>
-
-
-
-
-
   );
 };
 
