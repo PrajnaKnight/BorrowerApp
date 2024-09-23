@@ -222,18 +222,19 @@ const EMICalculator = ({ navigation }) => {
               onValueChange={(value) => handleSliderChange("loanAmount", value)}
               isCurrency={true}
               sliderLabels={[
-                "20K",
+                "10K",
                 "1L",
                 "5L",
-                "7L",
                 "10L",
-                "15L",
-                "20L",
                 "30L",
+                "50L",
+                "1Cr",
+                "5Cr",
+                "10Cr",
               ]}
               labelValues={[
-                20000, 100000, 500000, 700000, 1000000, 1500000, 2000000,
-                3000000,
+                10000, 100000, 500000, 1000000, 3000000, 5000000, 10000000,
+                50000000, 100000000,
               ]}
             />
             <InputSlider

@@ -255,9 +255,10 @@ const LoanEligibilityCalculator = ({ navigation }) => {
 const styles = StyleSheet.create({
   errorContainer: {
     backgroundColor: 'red',
-    padding: 10,
+    padding: 5,
   },
   errorText: {
+    fontSize: 12,
     color: 'white',
     textAlign: 'center',
   },
