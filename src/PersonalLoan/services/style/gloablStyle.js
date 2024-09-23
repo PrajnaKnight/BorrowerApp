@@ -54,7 +54,7 @@ export const styles = applyFontFamily({
     backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
-        zIndex: 100,
+        zIndex: 5000,
       },
     }),
   },
@@ -116,8 +116,17 @@ export const styles = applyFontFamily({
     shadowRadius: 2,
     elevation: 3,
     ...Platform.select({
-      // Additional, web-specific styles
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
       web: {
+      
         paddingHorizontal: 20,
         backgroundColor: "#ffffff",
         width: "100%",
@@ -127,6 +136,7 @@ export const styles = applyFontFamily({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingVertical: 10,
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       },
     }),
   },
@@ -1809,6 +1819,20 @@ outlineStyle: 'solid',
     shadowOpacity: 0.8,
     elevation: 5,
     padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
+      web: {
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 1)",
+      },
+    }),
   },
   docCaptureWrapper: {
     borderWidth: 1  ,
