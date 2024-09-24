@@ -14,11 +14,11 @@ const formatIndianCurrency = (value) => {
 
 const formatCrLFormat = (value) => {
   if (value >= 10000000) { // 1 Crore
-    return `${(value / 10000000).toFixed(2)}Cr`;
+    return `${(value / 10000000).toFixed(0)}Cr`;
   } else if (value >= 100000) { // 1 Lakh
-    return `${(value / 100000).toFixed(2)}L`;
+    return `${(value / 100000).toFixed(0)}L`;
   } else if (value >= 1000) { // 1 Thousand
-    return `${(value / 1000).toFixed(2)}k`;
+    return `${(value / 1000).toFixed(0)}k`;
   } else {
     return value.toString();
   }
@@ -126,10 +126,14 @@ const styles = applyFontFamily({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5,
+    marginHorizontal: -5, 
   },
   sliderLabel: {
-    fontSize: 12,
+    fontSize: 10, 
     color: '#00194c',
+    textAlign: 'center',
+    flex: 1, 
+    paddingHorizontal: 2,
   },
 });
 
