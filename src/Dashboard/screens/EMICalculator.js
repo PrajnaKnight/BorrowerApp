@@ -304,9 +304,14 @@ const EMICalculator = ({ navigation }) => {
 };
 
 const calculateEMI = (principal, rate, tenure) => {
-  const monthlyRate = rate / 12 / 100;
-  const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
-  return emi;
+  if (rate === 0) {
+    // If interest rate is 0, EMI is simply the principal divided by the tenure
+    return principal / tenure;
+  } else {
+    const monthlyRate = rate / 12 / 100;
+    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
+    return emi;
+  }
 };
 
 const styles = applyFontFamily({

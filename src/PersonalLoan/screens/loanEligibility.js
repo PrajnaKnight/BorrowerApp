@@ -41,6 +41,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SubmitBorrowerLoanApplicationAsyncSubmit } from '../services/API/SaveBankAccountDetail';
 import useJumpTo from "../components/StageComponent";
 import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
+import ResponsiveEMILayout from '../components/ResponsiveEMILayout';
 
 
 const LoanEligibilityScreen = ({ navigation }) => {
@@ -747,86 +748,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       You are not eligible for selected loan amount
                     </Text>
                   )}
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}>
-                    <View style={{ flex: 1, paddingRight: 5 }}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { fontSize: dynamicFontSize(styles.label.fontSize) },
-                        ]}>
-                        Rate of Interest
-                      </Text>
-                      <View
-                        style={[
-                          styles.input,
-                          styles.readonly,
-                          {
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: 10,
-                          },
-                        ]}>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            color: "#00194C",
-                            lineHeight: 26,
-                          }}>
-                          {rateOfInterest || 0} %
-                        </Text>
-                        <View style={{ alignItems: "flex-end", marginRight:10 }}>
-                          <Text
-                            style={{
-                              color: "#00194c",
-                              fontSize: 9,
-                              lineHeight: 12,
-                              fontWeight: "500",
-                              opacity: 0.6,
-                            }}>
-                            Reducing
-                          </Text>
-                          <Text
-                            style={{
-                              color: "#00194c",
-                              fontSize: 9,
-                              lineHeight: 12,
-                              fontWeight: "500",
-                              opacity: 0.6,
-                            }}>
-                            Rate
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-
-                    <View
-                      style={[
-                        styles.emiContainer,
-                        { flex: 1, paddingLeft: 5 },
-                      ]}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { fontSize: dynamicFontSize(styles.label.fontSize) },
-                        ]}>
-                        EMI Amount
-                      </Text>
-
-                      <Text
-                        style={[
-                          styles.input,
-                          styles.readonly,
-                          { fontSize: dynamicFontSize(styles.input.fontSize) },
-                        ]}>
-                        ₹ {emiAmount || 0}
-                      </Text>
-                    </View>
-                  </View>
+                <ResponsiveEMILayout rateOfInterest={7.5} emiAmount={10000} />
                 </View>
               </View>
             </View>

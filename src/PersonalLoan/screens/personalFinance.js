@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { KeyboardAvoidingView, Platform, useWindowDimensions, View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Platform, useWindowDimensions, View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import LoadingOverlay from '../components/FullScreenLoader';
 import ProgressBar from '../components/progressBar';
 import { useAppContext } from '../components/useContext';
@@ -19,6 +19,7 @@ import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from '../components/StageComponent';
 import { checkLocationPermission } from './PermissionScreen';
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 
 const PersonalFinance = ({navigation}) => {
@@ -233,343 +234,359 @@ const PersonalFinance = ({navigation}) => {
             setRefresh(false);
         }, [refresh]))
 
-    return <View style={styles.mainContainer}>
+
+        const steps = [
+            { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+            { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+            { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+            { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+          ];
+
+    return (
+      <View style={styles.mainContainer}>
         <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
-
-            {isWeb && (isDesktop || (isTablet && width > height)) && (
-                <View style={[styles.leftContainer, imageContainerStyle]}>
-                    <View style={styles.mincontainer}>
-                        <View style={styles.webheader}>
-                            <Text style={styles.WebheaderText}>Personal Loan</Text>
-                            <Text style={styles.websubtitleText}>
-                                Move Into Your Dreams!
-                            </Text>
-                        </View>
-                        <LinearGradient
-                            // button Linear Gradient
-                            colors={["#000565", "#111791", "#000565"]}
-                            style={styles.webinterestButton}>
-                            <TouchableOpacity>
-                                <Text style={styles.webinterestText}>
-                                    Interest starting from 8.4%*
-                                </Text>
-                            </TouchableOpacity>
-                        </LinearGradient>
-
-                        <View style={styles.webfeaturesContainer}>
-                            <View style={styles.webfeature}>
-                                <Text
-                                    style={[
-                                        styles.webfeatureIcon,
-                                        { fontSize: 30, marginBottom: 5 },
-                                    ]}>
-                                    %
-                                </Text>
-                                <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                            </View>
-                            <View style={styles.webfeature}>
-                                <Text
-                                    style={[
-                                        styles.webfeatureIcon,
-                                        { fontSize: 30, marginBottom: 5 },
-                                    ]}>
-                                    3
-                                </Text>
-                                <Text style={styles.webfeatureText}>
-                                    3-Step Instant approval in 30 minutes
-                                </Text>
-                            </View>
-                            <View style={styles.webfeature}>
-                                <Text
-                                    style={[
-                                        styles.webfeatureIcon,
-                                        { fontSize: 30, marginBottom: 5 },
-                                    ]}>
-                                    ⏳
-                                </Text>
-                                <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.webdescription}>
-                            <Text style={styles.webdescriptionText}>
-                                There's more! Complete the entire process in just 3-steps that
-                                isn't any more than 30 minutes.
-                            </Text>
-                            <TouchableOpacity>
-                                <Text style={styles.weblinkText}>
-                                    To know more about product features & benefits, please click
-                                    here
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+          {isWeb && (isDesktop || (isTablet && width > height)) && (
+            <View style={[styles.leftContainer, imageContainerStyle]}>
+              <View style={styles.mincontainer}>
+                <View style={styles.webheader}>
+                  <Text style={styles.websubtitleText}>Get Your</Text>
+                  <Text style={styles.WebheaderText}>Loan Approved</Text>
                 </View>
-            )}
-
-            <KeyboardAvoidingView
-                style={[styles.rightCOntainer, { flex: 1 }]}
-                behavior={Platform.OS === "ios" ? "padding" : null}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
-                <LoadingOverlay visible={loading} />
-                <View style={{ paddingHorizontal: 16 }}>
-                    <ProgressBar progress={0.05} />
-                    <Text
+                <View>
+                  {steps.map((step, index) => (
+                    <View key={step.id} style={styles.step}>
+                      <View
                         style={[
-                            styles.headerText,
-                            { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                          styles.stepiconContainer,
+                          step.status === "done" &&
+                            styles.stepiconContainerDone,
+                          step.status === "current" &&
+                            styles.stepiconContainerCurrent,
+                          step.status === "disabled" &&
+                            styles.stepiconContainerDisabled,
                         ]}>
-                        Personal Financials
-                    </Text>
-                </View>
-
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                    <View style={styles.container}>
-                        <View>
-                            {otherError && (
-                                <Text
-                                    style={[
-                                        styles.errorText,
-                                        { fontSize: dynamicFontSize(styles.errorText.fontSize) },
-                                    ]}>
-                                    {otherError}
-                                </Text>
-                            )}
-
-
-
-                            <View style={styles.formGroup}>
-
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                    ]}>
-                                    Annual Turnover
-                                </Text>
-                                <CustomInput
-                                    placeholder="Enter your gross monthly income"
-                                    value={personalLoanDetailSlice?.data?.GrossMonthlyIncome?.toString() }
-                                    error={personalLoanDetailSlice?.data?.GrossMonthlyIncomeError}
-                                    keyboardType = {"numeric"}
-
-                                    onChangeText={(e) => {
-                                        UpdatePersonalLoan(-1, "GrossMonthlyIncome", e)
-                                    }}
-                                />
-                            </View>
-
-                            <View style={styles.formGroup}>
-
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                    ]}>
-                                    Total Financial Asset
-                                </Text>
-                                <CustomInput
-                                    placeholder="Enter your total investments"
-                                    value={personalLoanDetailSlice?.data?.Investments?.toString()}
-                                    error={personalLoanDetailSlice?.data?.InvestmentsError}
-                                    keyboardType = {"numeric"}
-
-                                    onChangeText={(e) => {
-                                        UpdatePersonalLoan(-1, "Investments", e)
-
-                                    }}
-                                />
-
-                            </View>
-                            <View style={styles.formGroup}>
-
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                    ]}>
-                                    Total Non-Financial Asset
-                                </Text>
-                                <CustomInput
-                                    placeholder="Enter your total fixed asset"
-                                    value={personalLoanDetailSlice?.data?.FixedAssets?.toString()}
-                                    error={personalLoanDetailSlice?.data?.FixedAssetsError}
-                                    keyboardType = {"numeric"}
-                                    onChangeText={(e) => {
-                                        UpdatePersonalLoan(-1, "FixedAssets", e)
-
-                                    }}
-                                />
-
-                            </View>
-
-                            <View style={styles.formGroup}>
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                    ]}>
-                                    Do you have the existing loans ?
-                                </Text>
-                                <View style={{ flexDirection: "row" }}>
-
-                                    <View>
-                                        <RadioButton
-                                            label={"Yes"}
-                                            isSelected={personalLoanDetailSlice?.data?.IsLoanAvailable}
-                                            onPress={() => { UpdatePersonalLoan(-1, "IsLoanAvailable", true) }}
-                                        />
-                                        <View style={{ width: 20 }} />
-                                    </View>
-                                    <View>
-                                        <RadioButton
-                                            label={"No"}
-                                            isSelected={!personalLoanDetailSlice?.data?.IsLoanAvailable}
-                                            onPress={() => { UpdatePersonalLoan(-1, "IsLoanAvailable", false) }}
-                                        />
-                                        <View style={{ width: 20 }} />
-                                    </View>
-
-                                </View>
-                            </View>
-
-                            {personalLoanDetailSlice?.data?.IsLoanAvailable &&
-
-                                personalLoanDetailSlice.data.BorrowerExistingLoanDetails.map((element, index) => (
-                                    <View key={index}>
-                                        <View style={styles.formGroup}>
-
-                                            <Text
-                                                style={[
-                                                    styles.label,
-                                                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                                ]}>
-                                                Bank Name
-                                            </Text>
-                                            <CustomInput
-                                                placeholder="Bank Name"
-                                                value={element.LoanFromBank?.toString()}
-                                                error={element.LoanFromBankError}
-                                                onChangeText={(e) => {
-                                                    UpdatePersonalLoan(index, "LoanFromBank", e)
-
-                                                }}
-                                            />
-
-                                        </View>
-                                        <View style={styles.formGroup}>
-
-                                            <Text
-                                                style={[
-                                                    styles.label,
-                                                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                                ]}>
-                                                Loan Type
-                                            </Text>
-                                            <CustomInput
-                                                placeholder="Loan Type"
-                                                value={element.LoanType?.toString()}
-                                                error={element.LoanTypeError}
-                                                onChangeText={(e) => {
-                                                    UpdatePersonalLoan(index, "LoanType", e)
-
-                                                }}
-                                            />
-
-                                        </View>
-                                        <View style={styles.formGroup}>
-
-                                            <Text
-                                                style={[
-                                                    styles.label,
-                                                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                                ]}>
-                                                Loan Amount
-                                            </Text>
-                                            <CustomInput
-                                                placeholder="Loan Amount"
-                                                value={element.LoanAmount?.toString()}
-                                                error={element.LoanAmountError}
-                                                keyboardType={"numeric"}
-
-                                                onChangeText={(e) => {
-                                                    UpdatePersonalLoan(index, "LoanAmount", e)
-
-                                                }}
-                                            />
-
-                                        </View>
-                                        <View style={styles.formGroup}>
-
-                                            <Text
-                                                style={[
-                                                    styles.label,
-                                                    { fontSize: dynamicFontSize(styles.label.fontSize) },
-                                                ]}>
-                                                EMI Amount
-                                            </Text>
-                                            <CustomInput
-                                                placeholder="EMI Amount"
-                                                value={element.EMI?.toString()}
-                                                error={element.EmiError}
-                                                keyboardType={"numeric"}
-                                                onChangeText={(e) => {
-                                                    UpdatePersonalLoan(index, "EMI", e)
-
-                                                }}
-                                            />
-
-                                        </View>
-                                    </View>
-                                ))
-
-                            }
+                        <step.icon
+                          size={24}
+                          color={
+                            step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                          }
+                        />
+                      </View>
+                      <View style={styles.steptextContainer}>
+                        <Text
+                          style={[
+                            styles.steptitle,
+                            step.status === "disabled" &&
+                              styles.steptextDisabled,
+                          ]}>
+                          {step.title}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.stepsubtitle,
+                            step.status === "disabled" &&
+                              styles.steptextDisabled,
+                          ]}>
+                          {step.subtitle}
+                        </Text>
+                      </View>
+                      {index < steps.length - 1 && (
+                        <View style={styles.connectorContainer}>
+                          {[...Array(10)].map((_, i) => (
+                            <View
+                              key={i}
+                              style={[
+                                styles.dashItem,
+                                step.status === "done" && styles.dashItemDone,
+                              ]}
+                            />
+                          ))}
                         </View>
+                      )}
+                    </View>
+                  ))}
+                </View>
+                <View style={styles.bottomFixed}>
+                  <Image
+                    source={require("../../assets/images/poweredby.png")}
+                    style={styles.logo}
+                  />
+                </View>
+              </View>
+            </View>
+          )}
+          <KeyboardAvoidingView
+            style={[styles.rightCOntainer, { flex: 1 }]}
+            behavior={Platform.OS === "ios" ? "padding" : null}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+            <LoadingOverlay visible={loading} />
+            <View
+              style={[
+                styles.centerAlignedContainer,
+                { padding: 16, paddingBottom: 0 },
+              ]}>
+              <ProgressBar progress={0.05} />
+              <Text
+                style={[
+                  styles.headerText,
+                  { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                ]}>
+                Personal Financials
+              </Text>
+            </View>
 
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+              <View style={styles.centerAlignedContainer}>
+                <View style={styles.container}>
+                  <View>
+                    {otherError && (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.errorText.fontSize
+                            ),
+                          },
+                        ]}>
+                        {otherError}
+                      </Text>
+                    )}
+
+                    <View style={styles.formGroup}>
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Annual Turnover
+                      </Text>
+                      <CustomInput
+                        placeholder="Enter your gross monthly income"
+                        value={personalLoanDetailSlice?.data?.GrossMonthlyIncome?.toString()}
+                        error={
+                          personalLoanDetailSlice?.data?.GrossMonthlyIncomeError
+                        }
+                        keyboardType={"numeric"}
+                        onChangeText={(e) => {
+                          UpdatePersonalLoan(-1, "GrossMonthlyIncome", e);
+                        }}
+                      />
                     </View>
 
-                </ScrollView>
+                    <View style={styles.formGroup}>
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Total Financial Asset
+                      </Text>
+                      <CustomInput
+                        placeholder="Enter your total investments"
+                        value={personalLoanDetailSlice?.data?.Investments?.toString()}
+                        error={personalLoanDetailSlice?.data?.InvestmentsError}
+                        keyboardType={"numeric"}
+                        onChangeText={(e) => {
+                          UpdatePersonalLoan(-1, "Investments", e);
+                        }}
+                      />
+                    </View>
+                    <View style={styles.formGroup}>
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Total Non-Financial Asset
+                      </Text>
+                      <CustomInput
+                        placeholder="Enter your total fixed asset"
+                        value={personalLoanDetailSlice?.data?.FixedAssets?.toString()}
+                        error={personalLoanDetailSlice?.data?.FixedAssetsError}
+                        keyboardType={"numeric"}
+                        onChangeText={(e) => {
+                          UpdatePersonalLoan(-1, "FixedAssets", e);
+                        }}
+                      />
+                    </View>
 
-                <View style={[styles.actionContainer, styles.boxShadow]}>
-                    <TouchableOpacity
-                        style={styles.backButton}
-                        onPress={() => {
-                            GoBack(navigation);
-                        }}>
-                        <Text
-                            style={[
-                                styles.backBtnText,
-                                {
-                                    fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                                },
-                            ]}>
-                            BACK
-                        </Text>
-                    </TouchableOpacity>
-                    <LinearGradient
-                        colors={["#002777", "#00194C"]}
-                        style={[styles.verifyButton]}
-                    >
-                        <TouchableOpacity
-                            onPress={() => { HandleProcced() }}
-                        >
-                            <Text
+                    <View style={styles.formGroup}>
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Do you have the existing loans ?
+                      </Text>
+                      <View style={{ flexDirection: "row" }}>
+                        <View>
+                          <RadioButton
+                            label={"Yes"}
+                            isSelected={
+                              personalLoanDetailSlice?.data?.IsLoanAvailable
+                            }
+                            onPress={() => {
+                              UpdatePersonalLoan(-1, "IsLoanAvailable", true);
+                            }}
+                          />
+                          <View style={{ width: 20 }} />
+                        </View>
+                        <View>
+                          <RadioButton
+                            label={"No"}
+                            isSelected={
+                              !personalLoanDetailSlice?.data?.IsLoanAvailable
+                            }
+                            onPress={() => {
+                              UpdatePersonalLoan(-1, "IsLoanAvailable", false);
+                            }}
+                          />
+                          <View style={{ width: 20 }} />
+                        </View>
+                      </View>
+                    </View>
+
+                    {personalLoanDetailSlice?.data?.IsLoanAvailable &&
+                      personalLoanDetailSlice.data.BorrowerExistingLoanDetails.map(
+                        (element, index) => (
+                          <View key={index}>
+                            <View style={styles.formGroup}>
+                              <Text
                                 style={[
-                                    styles.buttonText,
-                                    {
-                                        fontSize: dynamicFontSize(styles.buttonText.fontSize),
-                                    },
-                                ]}
-                            >
-                                PROCEED
-                            </Text>
-                        </TouchableOpacity>
-                    </LinearGradient>
+                                  styles.label,
+                                  {
+                                    fontSize: dynamicFontSize(
+                                      styles.label.fontSize
+                                    ),
+                                  },
+                                ]}>
+                                Bank Name
+                              </Text>
+                              <CustomInput
+                                placeholder="Bank Name"
+                                value={element.LoanFromBank?.toString()}
+                                error={element.LoanFromBankError}
+                                onChangeText={(e) => {
+                                  UpdatePersonalLoan(index, "LoanFromBank", e);
+                                }}
+                              />
+                            </View>
+                            <View style={styles.formGroup}>
+                              <Text
+                                style={[
+                                  styles.label,
+                                  {
+                                    fontSize: dynamicFontSize(
+                                      styles.label.fontSize
+                                    ),
+                                  },
+                                ]}>
+                                Loan Type
+                              </Text>
+                              <CustomInput
+                                placeholder="Loan Type"
+                                value={element.LoanType?.toString()}
+                                error={element.LoanTypeError}
+                                onChangeText={(e) => {
+                                  UpdatePersonalLoan(index, "LoanType", e);
+                                }}
+                              />
+                            </View>
+                            <View style={styles.formGroup}>
+                              <Text
+                                style={[
+                                  styles.label,
+                                  {
+                                    fontSize: dynamicFontSize(
+                                      styles.label.fontSize
+                                    ),
+                                  },
+                                ]}>
+                                Loan Amount
+                              </Text>
+                              <CustomInput
+                                placeholder="Loan Amount"
+                                value={element.LoanAmount?.toString()}
+                                error={element.LoanAmountError}
+                                keyboardType={"numeric"}
+                                onChangeText={(e) => {
+                                  UpdatePersonalLoan(index, "LoanAmount", e);
+                                }}
+                              />
+                            </View>
+                            <View style={styles.formGroup}>
+                              <Text
+                                style={[
+                                  styles.label,
+                                  {
+                                    fontSize: dynamicFontSize(
+                                      styles.label.fontSize
+                                    ),
+                                  },
+                                ]}>
+                                EMI Amount
+                              </Text>
+                              <CustomInput
+                                placeholder="EMI Amount"
+                                value={element.EMI?.toString()}
+                                error={element.EmiError}
+                                keyboardType={"numeric"}
+                                onChangeText={(e) => {
+                                  UpdatePersonalLoan(index, "EMI", e);
+                                }}
+                              />
+                            </View>
+                          </View>
+                        )
+                      )}
+                  </View>
                 </View>
+              </View>
+            </ScrollView>
 
-            </KeyboardAvoidingView>
+            <View style={[styles.boxShadow]}>
+              <View
+                style={[styles.actionContainer, styles.centerAlignedContainer]}>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => {
+                    GoBack(navigation);
+                  }}>
+                  <Text
+                    style={[
+                      styles.backBtnText,
+                      {
+                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                      },
+                    ]}>
+                    BACK
+                  </Text>
+                </TouchableOpacity>
+                <LinearGradient
+                  colors={["#002777", "#00194C"]}
+                  style={[styles.verifyButton]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      HandleProcced();
+                    }}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                        },
+                      ]}>
+                      PROCEED
+                    </Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
         </View>
-    </View>
+      </View>
+    );
 }
 
 export default PersonalFinance;
