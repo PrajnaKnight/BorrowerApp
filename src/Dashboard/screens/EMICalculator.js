@@ -226,14 +226,13 @@ const EMICalculator = ({ navigation }) => {
                 "1L",
                 "5L",
                 "10L",
-                "30L",
                 "50L",
                 "1Cr",
                 "5Cr",
                 "10Cr",
               ]}
               labelValues={[
-                10000, 100000, 500000, 1000000, 3000000, 5000000, 10000000,
+                10000, 100000, 500000, 1000000, 5000000, 10000000,
                 50000000, 100000000,
               ]}
             />
@@ -304,9 +303,14 @@ const EMICalculator = ({ navigation }) => {
 };
 
 const calculateEMI = (principal, rate, tenure) => {
-  const monthlyRate = rate / 12 / 100;
-  const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
-  return emi;
+  if (rate === 0) {
+    // If interest rate is 0, EMI is simply the principal divided by the tenure
+    return principal / tenure;
+  } else {
+    const monthlyRate = rate / 12 / 100;
+    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
+    return emi;
+  }
 };
 
 const styles = applyFontFamily({

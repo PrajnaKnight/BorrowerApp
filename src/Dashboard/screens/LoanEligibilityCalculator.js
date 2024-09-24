@@ -24,7 +24,7 @@ const LoanEligibilityCalculator = ({ navigation }) => {
   });
   const [tenureRange, setTenureRange] = useState({ min: 12, max: 60 });
   const [isApplyButtonEnabled, setIsApplyButtonEnabled] = useState(false);
-  const [tenureUnit, setTenureUnit] = useState('Yr');
+  const [tenureUnit, setTenureUnit] = useState('Mo');
   const [errorMessage, setErrorMessage] = useState('');
 
   const loanDefaults = {
@@ -44,7 +44,10 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         otherEMI: 0,
         deductions: 5000,
       },
-      tenureRange: { min: 12, max: 360 },
+      tenureRange: {
+        Mo: { min: 12, max: 240 },
+        Yr: { min: 1, max: 30 },
+      },
     },
     'Personal Loan': {
       loanDetails: {
@@ -62,7 +65,10 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         otherEMI: 5000,
         deductions: 0,
       },
-      tenureRange: { min: 12, max: 60 },
+      tenureRange: {
+        Mo: { min: 12, max: 60 },
+        Yr: { min: 1, max: 5 },
+      },
     },
     'Vehicle Loan': {
       loanDetails: {
@@ -80,25 +86,39 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         otherEMI: 5000,
         deductions: 0,
       },
-      tenureRange: { min: 12, max: 84 },
+      tenureRange: {
+        Mo: { min: 12, max: 120 },
+        Yr: { min: 1, max: 12 },
+      },
     },
   };
 
   useEffect(() => {
-    const { loanDetails, formDefaults, tenureRange } = loanDefaults[activeTab];
-    setLoanDetails(loanDetails);
-    setFormData(formDefaults);
-    setTenureRange(tenureRange);
+    updateLoanDetails(activeTab, tenureUnit);
   }, [activeTab]);
 
-  useEffect(() => {
-    const { min, max } = tenureRange;
-    if (tenureUnit === 'Yr') {
-      setTenureRange({ min: Math.ceil(min / 12), max: Math.floor(max / 12) });
-    } else {
-      setTenureRange({ min, max });
+  const updateLoanDetails = (tab, unit) => {
+    console.log(`Updating loan details for ${tab} with unit ${unit}`);
+    const { loanDetails, formDefaults, tenureRange } = loanDefaults[tab];
+    setLoanDetails(loanDetails);
+    
+    const newRange = tenureRange[unit];
+    if (!newRange) {
+      console.error(`Invalid tenure range for ${tab} and ${unit}`);
+      return;
     }
-  }, [tenureUnit]);
+    
+    setTenureRange(newRange);
+    
+    const adjustedTenure = unit === 'Yr' 
+      ? Math.min(Math.max(Math.floor(formDefaults.loanTenure / 12), newRange.min), newRange.max)
+      : Math.min(Math.max(formDefaults.loanTenure, newRange.min), newRange.max);
+    
+    setFormData({
+      ...formDefaults,
+      loanTenure: adjustedTenure
+    });
+  };
 
   useEffect(() => {
     const isValidInput = validateForm(formData, tenureRange);
@@ -107,6 +127,10 @@ const LoanEligibilityCalculator = ({ navigation }) => {
   }, [formData, tenureRange]);
 
   const validateForm = (data, range) => {
+    if (!range || typeof range.min === 'undefined' || typeof range.max === 'undefined') {
+      console.error('Invalid tenure range:', range);
+      return false;
+    }
     const { age, creditScore, loanTenure, grossSalary, otherEMI, deductions } = data;
     return (
       age >= 18 &&
@@ -120,12 +144,18 @@ const LoanEligibilityCalculator = ({ navigation }) => {
   };
 
   const getErrorMessage = (data, range) => {
+    if (!range || typeof range.min === 'undefined' || typeof range.max === 'undefined') {
+      return 'Invalid tenure range';
+    }
     const allFieldsZero = Object.values(data).every((value) => value === 0);
     if (allFieldsZero) {
       return 'Please re-check your input details';
     }
     if (data.loanTenure < range.min) {
-      return `Please enter Tenure greater than ${range.min} ${tenureUnit === 'Yr' ? 'year' : 'month'}${range.min > 1 ? 's' : ''}`;
+      return `Please enter Tenure greater than or equal to ${range.min} ${tenureUnit === 'Mo' ? 'months' : 'years'}`;
+    }
+    if (data.loanTenure > range.max) {
+      return `Please enter Tenure less than or equal to ${range.max} ${tenureUnit === 'Mo' ? 'months' : 'years'}`;
     }
     return 'Please re-check your input details';
   };
@@ -144,10 +174,11 @@ const LoanEligibilityCalculator = ({ navigation }) => {
 
   const roundOff = (value) => Math.round(value);
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
+  const handleTenureUnitToggle = (unit) => {
+    console.log(`Toggling tenure unit to ${unit}`);
+    setTenureUnit(unit);
+    updateLoanDetails(activeTab, unit);
   };
-
   return (
     <Layout>
       <ScrollView style={globalStyles.container}>
@@ -200,8 +231,8 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               step={1}
               onValueChange={(value) => handleSliderChange("loanTenure", value)}
               toggle={tenureUnit}
-              onToggle={setTenureUnit}
-              sliderLabels={tenureUnit === 'Yr' ? ['1', '240'] : ['6', '60']}
+              onToggle={handleTenureUnitToggle}
+              sliderLabels={[tenureRange.min.toString(), tenureRange.max.toString()]}
             />
             <InputSlider
               label={

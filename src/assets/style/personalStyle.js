@@ -7,6 +7,9 @@ const deviceWidth = window.width;
 
 const { width, height } = Dimensions.get('window');
 
+const screenWidth = Dimensions.get('window').width;
+const inputWidth = Math.min(60, screenWidth / 8); 
+
 
 // You can create your own "media query" functions
 const isSmallDevice = deviceWidth < 768;
@@ -412,7 +415,7 @@ outlineStyle: 'solid',
     }),
   },
   otpInput: {
-    width: 60,
+    width: inputWidth,
     height: 50,
     borderColor: "#A2ACC6",
     borderWidth: 1,
