@@ -66,20 +66,20 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const changeType = (value, index) => {
     dispatch(updateChildSelected(value));
-   
+
   };
 
 
   const findCurrentMasterSelectedChild = () => {
 
-    let DisplayName = null, DocType = null, Password = null;
+    let Password = null, DisplayName = null;
     if (uploadDocumentSlices.data.selectedDoc.master != null && uploadDocumentSlices.data.selectedDoc.child != null) {
-      DisplayName = uploadDocumentSlices.data.selectedDoc.child
-      DocType = uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master][uploadDocumentSlices.data.selectedDoc.child].Id
       Password = uploadDocumentSlices.data.OTHER_FILES[uploadDocumentSlices.data.selectedDoc.master][uploadDocumentSlices.data.selectedDoc.child].Password
+      DisplayName = uploadDocumentSlices.data.selectedDoc.child
+
     }
 
-    return { DisplayName, DocType, Password }
+    return {Password, DisplayName} 
   }
 
   useFocusEffect(
@@ -104,7 +104,7 @@ const DocumentUploadScreen = ({ navigation }) => {
       setRefreshPage(false);
     }, [refreshPage]));
 
-  const handleDocumentPick = async (type) => {
+  const handleDocumentPick = async (type, DocType) => {
     setOtherError(null)
 
     if (type === 'camera') {
@@ -129,7 +129,7 @@ const DocumentUploadScreen = ({ navigation }) => {
     let document = null;
     let fileName = null;
 
-    let { DisplayName, DocType, Password } = findCurrentMasterSelectedChild()
+    let {Password, DisplayName} = findCurrentMasterSelectedChild()
 
 
     if (type === 'library') {
@@ -378,6 +378,8 @@ const DocumentUploadScreen = ({ navigation }) => {
   };
   const goToEmandate = async () => {
     setOtherError(null)
+
+    
     const realDocs = uploadDocumentSlices.data.OTHER_FILES
     const masterKeys = Object.keys(realDocs)
     for (let i = 0; i < masterKeys.length; i++) {
@@ -389,9 +391,12 @@ const DocumentUploadScreen = ({ navigation }) => {
       const childKeys = Object.keys(realDocs[masterKeys[i]])
       let isFileAvailable = false
       for (let j = 0; j < childKeys.length; j++) {
-        if (realDocs[masterKeys[i]][childKeys[j]].Base64) {
-          isFileAvailable = true
-        }
+        realDocs[masterKeys[i]][childKeys[j]]?.items?.map((item) => {
+          if (item.Base64) {
+            isFileAvailable = true
+          }
+        })
+
       }
 
       if (!isFileAvailable) {
@@ -483,19 +488,19 @@ const DocumentUploadScreen = ({ navigation }) => {
     </View>
   );
 
-  const handleScroll = (event) => {
-    const scrollPosition = event.nativeEvent.contentOffset.x;
-    const maxScrollPosition = event.nativeEvent.contentSize.width - windowWidth;
+  // const handleScroll = (event) => {
+  //   const scrollPosition = event.nativeEvent.contentOffset.x;
+  //   const maxScrollPosition = event.nativeEvent.contentSize.width - windowWidth;
 
-    if (scrollPosition >= maxScrollPosition) {
-      // We're at the end, select the last item
-      const filteredKeys = getFilteredKeys();
-      setActiveIndex(filteredKeys.length - 1);
-    } else {
-      const index = Math.round(scrollPosition / itemWidth);
-      setActiveIndex(index);
-    }
-  };
+  //   if (scrollPosition >= maxScrollPosition) {
+  //     // We're at the end, select the last item
+  //     const filteredKeys = getFilteredKeys();
+  //     setActiveIndex(filteredKeys.length - 1);
+  //   } else {
+  //     const index = Math.round(scrollPosition / itemWidth);
+  //     setActiveIndex(index);
+  //   }
+  // };
 
   const getFilteredKeys = () => {
     const selectedMaster = uploadDocumentSlices.data?.selectedDoc?.master;
@@ -508,16 +513,6 @@ const DocumentUploadScreen = ({ navigation }) => {
   const pagerViewRef = useRef(null);
 
 
-  useEffect(() => {
-    const selectedChild = uploadDocumentSlices.data?.selectedDoc?.child;
-    if (selectedChild && pagerViewRef.current) {
-      const filteredKeys = getFilteredKeys();
-      const index = filteredKeys.indexOf(selectedChild);
-      if (index !== -1) {
-        // pagerViewRef.current?.scrollToIndex(Math.floor(index / 3) || 0, false);
-      }
-    }
-  }, [uploadDocumentSlices.data?.selectedDoc?.child]);
 
 
   const TabsView = ({ items = [], filteredKeys }) => (<View style={{ height: 100, width: swiperWidth, flexDirection: "row", justifyContent: "space-between" }}>
@@ -643,16 +638,16 @@ const DocumentUploadScreen = ({ navigation }) => {
               setSwiperWidth(width); // Update the width when layout changes
             }}
 
-            onChangeIndex={({index, preIndex})=>{setActiveIndex(index)}}
-            
+            onChangeIndex={({ index, preIndex }) => { setActiveIndex(index) }}
+
             index={0}
             scrollEnabled={true}
             horizontal
             data={groupedKeys}
-            
+
             renderItem={({ item, index }) => {
               return (
-                <View key={index} style={{ flexDirection: 'row' , width:swiperWidth}}>
+                <View key={index} style={{ flexDirection: 'row', width: swiperWidth }}>
                   {item.map((element, idx) => {
                     const isSelected = uploadDocumentSlices.data.selectedDoc.child === element;
                     const truncatedText = element.length > 12 ? element.slice(0, 12) + '...' : element;
@@ -663,7 +658,7 @@ const DocumentUploadScreen = ({ navigation }) => {
                         style={[
                           styles.docTypeButton,
                           isSelected && styles.selectedDocTypeButton,
-                          {width:"30%", marginHorizontal:7}
+                          { width: "30%", marginHorizontal: 7 }
                         ]}
                         onPress={() => changeType(element, filteredKeys.indexOf(element))}
                       >
@@ -696,12 +691,12 @@ const DocumentUploadScreen = ({ navigation }) => {
             }}
           />
         </View>
-        <RenderDots groupedKeys = {groupedKeys}/>
+        <RenderDots groupedKeys={groupedKeys} />
       </View>
     );
   };
 
-  const RenderDots = ({groupedKeys}) => {
+  const RenderDots = ({ groupedKeys }) => {
 
     return (
       <View style={[styles.dotsContainer, { marginTop: 10 }]}>
@@ -723,14 +718,18 @@ const DocumentUploadScreen = ({ navigation }) => {
 
   const RenderDocumentPreviews = (selectedFile) => (
     <View style={styles.fileUploadContainer}>
-      <View style={styles.uploadPreviewContainer}>
-        <View style={styles.previewArea}>
-          <View style={{ flex: 1, width: "100%", height: "100%" }}>
-            {selectedFile.Base64 ?
-              (isImage(selectedFile.Name) ? (
+
+      {selectedFile?.items.map((file) => {
+
+        return <View style={styles.uploadPreviewContainer}>
+          <View style={styles.previewArea}>
+            <View style={{ flex: 1, width: "100%", height: "100%" }}>
+
+              {file.Base64 ?
+               (isImage(file.Name) ? (
                 <Image
                   source={{
-                    uri: `data:image/png;base64,${selectedFile.Base64}`,
+                    uri: `data:image/png;base64,${file.Base64}`,
                   }}
                   style={{ flex: 1 }}
                   resizeMode="contain" // or 'cover', 'stretch', etc.
@@ -745,48 +744,51 @@ const DocumentUploadScreen = ({ navigation }) => {
                   }}>
                   <Icon name={"file"} size={24} />
                   <View style={{ height: 5 }} />
-                  <Text style={{ fontFamily: "Poppins_400Regular" }}>{selectedFile.Name}</Text>
+                  <Text style={{ fontFamily: "Poppins_400Regular" }}>{file.Name}</Text>
                 </View>
               )) :
-              <View style={styles.previewPlaceholder}>
-                <ImageBackground
-                  source={require("../../assets/images/dummyid.png")}
-                  style={[styles.previewPlaceholder]}>
-                  <Text style={styles.previewPlaceholderText}>Preview</Text>
-                </ImageBackground>
-              </View>
+                <View style={styles.previewPlaceholder}>
+                  <ImageBackground
+                    source={require("../../assets/images/dummyid.png")}
+                    style={[styles.previewPlaceholder]}>
+                    <Text style={styles.previewPlaceholderText}>{file?.Label || ""} Preview</Text>
+                  </ImageBackground>
+                </View>
 
-            }
+              }
 
-            {selectedFile.Base64 != null && (
-              <TouchableOpacity
-                style={styles.closePDF}
-                onPress={() => {
-                  handleDeleteFile(selectedFile.Id);
-                }}>
-                <Icon name="times-circle" size={24} color="#FF0000" />
-              </TouchableOpacity>
-            )}
+
+
+              {file.Base64 != null && (
+                <TouchableOpacity
+                  style={styles.closePDF}
+                  onPress={() => {
+                    handleDeleteFile(file.Id);
+                  }}>
+                  <Icon name="times-circle" size={24} color="#FF0000" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.uploadButtonsContainer}>
+            <TouchableOpacity
+              style={styles.uploadButton}
+              onPress={() => {
+                handleDocumentPick("library",file.Id);
+              }}>
+              <Icon name="upload" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.uploadButton}
+              onPress={() => {
+                handleDocumentPick("camera", file.Id);
+              }}>
+              <Icon name="camera" size={24} color="#fff" />
+            </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.uploadButtonsContainer}>
-          <TouchableOpacity
-            style={styles.uploadButton}
-            onPress={() => {
-              handleDocumentPick("library");
-            }}>
-            <Icon name="upload" size={24} color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.uploadButton}
-            onPress={() => {
-              handleDocumentPick("camera");
-            }}>
-            <Icon name="camera" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      })}
     </View>
   )
 
@@ -929,9 +931,9 @@ const DocumentUploadScreen = ({ navigation }) => {
                         styles.stepiconContainer,
                         step.status === "done" && styles.stepiconContainerDone,
                         step.status === "current" &&
-                          styles.stepiconContainerCurrent,
+                        styles.stepiconContainerCurrent,
                         step.status === "disabled" &&
-                          styles.stepiconContainerDisabled,
+                        styles.stepiconContainerDisabled,
                       ]}>
                       <step.icon
                         size={24}
@@ -997,9 +999,9 @@ const DocumentUploadScreen = ({ navigation }) => {
                 Document Upload
               </Text>
             </View>
-            </View>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-              <View style={styles.centerAlignedContainer}>
+          </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={styles.centerAlignedContainer}>
               <View style={styles.container}>
                 {otherError ? (
                   <Text
@@ -1026,12 +1028,12 @@ const DocumentUploadScreen = ({ navigation }) => {
                         <View style={styles.FileControllerContainer}>
                           {RenderDocumentPreviews(
                             uploadDocumentSlices.data.OTHER_FILES[
-                              uploadDocumentSlices.data.selectedDoc.master
+                            uploadDocumentSlices.data.selectedDoc.master
                             ][uploadDocumentSlices.data.selectedDoc.child]
                           )}
                           {RenderPasswordInput(
                             uploadDocumentSlices.data.OTHER_FILES[
-                              uploadDocumentSlices.data.selectedDoc.master
+                            uploadDocumentSlices.data.selectedDoc.master
                             ][uploadDocumentSlices.data.selectedDoc.child]
                           )}
                         </View>
@@ -1040,9 +1042,9 @@ const DocumentUploadScreen = ({ navigation }) => {
                     </>
                   )}
               </View>
-              </View>
-            </ScrollView>
-         
+            </View>
+          </ScrollView>
+
           <View style={[styles.boxShadow]}>
             <View
               style={[styles.actionContainer, styles.centerAlignedContainer]}>
