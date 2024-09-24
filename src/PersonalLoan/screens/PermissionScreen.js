@@ -552,29 +552,31 @@ const PermissionsScreen = ({ navigation, route }) => {
 
                     {showPermssionModel && ShowPermissionDialog()}
                   </View>
-
-                  <TouchableOpacity
-                    onPress={handleNextPress}
-                    style={{ marginBottom: 10 }}>
-                    <LinearGradient
-                      colors={["#002777", "#00194C"]}
-                      style={[styles.Nextbutton]}>
-                      <Text
-                        style={[
-                          styles.buttonText,
-                          {
-                            fontSize: dynamicFontSize(
-                              styles.buttonText.fontSize
-                            ),
-                          },
-                        ]}>
-                        {route.params.launchTimeAsk ? "NEXT" : "BACK"}
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
                 </View>
               </View>
             </ScrollView>
+            <View style={styles.boxShadow}>
+              <View
+                style={[styles.actionContainer, styles.centerAlignedContainer]}>
+                <TouchableOpacity
+                  onPress={handleNextPress}
+                  style={{ marginBottom: 10, flex:1 }}>
+                  <LinearGradient
+                    colors={["#002777", "#00194C"]}
+                    style={[styles.Nextbutton]}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                        },
+                      ]}>
+                      {route.params.launchTimeAsk ? "NEXT" : "BACK"}
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
 
             {showPerimissionPopup && (
               <PermissionPopup
