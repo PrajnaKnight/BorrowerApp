@@ -34,6 +34,16 @@ const initialState = {
     }
 }
 
+
+const getLabelText = (docId) =>{
+    if(docId == "FrontAdhaar"){
+        return "Aadhaar Front";
+    }
+    else if(docId == "AadharBack"){
+        return "Aadhaar Back"
+    }
+    return ""
+}
 const UploadOtherFileSlice = createSlice({
     name: 'UploadOtherFileSlice',
     initialState,
@@ -89,6 +99,9 @@ const UploadOtherFileSlice = createSlice({
 
             let resultArray = {};
 
+            console.log("================= Master List inside updateOtherDocumentAndFields ===============")
+            console.log(JSON.stringify( state.data.MASTER_OPTION))
+
             for (let i = 0; i < state.data.MASTER_OPTION.length; i++) {
                 const master = state.data.MASTER_OPTION[i]
 
@@ -99,10 +112,16 @@ const UploadOtherFileSlice = createSlice({
                     
                     let key = master.DocList[j].value
                     resultArrayMaster[key] = {
-                        Id: parseInt(master.DocList[j].ID),
-                        IsSelected: false,
-                        Name: null,
-                        Base64: null,
+                        items : [
+                            ...resultArrayMaster[key]?.items || [], 
+                            {
+                                Id: parseInt(master.DocList[j].ID),
+                                Name: null,
+                                Base64: null,
+                                Label : getLabelText(master.DocList[j].label)
+                            },
+                            
+                        ],
                         Password: null,
                         EnablePassword: false
                     }
@@ -126,14 +145,20 @@ const UploadOtherFileSlice = createSlice({
                 for (let j = 0; j < newOtherList.length; j++) {
 
                     if (newOtherList[j].DocSetTypeDisplayName == master.DoctypeType) {
-                        resultArrayMaster[newOtherList[j].DisplayName] = {
+
+
+                        const newObject =  {
                             Id: parseInt(newOtherList[j].DocType),
-                            IsSelected: false,
                             Name: newOtherList[j].Name,
                             Base64: newOtherList[j].OriginalFile,
-                            Password: newOtherList[j].Password,
-                            EnablePassword: newOtherList[j].Password ? true : false
+                            Label : getLabelText(parseInt(newOtherList[j].DocType), master.DoctypeType)
                         }
+
+                        resultArrayMaster[newOtherList[j].DisplayName].items =  resultArrayMaster[newOtherList[j].DisplayName].items.map(item => (item.Id === parseInt(newOtherList[j].DocType) ? newObject : item));
+
+                        resultArrayMaster[newOtherList[j].DisplayName].Password = newOtherList[j].Password
+                        resultArrayMaster[newOtherList[j].DisplayName].EnablePassword = newOtherList[j].Password ? true : false
+                        
                     }
                 }
 
@@ -181,7 +206,7 @@ const UploadOtherFileSlice = createSlice({
                 DoctypeType: docType.DoctypeType,
                 MandatoryFlag: docType.MandatoryFlag,
                 DocList: docType.DocList.map(doc => ({
-                    label: doc.Value,
+                    label: doc.Text,
                     value: doc.Value,
                     ID: doc.ID
                 }))
