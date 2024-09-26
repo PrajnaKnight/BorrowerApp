@@ -44,7 +44,7 @@ const PersonalFinance = ({navigation}) => {
     const isDesktop = width >= 1024;
 
     const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-    const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+    const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
 
     const HandleProcced = async () => {
 
@@ -338,7 +338,7 @@ const PersonalFinance = ({navigation}) => {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={styles.centerAlignedContainer}>
                 <View style={styles.container}>
-                  <View>
+                  <View style={{minHeight: height - 250}}>
                     {otherError && (
                       <Text
                         style={[

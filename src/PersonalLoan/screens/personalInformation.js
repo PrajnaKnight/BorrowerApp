@@ -279,6 +279,12 @@ const PersonalInformationScreen = ({ navigation }) => {
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
   const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleDropdownOpen = (open) => {
+    setIsDropdownOpen(open);
+  };
+
   
   const steps = [
     { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
@@ -358,8 +364,8 @@ const PersonalInformationScreen = ({ navigation }) => {
           </View>
         )}
         <KeyboardAvoidingView
-          style={[styles.rightCOntainer, { flex: 1 }]}
-          behavior={Platform.OS === "ios" ? "padding" : null}
+          style={[styles.rightContainer, { flex: 1 }]}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
           <View
@@ -377,7 +383,10 @@ const PersonalInformationScreen = ({ navigation }) => {
             </Text>
           </View>
 
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled={true}>
             <View style={styles.centerAlignedContainer}>
               <View style={styles.container}>
                 <View>
@@ -514,7 +523,7 @@ const PersonalInformationScreen = ({ navigation }) => {
                       }}
                     />
                   </View>
-                  <View style={styles.formGroup}>
+                  <View style={[styles.formGroup, { zIndex: 1000 }]}>
                     <Text
                       style={[
                         styles.label,
@@ -531,6 +540,8 @@ const PersonalInformationScreen = ({ navigation }) => {
                       setItems={setItems}
                       placeholder="Select"
                       style={styles.dropdownBorder}
+                      zIndex={1000}
+                      dropDownDirection="TOP"
                     />
                     {personalDetails.data.LeadMaritalStatusError && (
                       <Text
@@ -545,14 +556,14 @@ const PersonalInformationScreen = ({ navigation }) => {
                         {personalDetails.data.LeadMaritalStatusError}
                       </Text>
                     )}
-                    <View style={{ height: 20 }}></View>
                   </View>
                 </View>
               </View>
             </View>
           </ScrollView>
           <View style={[styles.boxShadow]}>
-            <View style={[styles.actionContainer, styles.centerAlignedContainer ]}>
+            <View
+              style={[styles.actionContainer, styles.centerAlignedContainer]}>
               <TouchableOpacity
                 style={styles.backButton}
                 onPress={() => {
