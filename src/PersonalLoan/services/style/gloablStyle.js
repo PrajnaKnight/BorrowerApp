@@ -1,6 +1,6 @@
 import { StyleSheet, Platform, Dimensions } from "react-native";
 import applyFontFamily from "./applyFontFamily";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+
 
 // Get the device's width and height
 const window = Dimensions.get('window');
@@ -23,6 +23,7 @@ export const styles = applyFontFamily({
       web: {
         width: "100%",
         alignSelf: "center",
+        backgroundColor: "#ffffff",
       },
     }),
   },
@@ -53,7 +54,7 @@ export const styles = applyFontFamily({
     backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
-        zIndex: 100,
+        zIndex: 5000,
       },
     }),
   },
@@ -88,6 +89,11 @@ export const styles = applyFontFamily({
     height: 20,
     borderRadius: 5,
     flexDirection: "row",
+    ...Platform.select({
+      web: {
+        height: 40,
+      },
+    }),
   },
   sliderLabels: {
     flexDirection: "row",
@@ -110,10 +116,19 @@ export const styles = applyFontFamily({
     shadowRadius: 2,
     elevation: 3,
     ...Platform.select({
-      // Additional, web-specific styles
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
       web: {
+      
         paddingHorizontal: 20,
-        backgroundColor: "#00194c",
+        backgroundColor: "#ffffff",
         width: "100%",
         margin: "auto",
         right: 0,
@@ -121,6 +136,7 @@ export const styles = applyFontFamily({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingVertical: 10,
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       },
     }),
   },
@@ -215,7 +231,10 @@ export const styles = applyFontFamily({
     elevation: 2,
     ...Platform.select({
       web: {
-        outline: "none",
+        // outline: "none",
+        outlineWidth: 1,
+outlineColor: 'black',
+outlineStyle: 'solid',
         "&:focus": {
           borderColor: "#0056b3",
         },
@@ -374,11 +393,10 @@ export const styles = applyFontFamily({
     color: "#00194C",
   },
   WebheaderText: {
-    fontSize: 30,
+    fontSize: 49,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
-    textAlign: "center",
   },
   subText: {
     fontSize: 16,
@@ -489,6 +507,11 @@ export const styles = applyFontFamily({
     paddingHorizontal: 5,
     borderWidth: 1,
     borderRadius: 5,
+    ...Platform.select({
+      web: {
+        borderWidth:0
+      },
+    }),
   },
   progressBarBackground: {
     height: 5,
@@ -741,6 +764,11 @@ export const styles = applyFontFamily({
     paddingHorizontal: 10,
     textAlign: "left",
     fontWeight: "600",
+    ...Platform.select({
+      web: {
+        fontSize: 12,
+      },
+    }),
 
   },
   downloadButtonLink: {
@@ -989,7 +1017,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -997,7 +1025,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -1206,9 +1234,9 @@ export const styles = applyFontFamily({
     lineHeight: 20,
     ...Platform.select({
       web: {
-        padding: 9,
-        color: "#ffffff",
-        borderColor: "#ffffff",
+        padding: 7,
+        color: "#00194c",
+        borderColor: "#00194c",
       },
     }),
   },
@@ -1295,6 +1323,27 @@ export const styles = applyFontFamily({
       },
     }),
   },
+  centerAlignedContainer: { 
+    ...Platform.select({
+      web: {
+        width: "70%",
+        backgroundColor: "#ffffff",
+        marginLeft: "auto",
+        marginRight: "auto",
+        flexGrow:1
+      },
+    }),
+  },
+  centerAlignedContainerHeader:{
+    ...Platform.select({
+      web: {
+        width: "70%",
+        backgroundColor: "#ffffff",
+        marginLeft: "auto",
+        marginRight: "auto",
+      },
+    }),
+  },
   rightCOntainer: {
     ...Platform.select({
       web: {
@@ -1322,7 +1371,6 @@ export const styles = applyFontFamily({
     }),
   },
   webheader: {
-    alignItems: "center",
     marginBottom: 20,
   },
   websubtitleText: {
@@ -1383,15 +1431,17 @@ export const styles = applyFontFamily({
   },
   mincontainer: {
     flex: 1,
-    padding: 20,
-    justifyContent: "center",
+    justifyContent :'center',
+    paddingHorizontal: 80,
+    paddingVertical:20
   },
   featureIcon: {
     color: "#ffffff",
   },
   bottomFixed: {
     position: "absolute",
-    bottom: 10,
+    bottom: 80,
+    right:80,
   },
 
   mainContainer: {
@@ -1619,6 +1669,14 @@ export const styles = applyFontFamily({
     borderRadius: 8,
     alignItems: "center",
     alignItems: "center",
+    width: "100%",
+    ...Platform.select({
+      web: {
+        width: "100%",
+        marginLeft: "auto",
+        marginRight: "auto",
+      },
+    }),
   },
   inputIcon: {
     backgroundColor: "#758BFD",
@@ -1761,9 +1819,23 @@ export const styles = applyFontFamily({
     shadowOpacity: 0.8,
     elevation: 5,
     padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
+      web: {
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 1)",
+      },
+    }),
   },
   docCaptureWrapper: {
-    borderWidth: 1,
+    borderWidth: 1  ,
     borderColor: "#A2ACC6",
     padding: 16,
     borderRadius: 10,
@@ -1995,9 +2067,7 @@ export const styles = applyFontFamily({
     paddingHorizontal: 5,
     borderWidth: 1,
     borderColor: "#E0E0E0",
-    borderRadius: 8,
-    marginRight: 10,
-    minWidth: "30%",
+    borderRadius: 8
   },
   dotIndicatorContainer: {
     flexDirection: "row",
@@ -2215,6 +2285,11 @@ export const styles = applyFontFamily({
     backgroundColor: "#758BFD",
     justifyContent: "center",
     alignItems: "center",
+    ...Platform.select({
+      web: {
+        padding:10,
+      },
+    }),
   },
   detailTextContainer: {
     flex: 1,
@@ -2233,6 +2308,11 @@ export const styles = applyFontFamily({
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "50%",
+    ...Platform.select({
+     web: {
+       fontSize: 12,
+     },
+    }),
   },
  
   disbursestatusText: {
@@ -2356,6 +2436,7 @@ export const styles = applyFontFamily({
   },
   contentContainer: {
     flex: 1,
+    minHeight:'50%'
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -2383,5 +2464,77 @@ export const styles = applyFontFamily({
     backgroundColor: '#00194c',
   },
   //New document upload screen ends
+  step: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  stepiconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  stepiconContainerDone: {
+    backgroundColor: '#213ACE',
+  },
+  stepiconContainerCurrent: {
+    backgroundColor: '#FF8500',
+  },
+  stepiconContainerDisabled: {
+    backgroundColor: '#213ACE',
+    opacity: 0.5,
+  },
+  steptextContainer: {
+    flex: 1,
+  },
+  steptitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+  },
+  stepsubtitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  steptextDisabled: {
+    color: '#9CA3AF',
+  },
+  connectorContainer: {
+    position: 'absolute',
+    left: 20,
+    top: 40,
+    bottom: -24,
+    width: 2,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    zIndex: -1,
+  },
+  dashItem: {
+    width: 1.5,
+    height: 1,
+    backgroundColor: '#9CA3AF',
+  },
+  dashItemDone: {
+    backgroundColor: '#ffffff',
+  },
+  scrollViewContentWrapper:{
+    flexGrow: 1,
+  
+  },
+  containerScroll:{
+    minHeight:'50%',
+    ...Platform.select({
+      web: {
+        height:"auto",
+        minHeight:'auto',
+      },
+    }),
+  },
+  dropdownContainerWrapper:{
+    zIndex: 1000,
+  },
+
 });
 

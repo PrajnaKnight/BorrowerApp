@@ -1778,11 +1778,12 @@ export const styles = applyFontFamily({
   },
   errorContainer: {
     backgroundColor: "red",
-    padding: 10,
+    padding: 5,
   },
   errorText: {
     color: "white",
     textAlign: "center",
+    fontSize: 12,
   },
   drpdownlabel: {
     color: "#00194C",

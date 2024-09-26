@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, TextInput, useWindowDimensions, KeyboardAvoidingView, Platform, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, useWindowDimensions, KeyboardAvoidingView, Platform, StyleSheet, FlatList, Image } from 'react-native';
 import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import { styles } from '../services/style/gloablStyle';
 import CustomInput, { CustomDropDownWithSearch, CustomInputFieldWithSuggestion, DateOfJoiningMaskedCustomInput } from '../components/input';
@@ -27,6 +27,7 @@ import CustomSlider from '../components/CustomSlider';
 import { checkLocationPermission } from './PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 const EmploymentDetailScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -80,7 +81,7 @@ const EmploymentDetailScreen = ({ navigation }) => {
   const isTablet = width >= 768 && width < 1024;
   const isDesktop = width >= 1024;
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
 
   const fetchCompanyList = (query) => {
     GetCompanyList(query).then((response) => {
@@ -637,283 +638,497 @@ const EmploymentDetailScreen = ({ navigation }) => {
 
     const renderContent = () => (
       <>
-     
-        <View style={styles.container}>
-          {otherError && <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{otherError}</Text>}
-          
-          <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Employment Type <Text style={styles.mandatoryStar}>*</Text></Text>
-          <CustomDropdown 
-            value={EmploymentType} 
-            items={employmentTypeOptions} 
-            setValue={(e) => onEmploymentTypeChange(e)} 
-            placeholder="Select" 
-            style={[styles.pickerContainer, { fontSize }]} 
-            zIndex={7000} 
-          />
-          {EmploymentTypeError && <Text style={styles.errorText}>{EmploymentTypeError}</Text>}
-          
-          <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Occupation Type <Text style={styles.mandatoryStar}>*</Text></Text>
-          <CustomDropDownWithSearch
-            value={EmploymentCategory}
-            listOfData={ocupationValueOptions}
-            onChangeText={(e) => { onEmploymenCategoryChange(e); }}
-            placeholder="Search"
-            style={[styles.pickerContainer, { fontSize }]}
-            zIndex={2000}
-            searchable={true}
-          />
-          {EmploymentCategoryError && <Text style={styles.errorText}>{EmploymentCategoryError}</Text>}
-          
-          {EmploymentType === 'Salaried' && (
-            <View style={styles.employmentWrapper}>
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience<Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInput
-                  placeholder="Years"
-                  keyboardType="numeric"
-                  error={Salaried.ExperienceError}
-                  value={Salaried.Experience}
-                  onChangeText={(e) => updateInfo("Experience", e)}
+       <View style={styles.containerScroll}>
+        <ScrollView contentContainerStyle={styles.scrollViewContentWrapper}   nestedScrollEnabled={true}>
+          <View style={styles.centerAlignedContainer}>
+            <View style={styles.container}>
+              {otherError && (
+                <Text
+                  style={[
+                    styles.errorText,
+                    { fontSize: dynamicFontSize(styles.errorText.fontSize) },
+                  ]}>
+                  {otherError}
+                </Text>
+              )}
+             <View style={[styles.dropdownContainerWrapper, { zIndex: 3000 }]}>
+                <Text
+                  style={[
+                    styles.label,
+                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                  ]}>
+                  Employment Type <Text style={styles.mandatoryStar}>*</Text>
+                </Text>
+                <CustomDropdown
+                  value={EmploymentType}
+                  items={employmentTypeOptions}
+                  setValue={(e) => onEmploymentTypeChange(e)}
+                  placeholder="Select"
+                  style={[styles.pickerContainer, { fontSize }]}
+                  zIndex={3000}
+                  dropdownStyle={{ maxHeight: 200 }}
                 />
+                {EmploymentTypeError && (
+                  <Text style={styles.errorText}>{EmploymentTypeError}</Text>
+                )}
               </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Current Company Name <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInputFieldWithSuggestion 
-                  placeholder="Enter your company name" 
-                  error={Salaried.CompanyNameError} 
-                  value={Salaried.CompanyName} 
-                  listOfData={salariedCompanySearchResult} 
-                  onChangeText={(e) => updateInfo("EmployerName", e)}
+              <View style={styles.dropdownContainer}>
+                <Text
+                  style={[
+                    styles.label,
+                    { fontSize: dynamicFontSize(styles.label.fontSize) },
+                  ]}>
+                  Occupation Type <Text style={styles.mandatoryStar}>*</Text>
+                </Text>
+                <CustomDropDownWithSearch
+                  value={EmploymentCategory}
+                  listOfData={ocupationValueOptions}
+                  onChangeText={(e) => {
+                    onEmploymenCategoryChange(e);
+                  }}
+                  placeholder="Search"
+                  style={[styles.pickerContainer, { fontSize }]}
+                  zIndex={2000}
+                  searchable={true}
                 />
+                {EmploymentCategoryError && (
+                  <Text style={styles.errorText}>
+                    {EmploymentCategoryError}
+                  </Text>
+                )}
               </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Your Current Designation <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInput  
-                  placeholder="Enter your current designation" 
-                  error={Salaried.DesignationError} 
-                  value={Salaried.Designation} 
-                  onChangeText={(e) => updateInfo("Designation", e)} 
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Date of Joining <Text style={styles.mandatoryStar}>*</Text></Text>
-                <DateOfJoiningMaskedCustomInput
-                  onDateChange={(masked, unmasked) => updateInfo("WorkStartDate", masked)}
-                  initialDate={Salaried.JoiningDate}
-                  error={Salaried.JoiningDateError}
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Phone Number <Text style={styles.mandatoryStar}>*</Text></Text>
-                <MobileNumberInput 
-                  placeholder="Enter your work phone number" 
-                  setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} 
-                  mobileNumber={Salaried.OfficePhoneNo} 
-                  error={Salaried.OfficePhoneNoError} 
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInput 
-                  placeholder="Enter your work email id" 
-                  error={Salaried.WorkEmailError} 
-                  value={Salaried.WorkEmail} 
-                  onChangeText={(e) => updateInfo("WorkEmail", e)} 
-                  keyboardType="email-address" 
-                  autoCapitalize="none" 
-                />
-              </View>
-              
-              <CustomSlider
-                title="Net Monthly Salary"
-                icon="rupee"
-                keyboardType="numeric"
-                min={minMonthlyIncome}
-                max={maxMonthlyIncome}
-                steps={5000}
-                currentValue={Salaried.AnnualCTC}
-                error={Salaried.AnnualCTCError}
-                onChange={(e) => updateInfo("AnnualCTC", e)}
-                isAmount={true} 
-              />
-              
-              <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Company Address <Text style={styles.mandatoryStar}>*</Text></Text>
-              <View style={styles.addressForm}>
-                <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
-                  <CustomInput 
-                    widthPercentage={"48%"} 
-                    error={Salaried.ZipCodeError} 
-                    keyboardType="numeric" 
-                    placeholder="PIN Code" 
-                    value={Salaried.EmpZipCode} 
-                    onChangeText={(e) => updateInfo("EmpZipCode", e)} 
-                    maxLength={6} 
+
+              {EmploymentType === "Salaried" && (
+                <View style={styles.employmentWrapper}>
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Total Experience
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Years"
+                      keyboardType="numeric"
+                      error={Salaried.ExperienceError}
+                      value={Salaried.Experience}
+                      onChangeText={(e) => updateInfo("Experience", e)}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Current Company Name{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInputFieldWithSuggestion
+                      placeholder="Enter your company name"
+                      error={Salaried.CompanyNameError}
+                      value={Salaried.CompanyName}
+                      listOfData={salariedCompanySearchResult}
+                      onChangeText={(e) => updateInfo("EmployerName", e)}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Your Current Designation{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Enter your current designation"
+                      error={Salaried.DesignationError}
+                      value={Salaried.Designation}
+                      onChangeText={(e) => updateInfo("Designation", e)}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Date of Joining{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <DateOfJoiningMaskedCustomInput
+                      onDateChange={(masked, unmasked) =>
+                        updateInfo("WorkStartDate", masked)
+                      }
+                      initialDate={Salaried.JoiningDate}
+                      error={Salaried.JoiningDateError}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Work Phone Number{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <MobileNumberInput
+                      placeholder="Enter your work phone number"
+                      setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)}
+                      mobileNumber={Salaried.OfficePhoneNo}
+                      error={Salaried.OfficePhoneNoError}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Work Email ID <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Enter your work email id"
+                      error={Salaried.WorkEmailError}
+                      value={Salaried.WorkEmail}
+                      onChangeText={(e) => updateInfo("WorkEmail", e)}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                    />
+                  </View>
+
+                  <CustomSlider
+                    title="Net Monthly Salary"
+                    icon="rupee"
+                    keyboardType="numeric"
+                    min={minMonthlyIncome}
+                    max={maxMonthlyIncome}
+                    steps={5000}
+                    currentValue={Salaried.AnnualCTC}
+                    error={Salaried.AnnualCTCError}
+                    onChange={(e) => updateInfo("AnnualCTC", e)}
+                    isAmount={true}
                   />
-                  <CustomInput 
-                    widthPercentage={"48%"} 
-                    error={Salaried.CityError} 
-                    placeholder="City" 
-                    value={Salaried.EmpCity} 
-                    onChangeText={(e) => updateInfo("EmpCity", e)} 
-                    cityOrState={true} 
-                  />
+
+                  <Text
+                    style={[
+                      styles.headerTitle,
+                      {
+                        fontSize: dynamicFontSize(styles.headerTitle.fontSize),
+                      },
+                    ]}>
+                    Company Address <Text style={styles.mandatoryStar}>*</Text>
+                  </Text>
+                  <View style={styles.addressForm}>
+                    <View
+                      style={[
+                        styles.flexContent,
+                        { flex: 1, alignItems: "baseline" },
+                      ]}>
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        error={Salaried.ZipCodeError}
+                        keyboardType="numeric"
+                        placeholder="PIN Code"
+                        value={Salaried.EmpZipCode}
+                        onChangeText={(e) => updateInfo("EmpZipCode", e)}
+                        maxLength={6}
+                      />
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        error={Salaried.CityError}
+                        placeholder="City"
+                        value={Salaried.EmpCity}
+                        onChangeText={(e) => updateInfo("EmpCity", e)}
+                        cityOrState={true}
+                      />
+                    </View>
+                    <CustomInput
+                      placeholder="State"
+                      error={Salaried.StateError}
+                      cityOrState={true}
+                      value={Salaried.EmpState}
+                      onChangeText={(e) => updateInfo("EmpState", e)}
+                    />
+                    <CustomInput
+                      placeholder="Address line 1"
+                      error={Salaried.AddressLine1Error}
+                      value={Salaried.AddressLine1}
+                      onChangeText={(e) => updateInfo("AddressLine1", e)}
+                    />
+                    <CustomInput
+                      placeholder="Address line 2"
+                      value={Salaried.AddressLine2}
+                      onChangeText={(e) => updateInfo("AddressLine2", e)}
+                    />
+                    <CustomInput
+                      placeholder="Landmark"
+                      value={Salaried.OfficeLandmark}
+                      onChangeText={(e) => updateInfo("OfficeLandmark", e)}
+                    />
+                  </View>
                 </View>
-                <CustomInput 
-                  placeholder="State" 
-                  error={Salaried.StateError} 
-                  cityOrState={true} 
-                  value={Salaried.EmpState} 
-                  onChangeText={(e) => updateInfo("EmpState", e)} 
-                />
-                <CustomInput 
-                  placeholder="Address line 1" 
-                  error={Salaried.AddressLine1Error} 
-                  value={Salaried.AddressLine1} 
-                  onChangeText={(e) => updateInfo("AddressLine1", e)} 
-                />
-                <CustomInput 
-                  placeholder="Address line 2" 
-                  value={Salaried.AddressLine2} 
-                  onChangeText={(e) => updateInfo("AddressLine2", e)} 
-                />
-                <CustomInput 
-                  placeholder="Landmark" 
-                  value={Salaried.OfficeLandmark} 
-                  onChangeText={(e) => updateInfo("OfficeLandmark", e)} 
-                />
-              </View>
-            </View>
-          )}
-          
-          {EmploymentType === 'Self-Employed' && (
-            <View style={styles.employmentWrapper}>
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Total Experience <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInput 
-                  placeholder="Total Experience" 
-                  keyboardType="numeric" 
-                  error={SelfEmployed.ExperienceError} 
-                  value={SelfEmployed.BusinessExperience?.toString()} 
-                  onChangeText={(e) => updateInfo("Experience", e)} 
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Business/Shop/Trade Name <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInput 
-                  placeholder="Business/Shop/Trade Name" 
-                  error={SelfEmployed.CompanyNameError} 
-                  value={SelfEmployed.BusinessName} 
-                  onChangeText={(e) => updateInfo("EmployerName", e)} 
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Business/Shop/Profession Commencement <Text style={styles.mandatoryStar}>*</Text></Text>
-                <DateOfJoiningMaskedCustomInput
-                  onDateChange={(masked, unmasked) => updateInfo("WorkStartDate", masked)}
-                  initialDate={SelfEmployed.IncorporationDate_CommencementDate}
-                  error={SelfEmployed.JoiningDateError}
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Phone Number <Text style={styles.mandatoryStar}>*</Text></Text>
-                <MobileNumberInput 
-                  placeholder="Enter your work phone number" 
-                  setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)} 
-                  mobileNumber={SelfEmployed.CompanyPhone} 
-                  error={SelfEmployed.OfficePhoneNoError} 
-                />
-              </View>
-              
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, { fontSize: dynamicFontSize(styles.label.fontSize) }]}>Work Email ID <Text style={styles.mandatoryStar}>*</Text></Text>
-                <CustomInput 
-                  placeholder="Work Email ID" 
-                  value={SelfEmployed.CompanyEmail} 
-                  onChangeText={(e) => updateInfo("WorkEmail", e)} 
-                  keyboardType="email-address" 
-                  autoCapitalize="none" 
-                  error={SelfEmployed.WorkEmailError} 
-                />
-              </View>
-              
-              <CustomSlider
-                title="Net Monthly Turnover"
-                icon="rupee"
-                keyboardType="numeric"
-                min={minMonthlyIncome}
-                max={maxMonthlyIncome}
-                steps={5000}
-                currentValue={SelfEmployed.CompanyTurnOver}
-                error={SelfEmployed.AnnualCTCError}
-                onChange={(e) => updateInfo("AnnualCTC", e)}
-                isAmount={true}
-              />
-              
-              <Text style={[styles.headerTitle, { fontSize: dynamicFontSize(styles.headerTitle.fontSize) }]}>Business/Shop/Profession Address <Text style={styles.mandatoryStar}>*</Text></Text>
-              <View style={styles.addressForm}>
-                <View style={[styles.flexContent, { flex: 1, alignItems: "baseline" }]}>
-                  <CustomInput 
-                    widthPercentage={"48%"} 
-                    error={SelfEmployed.ZipCodeError} 
-                    placeholder="PIN Code" 
-                    keyboardType="numeric" 
-                    value={SelfEmployed.Pincode} 
-                    onChangeText={(e) => updateInfo("EmpZipCode", e)} 
-                    maxLength={6} 
+              )}
+
+              {EmploymentType === "Self-Employed" && (
+                <View style={styles.employmentWrapper}>
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Total Experience{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Total Experience"
+                      keyboardType="numeric"
+                      error={SelfEmployed.ExperienceError}
+                      value={SelfEmployed.BusinessExperience?.toString()}
+                      onChangeText={(e) => updateInfo("Experience", e)}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Business/Shop/Trade Name{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Business/Shop/Trade Name"
+                      error={SelfEmployed.CompanyNameError}
+                      value={SelfEmployed.BusinessName}
+                      onChangeText={(e) => updateInfo("EmployerName", e)}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Business/Shop/Profession Commencement{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <DateOfJoiningMaskedCustomInput
+                      onDateChange={(masked, unmasked) =>
+                        updateInfo("WorkStartDate", masked)
+                      }
+                      initialDate={
+                        SelfEmployed.IncorporationDate_CommencementDate
+                      }
+                      error={SelfEmployed.JoiningDateError}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Work Phone Number{" "}
+                      <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <MobileNumberInput
+                      placeholder="Enter your work phone number"
+                      setMobileNumber={(e) => updateInfo("OfficePhoneNo", e)}
+                      mobileNumber={SelfEmployed.CompanyPhone}
+                      error={SelfEmployed.OfficePhoneNoError}
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Text
+                      style={[
+                        styles.label,
+                        { fontSize: dynamicFontSize(styles.label.fontSize) },
+                      ]}>
+                      Work Email ID <Text style={styles.mandatoryStar}>*</Text>
+                    </Text>
+                    <CustomInput
+                      placeholder="Work Email ID"
+                      value={SelfEmployed.CompanyEmail}
+                      onChangeText={(e) => updateInfo("WorkEmail", e)}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      error={SelfEmployed.WorkEmailError}
+                    />
+                  </View>
+
+                  <CustomSlider
+                    title="Net Monthly Turnover"
+                    icon="rupee"
+                    keyboardType="numeric"
+                    min={minMonthlyIncome}
+                    max={maxMonthlyIncome}
+                    steps={5000}
+                    currentValue={SelfEmployed.CompanyTurnOver}
+                    error={SelfEmployed.AnnualCTCError}
+                    onChange={(e) => updateInfo("AnnualCTC", e)}
+                    isAmount={true}
                   />
-                  <CustomInput 
-                    widthPercentage={"48%"} 
-                    error={SelfEmployed.CityError} 
-                    placeholder="City" 
-                    cityOrState={true} 
-                    value={SelfEmployed.EmpCity} 
-                    onChangeText={(e) => updateInfo("EmpCity", e)} 
-                  />
+
+                  <Text
+                    style={[
+                      styles.headerTitle,
+                      {
+                        fontSize: dynamicFontSize(styles.headerTitle.fontSize),
+                      },
+                    ]}>
+                    Business/Shop/Profession Address{" "}
+                    <Text style={styles.mandatoryStar}>*</Text>
+                  </Text>
+                  <View style={styles.addressForm}>
+                    <View
+                      style={[
+                        styles.flexContent,
+                        { flex: 1, alignItems: "baseline" },
+                      ]}>
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        error={SelfEmployed.ZipCodeError}
+                        placeholder="PIN Code"
+                        keyboardType="numeric"
+                        value={SelfEmployed.Pincode}
+                        onChangeText={(e) => updateInfo("EmpZipCode", e)}
+                        maxLength={6}
+                      />
+                      <CustomInput
+                        widthPercentage={"48%"}
+                        error={SelfEmployed.CityError}
+                        placeholder="City"
+                        cityOrState={true}
+                        value={SelfEmployed.EmpCity}
+                        onChangeText={(e) => updateInfo("EmpCity", e)}
+                      />
+                    </View>
+                    <CustomInput
+                      placeholder="State"
+                      error={SelfEmployed.StateError}
+                      cityOrState={true}
+                      value={SelfEmployed.EmpState}
+                      onChangeText={(e) => updateInfo("EmpState", e)}
+                    />
+                    <CustomInput
+                      placeholder="Address line 1"
+                      error={SelfEmployed.AddressLine1Error}
+                      value={SelfEmployed.AddressLine1}
+                      onChangeText={(e) => updateInfo("AddressLine1", e)}
+                    />
+                    <CustomInput
+                      placeholder="Address line 2"
+                      value={SelfEmployed.AddressLine2}
+                      onChangeText={(e) => updateInfo("AddressLine2", e)}
+                    />
+                    <CustomInput
+                      placeholder="Landmark"
+                      value={SelfEmployed.OfficeLandmark}
+                      onChangeText={(e) => updateInfo("OfficeLandmark", e)}
+                    />
+                  </View>
                 </View>
-                <CustomInput 
-                  placeholder="State" 
-                  error={SelfEmployed.StateError} 
-                  cityOrState={true} 
-                  value={SelfEmployed.EmpState} 
-                  onChangeText={(e) => updateInfo("EmpState", e)} 
-                />
-                <CustomInput 
-                  placeholder="Address line 1" 
-                  error={SelfEmployed.AddressLine1Error} 
-                  value={SelfEmployed.AddressLine1} 
-                  onChangeText={(e) => updateInfo("AddressLine1", e)} 
-                />
-                <CustomInput 
-                  placeholder="Address line 2" 
-                  value={SelfEmployed.AddressLine2} 
-                  onChangeText={(e) => updateInfo("AddressLine2", e)} 
-                />
-                <CustomInput 
-                  placeholder="Landmark" 
-                  value={SelfEmployed.OfficeLandmark} 
-                  onChangeText={(e) => updateInfo("OfficeLandmark", e)} 
-                />
-              </View>
+              )}
             </View>
-          )}
+          </View>
+        </ScrollView>
         </View>
       </>
     );
+
+    const steps = [
+      { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+      { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+      { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+      { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+    ];
 
     return (
       <View style={styles.mainContainer}>
         <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
           {isWeb && (isDesktop || (isTablet && width > height)) && (
-            <View style={[styles.leftContainer, { width: "50%" }]}>
-              {/* Web view content */}
+            <View style={[styles.leftContainer, imageContainerStyle]}>
+              <View style={styles.mincontainer}>
+                <View style={styles.webheader}>
+                  <Text style={styles.websubtitleText}>Get Your</Text>
+                  <Text style={styles.WebheaderText}>Loan Approved</Text>
+                </View>
+                <View>
+                  {steps.map((step, index) => (
+                    <View key={step.id} style={styles.step}>
+                      <View
+                        style={[
+                          styles.stepiconContainer,
+                          step.status === "done" &&
+                            styles.stepiconContainerDone,
+                          step.status === "current" &&
+                            styles.stepiconContainerCurrent,
+                          step.status === "disabled" &&
+                            styles.stepiconContainerDisabled,
+                        ]}>
+                        <step.icon
+                          size={24}
+                          color={
+                            step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                          }
+                        />
+                      </View>
+                      <View style={styles.steptextContainer}>
+                        <Text
+                          style={[
+                            styles.steptitle,
+                            step.status === "disabled" &&
+                              styles.steptextDisabled,
+                          ]}>
+                          {step.title}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.stepsubtitle,
+                            step.status === "disabled" &&
+                              styles.steptextDisabled,
+                          ]}>
+                          {step.subtitle}
+                        </Text>
+                      </View>
+                      {index < steps.length - 1 && (
+                        <View style={styles.connectorContainer}>
+                          {[...Array(10)].map((_, i) => (
+                            <View
+                              key={i}
+                              style={[
+                                styles.dashItem,
+                                step.status === "done" && styles.dashItemDone,
+                              ]}
+                            />
+                          ))}
+                        </View>
+                      )}
+                    </View>
+                  ))}
+                </View>
+                <View style={styles.bottomFixed}>
+                  <Image
+                    source={require("../../assets/images/poweredby.png")}
+                    style={styles.logo}
+                  />
+                </View>
+              </View>
             </View>
           )}
           <KeyboardAvoidingView
@@ -921,43 +1136,61 @@ const EmploymentDetailScreen = ({ navigation }) => {
             behavior={Platform.OS === "ios" ? "padding" : null}
             keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
             <LoadingOverlay visible={loading} />
-            <View style={{ padding: 16, paddingBottom: 5 }}>
+          
+              <View style={[styles.centerAlignedContainerHeader,{ padding: 16, paddingBottom: 5 }]}>
                 <ProgressBar progress={0.1} />
-                <Text style={[styles.headerText, { fontSize: dynamicFontSize(styles.headerText.fontSize) }]}>Employment Details</Text>
-              </View>
-            <View style={styles.contentContainer}>
-              <FlatList
-                data={[{ key: "content" }]}
-                renderItem={() => renderContent()}
-                keyExtractor={(item) => item.key}
-                contentContainerStyle={styles.flatListContent}
-              />
-            </View>
-            <View style={[styles.actionContainer, styles.boxShadow]}>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => GoBack(navigation)}>
                 <Text
                   style={[
-                    styles.backBtnText,
-                    { fontSize: dynamicFontSize(styles.backBtnText.fontSize) },
+                    styles.headerText,
+                    { fontSize: dynamicFontSize(styles.headerText.fontSize) },
                   ]}>
-                  BACK
+                  Employment Details
                 </Text>
-              </TouchableOpacity>
-              <LinearGradient
-                colors={["#002777", "#00194C"]}
-                style={[styles.verifyButton]}>
-                <TouchableOpacity onPress={submitEmploymentDetails}>
+              </View>
+              <View style={styles.contentContainer}>
+              
+                <FlatList
+                  data={[{ key: "content" }]}
+                  renderItem={() => renderContent()}
+                  keyExtractor={(item) => item.key}
+                  contentContainerStyle={styles.flatListContent}
+                  nestedScrollEnabled={true}
+                />
+            
+              </View>
+              
+            <View style={[styles.boxShadow]}>
+              <View
+                style={[styles.actionContainer, styles.centerAlignedContainer]}>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => GoBack(navigation)}>
                   <Text
                     style={[
-                      styles.buttonText,
-                      { fontSize: dynamicFontSize(styles.buttonText.fontSize) },
+                      styles.backBtnText,
+                      {
+                        fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                      },
                     ]}>
-                    PROCEED
+                    BACK
                   </Text>
                 </TouchableOpacity>
-              </LinearGradient>
+                <LinearGradient
+                  colors={["#002777", "#00194C"]}
+                  style={[styles.verifyButton]}>
+                  <TouchableOpacity onPress={submitEmploymentDetails}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                        },
+                      ]}>
+                      PROCEED
+                    </Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              </View>
             </View>
             {errorScreen.type != null && (
               <ScreenError

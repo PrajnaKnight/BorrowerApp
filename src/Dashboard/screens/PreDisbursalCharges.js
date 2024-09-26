@@ -255,7 +255,7 @@ const styles = applyFontFamily({
     color: '#888',
   },
   expandedContent: {
-    backgroundColor: '#f7f9ff',
+    backgroundColor: '#ffffff',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },

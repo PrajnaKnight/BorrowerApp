@@ -4,7 +4,22 @@ import { STATUS } from '../../API/Constants'
 import { GetPeronsalFinanceDetails } from '../../API/SaveEmploymentDetails'
 
 
+const PeronsalFinanceBody = {
+    LeadId: 0,
+    NetSalaryMonthWise: 0,
+    GrossMonthlyIncome: 0,
+    AnyExistingLoan: null,
+    Investments: 0,
+    FixedAssets: 0,
+    LeadStage: 0,
+    BorrowerExistingLoanDetails: [],
+    IsLoanAvailable : false,
+    
 
+    GrossMonthlyIncomeError: null,
+    InvestmentsError: null,
+    FixedAssetsError : null
+}
 
 
 const initialState = {
@@ -72,22 +87,6 @@ export const PersonalLoanDetailSlice = createSlice({
 export const { updatePersonaLoanDetails } = PersonalLoanDetailSlice.actions
 export default PersonalLoanDetailSlice.reducer
 
-const PeronsalFinanceBody = {
-    LeadId: 0,
-    NetSalaryMonthWise: 0,
-    GrossMonthlyIncome: 0,
-    AnyExistingLoan: null,
-    Investments: 0,
-    FixedAssets: 0,
-    LeadStage: 0,
-    BorrowerExistingLoanDetails: [],
-    IsLoanAvailable : false,
-    
-
-    GrossMonthlyIncomeError: null,
-    InvestmentsError: null,
-    FixedAssetsError : null
-}
 
 const LoanDetails = {
     ELDetailId: 0,

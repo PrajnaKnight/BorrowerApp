@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetInfo, { fetch } from "@react-native-community/netinfo";
 import { useAppContext } from '../components/useContext';
@@ -125,7 +125,12 @@ const styles = applyFontFamily({
         flexDirection:'column',
         alignItems:'center',
         justifyContent:'center',
-        lineHeight:15
+        lineHeight:15,
+        ...Platform.select({
+            web: {
+                lineHeight:19,
+            },
+        }),
     },
     content: {
         flexDirection: 'column',

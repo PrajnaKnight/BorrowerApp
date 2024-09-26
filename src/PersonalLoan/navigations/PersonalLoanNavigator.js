@@ -60,7 +60,7 @@ const PersonalLoanNavigator = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <AppProvider>
-        <View>
+        <View style={{ zIndex: 1000 }}>
           <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
           <Header
             navigation={navigation}

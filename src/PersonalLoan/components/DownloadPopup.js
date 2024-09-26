@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, Button, StyleSheet, TouchableOpacity, Linking } from 'react-native';
-import RNFS from 'react-native-fs';
+// import RNFS from 'react-native-fs';
 import FileViewer from 'react-native-file-viewer';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/MaterialIcons';

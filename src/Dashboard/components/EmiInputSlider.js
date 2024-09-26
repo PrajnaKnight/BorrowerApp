@@ -32,7 +32,7 @@ const formatIndianCurrency = (value) => {
       formattedWholePart = wholePart + formattedWholePart;
       length = 0;
     }
-  }
+  } 
 
   // Remove leading comma if present
   formattedWholePart = formattedWholePart.replace(/^,/, '');
@@ -66,8 +66,8 @@ const EmiInputSlider = ({
   const [sliderValue, setSliderValue] = useState(0);
 
   useEffect(() => {
-    const index = labelValues.findIndex(v => v >= value);
-    setSliderValue(index >= 0 ? index : labelValues.length - 1);
+    const normalizedValue = (value - labelValues[0]) / (labelValues[labelValues.length - 1] - labelValues[0]);
+    setSliderValue(normalizedValue);
   }, [value, labelValues]);
 
   const formatDisplayValue = (val) => {
@@ -77,14 +77,22 @@ const EmiInputSlider = ({
     return val.toString();
   };
 
-  const handleSliderChange = (index) => {
-    const newValue = labelValues[index];
+  const handleSliderChange = (normalizedValue) => {
+    const range = labelValues[labelValues.length - 1] - labelValues[0];
+    const newValue = labelValues[0] + (normalizedValue * range);
     onValueChange(newValue);
   };
 
   const handleTextChange = (text) => {
     const numericValue = Number(text.replace(/[^0-9]/g, ''));
     onValueChange(numericValue);
+  };
+
+  const formatSliderLabel = (label) => {
+    if (typeof label === 'number') {
+      return formatCrLFormat(label);
+    }
+    return label;
   };
 
   return (
@@ -107,8 +115,8 @@ const EmiInputSlider = ({
         <Slider
           style={styles.slider}
           minimumValue={0}
-          maximumValue={labelValues.length - 1}
-          step={1}
+          maximumValue={1}
+          step={0.001}
           value={sliderValue}
           onValueChange={handleSliderChange}
           minimumTrackTintColor="#0010AC"
@@ -118,14 +126,15 @@ const EmiInputSlider = ({
       </View>
       <View style={styles.sliderLabelContainer}>
         {sliderLabels.map((label, index) => (
-          <Text key={index} style={styles.sliderLabel}>
-            {label}
+          <Text key={index} style={styles.sliderLabel} numberOfLines={1} ellipsizeMode="tail">
+            {formatSliderLabel(label)}
           </Text>
         ))}
       </View>
     </View>
   );
 };
+
 
 
 const styles = StyleSheet.create({
@@ -175,10 +184,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5,
+    marginHorizontal: -20, 
   },
   sliderLabel: {
-    fontSize: 12,
+    fontSize: 12, 
     color: '#00194c',
+    textAlign: 'center',
+    flex: 1, 
+    paddingHorizontal: 2,
   },
 });
 

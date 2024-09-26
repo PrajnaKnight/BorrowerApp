@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions, Image } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppContext } from '../components/useContext';
@@ -14,6 +14,8 @@ import LoadingOverlay from '../../PersonalLoan/components/FullScreenLoader';
 import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
 import ScreenError, { useErrorEffect } from '../../PersonalLoan/screens/ScreenError';
 import { Network_Error } from '../../PersonalLoan/services/Utils/Constants';
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
+
 
 import {
   getHash,
@@ -297,13 +299,21 @@ const OTPVerificationScreen = ({ navigation, route }) => {
   const isDesktop = width >= 1024; // Desktop and iPad landscape
 
 
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
 
   const { setProgress } = useProgressBar();
 
   useEffect(() => {
     setProgress(0.1);
   }, []);
+
+  
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
 
 
   return (
@@ -315,77 +325,73 @@ const OTPVerificationScreen = ({ navigation, route }) => {
               <View style={[styles.leftContainer, imageContainerStyle]}>
                 <View style={styles.mincontainer}>
                   <View style={styles.webheader}>
-                    <Text style={styles.WebheaderText}>Personal Loan</Text>
-                    <Text style={styles.websubtitleText}>
-                      Move Into Your Dreams!
-                    </Text>
+                    <Text style={styles.websubtitleText}>Get Your</Text>
+                    <Text style={styles.WebheaderText}>Loan Approved</Text>
                   </View>
-                  <LinearGradient
-                    // button Linear Gradient
-                    colors={["#000565", "#111791", "#000565"]}
-                    style={styles.webinterestButton}>
-                    <TouchableOpacity>
-                      <Text style={styles.webinterestText}>
-                        Interest starting from 8.4%*
-                      </Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
-
-                  <View style={styles.webfeaturesContainer}>
-                    <View style={styles.webfeature}>
-                      <Text
-                        style={[
-                          styles.webfeatureIcon,
-                          { fontSize: 30, marginBottom: 5 },
-                        ]}>
-                        %
-                      </Text>
-                      <Text style={styles.webfeatureText}>
-                        Nil processing fee*
-                      </Text>
-                    </View>
-                    <View style={styles.webfeature}>
-                      <Text
-                        style={[
-                          styles.webfeatureIcon,
-                          { fontSize: 30, marginBottom: 5 },
-                        ]}>
-                        3
-                      </Text>
-                      <Text style={styles.webfeatureText}>
-                        3-Step Instant approval in 30 minutes
-                      </Text>
-                    </View>
-                    <View style={styles.webfeature}>
-                      <Text
-                        style={[
-                          styles.webfeatureIcon,
-                          { fontSize: 30, marginBottom: 5 },
-                        ]}>
-                        ⏳
-                      </Text>
-                      <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                    </View>
+                  <View>
+                    {steps.map((step, index) => (
+                      <View key={step.id} style={styles.step}>
+                        <View
+                          style={[
+                            styles.stepiconContainer,
+                            step.status === "done" &&
+                              styles.stepiconContainerDone,
+                            step.status === "current" &&
+                              styles.stepiconContainerCurrent,
+                            step.status === "disabled" &&
+                              styles.stepiconContainerDisabled,
+                          ]}>
+                          <step.icon
+                            size={24}
+                            color={
+                              step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                            }
+                          />
+                        </View>
+                        <View style={styles.steptextContainer}>
+                          <Text
+                            style={[
+                              styles.steptitle,
+                              step.status === "disabled" &&
+                                styles.steptextDisabled,
+                            ]}>
+                            {step.title}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.stepsubtitle,
+                              step.status === "disabled" &&
+                                styles.steptextDisabled,
+                            ]}>
+                            {step.subtitle}
+                          </Text>
+                        </View>
+                        {index < steps.length - 1 && (
+                          <View style={styles.connectorContainer}>
+                            {[...Array(10)].map((_, i) => (
+                              <View
+                                key={i}
+                                style={[
+                                  styles.dashItem,
+                                  step.status === "done" && styles.dashItemDone,
+                                ]}
+                              />
+                            ))}
+                          </View>
+                        )}
+                      </View>
+                    ))}
                   </View>
-
-                  <View style={styles.webdescription}>
-                    <Text style={styles.webdescriptionText}>
-                      There's more! Complete the entire process in just 3-steps
-                      that isn't any more than 30 minutes.
-                    </Text>
-                    <TouchableOpacity>
-                      <Text style={styles.weblinkText}>
-                        To know more about product features & benefits, please
-                        click here
-                      </Text>
-                    </TouchableOpacity>
+                  <View style={styles.bottomFixed}>
+                    <Image
+                      source={require("../../assets/images/poweredby.png")}
+                      style={styles.logo}
+                    />
                   </View>
-                  {/* <View style={styles.bottomFixed}>
-         <Image source={require('../assets/images/poweredby.png')} style={styles.logo} />
-      </View> */}
                 </View>
               </View>
             )}
+
             <KeyboardAvoidingView
               style={[styles.rightCOntainer, { flex: 1 }]}
               behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -393,107 +399,119 @@ const OTPVerificationScreen = ({ navigation, route }) => {
               <LoadingOverlay visible={loading} />
 
               <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <View style={styles.container}>
-                  <View>
-                    <ProgressBar progress={0.1} />
-                    <Text
-                      style={[
-                        styles.headerText,
-                        {
-                          fontSize: dynamicFontSize(styles.headerText.fontSize),
-                        },
-                      ]}>
-                      Mobile OTP Verification
-                    </Text>
-                    <Text
-                      style={[
-                        styles.subText,
-                        { fontSize: dynamicFontSize(styles.subText.fontSize) },
-                      ]}>
-                      Please enter the OTP sent to your mobile number
-                    </Text>
-                    <View style={styles.flexContent}>
+                <View style={styles.centerAlignedContainer}>
+                  <View style={styles.container}>
+                    <View>
+                      <ProgressBar progress={0.1} />
                       <Text
                         style={[
-                          styles.phoneNumber,
+                          styles.headerText,
                           {
                             fontSize: dynamicFontSize(
-                              styles.phoneNumber.fontSize
+                              styles.headerText.fontSize
                             ),
                           },
                         ]}>
-                        {" "}
-                        {`+91 ${requestModel.LeadPhone}`}
+                        Mobile OTP Verification
                       </Text>
-                     
-                    </View>
-                    <View style={styles.otpContainer}>
-                      {OTP.map((value, index) => (
-                        <TextInput
-                          key={index}
-                          style={[
-                            styles.otpInput,
-                            {
-                              fontSize: dynamicFontSize(
-                                styles.otpInput.fontSize
-                              ),
-                            },
-                            focusedInput === index && styles.focusedInput, // Conditional style for focused input
-                          ]}
-                          value={value}
-                          // onChangeText={(text) => handleOTPChange(text, index)}
-                          onFocus={() => handleFocus(index)}
-                          onBlur={handleBlur}
-                          maxLength={1}
-                          onKeyPress={({ nativeEvent: { key } }) => {
-                            handleOTPChange(key, index);
-                          }}
-                          keyboardType="numeric"
-                          ref={(el) => (inputsRef.current[index] = el)}
-                        />
-                      ))}
-                    </View>
-                    {error ? (
                       <Text
                         style={[
-                          styles.errorText,
+                          styles.subText,
                           {
-                            fontSize: dynamicFontSize(
-                              styles.errorText.fontSize
-                            ),
+                            fontSize: dynamicFontSize(styles.subText.fontSize),
                           },
                         ]}>
-                        {error}
+                        Please enter the OTP sent to your mobile number
                       </Text>
-                    ) : null}
-
-                    <View style={{flexDirection: "row", alignItems: "center", justifyContent:'flex-end'}}>
-                      <TouchableOpacity
-                        style={[
-                          styles.resendButton,
-                          !isResendEnabled && styles.resendButtonDisabled,
-                        ]}
-                        onPress={submitPhoneNumber}
-                        disabled={!isResendEnabled}>
+                      <View style={styles.flexContent}>
                         <Text
                           style={[
-                            styles.resendButtonText,
+                            styles.phoneNumber,
                             {
                               fontSize: dynamicFontSize(
-                                styles.resendButtonText.fontSize
+                                styles.phoneNumber.fontSize
                               ),
                             },
                           ]}>
-                          RESEND OTP
+                          {" "}
+                          {`+91 ${requestModel.LeadPhone}`}
                         </Text>
-                      </TouchableOpacity>
-                      <Text
-                        style={[
-                          styles.timer,
-                          { fontSize: dynamicFontSize(styles.timer.fontSize) },
-                        ]}>
-                        {formatTimeLeft()}
-                      </Text>
+                      </View>
+                      <View style={styles.otpContainer}>
+                        {OTP.map((value, index) => (
+                          <TextInput
+                            key={index}
+                            style={[
+                              styles.otpInput,
+                              {
+                                fontSize: dynamicFontSize(
+                                  styles.otpInput.fontSize
+                                ),
+                              },
+                              focusedInput === index && styles.focusedInput, // Conditional style for focused input
+                            ]}
+                            value={value}
+                            // onChangeText={(text) => handleOTPChange(text, index)}
+                            onFocus={() => handleFocus(index)}
+                            onBlur={handleBlur}
+                            maxLength={1}
+                            onKeyPress={({ nativeEvent: { key } }) => {
+                              handleOTPChange(key, index);
+                            }}
+                            keyboardType="numeric"
+                            ref={(el) => (inputsRef.current[index] = el)}
+                          />
+                        ))}
+                      </View>
+                      {error ? (
+                        <Text
+                          style={[
+                            styles.errorText,
+                            {
+                              fontSize: dynamicFontSize(
+                                styles.errorText.fontSize
+                              ),
+                            },
+                          ]}>
+                          {error}
+                        </Text>
+                      ) : null}
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}>
+                        <TouchableOpacity
+                          style={[
+                            styles.resendButton,
+                            !isResendEnabled && styles.resendButtonDisabled,
+                          ]}
+                          onPress={submitPhoneNumber}
+                          disabled={!isResendEnabled}>
+                          <Text
+                            style={[
+                              styles.resendButtonText,
+                              {
+                                fontSize: dynamicFontSize(
+                                  styles.resendButtonText.fontSize
+                                ),
+                              },
+                            ]}>
+                            RESEND OTP
+                          </Text>
+                        </TouchableOpacity>
+                        <Text
+                          style={[
+                            styles.timer,
+                            {
+                              fontSize: dynamicFontSize(styles.timer.fontSize),
+                            },
+                          ]}>
+                          {formatTimeLeft()}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -506,40 +524,48 @@ const OTPVerificationScreen = ({ navigation, route }) => {
                   setNewErrorScreen={setNewErrorScreen}
                 />
               )}
+              
+                <View style={[styles.boxShadow]}>
+                <View style={styles.centerAlignedContainer}>
+                  <View style={[styles.actionContainer]}>
+                 
+                    <TouchableOpacity
+                      style={styles.backButton}
+                      onPress={() => GoBack(navigation)}>
+                      <Text
+                        style={[
+                          styles.backBtnText,
+                          {
+                            fontSize: dynamicFontSize(
+                              styles.backBtnText.fontSize
+                            ),
+                          },
+                        ]}>
+                        BACK
+                      </Text>
+                    </TouchableOpacity>
+                    <LinearGradient
+                      // button Linear Gradient
+                      colors={["#2B478B", "#2B478B"]}
+                      style={styles.verifyButton}>
+                      <TouchableOpacity onPress={handleVerifyPress}>
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            {
+                              fontSize: dynamicFontSize(
+                                styles.buttonText.fontSize
+                              ),
+                            },
+                          ]}>
+                          VERIFY
+                        </Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                  </View>
+                </View>
+              </View>
             </KeyboardAvoidingView>
-          </View>
-        </View>
-        <View style={[styles.boxShadow]}>
-          <View style={[styles.actionContainer]}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => GoBack(navigation)}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  {
-                    fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                  },
-                ]}>
-                BACK
-              </Text>
-            </TouchableOpacity>
-            <LinearGradient
-              // button Linear Gradient
-              colors={["#2B478B", "#2B478B"]}
-              style={styles.verifyButton}>
-              <TouchableOpacity onPress={handleVerifyPress}>
-                <Text
-                  style={[
-                    styles.buttonText,
-                    {
-                      fontSize: dynamicFontSize(styles.buttonText.fontSize),
-                    },
-                  ]}>
-                  VERIFY
-                </Text>
-              </TouchableOpacity>
-            </LinearGradient>
           </View>
         </View>
       </Layout>

@@ -15,7 +15,7 @@ const Charges = ({ navigation, route }) => {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <TabsComponent activeTab={activeTab} setActiveTab={setActiveTab} />
           <View style={styles.content}>
-            <Text style={styles.sectionTitle}>Re-payment Info</Text>
+            <Text style={styles.sectionTitle}>EMI / Repayment Info</Text>
             <View style={[styles.overdueCard, isOverdue ? styles.redOverdueCard : styles.blueOverdueCard]}>
             <ImageBackground source={require("../../assets/images/repaymentInfo-bg.png")}  style={{backgroundSize:'cover'}}>
 

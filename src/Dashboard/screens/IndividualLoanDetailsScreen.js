@@ -32,7 +32,7 @@ const LoanDetailsScreen = ({ navigation, route }) => {
   const activeRedirectItems = [
     { key: '1', label: 'Loan Overview', target: 'LoanOverview' },
     { key: '2', label: 'Pre-Disbursement Charges', target: 'PreDisbursalCharges' },
-    { key: '3', label: 'Re-payment Info', target: 'Charges', isOverdue },
+    { key: '3', label: 'EMI / Repayment Info', target: 'Charges', isOverdue },
     { key: '4', label: 'Loan Repayment Schedule (RPS)', target: 'LoanRPS' },
   ];
 

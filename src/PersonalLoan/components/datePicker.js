@@ -98,7 +98,7 @@ const ExampleCustomInput = forwardRef(({ value, onClick , readonly}, ref) => (
       ref={ref}
     >
       <Text
-        style={[styles.dateText, { fontSize: 12, color: value ? "#00194c" : "#ccccccc" }]}
+        style={[styles.dateText, { fontSize: 15, color: value ? "#00194c" : "#ccccccc" }]}
       >{value ? format(value, 'PPP') : "Date"}</Text>
      <FontAwesome5 name="calendar-alt" size={16} color={readonly ? "#cccccc" : "#ff8500"} style={styles.icon} />
     </TouchableOpacity>

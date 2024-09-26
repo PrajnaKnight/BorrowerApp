@@ -222,18 +222,18 @@ const EMICalculator = ({ navigation }) => {
               onValueChange={(value) => handleSliderChange("loanAmount", value)}
               isCurrency={true}
               sliderLabels={[
-                "20K",
+                "10K",
                 "1L",
                 "5L",
-                "7L",
                 "10L",
-                "15L",
-                "20L",
-                "30L",
+                "50L",
+                "1Cr",
+                "5Cr",
+                "10Cr",
               ]}
               labelValues={[
-                20000, 100000, 500000, 700000, 1000000, 1500000, 2000000,
-                3000000,
+                10000, 100000, 500000, 1000000, 5000000, 10000000,
+                50000000, 100000000,
               ]}
             />
             <InputSlider
@@ -262,7 +262,7 @@ const EMICalculator = ({ navigation }) => {
               sliderLabels={tenureUnit === 'Yr' ? ['1', '10', '15', '20', '30'] : ['1', '120', '240', '360']}
             />
           </View>
-          <ProceedButton onPress={() => {}} text="CALCULATE" />
+          {/* <ProceedButton onPress={() => {}} text="CALCULATE" /> */}
         </View>
       </ScrollView>
       <Modal
@@ -303,9 +303,14 @@ const EMICalculator = ({ navigation }) => {
 };
 
 const calculateEMI = (principal, rate, tenure) => {
-  const monthlyRate = rate / 12 / 100;
-  const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
-  return emi;
+  if (rate === 0) {
+    // If interest rate is 0, EMI is simply the principal divided by the tenure
+    return principal / tenure;
+  } else {
+    const monthlyRate = rate / 12 / 100;
+    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
+    return emi;
+  }
 };
 
 const styles = applyFontFamily({

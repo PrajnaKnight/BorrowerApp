@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, useWindowDimensions, Alert, Image } from 'react-native';
 import CustomInput from '../components/input';
 import { useProgressBar } from '../components/progressContext';
 import ProgressBar from '../components/progressBar';
@@ -25,6 +25,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import useJumpTo from "../components/StageComponent";
+import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 const BankDetailsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -455,7 +456,14 @@ const BankDetailsScreen = ({ navigation }) => {
   const isDesktop = width >= 1024;
 
   const containerStyle = isDesktop ? styles.desktopContainer : isMobile ? styles.mobileContainer : styles.tabletContainer;
-  const imageContainerStyle = isDesktop ? { width: '50%' } : { width: '100%' };
+  const imageContainerStyle = isDesktop ? { width: '60%' } : { width: '100%' };
+
+  const steps = [
+    { id: 1, title: 'Primary Information', subtitle: 'प्राथमिक जानकारी', icon: CheckCircle2, status: 'current' },
+    { id: 2, title: 'Personal Information', subtitle: 'व्यक्तिगत जानकारी', icon: MapPin, status: 'disabled' },
+    { id: 3, title: 'eKYC OTP Verification', subtitle: 'ईकेवाईसी ओटीपी सत्यापन', icon: Lock, status: 'disabled' },
+    { id: 4, title: 'Address Details', subtitle: 'पते का विवरण', icon: Building2, status: 'disabled' },
+  ];
 
   return (
     <View style={styles.mainContainer}>
@@ -464,43 +472,65 @@ const BankDetailsScreen = ({ navigation }) => {
           <View style={[styles.leftContainer, imageContainerStyle]}>
             <View style={styles.mincontainer}>
               <View style={styles.webheader}>
-                <Text style={styles.WebheaderText}>Personal Loan</Text>
-                <Text style={styles.websubtitleText}>
-                  Move Into Your Dreams!
-                </Text>
+                <Text style={styles.websubtitleText}>Get Your</Text>
+                <Text style={styles.WebheaderText}>Loan Approved</Text>
               </View>
-              <LinearGradient
-                colors={["#000565", "#111791", "#000565"]}
-                style={styles.webinterestButton}>
-                <TouchableOpacity>
-                  <Text style={styles.webinterestText}>
-                    Interest starting from 8.4%*
-                  </Text>
-                </TouchableOpacity>
-              </LinearGradient>
-              <View style={styles.webfeaturesContainer}>
-                <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>%</Text>
-                  <Text style={styles.webfeatureText}>Nil processing fee*</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>3</Text>
-                  <Text style={styles.webfeatureText}>3-Step Instant approval in 30 minutes</Text>
-                </View>
-                <View style={styles.webfeature}>
-                  <Text style={[styles.webfeatureIcon, { fontSize: 30, marginBottom: 5 }]}>⏳</Text>
-                  <Text style={styles.webfeatureText}>Longer Tenure</Text>
-                </View>
+              <View>
+                {steps.map((step, index) => (
+                  <View key={step.id} style={styles.step}>
+                    <View
+                      style={[
+                        styles.stepiconContainer,
+                        step.status === "done" && styles.stepiconContainerDone,
+                        step.status === "current" &&
+                          styles.stepiconContainerCurrent,
+                        step.status === "disabled" &&
+                          styles.stepiconContainerDisabled,
+                      ]}>
+                      <step.icon
+                        size={24}
+                        color={
+                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                        }
+                      />
+                    </View>
+                    <View style={styles.steptextContainer}>
+                      <Text
+                        style={[
+                          styles.steptitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stepsubtitle,
+                          step.status === "disabled" && styles.steptextDisabled,
+                        ]}>
+                        {step.subtitle}
+                      </Text>
+                    </View>
+                    {index < steps.length - 1 && (
+                      <View style={styles.connectorContainer}>
+                        {[...Array(10)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.dashItem,
+                              step.status === "done" && styles.dashItemDone,
+                            ]}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
-              <View style={styles.webdescription}>
-                <Text style={styles.webdescriptionText}>
-                  There's more! Complete the entire process in just 3-steps that isn't any more than 30 minutes.
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.weblinkText}>
-                    To know more about product features & benefits, please click here
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.bottomFixed}>
+                <Image
+                  source={require("../../assets/images/poweredby.png")}
+                  style={styles.logo}
+                />
               </View>
             </View>
           </View>
@@ -510,40 +540,309 @@ const BankDetailsScreen = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
           <LoadingOverlay visible={loading} />
-          <View style={{ padding: 16, paddingBottom: 0 }}>
-            <ProgressBar progress={0.2} />
-            <Text
-              style={[
-                styles.headerText,
-                { fontSize: dynamicFontSize(styles.headerText.fontSize) },
-              ]}>
-              Bank Details <Text style={{ fontSize: 14, fontWeight: '500' }}>(Salary Account)</Text>
-            </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10, alignItems: 'center' }}>
-              {bankAccountSlices.data.BankList.map((account, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => setSelectedAccountIndex(index)}
+          <View style={styles.centerAlignedContainerHeader}>
+            <View style={{ padding: 16, paddingBottom: 0 }}>
+              <ProgressBar progress={0.2} />
+              <Text
+                style={[
+                  styles.headerText,
+                  { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                ]}>
+                Bank Details{" "}
+                <Text style={{ fontSize: 14, fontWeight: "500" }}>
+                  (Salary Account)
+                </Text>
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  marginBottom: 10,
+                  alignItems: "center",
+                }}>
+                {bankAccountSlices.data.BankList.map((account, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setSelectedAccountIndex(index)}
+                    style={[
+                      styles.accountIcon,
+                      selectedAccountIndex === index &&
+                        styles.selectedAccountIcon,
+                    ]}>
+                    <FontAwesome
+                      name="bank"
+                      size={30}
+                      color={
+                        selectedAccountIndex === index ? "#000565" : "#ccc"
+                      }
+                    />
+
+                    {index > 0 && (
+                      <TouchableOpacity
+                        style={styles.BankdeleteIcon}
+                        onPress={() => confirmDeleteAccount(index)}>
+                        <AntDesign name="closecircleo" size={16} color="red" />
+                      </TouchableOpacity>
+                    )}
+                  </TouchableOpacity>
+                ))}
+                <LinearGradient
+                  colors={
+                    addButtonState
+                      ? ["#002777", "#00194C"]
+                      : ["#E9EEFF", "#D8E2FF"]
+                  }
+                  style={[styles.addbutton]}>
+                  <TouchableOpacity
+                    onPress={addAccount}
+                    disabled={!addButtonState}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
+                        },
+                      ]}>
+                      <FontAwesome5 name="plus" size={14} /> ADD
+                    </Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              </View>
+            </View>
+            </View>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+              <View style={styles.centerAlignedContainer}>
+              <View style={styles.container}>
+                <View>
+                  {otherError && (
+                    <Text
+                      style={[
+                        styles.errorText,
+                        {
+                          fontSize: dynamicFontSize(styles.errorText.fontSize),
+                        },
+                      ]}>
+                      {otherError}
+                    </Text>
+                  )}
+
+                  {/* Additional Accounts Section */}
+                  {bankAccountSlices.data.BankList.length > 0 && (
+                    <View style={styles.accountContainer}>
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Bank Branch IFSC Code
+                        <Text style={styles.mandatoryStar}> *</Text>
+                      </Text>
+                      <CustomInput
+                        placeholder="Enter your bank branch IFSC code"
+                        value={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.IFSC || ""
+                        }
+                        error={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.IFSCError
+                        }
+                        autoCapitalize="characters"
+                        onChangeText={(text) =>
+                          UpdateBankInfo(
+                            selectedAccountIndex,
+                            "IFSC-CODE",
+                            text
+                          )
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Bank Branch Name{" "}
+                        <Text style={styles.mandatoryStar}>*</Text>
+                      </Text>
+                      <CustomInput
+                        placeholder="Bank Branch Name"
+                        value={BankIfscWithBankName(
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                        )}
+                        error={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.BankBracnchNameError
+                        }
+                        onChangeText={(text) =>
+                          UpdateBankInfo(
+                            selectedAccountIndex,
+                            "BRANCH-NAME",
+                            text
+                          )
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Bank Account Number{" "}
+                        <Text style={styles.mandatoryStar}>*</Text>
+                      </Text>
+                      <CustomInput
+                        placeholder="Enter your bank account number"
+                        value={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.AccountNumber || ""
+                        }
+                        onChangeText={(text) =>
+                          UpdateBankInfo(
+                            selectedAccountIndex,
+                            "ACCOUNT-NUMBER",
+                            text
+                          )
+                        }
+                        error={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.AccountNumberError
+                        }
+                        secureTextEntry
+                        keyboardType="numeric"
+                      />
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Re-enter Bank Account Number{" "}
+                        <Text style={styles.mandatoryStar}>*</Text>
+                      </Text>
+                      <CustomInput
+                        placeholder="Re-enter your bank account number"
+                        error={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.ReAccountNumberError
+                        }
+                        value={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.ReAccountNumber || ""
+                        }
+                        onChangeText={(text) =>
+                          UpdateBankInfo(
+                            selectedAccountIndex,
+                            "RE-ACCOUNT-NUMBER",
+                            text
+                          )
+                        }
+                        keyboardType="numeric"
+                      />
+                      {bankAccountSlices.data.BankList[selectedAccountIndex]
+                        ?.ReAccountNumber != null &&
+                        bankAccountSlices.data.BankList[selectedAccountIndex]
+                          ?.AccountNumber != null &&
+                        bankAccountSlices.data.BankList[selectedAccountIndex]
+                          ?.ReAccountNumber.length >= 8 &&
+                        bankAccountSlices.data.BankList[selectedAccountIndex]
+                          ?.AccountNumber.length >= 8 && (
+                          <Text
+                            style={[
+                              styles.statusMessage,
+                              bankAccountSlices.data.BankList[
+                                selectedAccountIndex
+                              ]?.isAccountNumberMatching
+                                ? styles.match
+                                : styles.noMatch,
+                              {
+                                fontSize: dynamicFontSize(
+                                  styles.statusMessage.fontSize
+                                ),
+                              },
+                            ]}>
+                            {bankAccountSlices.data.BankList[
+                              selectedAccountIndex
+                            ]?.isAccountNumberMatching
+                              ? "✓ Account number match"
+                              : "✗ Account number does not match"}
+                          </Text>
+                        )}
+
+                      <Text
+                        style={[
+                          styles.label,
+                          { fontSize: dynamicFontSize(styles.label.fontSize) },
+                        ]}>
+                        Account Holder Name{" "}
+                        <Text style={styles.mandatoryStar}>*</Text>
+                      </Text>
+                      <CustomInput
+                        placeholder="Enter your account holder name"
+                        error={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.AccountHolderNameError
+                        }
+                        value={
+                          bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.AccountHolderName || ""
+                        }
+                        onChangeText={(text) =>
+                          UpdateBankInfo(
+                            selectedAccountIndex,
+                            "HOLDER-NAME",
+                            text
+                          )
+                        }
+                      />
+
+                      {bankAccountSlices.data.BankList[selectedAccountIndex]
+                        ?.isAccountNameVaid != null && (
+                        <Text
+                          style={[
+                            styles.statusMessage,
+                            bankAccountSlices.data.BankList[
+                              selectedAccountIndex
+                            ]?.isAccountNameVaid
+                              ? styles.match
+                              : styles.noMatch,
+                            {
+                              fontSize: dynamicFontSize(
+                                styles.statusMessage.fontSize
+                              ),
+                            },
+                          ]}>
+                          {bankAccountSlices.data.BankList[selectedAccountIndex]
+                            ?.isAccountNameVaid
+                            ? "✓ Name is matching with account name"
+                            : "✗ Name not matching with account name"}
+                        </Text>
+                      )}
+                    </View>
+                  )}
+                </View>
+              </View>
+              </View>
+            </ScrollView>
+          
+
+          <View style={ styles.boxShadow}>
+            <View
+              style={[styles.actionContainer, styles.centerAlignedContainer]}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => GoBack(navigation)}>
+                <Text
                   style={[
-                    styles.accountIcon,
-                    selectedAccountIndex === index && styles.selectedAccountIcon,
+                    styles.backBtnText,
+                    {
+                      fontSize: dynamicFontSize(styles.backBtnText.fontSize),
+                    },
                   ]}>
-
-                  <FontAwesome name="bank" size={30} color={selectedAccountIndex === index ? "#000565" : "#ccc"} />
-
-                  {index > 0 && <TouchableOpacity
-                    style={styles.BankdeleteIcon}
-                    onPress={() => confirmDeleteAccount(index)}>
-                    <AntDesign name="closecircleo" size={16} color="red" />
-                  </TouchableOpacity>}
-
-
-                </TouchableOpacity>
-              ))}
+                  BACK
+                </Text>
+              </TouchableOpacity>
               <LinearGradient
-                colors={addButtonState ? ["#002777", "#00194C"] : ["#E9EEFF", "#D8E2FF"]}
-                style={[styles.addbutton]}>
-                <TouchableOpacity onPress={addAccount} disabled={!addButtonState}>
+                colors={["#002777", "#00194C"]}
+                style={[styles.verifyButton]}>
+                <TouchableOpacity onPress={handleBankDetailSubmit}>
                   <Text
                     style={[
                       styles.buttonText,
@@ -551,182 +850,11 @@ const BankDetailsScreen = ({ navigation }) => {
                         fontSize: dynamicFontSize(styles.buttonText.fontSize),
                       },
                     ]}>
-                    <FontAwesome5 name="plus" size={14} /> ADD
+                    PROCEED
                   </Text>
                 </TouchableOpacity>
               </LinearGradient>
             </View>
-          </View>
-
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.container}>
-              <View>
-                {otherError && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      { fontSize: dynamicFontSize(styles.errorText.fontSize) },
-                    ]}>
-                    {otherError}
-                  </Text>
-                )}
-
-                {/* Additional Accounts Section */}
-                {bankAccountSlices.data.BankList.length > 0 && (
-                  <View style={styles.accountContainer}>
-
-
-                    <Text
-                      style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      ]}>
-                      Bank Branch IFSC Code<Text style={styles.mandatoryStar}> *</Text>
-                    </Text>
-                    <CustomInput
-                      placeholder="Enter your bank branch IFSC code"
-                      value={bankAccountSlices.data.BankList[selectedAccountIndex]?.IFSC || ''}
-                      error={bankAccountSlices.data.BankList[selectedAccountIndex]?.IFSCError}
-                      autoCapitalize="characters"
-                      onChangeText={(text) =>
-                        UpdateBankInfo(selectedAccountIndex, "IFSC-CODE", text)
-                      }
-                    />
-                    <Text
-                      style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      ]}>
-                      Bank Branch Name <Text style={styles.mandatoryStar}>*</Text>
-                    </Text>
-                    <CustomInput
-                      placeholder="Bank Branch Name"
-                      value={BankIfscWithBankName(bankAccountSlices.data.BankList[selectedAccountIndex])}
-                      error={bankAccountSlices.data.BankList[selectedAccountIndex]?.BankBracnchNameError}
-                      onChangeText={(text) =>
-                        UpdateBankInfo(selectedAccountIndex, "BRANCH-NAME", text)
-                      }
-                    />
-                    <Text
-                      style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      ]}>
-                      Bank Account Number <Text style={styles.mandatoryStar}>*</Text>
-                    </Text>
-                    <CustomInput
-                      placeholder="Enter your bank account number"
-                      value={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumber || ''}
-                      onChangeText={(text) =>
-                        UpdateBankInfo(selectedAccountIndex, "ACCOUNT-NUMBER", text)
-                      }
-                      error={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumberError}
-                      secureTextEntry
-                      keyboardType="numeric"
-                    />
-                    <Text
-                      style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      ]}>
-                      Re-enter Bank Account Number <Text style={styles.mandatoryStar}>*</Text>
-                    </Text>
-                    <CustomInput
-                      placeholder="Re-enter your bank account number"
-                      error={bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumberError}
-                      value={bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumber || ''}
-                      onChangeText={(text) =>
-                        UpdateBankInfo(selectedAccountIndex, "RE-ACCOUNT-NUMBER", text)
-                      }
-                      keyboardType="numeric"
-
-                    />
-                    {bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumber != null &&
-                      bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumber != null &&
-                      bankAccountSlices.data.BankList[selectedAccountIndex]?.ReAccountNumber.length >= 8 &&
-                      bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountNumber.length >= 8 && (
-                        <Text
-                          style={[
-                            styles.statusMessage,
-                            bankAccountSlices.data.BankList[selectedAccountIndex]?.isAccountNumberMatching
-                              ? styles.match
-                              : styles.noMatch,
-                            {
-                              fontSize: dynamicFontSize(styles.statusMessage.fontSize),
-                            },
-                          ]}>
-                          {bankAccountSlices.data.BankList[selectedAccountIndex]?.isAccountNumberMatching
-                            ? "✓ Account number match"
-                            : "✗ Account number does not match"}
-                        </Text>
-                      )}
-
-                    <Text
-                      style={[
-                        styles.label,
-                        { fontSize: dynamicFontSize(styles.label.fontSize) },
-                      ]}>
-                      Account Holder Name <Text style={styles.mandatoryStar}>*</Text>
-                    </Text>
-                    <CustomInput
-                      placeholder="Enter your account holder name"
-                      error={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountHolderNameError}
-                      value={bankAccountSlices.data.BankList[selectedAccountIndex]?.AccountHolderName || ''}
-                      onChangeText={(text) =>
-                        UpdateBankInfo(selectedAccountIndex, "HOLDER-NAME", text)
-                      }
-                    />
-
-                    {bankAccountSlices.data.BankList[selectedAccountIndex]?.isAccountNameVaid != null && (
-                      <Text
-                        style={[
-                          styles.statusMessage,
-                          bankAccountSlices.data.BankList[selectedAccountIndex]?.isAccountNameVaid
-                            ? styles.match
-                            : styles.noMatch,
-                          {
-                            fontSize: dynamicFontSize(styles.statusMessage.fontSize),
-                          },
-                        ]}>
-                        {bankAccountSlices.data.BankList[selectedAccountIndex]?.isAccountNameVaid
-                          ? "✓ Name is matching with account name"
-                          : "✗ Name not matching with account name"}
-                      </Text>
-                    )}
-                  </View>
-                )}
-              </View>
-            </View>
-          </ScrollView>
-          <View style={[styles.actionContainer, styles.boxShadow]}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => GoBack(navigation)}>
-              <Text
-                style={[
-                  styles.backBtnText,
-                  {
-                    fontSize: dynamicFontSize(styles.backBtnText.fontSize),
-                  },
-                ]}>
-                BACK
-              </Text>
-            </TouchableOpacity>
-            <LinearGradient
-              colors={["#002777", "#00194C"]}
-              style={[styles.verifyButton]}>
-              <TouchableOpacity onPress={handleBankDetailSubmit}>
-                <Text
-                  style={[
-                    styles.buttonText,
-                    {
-                      fontSize: dynamicFontSize(styles.buttonText.fontSize),
-                    },
-                  ]}>
-                  PROCEED
-                </Text>
-              </TouchableOpacity>
-            </LinearGradient>
           </View>
 
           {errorScreen.type != null && (

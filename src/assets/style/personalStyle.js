@@ -7,6 +7,9 @@ const deviceWidth = window.width;
 
 const { width, height } = Dimensions.get('window');
 
+const screenWidth = Dimensions.get('window').width;
+const inputWidth = Math.min(60, screenWidth / 8); 
+
 
 // You can create your own "media query" functions
 const isSmallDevice = deviceWidth < 768;
@@ -17,11 +20,12 @@ export const styles = applyFontFamily({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: "#F8FAFF",
+    backgroundColor: "#ffffff",
     ...Platform.select({
       web: {
         width: "100%",
         alignSelf: "center",
+        backgroundColor: "#ffffff",
       },
     }),
   },
@@ -89,6 +93,11 @@ export const styles = applyFontFamily({
     height: 20,
     borderRadius: 5,
     flexDirection: "row",
+    ...Platform.select({
+     web: {
+       height: 40,
+     },
+    }),
   },
   sliderLabels: {
     flexDirection: "row",
@@ -195,7 +204,11 @@ export const styles = applyFontFamily({
     textAlign: "center",
     ...Platform.select({
       web: {
-        outline: "none",
+        // outline: "none",
+        // Use this:
+outlineWidth: 1,
+outlineColor: 'black',
+outlineStyle: 'solid',
         "&:focus": {
           borderColor: "#0056b3",
         },
@@ -315,6 +328,13 @@ export const styles = applyFontFamily({
     display: "flex",
     marginTop: 30,
     marginBottom: 20,
+    ...Platform.select({
+      web: {
+       width:"10%",
+       marginLeft:"auto",
+       marginRight:"auto",
+      },
+    }),
   },
   btnText: {
     color: "#ffffff",
@@ -363,11 +383,10 @@ export const styles = applyFontFamily({
     color: "#00194C",
   },
   WebheaderText: {
-    fontSize: 30,
+    fontSize: 49,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
-    textAlign: "center",
   },
   subText: {
     fontSize: 16,
@@ -396,7 +415,7 @@ export const styles = applyFontFamily({
     }),
   },
   otpInput: {
-    width: 60,
+    width: inputWidth,
     height: 50,
     borderColor: "#A2ACC6",
     borderWidth: 1,
@@ -973,7 +992,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -981,7 +1000,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     ...Platform.select({
       web: {
-        color: "#ffffff",
+        color: "#00194c",
       },
     }),
   },
@@ -1199,8 +1218,8 @@ export const styles = applyFontFamily({
     ...Platform.select({
       web: {
         padding: 9,
-        color: "#ffffff",
-        borderColor: "#ffffff",
+        color: "#00194c",
+        borderColor: "#00194c",
       },
     }),
   },
@@ -1283,6 +1302,17 @@ export const styles = applyFontFamily({
       },
     }),
   },
+  centerAlignedContainer: { 
+   
+    ...Platform.select({
+      web: {
+        width: "70%",
+        backgroundColor: "#ffffff",
+        marginLeft: "auto",
+        marginRight: "auto",
+      },
+    }),
+  },
   rightCOntainer: {
     ...Platform.select({
       web: {
@@ -1310,11 +1340,10 @@ export const styles = applyFontFamily({
     }),
   },
   webheader: {
-    alignItems: "center",
     marginBottom: 20,
   },
   websubtitleText: {
-    fontSize: 16,
+    fontSize: 22,
     color: "#fff",
   },
   webinterestButton: {
@@ -1371,15 +1400,17 @@ export const styles = applyFontFamily({
   },
   mincontainer: {
     flex: 1,
-    padding: 20,
-    justifyContent: "center",
+    justifyContent :'center',
+    paddingHorizontal: 80,
+    paddingVertical:20
   },
   featureIcon: {
     color: "#ffffff",
   },
   bottomFixed: {
     position: "absolute",
-    bottom: 10,
+    bottom: 80,
+    right:80,
   },
 
   mainContainer: {
@@ -1774,4 +1805,59 @@ export const styles = applyFontFamily({
     padding: 16,
   },
   //new css after merge
+  step: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  stepiconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  stepiconContainerDone: {
+    backgroundColor: '#213ACE',
+  },
+  stepiconContainerCurrent: {
+    backgroundColor: '#FF8500',
+  },
+  stepiconContainerDisabled: {
+    backgroundColor: '#213ACE',
+    opacity: 0.5,
+  },
+  steptextContainer: {
+    flex: 1,
+  },
+  steptitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+  },
+  stepsubtitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  steptextDisabled: {
+    color: '#9CA3AF',
+  },
+  connectorContainer: {
+    position: 'absolute',
+    left: 20,
+    top: 40,
+    bottom: -24,
+    width: 2,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    zIndex: -1,
+  },
+  dashItem: {
+    width: 1.5,
+    height: 1,
+    backgroundColor: '#9CA3AF',
+  },
+  dashItemDone: {
+    backgroundColor: '#ffffff',
+  },
 });

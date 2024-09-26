@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
 
 const CustomDropdown = ({
@@ -21,24 +21,24 @@ const CustomDropdown = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (items.length === 1) {
-      setValue(items[0].value);
-    }
-  }, [items]);
-
   const styles = applyFontFamily({
     dropdownBorder: {
       borderColor: "#D8DFF2",
       marginBottom: 15,
+      maxHeight: 300,
     },
     dropdown: {
       borderWidth: 1,
       borderColor: "#D8DFF2",
       color: "#fff",
-      fontSize: 16,
-      backgroundColor: "#fff",
-      zIndex: 1000,
+      fontSize: 15,
+      backgroundColor: "#ffffff",
+      zIndex: 10000,
+      ...Platform.select({
+        web: {
+          minHeight: 42,
+        },
+      }),
     },
     dropdownText: {
       color: '#333',
@@ -58,10 +58,11 @@ const CustomDropdown = ({
     },
   });
 
+
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ zIndex: zIndex }}>
       <DropDownPicker
-        listMode='SCROLLVIEW'
         open={open}
         value={value}
         items={items}
@@ -69,7 +70,7 @@ const CustomDropdown = ({
         onSelectItem={(value)=>setValue(value)}
         setItems={setItems}
         placeholder={placeholder}
-        maxHeight={150}
+        searchable={searchable}
         style={[
           styles.dropdownBorder,
           styles.dropdown,
@@ -89,10 +90,8 @@ const CustomDropdown = ({
           styles.selectedItemText,
           { color: selectedItemColor },
         ]}
-        searchable={searchable}
         selectedItemContainerStyle={{
-          backgroundColor: selectedItemBackgroundColor,
-          marginVertical: -1,
+          backgroundColor: selectedItemBackgroundColor, 
         }}
         itemSeparator={true}
         itemSeparatorStyle={{
@@ -103,7 +102,6 @@ const CustomDropdown = ({
         tickIconStyle={{ tintColor: tickIconColor }}
         searchContainerStyle={{
           borderBottomWidth: 0,
-          borderTopWidth: 0,
         }}
         searchTextInputStyle={[
           styles.dropdownText,
@@ -112,11 +110,14 @@ const CustomDropdown = ({
             borderRadius: 5,
           },
         ]}
-        zIndex={zIndex}
+        listMode="SCROLLVIEW"
+        scrollViewProps={{
+          nestedScrollEnabled: true,
+        }}
+        maxHeight={300}
+       
       />
-      {error && (
-        <Text style={styles.errorText}>{error}</Text>
-      )}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 };

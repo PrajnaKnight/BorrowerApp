@@ -111,7 +111,7 @@ function RootNavigator({initialRouteName}) {
 
 
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer>
       <RootStack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
         <RootStack.Screen name="Common" component={CommonNavigator} />
         <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View, Platform } from 'react-native';
 import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Slider from '@react-native-community/slider';
@@ -45,34 +45,57 @@ const formatValue = (value, isAmount, isTenure) => {
   }
 };
 
-const CustomSlider = ({ title, icon, keyboardType, min, max, steps,currentValue, error, onChange, isAmount = false, isTenure = false}) => {
+const CustomSlider = ({ title, icon, keyboardType, min, max, steps, currentValue, error, onChange, isAmount = false, isTenure = false }) => {
   const { fontSize } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
-
-
   const handleTextInputChange = (value) => {
-    
     let numericValue = properAmmount(value) || 0;
-    if(numericValue >  max){
-      numericValue = max
+    if (numericValue > max) {
+      numericValue = max;
     }
     onChange(numericValue);
-    
   };
 
-  const handleSlider  = (value) => {
-    const numericValue = Math.max(min, Math.min(max, value));
+  const handleSlider = (value) => {
+    const numericValue = Math.max(min, Math.min(max, parseFloat(value)));
     onChange(numericValue);
   };
 
-  const TextFieldValue = (value) =>{
-    if(isAmount){
-      return (formateAmmountValue(value) || 0).toString()
+  const TextFieldValue = (value) => {
+    if (isAmount) {
+      return (formateAmmountValue(value) || 0).toString();
     }
     return (value || 0).toString();
-  }
+  };
 
+  const SliderComponent = Platform.OS === 'web' ? (
+    <input
+      type="range"
+      min={min}
+      max={max}
+      step={steps || 1}
+      value={currentValue || min}
+      onChange={(e) => handleSlider(e.target.value)}
+      style={{
+        width: '100%',
+        height: 40,
+        accentColor: '#0010AC',
+      }}
+    />
+  ) : (
+    <Slider
+      style={styles.slider}
+      minimumValue={min}
+      maximumValue={max}
+      step={steps || 1}
+      onValueChange={handleSlider}
+      value={currentValue || min}
+      minimumTrackTintColor="#0010AC"
+      maximumTrackTintColor="#758BFD"
+      thumbTintColor="#F38F00"
+    />
+  );
 
   return (
     <View style={styles.sliderContainer}>
@@ -88,23 +111,13 @@ const CustomSlider = ({ title, icon, keyboardType, min, max, steps,currentValue,
           />
         </View>
       </View>
-      <Slider
-        style={styles.slider}
-        minimumValue={min}
-        maximumValue={max}
-        step={steps || 1}
-        onValueChange={handleSlider}
-        value={currentValue || min}
-        minimumTrackTintColor="#0010AC"
-        maximumTrackTintColor="#758BFD"
-        thumbTintColor="#F38F00"
-      />
+      {SliderComponent}
       <View style={styles.sliderLabels}>
         <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>
-          {isAmount ? `₹ ${formatValue(min,true, false)}` : formatValue(min, false, isTenure)}
+          {isAmount ? `₹ ${formatValue(min, true, false)}` : formatValue(min, false, isTenure)}
         </Text>
         <Text style={[styles.p, { fontSize: dynamicFontSize(styles.p.fontSize) }]}>
-          {isAmount ? `₹ ${formatValue(max,true, false)}` : formatValue(max, false, isTenure)}
+          {isAmount ? `₹ ${formatValue(max, true, false)}` : formatValue(max, false, isTenure)}
         </Text>
       </View>
       {error && (
