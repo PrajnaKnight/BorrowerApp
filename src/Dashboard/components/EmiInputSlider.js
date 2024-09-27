@@ -62,6 +62,7 @@ const EmiInputSlider = ({
   sliderLabels,
   labelValues,
   showInput = true,
+  isROI = false, // New prop to identify if this is for ROI
 }) => {
   const [sliderValue, setSliderValue] = useState(0);
 
@@ -74,22 +75,39 @@ const EmiInputSlider = ({
     if (isCurrency) {
       return `₹ ${formatIndianCurrency(val)}`;
     }
+    if (isROI) {
+      return val.toFixed(2); // Display ROI with 2 decimal places
+    }
     return val.toString();
   };
 
   const handleSliderChange = (normalizedValue) => {
     const range = labelValues[labelValues.length - 1] - labelValues[0];
-    const newValue = labelValues[0] + (normalizedValue * range);
+    let newValue = labelValues[0] + (normalizedValue * range);
+    if (isROI) {
+      newValue = Number(newValue.toFixed(2)); // Round to 2 decimal places for ROI
+    } else {
+      newValue = Math.round(newValue); // Round to nearest integer for other values
+    }
     onValueChange(newValue);
   };
 
   const handleTextChange = (text) => {
-    const numericValue = Number(text.replace(/[^0-9]/g, ''));
+    let numericValue;
+    if (isROI) {
+      numericValue = Number(text.replace(/[^0-9.]/g, '')); // Allow decimal for ROI
+      numericValue = Number(numericValue.toFixed(2)); // Limit to 2 decimal places
+    } else {
+      numericValue = Number(text.replace(/[^0-9]/g, '')); // Only integers for other values
+    }
     onValueChange(numericValue);
   };
 
   const formatSliderLabel = (label) => {
     if (typeof label === 'number') {
+      if (isROI) {
+        return `${label}%`; // Add percentage sign for ROI labels
+      }
       return formatCrLFormat(label);
     }
     return label;
@@ -104,7 +122,7 @@ const EmiInputSlider = ({
             <TextInput
               style={styles.inputValue}
               value={formatDisplayValue(value)}
-              keyboardType="numeric"
+              keyboardType={isROI ? "decimal-pad" : "numeric"}
               onChangeText={handleTextChange}
             />
             {suffix && <Text style={styles.suffix}>{suffix}</Text>}
