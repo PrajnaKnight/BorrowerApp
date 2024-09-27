@@ -248,6 +248,7 @@ const EMICalculator = ({ navigation }) => {
               suffix="%"
               sliderLabels={["0", "10", "15", "20", "25", "30", "40", "50"]}
               labelValues={[0, 10, 15, 20, 25, 30, 40, 50]}
+              isROI={true}
             />
 
             <LoanTenureSlider
