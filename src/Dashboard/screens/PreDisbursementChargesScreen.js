@@ -197,7 +197,7 @@ const styles = applyFontFamily({
     borderBottomColor: '#e0e0e0',
   },
   evenRow: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f7f9ff',
   },
   oddRow: {
     backgroundColor: '#f7f9ff',
