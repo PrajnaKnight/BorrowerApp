@@ -23,6 +23,7 @@ const formatCrLFormat = (value) => {
     return value.toString();
   }
 };
+
 const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, suffix }) => {
   const formatDisplayValue = (val) => {
     if (isCurrency) {
@@ -71,8 +72,8 @@ const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, 
         />
       </View>
       <View style={styles.sliderLabelContainer}>
-      <Text style={styles.sliderLabel}>{formatSliderLabel(min)}</Text>
-      <Text style={styles.sliderLabel}>{formatSliderLabel(max)}</Text>
+        <Text style={[styles.sliderLabel, styles.sliderLabelLeft]}>{formatSliderLabel(min)}</Text>
+        <Text style={[styles.sliderLabel, styles.sliderLabelRight]}>{formatSliderLabel(max)}</Text>
       </View>
     </View>
   );
@@ -126,14 +127,19 @@ const styles = applyFontFamily({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5,
-    marginHorizontal: -5, 
+    position: 'relative',
+    height: 20,
   },
   sliderLabel: {
-    fontSize: 10, 
+    fontSize: 10,
     color: '#00194c',
-    textAlign: 'center',
-    flex: 1, 
-    paddingHorizontal: 2,
+    position: 'absolute',
+  },
+  sliderLabelLeft: {
+    left: 0,
+  },
+  sliderLabelRight: {
+    right: 0,
   },
 });
 
