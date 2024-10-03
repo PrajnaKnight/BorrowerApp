@@ -171,9 +171,9 @@ const RepaymentSchedule = ({ navigation, route }) => {
           )}
           <View style={styles.tableHeader}>
             <Text style={styles.tableHeaderText}>Year</Text>
-            <Text style={styles.tableHeaderText}>EMI {'\n'}  (A+B)</Text>
-            <Text style={styles.tableHeaderText}>Principal {'\n'}  (A)</Text>
-            <Text style={styles.tableHeaderText}>Interest {'\n'}  (B)</Text>
+            <Text style={styles.tableHeaderText}>EMI{'\n'}(A+B)</Text>
+            <Text style={styles.tableHeaderText}>Principal{'\n'}(A)</Text>
+            <Text style={styles.tableHeaderText}>Interest{'\n'}(B)</Text>
             <Text style={[styles.tableHeaderText, styles.noBorder]}>Balance</Text>
           </View>
           <FlatList

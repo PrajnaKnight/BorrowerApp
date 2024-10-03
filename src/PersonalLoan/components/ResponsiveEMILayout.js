@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -37,7 +37,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: Math.max(12, screenWidth * 0.03),
     marginBottom: 5,
+    fontWeight: '500',
     color: '#00194C',
+    ...Platform.select({
+      web: {
+        fontSize: 15,
+      },
+    }),
   },
   interestContainer: {
     flexDirection: 'row',
@@ -52,6 +58,11 @@ const styles = StyleSheet.create({
   interestRate: {
     fontSize: Math.max(14, screenWidth * 0.035),
     color: '#00194C',
+    ...Platform.select({
+      web: {
+        fontSize: 14,
+      },
+    }),
   },
   reducingRateContainer: {
     alignItems: 'flex-end',
@@ -62,9 +73,20 @@ const styles = StyleSheet.create({
     lineHeight: Math.max(10, screenWidth * 0.025),
     fontWeight: '500',
     opacity: 0.6,
+    ...Platform.select({
+      web: {
+        fontSize: 10,
+        lineHeight: 10,
+      },
+    }),
   },
   emiAmount: {
     fontSize: Math.max(14, screenWidth * 0.035),
+    ...Platform.select({
+      web: {
+        fontSize: 14,
+      },
+    }),
     color: '#00194C',
     padding: 10,
     borderWidth: 1,

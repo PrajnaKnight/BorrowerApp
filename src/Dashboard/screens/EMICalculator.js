@@ -25,7 +25,7 @@ const EMICalculator = ({ navigation }) => {
   const [formData, setFormData] = useState({
     loanAmount: 500000,
     interestRate: 10,
-    loanTenure: 60,
+    loanTenure: 30,
   });
   const [tenureRange, setTenureRange] = useState({ min: 1, max: 30 });
   const [tenureUnit, setTenureUnit] = useState('Yr');
@@ -104,6 +104,7 @@ const EMICalculator = ({ navigation }) => {
     setShowDatePicker(Platform.OS === 'ios');
     setStartDate(currentDate);
   };
+  const [sliderLayout, setSliderLayout] = useState('default');
 
   return (
     <Layout>
@@ -232,8 +233,8 @@ const EMICalculator = ({ navigation }) => {
                 "10Cr",
               ]}
               labelValues={[
-                10000, 100000, 500000, 1000000, 5000000, 10000000,
-                50000000, 100000000,
+                10000, 100000, 500000, 1000000, 5000000, 10000000, 50000000,
+                100000000,
               ]}
             />
             <InputSlider
@@ -254,13 +255,18 @@ const EMICalculator = ({ navigation }) => {
             <LoanTenureSlider
               label="Loan Tenure"
               value={formData.loanTenure}
-              min={tenureRange.min}
-              max={tenureRange.max}
-              step={1}
               onValueChange={(value) => handleSliderChange("loanTenure", value)}
               toggle={tenureUnit}
               onToggle={handleTenureToggle}
-              sliderLabels={tenureUnit === 'Yr' ? ['1', '10', '15', '20', '30'] : ['1', '120', '240', '360']}
+              sliderLabels={
+                tenureUnit === "Yr"
+                  ? ["1", "10", "15", "20", "30"]
+                  : ["1", "120", "240", "360"]
+              }
+              labelValues={
+                tenureUnit === "Yr" ? [1, 10, 15, 20, 30] : [1, 120, 240, 360]
+              }
+              layout={sliderLayout}
             />
           </View>
           {/* <ProceedButton onPress={() => {}} text="CALCULATE" /> */}
