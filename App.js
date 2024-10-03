@@ -27,7 +27,7 @@ export default function App() {
   const isUserAvailable = async () => {
     const number = await GetBorrowerPhoneNumber()
     console.log("phone number " +number)
-    setInitialRouteName(number  ? "Dashboard" : "Common" )
+    setInitialRouteName(number  ? "MsmeLoan" : "Common" )
   }
 
   
