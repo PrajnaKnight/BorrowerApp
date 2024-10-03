@@ -18,9 +18,17 @@ const LoanDetailsScreen = () => {
   const [loanAmount, setLoanAmount] = useState(200000);
   const [tenure, setTenure] = useState(36);
   const [purpose, setPurpose] = useState(null);
+  const [selectedLoanType, setSelectedLoanType] = useState(null);  // State for selected loan type
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [purposeItems, setPurposeItems] = useState([
     { label: 'Working Capital', value: 'working_capital' },
+    { label: 'Business Expansion', value: 'business_expansion' },
+    { label: 'Equipment Purchase', value: 'equipment_purchase' },
+    { label: 'Debt Consolidation', value: 'debt_consolidation' },
+    { label: 'Other', value: 'other' },
+  ]);
+  const [LoanTypes, setLoanTypes] = useState([
+    { label: 'Business Loan', value: 'business_Loan' },
     { label: 'Business Expansion', value: 'business_expansion' },
     { label: 'Equipment Purchase', value: 'equipment_purchase' },
     { label: 'Debt Consolidation', value: 'debt_consolidation' },
@@ -49,15 +57,17 @@ const LoanDetailsScreen = () => {
   const { setProgress } = useProgressBar();
 
   useEffect(() => {
-    setProgress(0.2);
+    setProgress(0.1);
   }, []);
-
+  useEffect(() => {
+    console.log("Current selectedLoanType: ", selectedLoanType); // Monitor selectedLoanType
+  }, [selectedLoanType]);
  
 
   return (
     <Layout>
-      <View style={{ padding: 16, backgroundColor: "#F8FAFF" }}>
-        <ProgressBar progress={0.2} />
+      <View style={{ padding: 16, backgroundColor: "#ffffff" }}>
+        <ProgressBar progress={0.1} />
         <Text style={[styles.TitleText, { fontSize: dynamicFontSize(24) }]}>
           Welcome,
         </Text>
@@ -67,9 +77,24 @@ const LoanDetailsScreen = () => {
       </View>
       <View style={styles.container}>
         <ScrollView style={{ flex: 1 }}>
+          <View>
+            <Text
+              style={[styles.sectionTitle, { fontSize: dynamicFontSize(16) }]}>
+              Loan type
+            </Text>
+            <CustomDropdown
+              onSelectItem={(item) => setValue(item.value)}
+              value={selectedLoanType} // Pass the selected loan type state
+              setValue={setSelectedLoanType} // Update the selected loan type state
+              items={LoanTypes}
+              placeholder="Select Loan Type"
+              containerStyle={{ marginBottom: 20 }}
+              zIndex={9000}
+            />
+          </View>
           <Text
             style={[styles.sectionTitle, { fontSize: dynamicFontSize(16) }]}>
-            Business Registration Type
+            Your Business Registration as...
           </Text>
           <View style={styles.businessTypeContainer}>
             {businessTypes.map((type, index) => (
@@ -116,15 +141,14 @@ const LoanDetailsScreen = () => {
             isTenure={true}
           />
 
-          <Text
-            style={[styles.label, { fontSize: dynamicFontSize(14) }]}>
+          <Text style={[styles.label, { fontSize: dynamicFontSize(14) }]}>
             Purpose of Loan<Text style={styles.requiredStar}>*</Text>
           </Text>
           <CustomDropdown
             value={purpose}
             setValue={(val) => {
               setPurpose(val);
-              setIsButtonDisabled(!val); // Enable the button when a purpose is selected
+              setIsButtonDisabled(!val);
             }}
             items={purposeItems}
             setItems={setPurposeItems}
@@ -136,18 +160,9 @@ const LoanDetailsScreen = () => {
         </ScrollView>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton}  onPress={() => GoBack(navigation)}>
-          <Text
-            style={[
-              styles.cancelButtonText,
-              { fontSize: dynamicFontSize(14) },
-            ]}>
-            Cancel
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.proceedButtonContainer}>
+        <View style={[styles.proceedButtonContainer, { width: "100%" }]}>
           <ButtonComponent
-            title="PROCEED"
+            title="Submit"
             onPress={handleProceed}
             disabled={isButtonDisabled}
             style={{

@@ -22,18 +22,15 @@ const BusinessTypeDetailsScreen = () => {
   }, []);
 
   const [formData, setFormData] = useState({
-    companyType: 'Micro',
     incorporationDate: new Date('2014-12-25'),
     commencementDate: new Date('2014-12-25'),
     businessVintage: '5-10 years',
-    businessType: 'Start-up',
     businessPremise: 'Owned',
     officeTenure: '',
     salesTurnover: '',
     operatingIncome: '',
     businessTurnoverAnnual: '',
-    gstRegistrationNumber: '27AAHCK6791L1ZS',
-    udyamAadhaarNumber: 'UDYAM-MH26-938173',
+  
     businessRegisteredAddress: 'Techniplex-2, Goregaon (W), Mumb...',
     pinCode: '400062',
     city: 'Mumbai',
@@ -43,22 +40,6 @@ const BusinessTypeDetailsScreen = () => {
   const [errors, setErrors] = useState({});
 
   // Dropdown items
-  const companyTypeItems = [
-    { label: 'Micro', value: 'Micro' },
-    { label: 'Small', value: 'Small' },
-    { label: 'Medium', value: 'Medium' },
-  ];
-
-  const businessVintageItems = [
-    { label: '0-5 years', value: '0-5 years' },
-    { label: '5-10 years', value: '5-10 years' },
-    { label: '10+ years', value: '10+ years' },
-  ];
-
-  const businessTypeItems = [
-    { label: 'Start-up', value: 'Start-up' },
-    { label: 'Established', value: 'Established' },
-  ];
 
   const businessPremiseItems = [
     { label: 'Owned', value: 'Owned' },
@@ -92,7 +73,7 @@ const BusinessTypeDetailsScreen = () => {
   const handleProceed = () => {
     if (!isButtonDisabled) {
       console.log('Form is valid. Proceeding...');
-      navigation.navigate('BusinessLoanEligibility');
+      navigation.navigate('BusinessOwnerDetails');
       // Add your logic here to proceed
     } else {
       console.log('Form has errors. Please correct them.');
@@ -145,43 +126,25 @@ const BusinessTypeDetailsScreen = () => {
 
   return (
     <Layout>
-      <View style={{ padding: 16, backgroundColor: "#F8FAFF" }}>
-        <ProgressBar progress={0.6} />
-        <Text style={styles.TitleText}>Business Type Details</Text>
+      <View style={{ padding: 16, backgroundColor: "#ffffff" }}>
+        <ProgressBar progress={0.4} />
+        <View style={styles.TOpTitleContainer}>
+          <Text style={[styles.TitleText]}>Business Information</Text>
+          <Text style={styles.pageIndex}>
+            <Text style={styles.IndexActive}>4</Text>/4
+          </Text>
+        </View>
       </View>
       <View style={styles.container}>
         <ScrollView>
-          {renderDropdownField(
-            "Company Type",
-            "companyType",
-            companyTypeItems,
-            "Select Company Type"
-          )}
           {renderDatePicker("Incorporation Date", "incorporationDate")}
           {renderDatePicker("Commencement Date", "commencementDate")}
-          {renderDropdownField(
+
+          {renderInputField(
             "Business Vintage",
             "businessVintage",
-            businessVintageItems,
-            "Select Business Vintage"
-          )}
-          {renderDropdownField(
-            "Business Type",
-            "businessType",
-            businessTypeItems,
-            "Select Business Type"
-          )}
-          {renderDropdownField(
-            "Business Premise",
-            "businessPremise",
-            businessPremiseItems,
-            "Select Business Premise"
-          )}
-          {renderDropdownField(
-            "Office Tenure",
-            "officeTenure",
-            officeTenureItems,
-            "Select Office Tenure"
+            "Enter Business Vintage",
+            true
           )}
           {renderInputField(
             "Sales Turnover",
@@ -198,24 +161,28 @@ const BusinessTypeDetailsScreen = () => {
             "businessTurnoverAnnual",
             "Enter Business Turnover"
           )}
-          {renderInputField(
-            "GST Registration Number",
-            "gstRegistrationNumber",
-            "Enter GST Number",
-            true
+          {renderDropdownField(
+            "Business Premise",
+            "businessPremise",
+            businessPremiseItems,
+            "Select Business Premise"
           )}
-          {renderInputField(
-            "UDYAM Aadhaar Number",
-            "udyamAadhaarNumber",
-            "Enter UDYAM Number",
-            true
-          )}
+
+          <View style={{ zIndex: 1000 }}>
+            {renderDropdownField(
+              "Office Tenure",
+              "officeTenure",
+              officeTenureItems,
+              "Select Office Tenure"
+            )}
+          </View>
           {renderInputField(
             "Business Registered Address",
             "businessRegisteredAddress",
             "Enter Business Address",
             true
           )}
+
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <View style={{ flex: 1, marginRight: 5 }}>
@@ -230,7 +197,9 @@ const BusinessTypeDetailsScreen = () => {
         </ScrollView>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton}  onPress={() => GoBack(navigation)}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => GoBack(navigation)}>
           <Text style={styles.cancelButtonText}>Back</Text>
         </TouchableOpacity>
         <View style={styles.proceedButtonContainer}>

@@ -16,7 +16,7 @@ export const styles = applyFontFamily({
     flex: 1,
     padding: 16,
     paddingTop: 0,
-    backgroundColor: "#F8FAFF",
+    backgroundColor: "#ffffff",
   },
   TitleText: {
     fontSize: 24,
@@ -33,7 +33,7 @@ export const styles = applyFontFamily({
     fontSize: 16,
     fontWeight: "500",
     color: "#00194c",
-    marginBottom:10
+    marginBottom: 10,
   },
   businessTypeContainer: {
     flexDirection: "row",
@@ -123,6 +123,8 @@ export const styles = applyFontFamily({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     paddingLeft: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#B3B9E1",
   },
   accordionHeaderRight: {
     flexDirection: "row",
@@ -139,29 +141,60 @@ export const styles = applyFontFamily({
   },
   gstinText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginLeft: 8,
+    color: "#00194c",
   },
   accordionContent: {
     padding: 16,
   },
+  gstinDetailsContainer: {
+    borderWidth: 1,
+    borderColor: "#B3B9E1",
+    borderRadius: 5,
+    marginTop: 10,
+    overflow: 'hidden',
+  },
+  
   detailItem: {
     flexDirection: "row",
-    paddingVertical: 12,
-  },
-  borderBottom: {
+    paddingHorizontal: 6,
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#E6E6E6",
+    borderBottomColor: "#B3B9E1",
+  },
+  firstDetailItem: {
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  lastDetailItem: {
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+    borderBottomWidth: 0, 
   },
   detailLabel: {
-    color: "#666",
+    color: "#00194C",
     flex: 1,
     width: "50%",
+    fontSize: 12,
+    fontWeight: "500",
+    paddingVertical: 6,
   },
   detailValue: {
-    fontWeight: "500",
     flex: 1,
     textAlign: "left",
+    fontSize: 12,
+    paddingVertical: 6,
+    color: "#00194C",
+    paddingLeft: 10,
+    borderLeftWidth: 1,
+    borderLeftColor: "#B3B9E1",
+  },
+  evenItem: {
+    backgroundColor: "#ffffff",
+  },
+  oddItem: {
+    backgroundColor: "#D2DEF7",
   },
   tabBar: {
     paddingVertical: 0,
@@ -169,7 +202,7 @@ export const styles = applyFontFamily({
     backgroundColor: "transparent",
     elevation: 0,
     shadowOpacity: 0,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     borderBottomColor: "transparent",
   },
   tabIndicator: {
@@ -196,8 +229,7 @@ export const styles = applyFontFamily({
   accodionRightIcon: {
     backgroundColor: "#ff8500",
     padding: 4,
-    color: "#fff",
-    paddingVertical: 10,
+    paddingVertical: 16,
     paddingHorizontal: 8,
     borderTopRightRadius: 8,
   },
@@ -216,18 +248,22 @@ export const styles = applyFontFamily({
   activeStatusContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
     flex: 1,
+    borderLeftWidth: 1,
+    borderLeftColor: "#B3B9E1",
+    paddingLeft: 10,
   },
   activeBullet: {
     width: 6,
     height: 6,
     borderRadius: 3,
     backgroundColor: "#00B436",
-    marginRight: 6,
+    marginRight: 5,
   },
   activeStatus: {
     color: "#00B436",
+    paddingLeft: 0,
+    borderLeftWidth: 0,
   },
   multilineValue: {
     textAlign: "left",
@@ -277,8 +313,9 @@ export const styles = applyFontFamily({
     fontSize: 16,
     fontWeight: "bold",
     color: "#00194c",
-    backgroundColor: "#DCE5FF",
-    padding: 16,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 16,
+    paddingTop:16
   },
   udyamDetailsContainer: {
     padding: 16,
@@ -289,22 +326,23 @@ export const styles = applyFontFamily({
     color: "#00194c",
     fontWeight: "500",
   },
-  radioGroup:{
+  radioGroup: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 16,
   },
   // businessSummary styles ends
   //businessEligibility styles starts
   congratsText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   approvalText: {
     marginBottom: 24,
   },
   chartContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 10,
   },
   loanIdcontainer: {
@@ -342,8 +380,8 @@ export const styles = applyFontFamily({
     color: "#ff8500",
   },
   infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 24,
   },
   infoItem: {
@@ -351,8 +389,8 @@ export const styles = applyFontFamily({
   },
   infoLabel: {
     fontSize: 14,
-    fontWeight: "500",  
-    color: '#00194c',
+    fontWeight: "500",
+    color: "#00194c",
     marginBottom: 4,
   },
   infoValueContainer: {
@@ -365,24 +403,24 @@ export const styles = applyFontFamily({
     alignItems: "center",
   },
   infoValue: {
-    fontSize:14,
+    fontSize: 14,
     color: "#191C35",
   },
   infoSubtext: {
-    color: '#666',
+    color: "#666",
     fontSize: 8,
     lineHeight: 10,
   },
   requestMoreButton: {
-    backgroundColor: '#FFF5E6',
+    backgroundColor: "#FFF5E6",
     borderRadius: 8,
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
   },
   requestMoreText: {
-    color: '#FFA500',
-    fontWeight: 'bold',
+    color: "#FFA500",
+    fontWeight: "bold",
   },
   addAnotherBank: {
     flex: 1,
@@ -396,7 +434,7 @@ export const styles = applyFontFamily({
     justifyContent: "center",
     marginVertical: 10,
   },
-  buttonText:{
+  buttonText: {
     color: "#ffffff",
     fontSize: 14,
   },
@@ -409,7 +447,7 @@ export const styles = applyFontFamily({
     fontSize: 14,
     fontWeight: "bold",
   },
-  Fundscontainer:{
+  Fundscontainer: {
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 16,
@@ -423,20 +461,20 @@ export const styles = applyFontFamily({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  funds:{
+  funds: {
     width: 150,
     height: 100,
   },
-  Fundstitle:{
+  Fundstitle: {
     fontSize: 16,
     color: "#00194C",
     fontWeight: "500",
   },
-  Fundscontent:{
+  Fundscontent: {
     width: "55%",
-    marginRight: 10,  
+    marginRight: 10,
   },
-  Fundbutton:{
+  Fundbutton: {
     backgroundColor: "#ff8500",
     borderRadius: 5,
     alignItems: "center",
@@ -444,11 +482,89 @@ export const styles = applyFontFamily({
     marginVertical: 10,
     padding: 5,
   },
-  FundbuttonText:{
-      color: "#fff",
-      fontSize: 14,
-      fontWeight: "500",
+  FundbuttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "500",
   },
 
   //BusinessELigibility ends
+  TOpTitleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  pageIndex: {
+    fontSize: 16,
+    color: "#D8DFF2",
+    fontWeight: "500",
+  },
+  IndexActive: {
+    color: "#ff8500",
+  },
+  tableContainer: {
+    marginBottom: 20,
+    marginHorizontal: 16,
+  },
+  tableWrapper:{
+    borderRadius: 5,
+    overflow: 'hidden',
+    borderWidth: 1, 
+    borderColor: '#B3B9E1'
+  },
+  tableTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    padding: 6,
+    color:'#00194C'
+  },
+  tableHeader: {
+    flexDirection: "row",
+    backgroundColor: "#00246E",
+  },
+  tableHeaderText: {
+    fontWeight: "500",
+    color:'#ffffff',
+    padding: 6,
+  },
+  tableRow: {
+    flexDirection: "row",
+    alignItems :'center'
+  },
+  evenRow: {
+    backgroundColor: "#FFFFFF",
+  },
+  oddRow: {
+    backgroundColor: "#F0F4FF",
+  },
+  tableCell: {
+    fontSize: 12,
+    color: "#00194c",
+    alignItems: "center",
+    padding: 6,
+  },
+  nicColumn: {
+    width: 50,
+   
+  },
+  descriptionColumn: {
+    flex: 1,
+    borderLeftWidth: 1,
+    borderLeftColor: '#B3B9E1',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 100,
+  },
+  noDataText: {
+    fontSize: 24,
+    color: '#00194C',
+    marginTop: 10,
+  },
+  oddRowTable:{
+    backgroundColor: '#ffffff'
+  },
+  
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,6 +10,7 @@ import ButtonComponent from '../../Common/components/ControlPanel/button';
 import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import {GoBack} from '../../PersonalLoan/services/Utils/ViewValidator';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const BusinessSummary = ({ navigation }) => {
   const [index, setIndex] = useState(0);
@@ -21,6 +22,8 @@ const BusinessSummary = ({ navigation }) => {
   const [agreementChecked, setAgreementChecked] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+  const { width } = Dimensions.get('window');
+
   const { setProgress } = useProgressBar();
   useEffect(() => {
     setProgress(0.4);
@@ -30,6 +33,8 @@ const BusinessSummary = ({ navigation }) => {
     setIsButtonDisabled(!agreementChecked);
   }, [agreementChecked]);
 
+
+ 
   const gstDetails = [
     { gstin: "27AAHCK6791L1ZS", isPrimary: true },
     { gstin: "27AAHCK6791L1ZS", isPrimary: false }
@@ -37,20 +42,17 @@ const BusinessSummary = ({ navigation }) => {
 
   const gstDetailsFull = {
         
-    'GSTIN Number': "27AAHCK6791L1ZS",
-    'Financial Year': "2023-2024",
-    'Status': "Active",
-    'Legal Name': "Rohit Creations",
-    'Constitution': "Sole Prop",
+    'Legal Name': "Leena Bakes",
+    'Trade Name': "Leena Bakes",
     'Date of Registration': "15 June 2019",
-    'Tax Payer Type': "Regular",
+    'Constitution Of Business ': "Sole Prop",
     'Nature of Business': "Supplier of Service",
-    'Location': "Mumbai, Maharashtra",
+    'Business Address': "Mumbai, Maharashtra",
+    'GSTIN Status': "Active",
     'Latest Return File': "GSTR 3B-May 2024\nGSTR 1-June 2024"
   };
 
   const udyamDetails = {
-    'Registration No': "UDYAM-MH26-938173",
     'Name of Enterprise': "Leena Bakes",
     'Enterprise Type': "Micro",
     'Registration Date': "25/12/2014",
@@ -63,6 +65,23 @@ const BusinessSummary = ({ navigation }) => {
     'Commencement Date': "25/12/2014",
     'Official Address': "Mumbai, Maharashtra"
   };
+
+  const industryDetails = [
+    { NIC: "10", Description: "Manufacture of Food Products" },
+    { NIC: "46", Description: "Wholesale trade, except of motor vehicles and motorcycles" },
+    { NIC: "47", Description: "Retail trade, except of motor vehicles and motorcycles" }
+  ];
+
+  const subSectorDetails = [
+    { NIC: "1071", Description: "Manufacture of Bakery Products" },
+    { NIC: "4630", Description: "Wholesale of food, beverages and tobacco" },
+    { NIC: "4721", Description: "Retail sale of food in specialized stores" }
+  ];
+
+  const subClassDetails = [
+    { NIC: "10711", Description: "Manufacture of Bread" },
+    { NIC: "46308", Description: "Wholesale of confectionery, bakery products" }
+  ];
 
   const getValueStyle = (key, value) => {
     if (key === 'Status' && value === 'Active') {
@@ -86,13 +105,37 @@ const BusinessSummary = ({ navigation }) => {
     </TouchableOpacity>
   )
 
-  const renderDetailsItem = (key, value, index, totalItems,isUdyam = false) => (
-    <View key={`${key}-${index}`} style={[
-      styles.detailItem,
-      (key === 'Financial Year' || (isUdyam && key === 'Registration Date')) && styles.borderBottom
-    ]}>
+   // New component for no data available message
+   const NoDataAvailable = ({ message }) => (
+    <View style={styles.noDataContainer}>
+      <Icon name="file-document-outline" size={100} color="#D8DFF2" />
+      <Text style={styles.noDataText}>{message}</Text>
+    </View>
+  );
+  const renderDetailsItem = (
+    key,
+    value,
+    index,
+    totalItems,
+    isUdyam = false
+  ) => (
+    <View 
+      key={`${key}-${index}`} 
+      style={[
+        styles.detailItem,
+        index % 2 === 0 ? styles.evenItem : null,
+        index === 0 && styles.firstDetailItem,
+        index === totalItems - 1 && styles.lastDetailItem,
+      ]}
+    >
+      {index % 2 !== 0 ? (
+        <LinearGradient
+          colors={['#D2DEF7', '#EFF4FF']}
+          style={[styles.oddItem, StyleSheet.absoluteFillObject]}
+        />
+      ) : null}
       <Text style={styles.detailLabel}>{key}</Text>
-      {key === 'Status' && value === 'Active' ? (
+      {key === "Status" && value === "Active" ? (
         <View style={styles.activeStatusContainer}>
           <View style={styles.activeBullet} />
           <Text style={getValueStyle(key, value)}>{value}</Text>
@@ -105,13 +148,21 @@ const BusinessSummary = ({ navigation }) => {
 
 
 
+
+
   const renderGSTAccordion = (details, isPrimary, index) => {
     const isOpen = openAccordionIndex === index;
     return (
       <View key={`gst-${index}`} style={styles.accordionContainer}>
         <TouchableOpacity
-          style={styles.accordionHeader}
-          onPress={() => setOpenAccordionIndex(isOpen ? null : index)}>
+          onPress={() => setOpenAccordionIndex(isOpen ? null : index)}
+          style={[
+            styles.accordionHeader,
+            {
+              backgroundColor: isOpen ? "#ffffff" : "#DCE5FF",
+              marginHorizontal: isOpen ? 10 : 0,
+            },
+          ]}>
           <View style={styles.gstinContainer}>
             <Icon name="file-document-outline" size={24} color="#ff8500" />
             <Text style={styles.gstinText}>{details.gstin}</Text>
@@ -122,12 +173,15 @@ const BusinessSummary = ({ navigation }) => {
               <Text style={styles.primaryText}>Primary</Text>
             </View>
           )}
-        
+
           <Icon
             name={isOpen ? "chevron-up" : "chevron-down"}
             size={24}
-            color="#ff8500"
-            style={styles.accodionRightIcon}
+            color={isOpen ? "#ff8500" : "#A2ACC6"}
+            style={[
+              styles.accodionRightIcon,
+              { backgroundColor: isOpen ? "#ffffff" : "#DCE5FF" },
+            ]}
           />
         </TouchableOpacity>
         <Collapsible collapsed={!isOpen}>
@@ -141,9 +195,12 @@ const BusinessSummary = ({ navigation }) => {
                 }}
               />
             </View>
-            {Object.entries(gstDetailsFull).map(([key, value], index, array) =>
-              renderDetailsItem(key, value, index, array.length)
-            )}
+            <View style={styles.gstinDetailsContainer}>
+              {Object.entries(gstDetailsFull).map(
+                ([key, value], index, array) =>
+                  renderDetailsItem(key, value, index, array.length)
+              )}
+            </View>
           </View>
         </Collapsible>
       </View>
@@ -152,24 +209,65 @@ const BusinessSummary = ({ navigation }) => {
 
   const GSTScene = () => (
     <ScrollView style={styles.sceneContainer}>
-      {gstDetails.map((detail, index) => renderGSTAccordion(detail, detail.isPrimary, index))}
+      {gstDetails.length > 0 ? (
+        gstDetails.map((detail, index) => renderGSTAccordion(detail, detail.isPrimary, index))
+      ) : (
+        <NoDataAvailable message="No GST Available" />
+      )}
     </ScrollView>
   );
 
+  
+  const renderTable = (data, title) => (
+    <View style={styles.tableContainer}>
+      <Text style={styles.tableTitle}>{title}</Text>
+      <View style={styles.tableWrapper}>
+        <View style={styles.tableHeader}>
+          <Text style={[styles.tableHeaderText, styles.nicColumn]}>NIC</Text>
+          <Text style={[styles.tableHeaderText, styles.descriptionColumn]}>Description</Text>
+        </View>
+        {data.map((item, index) => (
+          <View key={index} style={[styles.tableRow, index % 2 === 0 ? styles.evenRow : styles.oddRowTable]}>
+            {index % 2 !== 0 && ( 
+              <LinearGradient
+                colors={['#D2DEF7', '#EFF4FF']}
+                style={[StyleSheet.absoluteFillObject]}
+              />
+            )}
+            <Text style={[styles.tableCell, styles.nicColumn]}>{item.NIC}</Text>
+            <Text style={[styles.tableCell, styles.descriptionColumn]}>{item.Description}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+
+  
+
+
   const UDYAMScene = () => (
     <ScrollView style={styles.sceneContainer}>
-      <View style={styles.udyamContainer}>
-        <Text style={styles.udyamText}>
-          UDYAM Details
-        </Text>
-        <View style={styles.udyamDetailsContainer}>
-          {Object.entries(udyamDetails).map(([key, value], index, array) =>
-            renderDetailsItem(key, value, index, array.length, true)
-          )}
+      {Object.keys(udyamDetails).length > 0 ? (
+        <View style={styles.udyamContainer}>
+          <Text style={styles.udyamText}>UDYAM-MH26-938173</Text>
+          <View style={styles.udyamDetailsContainer}>
+            <View style={{borderWidth:1, borderColor:'#B3B9E1', borderRadius:5}}>
+              {Object.entries(udyamDetails).map(([key, value], index, array) =>
+                renderDetailsItem(key, value, index, array.length, true)
+              )}
+            </View>
+          </View>
+          {renderTable(industryDetails, 'Industry')}
+          {renderTable(subSectorDetails, 'Sub Sector')}
+          {renderTable(subClassDetails, 'Sub Class')}
         </View>
-      </View>
+      ) : (
+        <NoDataAvailable message="No UDYAM Available" />
+      )}
     </ScrollView>
   );
+
 
 
   const renderScene = SceneMap({
@@ -184,9 +282,14 @@ const BusinessSummary = ({ navigation }) => {
 
   return (
     <Layout>
-      <View style={{ padding: 16, backgroundColor: "#F8FAFF" }}>
+      <View style={{ padding: 16, backgroundColor: "#ffffff" }}>
         <ProgressBar progress={0.4} />
-        <Text style={styles.TitleText}>Business Summary</Text>
+        <View style={styles.TOpTitleContainer}>
+          <Text style={[styles.TitleText]}>Business Information</Text>
+          <Text style={styles.pageIndex}>
+            <Text style={styles.IndexActive}>2</Text>/4
+          </Text>
+        </View>
       </View>
       <View style={styles.container}>
         <TabView
@@ -204,26 +307,32 @@ const BusinessSummary = ({ navigation }) => {
             />
           )}
         />
-        <View style={styles.agreementContainer}>
-          <CheckBox
-            disabled={false}
-            value={agreementChecked}
-            onValueChange={(newValue) => setAgreementChecked(newValue)}
-            tintColors={{ true: "#ff8500", false: "#00194c" }}
-          />
-          <Text style={styles.agreementText}>
-            I, the{" "}
-            <Text style={{ textDecorationLine: "underline" }}>
-              undersigned borrower
+        {gstDetails.length > 0 && Object.keys(udyamDetails).length > 0  ? (
+          
+          <View style={styles.agreementContainer}>
+            <CheckBox
+              disabled={false}
+              value={agreementChecked}
+              onValueChange={(newValue) => setAgreementChecked(newValue)}
+              tintColors={{ true: "#ff8500", false: "#00194c" }}
+            />
+            <Text style={styles.agreementText}>
+              I, the{" "}
+              <Text style={{ textDecorationLine: "underline" }}>
+                undersigned borrower
+              </Text>
+              , confirm that the above information is correct and will be used
+              to assess my loan application and that I am responsible for the
+              accuracy and completeness of all details provided.
             </Text>
-            , confirm that the above information is correct and will be used to
-            assess my loan application and that I am responsible for the
-            accuracy and completeness of all details provided.
-          </Text>
-        </View>
+          </View>
+        ) : <></>}
       </View>
+
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton}  onPress={() => GoBack(navigation)}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => GoBack(navigation)}>
           <Text style={[styles.cancelButtonText]}>Back</Text>
         </TouchableOpacity>
         <View style={styles.proceedButtonContainer}>

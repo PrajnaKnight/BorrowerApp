@@ -427,7 +427,7 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
 
     }
 
-    navigation.navigate("PersonalLoan")
+    navigation.navigate("MsmeLoan")
 
   };
 

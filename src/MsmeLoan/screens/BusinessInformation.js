@@ -23,15 +23,21 @@ const BusinessInformation = ({ navigation }) => {
   const { setProgress } = useProgressBar(); 
 
   useEffect(() => {
-    setProgress(0.3);
+    setProgress(0.2);
   }, []);
 
   const renderHeader = () => (
-    <View style={{padding:16, backgroundColor: '#F8FAFF'}}>
-      <ProgressBar progress={0.3} />
-      <Text style={[styles.TitleText,  { fontSize: dynamicFontSize(24) }]}>
-        Business Information
-      </Text>
+    <View style={{padding:16, backgroundColor: '#ffffff'}}>
+      <ProgressBar progress={0.2} />
+      <View style={styles.TOpTitleContainer}>
+          <Text style={[styles.TitleText,  { fontSize: dynamicFontSize(24) }]}>
+            Business Information
+          </Text>
+          <Text style={styles.pageIndex}>
+            <Text style={styles.IndexActive}>1</Text>/4
+          </Text>
+      </View>
+     
     </View>
   );
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import CustomInput from '../../Common/components/ControlPanel/input';
 import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import Layout from '../../Common/components/Layout';
@@ -9,81 +9,92 @@ import RadioButton from '../../Common/components/ControlPanel/radioButton';
 import { useNavigation } from '@react-navigation/native';
 import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
 import ProgressBar from '../../Common/components/ControlPanel/progressBar';
-import {GoBack} from '../../PersonalLoan/services/Utils/ViewValidator';
+import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
+import MultiSelectDropdown from '../../Common/components/ControlPanel/MultiSelectDropdown';
 
 const BusinessProfileScreen = () => {
   const navigation = useNavigation();
+  const scrollViewRef = useRef(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [formData, setFormData] = useState({
-    entityPAN: 'ABIB0012E',
-    entityName: 'Knight Fintech',
-    proprietorName: 'ABC',
-    natureOfBusiness: '',
-    industryType: '',
-    industrySubType: '',
+    proprietorName: 'Leena Lalwani',
+    entityName: 'Leena Bakes',
+    natureOfBusiness: 'Customer Service',
     businessMode: 'B2B',
+    companyType: 'Micro',
+    primaryIndustry: '10-Manufacture of Food Products',
+    subSector: [],
+    subClass: [],
   });
 
+  const [subSectorSearch, setSubSectorSearch] = useState('');
+  const [filteredSubSectors, setFilteredSubSectors] = useState([]);
+
+  useEffect(() => {
+    setFilteredSubSectors(dropdownItems.subSector.filter(item => 
+      item.label.toLowerCase().includes(subSectorSearch.toLowerCase())
+    ));
+  }, [subSectorSearch]);
+
   const [errors, setErrors] = useState({});
+  const [openDropdown, setOpenDropdown] = useState(null);
   const { setProgress } = useProgressBar();
 
   useEffect(() => {
-    setProgress(0.5);
+    setProgress(0.1); // 10% complete as shown in the image
   }, []);
 
   // Dropdown items
-  const [natureOfBusinessItems, setNatureOfBusinessItems] = useState([
-    { label: 'Customer Service', value: 'Customer Service' },
-    { label: 'Manufacturing', value: 'Manufacturing' },
-    { label: 'Retail', value: 'Retail' },
-  ]);
-  const [industryTypeItems, setIndustryTypeItems] = useState([
-    { label: 'Food & Beverages', value: 'Food & Beverages' },
-    { label: 'Technology', value: 'Technology' },
-    { label: 'Healthcare', value: 'Healthcare' },
-  ]);
-  const [industrySubTypeItems, setIndustrySubTypeItems] = useState([
-    { label: 'Bakery Industry', value: 'Bakery Industry' },
-    { label: 'Restaurant', value: 'Restaurant' },
-    { label: 'Catering', value: 'Catering' },
-  ]);
-
-  // Selected items for dropdowns
-  const [selectedNatureOfBusiness, setSelectedNatureOfBusiness] = useState(null);
-  const [selectedIndustryType, setSelectedIndustryType] = useState(null);
-  const [selectedIndustrySubType, setSelectedIndustrySubType] = useState(null);
+  const dropdownItems = {
+    natureOfBusiness: [
+      { label: 'Customer Service', value: 'Customer Service' },
+      { label: 'Manufacturing', value: 'Manufacturing' },
+      { label: 'Retail', value: 'Retail' },
+    ],
+    companyType: [
+      { label: 'Micro', value: 'Micro' },
+      { label: 'Small', value: 'Small' },
+      { label: 'Medium', value: 'Medium' },
+    ],
+    primaryIndustry: [
+      { label: '10-Manufacture of Food Products', value: '10-Manufacture of Food Products' },
+      { label: '11-Manufacture of Bakery Pro...', value: '11-Manufacture of Bakery Pro...' },
+      { label: '12-Manufacture of Bread', value: '12-Manufacture of Bread' },
+    ],
+    subSector: [
+      { label: '1071-Manufacture of Bakery Products', value: '1071' },
+      { label: '1072-Manufacture of Sugar', value: '1072' },
+      { label: '1073-Manufacture of Coca, Chocolate', value: '1073' },
+    ],
+    subClass: [
+      { label: '1071-Manufacture of Bakery Products', value: '1071' },
+      { label: '1072-Manufacture of Sugar', value: '1072' },
+      { label: '1073-Manufacture of Coca, Chocolate', value: '1073' },
+    ],
+  };
 
   useEffect(() => {
     validateForm();
   }, [formData]);
 
-  useEffect(() => {
-    // Set initial selected items based on formData
-    setSelectedNatureOfBusiness(formData.natureOfBusiness);
-    setSelectedIndustryType(formData.industryType);
-    setSelectedIndustrySubType(formData.industrySubType);
-  }, []);
-
   const handleInputChange = (field, value) => {
     setFormData(prevData => ({
       ...prevData,
-      [field]: value || ''
+      [field]: value
     }));
-
-    // Update selected items for dropdowns
-    if (field === 'natureOfBusiness') setSelectedNatureOfBusiness(value);
-    if (field === 'industryType') setSelectedIndustryType(value);
-    if (field === 'industrySubType') setSelectedIndustrySubType(value);
   };
 
+  
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.entityPAN) newErrors.entityPAN = 'Entity PAN is required';
-    if (!formData.entityName) newErrors.entityName = 'Entity Name is required';
     if (!formData.proprietorName) newErrors.proprietorName = 'Proprietor Name is required';
+    if (!formData.entityName) newErrors.entityName = 'Business Name is required';
     if (!formData.natureOfBusiness) newErrors.natureOfBusiness = 'Nature of Business is required';
-    if (!formData.industryType) newErrors.industryType = 'Industry Type is required';
-    if (!formData.industrySubType) newErrors.industrySubType = 'Industry Sub Type is required';
+    if (!formData.businessMode) newErrors.businessMode = 'Business Mode is required';
+    if (!formData.companyType) newErrors.companyType = 'Company Type is required';
+    if (!formData.primaryIndustry) newErrors.primaryIndustry = 'Primary Industry is required';
+    if (formData.subSector.length === 0) newErrors.subSector = 'At least one Sub Sector is required';
+    if (formData.subClass.length === 0) newErrors.subClass = 'At least one Sub Class is required';
     setErrors(newErrors);
     setIsButtonDisabled(Object.keys(newErrors).length > 0);
   };
@@ -91,16 +102,17 @@ const BusinessProfileScreen = () => {
   const handleProceed = () => {
     if (!isButtonDisabled) {
       console.log('Form is valid. Proceeding...');
-     navigation.navigate('BusinessTypeDetails');
-      // Add your logic here to proceed
+      navigation.navigate('BusinessTypeDetails');
     } else {
       console.log('Form has errors. Please correct them.');
     }
   };
 
+  
+
   const renderInputField = (label, field, placeholder, readOnly = false) => {
     return (
-      <View>
+      <View style={styles.inputContainer}>
         <Text style={styles.label}>{label}</Text>
         <CustomInput
           placeholder={placeholder}
@@ -113,21 +125,31 @@ const BusinessProfileScreen = () => {
     );
   };
 
-  const renderDropdownField = (label, field, items, setItems, placeholder, zIndex, selectedValue, setSelectedValue, error) => {
+  const renderDropdownField = (label, field, placeholder, multiSelect = false) => {
     return (
-      <View>
+      <View style={styles.inputContainer}>
         <Text style={styles.label}>{label}</Text>
         <CustomDropdown
-          value={selectedValue}
+          value={formData[field]}
           setValue={(value) => {
-            setSelectedValue(value);
             handleInputChange(field, value);
+            setOpenDropdown(null);
           }}
-          items={items}
-          setItems={setItems}
+          items={dropdownItems[field]}
           placeholder={placeholder}
-          zIndex={zIndex}
-          error={error}
+          error={errors[field]}
+          multiple={multiSelect}
+          searchable={multiSelect}
+          open={openDropdown === field}
+          setOpen={(isOpen) => {
+            if (isOpen) {
+              setOpenDropdown(field);
+              scrollViewRef.current.scrollTo({ y: 0, animated: true });
+            } else {
+              setOpenDropdown(null);
+            }
+          }}
+          onClose={() => setOpenDropdown(null)}
         />
       </View>
     );
@@ -135,54 +157,36 @@ const BusinessProfileScreen = () => {
 
   return (
     <Layout>
-      <View style={{ padding: 16, backgroundColor: "#F8FAFF" }}>
-        <ProgressBar progress={0.5} />
-        <Text style={styles.TitleText}>Business Profile</Text>
+      <View style={{ padding: 16, backgroundColor: "#ffffff" }}>
+        <ProgressBar progress={0.4} />
+        <View style={styles.TOpTitleContainer}>
+          <Text style={[styles.TitleText]}>Business Information</Text>
+          <Text style={styles.pageIndex}>
+            <Text style={styles.IndexActive}>3</Text>/4
+          </Text>
+        </View>
       </View>
-      <View style={styles.container}>
-        <ScrollView>
-          {renderInputField("Entity PAN", "entityPAN", "Entity PAN", true)}
-          {renderInputField("Entity Name", "entityName", "Entity Name", true)}
-          {renderInputField(
-            "Proprietor Name",
-            "proprietorName",
-            "Proprietor Name",
-            true
-          )}
-          {renderDropdownField(
-            "Nature of Business",
-            "natureOfBusiness",
-            natureOfBusinessItems,
-            setNatureOfBusinessItems,
-            "Select Nature of Business",
-            3000,
-            selectedNatureOfBusiness,
-            setSelectedNatureOfBusiness
-          )}
-          {renderDropdownField(
-            "Industry Type",
-            "industryType",
-            industryTypeItems,
-            setIndustryTypeItems,
-            "Select Industry Type",
-            2000,
-            selectedIndustryType,
-            setSelectedIndustryType
-          )}
-          {renderDropdownField(
-            "Industry Sub Type",
-            "industrySubType",
-            industrySubTypeItems,
-            setIndustrySubTypeItems,
-            "Select Industry Sub Type",
-            1000,
-            selectedIndustrySubType,
-            setSelectedIndustrySubType
-          )}
-
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        keyboardShouldPersistTaps="handled">
+        {renderInputField(
+          "Proprietor Name",
+          "proprietorName",
+          "Proprietor Name",
+          true
+        )}
+        {renderInputField("Business Name", "entityName", "Business Name", true)}
+        {renderDropdownField(
+          "Nature of Business",
+          "natureOfBusiness",
+          "Select Nature of Business"
+        )}
+        <View style={styles.inputContainer}>
           <Text style={styles.label}>Business Mode</Text>
           <View style={styles.radioGroup}>
-            {["B2B", "B2C", "B2G"].map((mode) => (
+            {["B2B", "B2C", "B2G", "B2B2C"].map((mode) => (
               <RadioButton
                 key={mode}
                 label={mode}
@@ -191,11 +195,42 @@ const BusinessProfileScreen = () => {
               />
             ))}
           </View>
-        </ScrollView>
-      </View>
+        </View>
+        <View style={{ zIndex: 1000 }}>
+          {renderDropdownField(
+            "Company Type",
+            "companyType",
+            "Select Company Type"
+          )}
+        </View>
+        <View style={{ zIndex: 900 }}>
+          {renderDropdownField(
+            "Primary Industry",
+            "primaryIndustry",
+            "Search Primary Industry"
+          )}
+        </View>
+        <MultiSelectDropdown
+          label="Sub Sector"
+          items={dropdownItems.subSector}
+          selectedItems={formData.subSector}
+          onItemsChange={(items) => handleInputChange("subSector", items)}
+          placeholder="Search Sub Sector"
+          chipLabel={(item) => item.split("-")[0] + "-Manuf..."}
+        />
+        <MultiSelectDropdown
+          label="Sub Class"
+          items={dropdownItems.subClass}
+          selectedItems={formData.subClass}
+          onItemsChange={(items) => handleInputChange("subClass", items)}
+          placeholder="Search Sub Class"
+        />
+      </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton}  onPress={() => GoBack(navigation)}>
-          <Text style={styles.cancelButtonText}>Back</Text>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => GoBack(navigation)}>
+          <Text style={[styles.cancelButtonText]}>Back</Text>
         </TouchableOpacity>
         <View style={styles.proceedButtonContainer}>
           <ButtonComponent

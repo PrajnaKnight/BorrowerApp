@@ -67,7 +67,7 @@ const CustomDropdown = ({
         value={value}
         items={items}
         setOpen={setOpen}
-        onSelectItem={(value)=>setValue(value)}
+        onSelectItem={(item) => setValue(item.value)}
         setItems={setItems}
         placeholder={placeholder}
         searchable={searchable}
