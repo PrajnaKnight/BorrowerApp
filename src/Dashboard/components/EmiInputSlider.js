@@ -94,6 +94,7 @@ const EmiInputSlider = ({
   const handleSliderChange = (normalizedValue) => {
     const index = Math.round(normalizedValue * (labelValues.length - 1));
     const newValue = labelValues[index];
+
     onValueChange(newValue);
   };
 
@@ -104,6 +105,7 @@ const EmiInputSlider = ({
       numericValue = Number(numericValue.toFixed(2));
     } else {
       numericValue = Number(text.replace(/[^0-9]/g, ''));
+
     }
     onValueChange(numericValue);
   };
