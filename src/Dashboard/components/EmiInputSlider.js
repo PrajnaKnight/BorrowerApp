@@ -67,38 +67,45 @@ const EmiInputSlider = ({
   const [sliderValue, setSliderValue] = useState(0);
 
   useEffect(() => {
-    const normalizedValue = (value - labelValues[0]) / (labelValues[labelValues.length - 1] - labelValues[0]);
-    setSliderValue(normalizedValue);
+    const index = findClosestLabelIndex(value);
+    setSliderValue(index / (labelValues.length - 1));
   }, [value, labelValues]);
+
+  const findClosestLabelIndex = (val) => {
+    return labelValues.reduce((closestIndex, currentValue, currentIndex, array) => {
+      return Math.abs(currentValue - val) < Math.abs(array[closestIndex] - val) 
+        ? currentIndex 
+        : closestIndex;
+    }, 0);
+  };
+
 
   const formatDisplayValue = (val) => {
     if (isCurrency) {
       return `₹ ${formatIndianCurrency(val)}`;
     }
     if (isROI) {
-      return val.toFixed(2); // Display ROI with 2 decimal places
+      return val.toFixed(2);
     }
     return val.toString();
   };
 
+
   const handleSliderChange = (normalizedValue) => {
-    const range = labelValues[labelValues.length - 1] - labelValues[0];
-    let newValue = labelValues[0] + (normalizedValue * range);
-    if (isROI) {
-      newValue = Number(newValue.toFixed(2)); // Round to 2 decimal places for ROI
-    } else {
-      newValue = Math.round(newValue); // Round to nearest integer for other values
-    }
+    const index = Math.round(normalizedValue * (labelValues.length - 1));
+    const newValue = labelValues[index];
+
     onValueChange(newValue);
   };
 
   const handleTextChange = (text) => {
     let numericValue;
     if (isROI) {
-      numericValue = Number(text.replace(/[^0-9.]/g, '')); // Allow decimal for ROI
-      numericValue = Number(numericValue.toFixed(2)); // Limit to 2 decimal places
+      numericValue = Number(text.replace(/[^0-9.]/g, ''));
+      numericValue = Number(numericValue.toFixed(2));
     } else {
-      numericValue = Number(text.replace(/[^0-9]/g, '')); // Only integers for other values
+      numericValue = Number(text.replace(/[^0-9]/g, ''));
+
     }
     onValueChange(numericValue);
   };
@@ -106,7 +113,7 @@ const EmiInputSlider = ({
   const formatSliderLabel = (label) => {
     if (typeof label === 'number') {
       if (isROI) {
-        return `${label}%`; // Add percentage sign for ROI labels
+        return `${label}%`;
       }
       return formatCrLFormat(label);
     }
@@ -134,7 +141,7 @@ const EmiInputSlider = ({
           style={styles.slider}
           minimumValue={0}
           maximumValue={1}
-          step={0.001}
+          step={1 / (labelValues.length - 1)}
           value={sliderValue}
           onValueChange={handleSliderChange}
           minimumTrackTintColor="#0010AC"
@@ -152,6 +159,7 @@ const EmiInputSlider = ({
     </View>
   );
 };
+
 
 
 
