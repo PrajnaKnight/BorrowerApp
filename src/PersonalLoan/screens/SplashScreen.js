@@ -88,6 +88,8 @@ const SplashScreen = ({ navigation }) => {
       response.data.jumpTo = jumpTo
       response.data.isSelfEmployed = userAvailable.data.EmploymentType == "Self-Employed"
       dispatch(updateBreStatus(userAvailable.data.IsBREcompleted))
+      await StoreLeadId(userAvailable.data.leadID);
+      await StoreApplicantId(userAvailable.data.ApplicationID);
     }
 
 
