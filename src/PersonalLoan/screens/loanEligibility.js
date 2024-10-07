@@ -748,7 +748,7 @@ const LoanEligibilityScreen = ({ navigation }) => {
                       You are not eligible for selected loan amount
                     </Text>
                   )}
-                <ResponsiveEMILayout rateOfInterest={7.5} emiAmount={10000} />
+                <ResponsiveEMILayout rateOfInterest={rateOfInterest || 0} emiAmount={emiAmount || 0} />
                 </View>
               </View>
             </View>
