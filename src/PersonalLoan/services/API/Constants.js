@@ -1,7 +1,7 @@
 import { GetStoreAuthToken } from "../LOCAL/AsyncStroage"
 
 
-const BASE_URL = "https://demolosapi-qa.azurewebsites.net"
+const BASE_URL = "https://bankofproductlosapi.azurewebsites.net"
 // https://demolosapi-qa.azurewebsites.net
 // https://bankofproductlosapi.azurewebsites.net
 export const CREATE_BORROWER_LEAD = `${BASE_URL}/CreateBorrowerLead`
