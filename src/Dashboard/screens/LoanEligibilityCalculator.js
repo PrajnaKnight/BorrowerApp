@@ -21,6 +21,8 @@ const LoanEligibilityCalculator = ({ navigation }) => {
     grossSalary: 0,
     otherEMI: 0,
     deductions: 0,
+    otherIncome: 0,
+    netIncome: 0,
   });
   const [tenureRange, setTenureRange] = useState({ min: 12, max: 60 });
   const [isApplyButtonEnabled, setIsApplyButtonEnabled] = useState(false);
@@ -42,6 +44,8 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         loanTenure: 240,
         grossSalary: 40000,
         otherEMI: 0,
+        netIncome: 0,
+        otherIncome: 0,
         deductions: 5000,
       },
       tenureRange: {
@@ -63,6 +67,8 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         loanTenure: 60,
         grossSalary: 50000,
         otherEMI: 5000,
+        netIncome: 0,
+        otherIncome: 0,
         deductions: 0,
       },
       tenureRange: {
@@ -84,6 +90,8 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         loanTenure: 84,
         grossSalary: 50000,
         otherEMI: 5000,
+        netIncome: 0,
+        otherIncome: 0,
         deductions: 0,
       },
       tenureRange: {
@@ -131,7 +139,7 @@ const LoanEligibilityCalculator = ({ navigation }) => {
       console.error('Invalid tenure range:', range);
       return false;
     }
-    const { age, creditScore, loanTenure, grossSalary, otherEMI, deductions } = data;
+    const { age, creditScore, loanTenure, grossSalary, otherEMI, deductions, netIncome, otherIncome } = data;
     return (
       age >= 18 &&
       creditScore > 0 &&
@@ -139,6 +147,8 @@ const LoanEligibilityCalculator = ({ navigation }) => {
       loanTenure <= range.max &&
       grossSalary > 0 &&
       otherEMI >= 0 &&
+      netIncome >= 0 &&
+      otherIncome >= 0 &&
       deductions >= 0
     );
   };
@@ -259,6 +269,24 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               max={100000}
               step={100}
               onValueChange={(value) => handleSliderChange("otherEMI", value)}
+              isCurrency={true}
+            />
+             <InputSlider
+              label="Net Income"
+              value={formData.netIncome}
+              min={0}
+              max={1000000}
+              step={100}
+              onValueChange={(value) => handleSliderChange("netIncome", value)}
+              isCurrency={true}
+            />
+             <InputSlider
+              label="Other Income"
+              value={formData.otherIncome}
+              min={0}
+              max={1000000}
+              step={100}
+              onValueChange={(value) => handleSliderChange("otherIncome", value)}
               isCurrency={true}
             />
             <InputSlider
