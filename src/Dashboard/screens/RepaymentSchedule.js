@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, FlatList, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Feather from '@expo/vector-icons/Feather';
@@ -64,124 +64,302 @@ const RepaymentSchedule = ({ navigation, route }) => {
   // Sample data for the repayment schedule
   const repaymentData = [
     {
-        year: "2024",
-        emi: "2,35,417",
-        principal: "1,47,327",
-        interest: "88,090",
-        balance: "12,37,673",
-        details: [
-          { date: "05/05/2024", emi: "29,427", principal: "17,885", interest: "11,542", balance: "13,67,115" },
-          { date: "05/06/2024", emi: "29,427", principal: "18,035", interest: "11,393", balance: "13,49,080" },
-          { date: "05/07/2024", emi: "29,427", principal: "18,185", interest: "11,242", balance: "13,30,895" },
-          { date: "05/08/2024", emi: "29,427", principal: "18,336", interest: "11,091", balance: "13,12,559" },
-          { date: "05/09/2024", emi: "29,427", principal: "18,489", interest: "10,938", balance: "12,94,070" },
-          { date: "05/10/2024", emi: "29,427", principal: "18,643", interest: "10,784", balance: "12,75,426" },
-          { date: "05/11/2024", emi: "29,427", principal: "18,799", interest: "10,629", balance: "12,56,628" },
-          { date: "05/12/2024", emi: "29,427", principal: "10,472", interest: "10,472", balance: "12,37,673" },
-          // More monthly details...
-        ],
-      },
-      {
-        year: "2025",
-        emi: "3,53,126",
-        principal: "2,40,168",
-        interest: "1,12,957",
-        balance: "9,97,504",
-        details: [
-          { date: "05/05/2023", emi: "29,427", principal: "17,885", interest: "11,542", balance: "13,67,115" },
-          { date: "05/06/2023", emi: "29,427", principal: "18,035", interest: "11,393", balance: "13,49,080" },
-          // More monthly details...
-        ],
-      },
-      {
-        year: "2026",
-        emi: "3,53,126",
-        principal: "2,65,317",
-        interest: "87,809",
-        balance: "7,32,187",
-        details: [
-            { date: "05/05/2023", emi: "29,427", principal: "17,885", interest: "11,542", balance: "13,67,115" },
-          { date: "05/06/2023", emi: "29,427", principal: "18,035", interest: "11,393", balance: "13,49,080" },
-          // More monthly details...
-          ],
-       },
-       {
-        year: "2027",
-        emi: "3,53,126",
-        principal: "2,93,099",
-        interest: "60,026",
-        balance: "4,39,087",
-        details: [
-            { date: "05/05/2023", emi: "29,427", principal: "17,885", interest: "11,542", balance: "13,67,115" },
-          { date: "05/06/2023", emi: "29,427", principal: "18,035", interest: "11,393", balance: "13,49,080" },
-          // More monthly details...
-        ],
-       },
-       {
-        year: "2028",
-        emi: "3,53,126",
-        principal: "3,23,791",
-        interest: "29,335",
-        balance: "1,15,297",
-        details: [
-            { date: "05/05/2023", emi: "29,427", principal: "17,885", interest: "11,542", balance: "13,67,115" },
-          { date: "05/06/2023", emi: "29,427", principal: "18,035", interest: "11,393", balance: "13,49,080" },
-          // More monthly details...
-        ],
-       },
-       {
-        year: "2029",
-        emi: "1,17,709",
-        principal: "1,15,297",
-        interest: "2,412",
-        balance: "0",
-        details: [
-           
-        ],
-       }
+      year: "2024",
+      emi: "2,35,417",
+      principal: "1,47,327",
+      interest: "88,090",
+      balance: "12,37,673",
+      details: [
+        {
+          date: "05/05/2024",
+          emi: "29,427",
+          principal: "17,885",
+          interest: "11,542",
+          balance: "13,67,115",
+        },
+        {
+          date: "05/06/2024",
+          emi: "29,427",
+          principal: "18,035",
+          interest: "11,393",
+          balance: "13,49,080",
+        },
+        {
+          date: "05/07/2024",
+          emi: "29,427",
+          principal: "18,185",
+          interest: "11,242",
+          balance: "13,30,895",
+        },
+        {
+          date: "05/08/2024",
+          emi: "29,427",
+          principal: "18,336",
+          interest: "11,091",
+          balance: "13,12,559",
+        },
+        {
+          date: "05/09/2024",
+          emi: "29,427",
+          principal: "18,489",
+          interest: "10,938",
+          balance: "12,94,070",
+        },
+        {
+          date: "05/10/2024",
+          emi: "29,427",
+          principal: "18,643",
+          interest: "10,784",
+          balance: "12,75,426",
+        },
+        {
+          date: "05/11/2024",
+          emi: "29,427",
+          principal: "18,799",
+          interest: "10,629",
+          balance: "12,56,628",
+        },
+        {
+          date: "05/12/2024",
+          emi: "29,427",
+          principal: "10,472",
+          interest: "10,472",
+          balance: "12,37,673",
+        },
+        // More monthly details...
+      ],
+    },
+    {
+      year: "2025",
+      emi: "3,53,126",
+      principal: "2,40,168",
+      interest: "1,12,957",
+      balance: "9,97,504",
+      details: [
+        {
+          date: "05/05/2023",
+          emi: "29,427",
+          principal: "17,885",
+          interest: "11,542",
+          balance: "13,67,115",
+        },
+        {
+          date: "05/06/2023",
+          emi: "29,427",
+          principal: "18,035",
+          interest: "11,393",
+          balance: "13,49,080",
+        },
+        // More monthly details...
+      ],
+    },
+    {
+      year: "2026",
+      emi: "3,53,126",
+      principal: "2,65,317",
+      interest: "87,809",
+      balance: "7,32,187",
+      details: [
+        {
+          date: "05/05/2023",
+          emi: "29,427",
+          principal: "17,885",
+          interest: "11,542",
+          balance: "13,67,115",
+        },
+        {
+          date: "05/06/2023",
+          emi: "29,427",
+          principal: "18,035",
+          interest: "11,393",
+          balance: "13,49,080",
+        },
+        // More monthly details...
+      ],
+    },
+    {
+      year: "2027",
+      emi: "3,53,126",
+      principal: "2,93,099",
+      interest: "60,026",
+      balance: "4,39,087",
+      details: [
+        {
+          date: "05/05/2023",
+          emi: "29,427",
+          principal: "17,885",
+          interest: "11,542",
+          balance: "13,67,115",
+        },
+        {
+          date: "05/06/2023",
+          emi: "29,427",
+          principal: "18,035",
+          interest: "11,393",
+          balance: "13,49,080",
+        },
+        // More monthly details...
+      ],
+    },
+    {
+      year: "2028",
+      emi: "3,53,126",
+      principal: "3,23,791",
+      interest: "29,335",
+      balance: "1,15,297",
+      details: [
+        {
+          date: "05/05/2023",
+          emi: "29,427",
+          principal: "17,885",
+          interest: "11,542",
+          balance: "13,67,115",
+        },
+        {
+          date: "05/06/2023",
+          emi: "29,427",
+          principal: "18,035",
+          interest: "11,393",
+          balance: "13,49,080",
+        },
+        // More monthly details...
+      ],
+    },
+    {
+      year: "2029",
+      emi: "1,17,709",
+      principal: "1,15,297",
+      interest: "2,412",
+      balance: "0",
+      details: [
+        {
+          date: "05/05/2024",
+          emi: "29,427",
+          principal: "17,885",
+          interest: "11,542",
+          balance: "13,67,115",
+        },
+        {
+          date: "05/06/2024",
+          emi: "29,427",
+          principal: "18,035",
+          interest: "11,393",
+          balance: "13,49,080",
+        },
+        {
+          date: "05/07/2024",
+          emi: "29,427",
+          principal: "18,185",
+          interest: "11,242",
+          balance: "13,30,895",
+        },
+        {
+          date: "05/08/2024",
+          emi: "29,427",
+          principal: "18,336",
+          interest: "11,091",
+          balance: "13,12,559",
+        },
+        {
+          date: "05/09/2024",
+          emi: "29,427",
+          principal: "18,489",
+          interest: "10,938",
+          balance: "12,94,070",
+        },
+        {
+          date: "05/10/2024",
+          emi: "29,427",
+          principal: "18,643",
+          interest: "10,784",
+          balance: "12,75,426",
+        },
+        {
+          date: "05/11/2024",
+          emi: "29,427",
+          principal: "18,799",
+          interest: "10,629",
+          balance: "12,56,628",
+        },
+        {
+          date: "05/12/2024",
+          emi: "29,427",
+          principal: "10,472",
+          interest: "10,472",
+          balance: "12,37,673",
+        },
+        {
+          date: "05/11/2024",
+          emi: "29,427",
+          principal: "18,799",
+          interest: "10,629",
+          balance: "12,56,628",
+        },
+        {
+          date: "05/12/2024",
+          emi: "29,427",
+          principal: "10,472",
+          interest: "10,472",
+          balance: "12,37,673",
+        },
+      ],
+    },
   ];
 
   return (
     <Layout>
       <View style={styles.container}>
         <View style={styles.RepaymentScheduleheader}>
-          <Text style={styles.RepaymentScheduleheaderTitle}>Repayment Schedule</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <Feather name="download" size={24} color="#ff8500" style={{ marginRight: 10 }}  />
+          <Text style={styles.RepaymentScheduleheaderTitle}>
+            Repayment Schedule
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Feather
+              name="download"
+              size={24}
+              color="#ff8500"
+              style={{ marginRight: 10 }}
+            />
             <Ionicons name="share-social" size={24} color="#00194c" />
           </View>
         </View>
-        <View style={styles.content}>
-          <Text style={styles.RepaymentSchedulesubtitle}>Enter a start date to know your loan repayment schedule</Text>
-          <Text style={styles.label}>Start Date</Text>
-          <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-            <TextInput
-              style={styles.input}
-              value={startDate.toLocaleDateString()}
-              editable={false}
+        <ScrollView style={{marginBottom:10}}>
+          <View style={styles.content}>
+            <Text style={styles.RepaymentSchedulesubtitle}>
+              Enter a start date to know your loan repayment schedule
+            </Text>
+            <Text style={styles.label}>Start Date</Text>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <TextInput
+                style={styles.input}
+                value={startDate.toLocaleDateString()}
+                editable={false}
+              />
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={startDate}
+                mode="date"
+                display="default"
+                onChange={onDateChange}
+              />
+            )}
+            <View style={styles.tableHeader}>
+              <Text style={styles.tableHeaderText}>Year</Text>
+              <Text style={styles.tableHeaderText}>EMI {"\n"} (A+B)</Text>
+              <Text style={styles.tableHeaderText}>Principal {"\n"} (A)</Text>
+              <Text style={styles.tableHeaderText}>Interest {"\n"} (B)</Text>
+              <Text style={[styles.tableHeaderText, styles.noBorder]}>
+                Balance
+              </Text>
+            </View>
+            <FlatList
+              data={repaymentData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.year}
             />
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              value={startDate}
-              mode="date"
-              display="default"
-              onChange={onDateChange}
-            />
-          )}
-          <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderText}>Year</Text>
-            <Text style={styles.tableHeaderText}>EMI {'\n'}  (A+B)</Text>
-            <Text style={styles.tableHeaderText}>Principal {'\n'}  (A)</Text>
-            <Text style={styles.tableHeaderText}>Interest {'\n'}  (B)</Text>
-            <Text style={[styles.tableHeaderText, styles.noBorder]}>Balance</Text>
           </View>
-          <FlatList
-            data={repaymentData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.year}
-          />
-        </View>
+        </ScrollView>
       </View>
     </Layout>
   );

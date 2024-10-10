@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, ImageBackground, Modal, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../components/Header';
-import InputSlider from '../components/EmiInputSlider';
+import InputSlider from '../components/InputSlider';
 import LoanTenureSlider from '../components/LoanTenureSlider';
 import ProceedButton from '../components/ProceedButton';
 import Layout from '../components/Layout';
@@ -221,20 +221,6 @@ const EMICalculator = ({ navigation }) => {
               step={10000}
               onValueChange={(value) => handleSliderChange("loanAmount", value)}
               isCurrency={true}
-              sliderLabels={[
-                "10K",
-                "1L",
-                "5L",
-                "10L",
-                "50L",
-                "1Cr",
-                "5Cr",
-                "10Cr",
-              ]}
-              labelValues={[
-                10000, 100000, 500000, 1000000, 5000000, 10000000,
-                50000000, 100000000,
-              ]}
             />
             <InputSlider
               label="Rate of Interest (ROI)"
@@ -246,11 +232,8 @@ const EMICalculator = ({ navigation }) => {
                 handleSliderChange("interestRate", value)
               }
               suffix="%"
-              sliderLabels={["0", "10", "15", "20", "25", "30", "40", "50"]}
-              labelValues={[0, 10, 15, 20, 25, 30, 40, 50]}
               isROI={true}
             />
-
             <LoanTenureSlider
               label="Loan Tenure"
               value={formData.loanTenure}
@@ -260,7 +243,7 @@ const EMICalculator = ({ navigation }) => {
               onValueChange={(value) => handleSliderChange("loanTenure", value)}
               toggle={tenureUnit}
               onToggle={handleTenureToggle}
-              sliderLabels={tenureUnit === 'Yr' ? ['1', '10', '15', '20', '30'] : ['1', '120', '240', '360']}
+              sliderLabels={[tenureRange.min.toString(), tenureRange.max.toString()]}
             />
           </View>
           {/* <ProceedButton onPress={() => {}} text="CALCULATE" /> */}

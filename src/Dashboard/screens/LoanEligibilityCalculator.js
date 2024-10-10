@@ -209,7 +209,7 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               step={1}
               onValueChange={(value) => handleSliderChange("age", value)}
             />
-            <EmiInputSlider
+            <InputSlider
               label="Credit Score"
               value={formData.creditScore}
               min={300}
@@ -218,10 +218,6 @@ const LoanEligibilityCalculator = ({ navigation }) => {
               onValueChange={(value) =>
                 handleSliderChange("creditScore", value)
               }
-              sliderLabels={['-1','300', '500', '700', '900']}
-              labelValues={[
-                -1, 300, 500, 700, 900
-              ]}
             />
             <LoanTenureSlider
               label="Loan Tenure"
