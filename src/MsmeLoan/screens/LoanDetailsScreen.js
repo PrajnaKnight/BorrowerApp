@@ -46,7 +46,7 @@ const LoanDetailsScreen = () => {
   const dynamicFontSize = (size) => size + fontSize;
 
   const handleProceed = () => {
-    navigation.navigate("BusinessInfo");
+    navigation.navigate("BusinessDocuments");
     console.log('Proceed button clicked');
   };
   

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
@@ -18,14 +18,37 @@ const CustomDropdown = ({
   tickIconColor = '#ff8500',
   selectedItemBackgroundColor = "#758BFD",
   focusedBorderColor = '#D8DFF2',
+  label,
+  onOpen,
+  onClose,
 }) => {
   const [open, setOpen] = useState(false);
+  const [dropdownHeight, setDropdownHeight] = useState(300);
+
+  useEffect(() => {
+    if (open) {
+      const windowHeight = Dimensions.get('window').height;
+      const maxHeight = windowHeight * 0.4; // 40% of screen height
+      setDropdownHeight(Math.min(items.length * 50, maxHeight));
+      onOpen && onOpen();
+    } else {
+      onClose && onClose();
+    }
+  }, [open, items]);
 
   const styles = applyFontFamily({
+    container: {
+      marginBottom: 15,
+    },
+    label: {
+      fontSize: 14,
+      marginBottom: 5,
+      color: '#00194c',
+      fontWeight:'500'
+    },
     dropdownBorder: {
       borderColor: "#D8DFF2",
-      marginBottom: 15,
-      maxHeight: 300,
+      maxHeight: dropdownHeight,
     },
     dropdown: {
       borderWidth: 1,
@@ -33,7 +56,6 @@ const CustomDropdown = ({
       color: "#fff",
       fontSize: 15,
       backgroundColor: "#ffffff",
-      zIndex: 10000,
       ...Platform.select({
         web: {
           minHeight: 42,
@@ -41,7 +63,7 @@ const CustomDropdown = ({
       }),
     },
     dropdownText: {
-      color: '#333',
+      color: '#00194c',
       fontSize: 14,
     },
     placeholderText: {
@@ -58,16 +80,15 @@ const CustomDropdown = ({
     },
   });
 
-
-
   return (
-    <View style={{ zIndex: zIndex }}>
+    <View style={[styles.container, { zIndex }]}>
+      {label && <Text style={styles.label}>{label}</Text>}
       <DropDownPicker
         open={open}
         value={value}
         items={items}
         setOpen={setOpen}
-        onSelectItem={(item) => setValue(item.value)}
+        setValue={setValue}
         setItems={setItems}
         placeholder={placeholder}
         searchable={searchable}
@@ -114,8 +135,7 @@ const CustomDropdown = ({
         scrollViewProps={{
           nestedScrollEnabled: true,
         }}
-        maxHeight={300}
-       
+        maxHeight={dropdownHeight}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>

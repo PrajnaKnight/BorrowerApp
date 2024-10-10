@@ -1860,5 +1860,13 @@ outlineStyle: 'solid',
   dashItemDone: {
     backgroundColor: '#ffffff',
   },
- 
+  inputWithIcon: {
+    paddingRight: 40, 
+  },
+  iconContainerInput: {
+    position: 'absolute',
+    right: 10,
+    top: '50%',
+    transform: [{ translateY: -18 }], 
+  },
 });

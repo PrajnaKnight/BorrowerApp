@@ -1,11 +1,15 @@
 import { StyleSheet, Platform, Dimensions } from "react-native";
 import applyFontFamily from "./applyFontFamily";
+import { PositionError } from "react-native-geolocation-service";
+import { colors } from "react-native-swiper-flatlist/src/themes";
 
 // Get the device's width and height
 const window = Dimensions.get('window');
 const deviceWidth = window.width;
 
 const { width, height } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
+const cardWidth = (screenWidth - 40) / 3; 
 
 
 // You can create your own "media query" functions
@@ -125,6 +129,7 @@ export const styles = applyFontFamily({
     paddingLeft: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#B3B9E1",
+    paddingVertical: 16,
   },
   accordionHeaderRight: {
     flexDirection: "row",
@@ -153,9 +158,9 @@ export const styles = applyFontFamily({
     borderColor: "#B3B9E1",
     borderRadius: 5,
     marginTop: 10,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
-  
+
   detailItem: {
     flexDirection: "row",
     paddingHorizontal: 6,
@@ -170,7 +175,7 @@ export const styles = applyFontFamily({
   lastDetailItem: {
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    borderBottomWidth: 0, 
+    borderBottomWidth: 0,
   },
   detailLabel: {
     color: "#00194C",
@@ -229,7 +234,6 @@ export const styles = applyFontFamily({
   accodionRightIcon: {
     backgroundColor: "#ff8500",
     padding: 4,
-    paddingVertical: 16,
     paddingHorizontal: 8,
     borderTopRightRadius: 8,
   },
@@ -315,7 +319,7 @@ export const styles = applyFontFamily({
     color: "#00194c",
     backgroundColor: "#ffffff",
     paddingHorizontal: 16,
-    paddingTop:16
+    paddingTop: 16,
   },
   udyamDetailsContainer: {
     padding: 16,
@@ -343,21 +347,21 @@ export const styles = applyFontFamily({
   },
   chartContainer: {
     alignItems: "center",
-    marginBottom: 10,
   },
   loanIdcontainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    shadowColor: "#000",
+    shadowColor: "#A2ACC6",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
-    marginVertical: 30,
+    elevation: 2,
+    marginVertical: 16,
     borderWidth: 1,
     borderColor: "#A2ACC6",
+
   },
   loanIdiconContainer: {
     backgroundColor: "#FF9800",
@@ -451,10 +455,10 @@ export const styles = applyFontFamily({
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 16,
-    marginVertical: 20,
-    shadowColor: "#E2ECFF",
+    margin: 5,
+    shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 4,
     alignItems: "center",
@@ -506,17 +510,17 @@ export const styles = applyFontFamily({
     marginBottom: 20,
     marginHorizontal: 16,
   },
-  tableWrapper:{
+  tableWrapper: {
     borderRadius: 5,
-    overflow: 'hidden',
-    borderWidth: 1, 
-    borderColor: '#B3B9E1'
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#B3B9E1",
   },
   tableTitle: {
     fontSize: 16,
     fontWeight: "bold",
     padding: 6,
-    color:'#00194C'
+    color: "#00194C",
   },
   tableHeader: {
     flexDirection: "row",
@@ -524,12 +528,12 @@ export const styles = applyFontFamily({
   },
   tableHeaderText: {
     fontWeight: "500",
-    color:'#ffffff',
+    color: "#ffffff",
     padding: 6,
   },
   tableRow: {
     flexDirection: "row",
-    alignItems :'center'
+    alignItems: "center",
   },
   evenRow: {
     backgroundColor: "#FFFFFF",
@@ -545,26 +549,345 @@ export const styles = applyFontFamily({
   },
   nicColumn: {
     width: 50,
-   
   },
   descriptionColumn: {
     flex: 1,
     borderLeftWidth: 1,
-    borderLeftColor: '#B3B9E1',
+    borderLeftColor: "#B3B9E1",
   },
   noDataContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 100,
   },
   noDataText: {
     fontSize: 24,
-    color: '#00194C',
+    color: "#00194C",
     marginTop: 10,
   },
-  oddRowTable:{
-    backgroundColor: '#ffffff'
+  oddRowTable: {
+    backgroundColor: "#ffffff",
   },
+  optionalLabel: {
+    fontSize: 10,
+    color: "#FF8500",
+    marginLeft: 5,
+    fontStyle: "italic",
+    marginBottom: 8,
+    lineHeight: 10,
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  noteText: {
+    fontSize: 12,
+    color: "#666",
+    fontStyle: "italic",
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  ownerName: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#00194C",
+    marginVertical: 10,
+    backgroundColor: "#ffffff",
+    padding: 10,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderRadius: 5,
+    marginRight:10,
+  },
+
+  activeOwnerName:{
+    color:"#FF8500",
+    fontWeight:'500',
+  },
+  //Tabs styles
+  tabContainer: {
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  Addresstab: {
+    flex: 1,
+    padding: 10,
+    alignItems: "center",
+    backgroundColor: "#E5ECFC",
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  AddressActivetab: {
+    backgroundColor: "#002777",
+  },
+  AdresstabText: {
+    fontSize: 16,
+    color: "#B2C2EE",
+  },
+  AdressActivetabText: {
+    color: "#ffffff",
+  },
+  formContainer: {
+    flex: 1,
+  },
+  addressForm: {
+    marginTop: 15,
+  },
+  accountIconsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  accountIcon: {
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  selectedAccountIcon: {
+    borderColor: "#000565",
+  },
+  deleteIcon: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  addAccountIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: "#2B478B",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  PDtabContainer:{
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  PDtab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  PDselectedTab: {
+    backgroundColor: '#000565',
+  },
+  PDtabText: {
+    color: '#000565',
+    fontWeight: '500',
+  },
+  PDselectedTabText: {
+    color: '#FFFFFF',
+  },
+  idTypeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  idTypeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#D8DFF2',
+    width: '30%',
+  },
+  selectedIdType: {
+    backgroundColor: '#000565',
+  },
+  idTypeText: {
+    marginTop: 4,
+    color: '#000565',
+    fontSize: 12,
+  },
+  selectedIdTypeText: {
+    color: '#FFFFFF',
+  },
+  gstinInputContainer: {
+    marginBottom: 10, 
+  },
+  gstinInputContainerDelete:{
+    backgroundColor:'#fffaf5',
+    padding:16,
+    borderRadius:8,
+  },
+  gstdeleteButton: {
+    alignSelf: 'flex-end',
+    padding: 5,
+  },
+  gstdeleteButtonText: {
+    color: '#ff8500',
+  },
+  addGSTINButton: {
+    alignItems: 'center',
+    marginBottom:16
+  },
+  addGSTINButtonText: {
+    color: '#758BFD',
+    fontSize: 14,
+    fontWeight:'500'
+  },
+  GSTradioGroup:{
+    flexDirection:'row',  
+    alignItems:'center',
+    marginBottom:16
+  },
+  match:{
+    color:'#00B436'
+  },
+  noMatch:{
+    color:'red'
+  },
+  statusMessage:{
+   fontSize:12,
+   marginBottom:10,
   
+  },
+  // personal documents styles statrs
+  applicantTabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 5,
+  },
+  applicantTab: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginHorizontal: 5,
+    shadowColor:'#000',
+    shadowOffset:{width:0,height:2},  
+    shadowOpacity:0.25,
+    shadowRadius:3.84,  
+    elevation:5,
+  },
+  applicantTabText: {
+    color: '#000080',
+    fontWeight: 'bold',
+  },
+  selectedApplicantTabText: {
+    color: '#ff8500',
+  },
+  PDtabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  PDtab: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#E5ECFC',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  PDselectedTab: {
+    backgroundColor: '#2B478B',
+  },
+  PDtabText: {
+    color: '#000080',
+    fontWeight: 'bold',
+  },
+  PDselectedTabText: {
+    color: '#FFFFFF',
+  },
+  sectionTitle: {
+    fontSize: 16,
+    marginVertical: 10,
+    color:'#00194c',
+    fontWeight:'500'
+  },
+  carouselContent: {
+    paddingHorizontal: 10,
+  },
+  carouselItem: {
+    width: cardWidth - 10,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 10,
+    marginHorizontal: 5,
+  },
+  activeCarouselItem: {
+    backgroundColor: '#00194c',
+  },
+  carouselItemText: {
+    marginTop: 5,
+    fontSize: 12,
+    color: '#00194c',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  activeCarouselItemText: {
+    color: '#FFFFFF',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  paginationDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#CCCCCC',
+    marginHorizontal: 3,
+  },
+  activePaginationDot: {
+    backgroundColor: '#FF8800',
+    width: 16,
+    borderRadius: 8,
+  },
+  // personal documents styles ends
+  datePickerContainer: {
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  dateLabel: {
+    fontSize: 14,
+    color: '#00194c',
+    marginBottom: 5,
+    fontWeight:'500',
+  },
+  dateButton: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dateButtonText: {
+    fontSize: 15,
+    color: '#1F2937',
+  },
 });

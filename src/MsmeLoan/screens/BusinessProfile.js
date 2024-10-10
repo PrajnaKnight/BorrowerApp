@@ -16,6 +16,8 @@ const BusinessProfileScreen = () => {
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isRegisteredWithGSTIN, setIsRegisteredWithGSTIN] = useState(true);
+  const [gstinNumbers, setGstinNumbers] = useState(['']);
   const [formData, setFormData] = useState({
     proprietorName: 'Leena Lalwani',
     entityName: 'Leena Bakes',
@@ -125,35 +127,90 @@ const BusinessProfileScreen = () => {
     );
   };
 
+
   const renderDropdownField = (label, field, placeholder, multiSelect = false) => {
     return (
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>{label}</Text>
         <CustomDropdown
+          label={label}
           value={formData[field]}
-          setValue={(value) => {
-            handleInputChange(field, value);
-            setOpenDropdown(null);
-          }}
+          setValue={(value) => handleInputChange(field, value)}
           items={dropdownItems[field]}
+          setItems={(items) => {/* Handle items update if needed */}}
           placeholder={placeholder}
           error={errors[field]}
-          multiple={multiSelect}
           searchable={multiSelect}
-          open={openDropdown === field}
-          setOpen={(isOpen) => {
-            if (isOpen) {
-              setOpenDropdown(field);
-              scrollViewRef.current.scrollTo({ y: 0, animated: true });
-            } else {
-              setOpenDropdown(null);
-            }
+          zIndex={1000 - Object.keys(dropdownItems).indexOf(field)} // This ensures proper layering
+          onOpen={() => {
+            setOpenDropdown(field);
+            scrollViewRef.current.scrollTo({ y: 0, animated: true });
           }}
           onClose={() => setOpenDropdown(null)}
         />
       </View>
     );
   };
+
+  const handleGSTINChange = (index, value) => {
+    const updatedGSTINs = [...gstinNumbers];
+    updatedGSTINs[index] = value;
+    setGstinNumbers(updatedGSTINs);
+  };
+
+  const addGSTINNumber = () => {
+    setGstinNumbers([...gstinNumbers, '']);
+  };
+
+  const removeGSTINNumber = (index) => {
+    const updatedGSTINs = gstinNumbers.filter((_, i) => i !== index);
+    setGstinNumbers(updatedGSTINs);
+  };
+
+  const renderGSTINSection = () => (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>Registered with GSTIN?</Text>
+      <View style={styles.GSTradioGroup}>
+        <RadioButton
+          label="YES"
+          isSelected={isRegisteredWithGSTIN}
+          onPress={() => setIsRegisteredWithGSTIN(true)}
+        />
+        <RadioButton
+          label="NO"
+          isSelected={!isRegisteredWithGSTIN}
+          onPress={() => setIsRegisteredWithGSTIN(false)}
+        />
+      </View>
+      {isRegisteredWithGSTIN && (
+        <View>
+          {gstinNumbers.map((gstin, index) => (
+            <View key={index} style={[styles.gstinInputContainer, index > 0 && styles.gstinInputContainerDelete]}>
+              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+              <Text style={styles.label}>GSTIN Number</Text>
+              {index > 0 && (
+                <TouchableOpacity
+                  style={styles.gstdeleteButton}
+                  onPress={() => removeGSTINNumber(index)}
+                >
+                  <Text style={styles.gstdeleteButtonText}>Delete</Text>
+                </TouchableOpacity>
+              )}
+              </View>
+              <CustomInput
+                placeholder="Enter GSTIN Number"
+                value={gstin}
+                onChangeText={(text) => handleGSTINChange(index, text)}
+              />
+            
+            </View>
+          ))}
+          <TouchableOpacity style={styles.addGSTINButton} onPress={addGSTINNumber}>
+            <Text style={styles.addGSTINButtonText}>Add GSTIN Number</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
 
   return (
     <Layout>
@@ -195,21 +252,18 @@ const BusinessProfileScreen = () => {
               />
             ))}
           </View>
+          {renderGSTINSection()}
         </View>
-        <View style={{ zIndex: 1000 }}>
           {renderDropdownField(
             "Company Type",
             "companyType",
             "Select Company Type"
           )}
-        </View>
-        <View style={{ zIndex: 900 }}>
           {renderDropdownField(
             "Primary Industry",
             "primaryIndustry",
             "Search Primary Industry"
           )}
-        </View>
         <MultiSelectDropdown
           label="Sub Sector"
           items={dropdownItems.subSector}

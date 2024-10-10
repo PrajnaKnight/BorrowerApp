@@ -50,7 +50,7 @@ const BusinessLoanEligibilityScreen = ({ navigation }) => {
   const handleProceed = () => {
     if (!isButtonDisabled) {
       console.log('Form is valid. Proceeding...');
-      navigation.navigate('BusinessBankDetails');
+      navigation.navigate('PersonalDocuments');
     } else {
       console.log('Form has errors. Please correct them.');
     }
@@ -61,9 +61,11 @@ const BusinessLoanEligibilityScreen = ({ navigation }) => {
 
   return (
     <Layout>
-      <View style={{ padding: 16, backgroundColor: "#F8FAFF" }}>
+      <View style={{ padding: 16, backgroundColor: "#ffffff" }}>
         <ProgressBar progress={0.7} />
+        <View style={styles.TOpTitleContainer}>
         <Text style={styles.TitleText}>Business Loan Eligibility</Text>
+        </View>
       </View>
       <KeyboardAvoidingView
         style={styles.container}
@@ -78,7 +80,7 @@ const BusinessLoanEligibilityScreen = ({ navigation }) => {
           </Text>
           <Text
             style={[styles.approvalText, { fontSize: dynamicFontSize(16) }]}>
-            Your business loan request has been approved up to ₹10,00,000
+            Your business loan request has been approved up to <Text style={{color:'#ff8500'}}>₹10,00,000</Text>
           </Text>
 
           <View style={styles.chartContainer}>

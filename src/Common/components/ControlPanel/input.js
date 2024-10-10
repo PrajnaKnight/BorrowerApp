@@ -6,7 +6,7 @@ import MaskInput from 'react-native-mask-input';
 import { FlatList } from 'react-native';
 import { ListViewBase } from 'react-native';
 
-const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTextEntry, onChangeText, maxLength, readOnly, value, cityOrState = false, error, autoCapitalize, onEndEditing, widthPercentage = "100%" }) => {
+const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTextEntry, onChangeText, maxLength, readOnly, value, cityOrState = false, error, autoCapitalize, onEndEditing, widthPercentage = "100%", icon=null }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   // Handle focus only if not read-only
@@ -37,8 +37,10 @@ const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTe
           style={[
             styles.input,
             isFocused && styles.inputFocused,
-            (readOnly || cityOrState) && styles.inputReadOnly, // Apply read-only style if readOnly is true
-            style, { fontSize: dynamicFontSize(styles.input.fontSize) }
+            (readOnly || cityOrState) && styles.inputReadOnly,
+            style, 
+            { fontSize: dynamicFontSize(styles.input.fontSize) },
+            icon && styles.inputWithIcon // Add padding if there's an icon
           ]}
           onEndEditing={(e) => { onEndEditing != null ? onEndEditing(e) : null }}
           onChangeText={readOnly ? null : onChangeText} // Disable onChangeText if readOnly
@@ -53,6 +55,11 @@ const CustomInput = ({ style, onFocusChange, placeholder, keyboardType, secureTe
           editable={!readOnly} // Make input non-editable if readOnly is true
         />
       </View>
+      {icon && (
+          <View style={styles.iconContainerInput}>
+            {icon}
+          </View>
+        )}
 
       {error && (
         <Text style={[styles.errorText, { fontSize: dynamicFontSize(styles.errorText.fontSize) }]}>{error}</Text>

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Switch } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 import CustomInput from './input';
+import applyFontFamily from '../../../assets/style/applyFontFamily';
 
-const UploadController = ({ title, inputPlaceholder, required }) => {
+const UploadController = ({ title, inputPlaceholder, required, passwordProtected = false, inputEnabled = true }) => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [uploadError, setUploadError] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [inputError, setInputError] = useState(null);
+  const [password, setPassword] = useState('');
+  const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
 
   const handleUpload = () => {
     // Simulating an upload failure
@@ -91,23 +94,47 @@ const UploadController = ({ title, inputPlaceholder, required }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <CustomInput
-          title={title}
-          required={required}
-          placeholder={inputPlaceholder}
-          value={inputValue}
-          onChangeText={(text) => {
-            setInputValue(text);
-            validateInput(text);
-          }}
-          error={inputError}
-        />
+        {inputEnabled && (
+          <CustomInput
+            title={title}
+            required={required}
+            placeholder={inputPlaceholder}
+            value={inputValue}
+            onChangeText={(text) => {
+              setInputValue(text);
+              validateInput(text);
+            }}
+            error={inputError}
+          />
+        )}
+        {passwordProtected && (
+          <View style={styles.passwordContainer}>
+            <View style={styles.passwordHeader}>
+              <Text style={styles.title}>Password</Text>
+              <Switch
+                value={isPasswordEnabled}
+                onValueChange={setIsPasswordEnabled}
+                trackColor={{ false: "#00000029", true: "#00194C" }}
+                thumbColor={isPasswordEnabled ? "#758BFD" : "#A2ACC6"}
+              />
+            </View>
+            {isPasswordEnabled && (
+              <CustomInput
+                placeholder="Enter password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={true}
+                style={styles.passwordInput}
+              />
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = applyFontFamily({
   container: {
     marginBottom: 20,
   },
@@ -198,6 +225,13 @@ const styles = StyleSheet.create({
   errorIcon: {
     marginLeft: 5,
   },
+  passwordHeader:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    marginBottom:10
+  },
+  
 });
 
 export default UploadController;

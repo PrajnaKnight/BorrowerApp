@@ -37,8 +37,12 @@ const BusinessOwnerDetails = () => {
     maritalStatus: [
       { label: 'Married', value: 'Married' },
       { label: 'Single', value: 'Single' },
+      { label: 'Divorced', value: 'Divorced' },
+      { label: 'Widowed', value: 'Widowed' },
+      { label: 'Separated', value: 'Separated' },
     ],
     qualification: [
+      { label: 'Undergraduate', value: 'Undergraduate' },
       { label: 'Graduate', value: 'Graduate' },
       { label: 'Post Graduate', value: 'Post Graduate' },
       { label: 'Doctorate', value: 'Doctorate' },
@@ -91,25 +95,32 @@ const BusinessOwnerDetails = () => {
   const handleProceed = () => {
     if (!isButtonDisabled) {
       console.log('Form is valid. Proceeding...');
-      // Navigate to the next screen
+     navigation.navigate('BusinessOwnerAddress');
     } else {
       console.log('Form has errors. Please correct them.');
     }
   };
 
-  const renderInputField = (label, field, placeholder, keyboardType = 'default') => {
+  const renderInputField = (label, field, placeholder, readOnly = false, keyboardType = 'default', optional = false, icon = null) => {
     return (
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>{label}</Text>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>{label}</Text>
+          {optional && <Text style={styles.optionalLabel}> Optional</Text>}
+        </View>
         <CustomInput
           placeholder={placeholder}
           value={currentApplicant.data[field] || ''}
           onChangeText={(text) => handleInputChange(field, text)}
+          readOnly={readOnly}
           keyboardType={keyboardType}
+          style={styles.input}
+          icon={icon}
         />
       </View>
     );
   };
+
 
   const renderDropdownField = (label, field, placeholder) => {
     return (
@@ -137,8 +148,8 @@ const BusinessOwnerDetails = () => {
       <View style={cardStyles.iconContainer}>
         <Ionicons 
           name={applicant.type === 'Applicant' ? "person" : "people"} 
-          size={20} 
-          color={applicant.type === 'Applicant' ? "#007AFF" : "#4CD964"}
+          size={18} 
+          color={applicant.type === 'Applicant' ? "#2B478B" : "#2B478B"}
         />
       </View>
       <Text style={cardStyles.cardText}>{applicant.type}</Text>
@@ -164,9 +175,9 @@ const BusinessOwnerDetails = () => {
       })}
     >
       <View style={cardStyles.iconContainer}>
-        <Ionicons name="add" size={24} color="#007AFF" />
+        <Ionicons name="add" size={18} color="#ffffff" />
       </View>
-      <Text style={cardStyles.cardText}>Add</Text>
+      <Text style={[cardStyles.cardText, { color: "#ffffff" }]}>Add</Text>
     </TouchableOpacity>
   );
 
@@ -178,7 +189,7 @@ const BusinessOwnerDetails = () => {
         <View style={styles.TOpTitleContainer}>
           <Text style={[styles.TitleText]}>Business Owner Details</Text>
           <Text style={styles.pageIndex}>
-            <Text style={styles.IndexActive}>1</Text>/4
+            <Text style={styles.IndexActive}>1</Text>/2
           </Text>
         </View>
       </View>
@@ -190,13 +201,21 @@ const BusinessOwnerDetails = () => {
 
         <ScrollView horizontal style={cardStyles.cardContainer} showsHorizontalScrollIndicator={false}>
           {applicants.map(renderApplicantCard)}
-          {applicants.length < 2 && renderAddCard()}
+          {applicants.length > 0  && renderAddCard()}
         </ScrollView>
         {renderDropdownField("Role Type", "roleType", "Select Role Type")}
-        {renderInputField("PAN Number", "panNumber", "Enter PAN Number")}
+        {renderInputField("PAN Number", "panNumber", "Enter PAN Number", true)}
         {renderInputField("Full Name", "fullName", "Enter Full Name")}
         {renderInputField("Father's Name", "fatherName", "Enter Father's Name")}
-        {renderInputField("Date of Birth", "dateOfBirth", "DD/MM/YYYY")}
+        {renderInputField(
+          "Date of Birth", 
+          "dateOfBirth", 
+          "DD/MM/YYYY", 
+          true, 
+          null, 
+          false, 
+          <Ionicons name="calendar-outline" size={18} color="#ff8500" />
+        )}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Gender</Text>
           <View style={styles.radioGroup}>
@@ -211,9 +230,9 @@ const BusinessOwnerDetails = () => {
           </View>
         </View>
         {renderDropdownField("Marital Status", "maritalStatus", "Select Marital Status")}
-        {renderInputField("Aadhaar Number", "aadhaarNumber", "Enter Aadhaar Number (Optional)", 'numeric')}
-        {renderInputField("Email ID", "emailId", "Enter Email ID", 'email-address')}
-        {renderInputField("Alternate Mobile Number", "alternateMobile", "Enter Alternate Mobile Number", 'phone-pad')}
+        {renderInputField("Aadhaar Number", "aadhaarNumber", "Enter Aadhaar Number", false, 'numeric', true)}
+        {renderInputField("Email ID", "emailId", "Enter Email ID",false,'email-address' )}
+        {renderInputField("Alternate Mobile Number", "alternateMobile", "Enter Alternate Mobile Number", false,'phone-pad')}
         {renderDropdownField("Qualification", "qualification", "Select Qualification")}
         
         <ButtonComponent
@@ -228,6 +247,7 @@ const BusinessOwnerDetails = () => {
           }}
           containerStyle={styles.proceedButtonContainer}
         />
+        <View height={10} />
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -261,36 +281,50 @@ const cardStyles = StyleSheet.create({
     marginBottom: 10,
   },
   card: {
-    padding: 10,
-    height: 50,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 10,
+    margin: 5,
     elevation: 2,
+
   },
   applicantCard: {
-    backgroundColor: "#E5F1FF",
-    borderColor: "#007AFF",
-    borderWidth: 1,
+    backgroundColor: "#ffffff",
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   coApplicantCard: {
-    backgroundColor: "#E5FFE9",
-    borderColor: "#4CD964",
-    borderWidth: 1,
+    backgroundColor: "#ffffff",
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   addCard: {
-    backgroundColor: "#F0F0F0",
-    borderStyle: "dashed",
-    borderColor: "#007AFF",
+    backgroundColor: "#2B478B",
+    borderStyle: "solid",
+    borderColor: "#2B478B",
     borderWidth: 1,
   },
   iconContainer: {
     marginBottom: 2,
   },
   cardText: {
-    fontSize: 12,
+    fontSize: 10,
     textAlign: "center",
+    color:'#2B478B'
   },
   removeButton: {
     position: "absolute",

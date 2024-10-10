@@ -10,6 +10,9 @@ import BusinessLoanEligibilityScreen from '../screens/BusinessLoanEligibility';
 import BusinessBankDetails from '../screens/BusinessBankDetails';
 import { ProgressBarProvider } from '../../Common/components/ControlPanel/progressContext'; 
 import BusinessOwnerDetails from '../screens/BusinessOwnerDetails';
+import BusinessOwnerAddress from '../screens/BusinessOwnerAddress';
+import PersonalDocumentsScreen from '../screens/PersonalDocuments';
+import BusinessDocumentsScreen from '../screens/BusinessDocuments';
 
 
 const Stack = createNativeStackNavigator();
@@ -37,6 +40,9 @@ function CommonNavigator() {
             component={BusinessBankDetails}
           />
           <Stack.Screen name="BusinessOwnerDetails" component={BusinessOwnerDetails} />
+          <Stack.Screen name="BusinessOwnerAddress" component={BusinessOwnerAddress} />
+          <Stack.Screen name="PersonalDocuments" component={PersonalDocumentsScreen} />
+          <Stack.Screen name="BusinessDocuments" component={BusinessDocumentsScreen} />
         </Stack.Navigator>
       </ProgressBarProvider>
     </AppProvider>
