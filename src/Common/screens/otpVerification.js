@@ -280,7 +280,7 @@ const OTPVerificationScreen = ({ navigation, route }) => {
         CommonActions.reset({
           index: 0, // The index of the active route
           routes: [
-            { name: 'MsmeLoan' }, // Name of the screen you want to navigate to
+            { name: 'Dashboard' }, // Name of the screen you want to navigate to
           ],
         })
       );

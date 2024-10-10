@@ -347,7 +347,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                         marginTop: 5,
                       },
                     ]}>
-                    Repayment Scheduled
+                    Repayment Schedule
                   </Text>
 
                   <View style={styles.tableContainer}>
