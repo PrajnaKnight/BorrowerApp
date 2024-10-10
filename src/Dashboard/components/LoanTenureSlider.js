@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import applyFontFamily from '../../assets/style/applyFontFamily';
@@ -6,15 +6,34 @@ import applyFontFamily from '../../assets/style/applyFontFamily';
 const LoanTenureSlider = ({
   label,
   value,
-  min,
-  max,
-  step,
   onValueChange,
   toggle,
   onToggle,
   sliderLabels,
-  layout = 'default' // New prop to control layout
+  labelValues,
+  layout = 'default'
 }) => {
+  const [sliderValue, setSliderValue] = useState(0);
+
+  useEffect(() => {
+    const index = findClosestLabelIndex(value);
+    setSliderValue(index / (labelValues.length - 1));
+  }, [value, labelValues]);
+
+  const findClosestLabelIndex = (val) => {
+    return labelValues.reduce((closestIndex, currentValue, currentIndex, array) => {
+      return Math.abs(currentValue - val) < Math.abs(array[closestIndex] - val) 
+        ? currentIndex 
+        : closestIndex;
+    }, 0);
+  };
+
+  const handleSliderChange = (normalizedValue) => {
+    const index = Math.round(normalizedValue * (labelValues.length - 1));
+    const newValue = labelValues[index];
+    onValueChange(newValue);
+  };
+
   const renderToggleButtons = () => (
     <View style={styles.toggleContainer}>
       <TouchableOpacity
@@ -79,11 +98,11 @@ const LoanTenureSlider = ({
       <View style={styles.sliderContainer}>
         <Slider
           style={styles.slider}
-          minimumValue={min}
-          maximumValue={max}
-          step={step}
-          value={value}
-          onValueChange={onValueChange}
+          minimumValue={0}
+          maximumValue={1}
+          step={1 / (labelValues.length - 1)}
+          value={sliderValue}
+          onValueChange={handleSliderChange}
           minimumTrackTintColor="#0010AC"
           maximumTrackTintColor="#758BFD"
           thumbTintColor="#F38F00"
@@ -99,6 +118,8 @@ const LoanTenureSlider = ({
     </View>
   );
 };
+
+
 
 const styles = applyFontFamily({
   sliderContainerWrapper: {

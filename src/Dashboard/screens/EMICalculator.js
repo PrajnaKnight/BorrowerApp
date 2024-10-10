@@ -10,6 +10,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
 const formatIndianCurrency = (value) => {
+
+  console.log(value)
+  if (!value || value == "Infinity") {
+    return 0
+  }
   const num = Math.floor(value);
   const str = num.toString();
   let lastThree = str.substring(str.length - 3);
@@ -17,17 +22,18 @@ const formatIndianCurrency = (value) => {
   if (otherNumbers !== '') {
     lastThree = ',' + lastThree;
   }
-  return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+  return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree
 };
 
 const EMICalculator = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('EMI Calculator');
   const [formData, setFormData] = useState({
-    loanAmount: 500000,
-    interestRate: 10,
-    loanTenure: 60,
+    LoanAmount: 10000,
+    InterestRate: 0,
+    TenureYears: 1,
+    Tenure: 0,
+    StartDate: new Date()
   });
-  const [tenureRange, setTenureRange] = useState({ min: 1, max: 30 });
   const [tenureUnit, setTenureUnit] = useState('Yr');
   const [emiDetails, setEmiDetails] = useState({
     emiAmount: 0,
@@ -38,35 +44,32 @@ const EMICalculator = ({ navigation }) => {
   });
   const [isExpanded, setIsExpanded] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  useEffect(() => {
-    updateTenureRange();
-  }, [tenureUnit]);
+  const [interesetError, setInterestError] = useState(null)
 
   useEffect(() => {
     calculateEMIDetails();
   }, [formData, tenureUnit]);
 
-  const updateTenureRange = () => {
+  useEffect(() => {
     if (tenureUnit === 'Yr') {
-      setTenureRange({ min: 1, max: 30 });
+      handleSliderChange("TenureYears", 1)
+
     } else {
-      setTenureRange({ min: 1, max: 360 });
+      handleSliderChange("Tenure", 1)
     }
-  };
+  }, [tenureUnit])
 
   const calculateEMIDetails = () => {
-    const { loanAmount, interestRate, loanTenure } = formData;
-    const tenureInMonths = tenureUnit === 'Yr' ? loanTenure * 12 : loanTenure;
-    const emi = calculateEMI(loanAmount, interestRate, tenureInMonths);
+    const { LoanAmount, InterestRate, TenureYears, Tenure } = formData;
+    const tenureInMonths = tenureUnit === 'Yr' ? TenureYears * 12 : Tenure;
+    const emi = calculateEMI(LoanAmount, InterestRate, tenureInMonths);
     const totalAmountPayable = emi * tenureInMonths;
-    const totalInterestPayable = totalAmountPayable - loanAmount;
+    const totalInterestPayable = totalAmountPayable - LoanAmount;
 
     setEmiDetails({
       emiAmount: formatIndianCurrency(emi),
-      principal: formatIndianCurrency(loanAmount),
+      principal: formatIndianCurrency(LoanAmount),
       interest: formatIndianCurrency(totalInterestPayable),
       totalInterestPayable: formatIndianCurrency(totalInterestPayable),
       totalAmountPayable: formatIndianCurrency(totalAmountPayable),
@@ -79,7 +82,6 @@ const EMICalculator = ({ navigation }) => {
 
   const handleTenureToggle = (unit) => {
     setTenureUnit(unit);
-    updateTenureRange();
   };
 
   const toggleExpand = () => {
@@ -96,14 +98,19 @@ const EMICalculator = ({ navigation }) => {
 
   const handleDone = () => {
     closeModal();
-    navigation.navigate('RepaymentSchedule', { startDate, emiDetails });
+    if (!formData.InterestRate) {
+      setInterestError("Please provide interest rate")
+      return
+    }
+    navigation.navigate('RepaymentSchedule', { formData });
   };
 
   const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || startDate;
-    setShowDatePicker(Platform.OS === 'ios');
-    setStartDate(currentDate);
+    const currentDate = selectedDate || formData.StartDate;
+    setShowDatePicker(false)
+    setFormData({ ...formData, StartDate: currentDate });
   };
+  const [sliderLayout, setSliderLayout] = useState('default');
 
   return (
     <Layout>
@@ -215,35 +222,49 @@ const EMICalculator = ({ navigation }) => {
           <View style={styles.formContainer}>
             <InputSlider
               label="Loan Amount"
-              value={formData.loanAmount}
+              value={formData.LoanAmount}
               min={20000}
               max={30000000}
               step={10000}
-              onValueChange={(value) => handleSliderChange("loanAmount", value)}
+              onValueChange={(value) => handleSliderChange("LoanAmount", value)}
               isCurrency={true}
             />
             <InputSlider
               label="Rate of Interest (ROI)"
-              value={formData.interestRate}
+              value={formData.InterestRate}
               min={0}
               max={50}
               step={1}
-              onValueChange={(value) =>
-                handleSliderChange("interestRate", value)
-              }
+              onValueChange={(value) => {
+                setInterestError(null);
+                handleSliderChange("InterestRate", value);
+              }}
               suffix="%"
               isROI={true}
             />
+            {interesetError && (
+              <Text style={styles.errorText}>{interesetError}</Text>
+            )}
             <LoanTenureSlider
               label="Loan Tenure"
-              value={formData.loanTenure}
-              min={tenureRange.min}
-              max={tenureRange.max}
-              step={1}
-              onValueChange={(value) => handleSliderChange("loanTenure", value)}
+              value={
+                tenureUnit === "Yr" ? formData.TenureYears : formData.Tenure
+              }
+              onValueChange={(value) =>
+                handleSliderChange(
+                  tenureUnit === "Yr" ? "TenureYears" : "Tenure",
+                  value
+                )
+              }
               toggle={tenureUnit}
               onToggle={handleTenureToggle}
-              sliderLabels={[tenureRange.min.toString(), tenureRange.max.toString()]}
+              sliderLabels={tenureUnit === "Yr" ? ["1", "30"] : ["1", "360"]}
+              labelValues={
+                tenureUnit === "Yr"
+                  ? Array.from({ length: 30 }, (_, i) => i + 1)
+                  : Array.from({ length: 360 }, (_, i) => i + 1)
+              }
+              layout={sliderLayout}
             />
           </View>
           {/* <ProceedButton onPress={() => {}} text="CALCULATE" /> */}
@@ -263,12 +284,12 @@ const EMICalculator = ({ navigation }) => {
             <Text style={styles.label}>Start Date</Text>
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
               <Text style={styles.dateText}>
-                {startDate.toLocaleDateString()}
+                {formData.StartDate.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
             {showDatePicker && (
               <DateTimePicker
-                value={startDate}
+                value={formData.StartDate}
                 mode="date"
                 display="calendar"
                 onChange={onDateChange}
@@ -277,7 +298,7 @@ const EMICalculator = ({ navigation }) => {
             <ProceedButton
               onPress={handleDone}
               text="DONE"
-              disabled={!startDate}
+              disabled={!formData.StartDate}
             />
           </View>
         </View>
@@ -301,6 +322,11 @@ const styles = applyFontFamily({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    fontSize: 14,
   },
   content: {
     padding: 20,
@@ -422,12 +448,12 @@ const styles = applyFontFamily({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 10,
-    width:120,
+    width: 120,
   },
   viewBtnText: {
     color: "#fff",
     fontSize: 14,
-    textAlign:'center'
+    textAlign: 'center'
   },
 });
 

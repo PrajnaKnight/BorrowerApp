@@ -103,12 +103,12 @@ const LoanEligibilityCalculator = ({ navigation }) => {
     setLoanDetails(loanDetails);
     
     const newRange = tenureRange[unit];
-    if (!newRange) {
+    if (!newRange || typeof newRange.min === 'undefined' || typeof newRange.max === 'undefined') {
       console.error(`Invalid tenure range for ${tab} and ${unit}`);
-      return;
+      setTenureRange({ min: 0, max: 0 }); // Set a default range
+    } else {
+      setTenureRange(newRange);
     }
-    
-    setTenureRange(newRange);
     
     const adjustedTenure = unit === 'Yr' 
       ? Math.min(Math.max(Math.floor(formDefaults.loanTenure / 12), newRange.min), newRange.max)
@@ -185,7 +185,10 @@ const LoanEligibilityCalculator = ({ navigation }) => {
         <Header activeTab={activeTab} onTabPress={handleTabPress} />
         {errorMessage && (
           <View style={styles.errorContainer}>
-            <Text style={[styles.errorText,{fontFamily:"Poppins_400Regular"}]}>{errorMessage}</Text>
+            <Text
+              style={[styles.errorText, { fontFamily: "Poppins_400Regular" }]}>
+              {errorMessage}
+            </Text>
           </View>
         )}
         <View style={globalStyles.content}>
@@ -222,13 +225,17 @@ const LoanEligibilityCalculator = ({ navigation }) => {
             <LoanTenureSlider
               label="Loan Tenure"
               value={formData.loanTenure}
-              min={tenureRange.min}
-              max={tenureRange.max}
-              step={1}
               onValueChange={(value) => handleSliderChange("loanTenure", value)}
               toggle={tenureUnit}
               onToggle={handleTenureUnitToggle}
-              sliderLabels={[tenureRange.min.toString(), tenureRange.max.toString()]}
+              sliderLabels={[
+                tenureRange.min.toString(),
+                tenureRange.max.toString(),
+              ]}
+              labelValues={Array.from(
+                { length: tenureRange.max - tenureRange.min + 1 },
+                (_, i) => i + tenureRange.min
+              )}
             />
             <InputSlider
               label={
