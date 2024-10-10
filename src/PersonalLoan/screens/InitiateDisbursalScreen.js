@@ -320,7 +320,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                     </Text>
                   )}
 
-                  <Text
+                  {/* <Text
                     style={[
                       styles.label,
                       {
@@ -329,15 +329,15 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                       },
                     ]}>
                     eMandate URN <Text style={styles.mandatoryStar}>*</Text>
-                  </Text>
-                  <View style={styles.inputContainer}>
+                  </Text> */}
+                  {/* <View style={styles.inputContainer}>
                     <CustomInput
                       value={requestModel?.EmandateUMRN}
                       onChangeText={setEMandateUMRN}
                       placeholder="Enter eMandate URN"
                       keyboardType="numeric"
                     />
-                  </View>
+                  </View> */}
 
                   <Text
                     style={[
