@@ -320,7 +320,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                     </Text>
                   )}
 
-                  <Text
+                  {/* <Text
                     style={[
                       styles.label,
                       {
@@ -337,7 +337,7 @@ const InitiateDisbursalScreen = ({ navigation }) => {
                       placeholder="Enter eMandate URN"
                       keyboardType="numeric"
                     />
-                  </View>
+                  </View> */}
 
                   <Text
                     style={[

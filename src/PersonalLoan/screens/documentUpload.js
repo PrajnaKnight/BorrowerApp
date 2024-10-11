@@ -800,7 +800,7 @@ const DocumentUploadScreen = ({ navigation }) => {
 
     selectedFile && <View style={styles.passwordContainer}>
       <View style={styles.passwordLabelContainer}>
-        <Text style={styles.passwordLabel}>Password</Text>
+        <Text style={styles.passwordLabel}>Is password protected ?</Text>
 
         <TouchableOpacity
           style={{ flexDirection: "row", backgroundColor: selectedFile.EnablePassword ? "#00194C" : "#E0E0E0", borderRadius: 30, paddingHorizontal: 7, paddingVertical: 2 }}
@@ -880,17 +880,27 @@ const DocumentUploadScreen = ({ navigation }) => {
 
       </View>
       {
-        <View style={styles.passwordInputContainer}>
-          <TextInput
+         <View >
 
-            style={[styles.passwordInput, { fontFamily: "Poppins_400Regular" }]}
-            secureTextEntry={true}
-            value={selectedFile.Password}
-            onChangeText={updatePassword}
-
-            editable={selectedFile.EnablePassword}
-          />
-        </View>
+         {selectedFile.EnablePassword ?
+         
+         <View style={styles.passwordInputContainer}>
+                      <TextInput
+                      style={[styles.passwordInput, { fontFamily: "Poppins_400Regular" }]}
+                      secureTextEntry={true}
+                      value={selectedFile.Password}
+                      onChangeText={updatePassword}
+          
+                      editable={selectedFile.EnablePassword}
+                    />
+                      </View>
+                     :
+                     <View>
+                    
+                     </View>
+                       
+                   }
+         </View>
       }
     </View>)
 
