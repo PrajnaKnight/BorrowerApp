@@ -23,7 +23,7 @@ function CommonNavigator() {
   return (
     <AppProvider>
       <ProgressBarProvider>
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='BusinessDocuments'>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="LoanDetails" component={LoanDetails} />
           <Stack.Screen name="BusinessInfo" component={BusinessInformation} />
           <Stack.Screen name="BusinessSummary" component={BusinessSummary} />
