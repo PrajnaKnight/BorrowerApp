@@ -22,6 +22,7 @@ import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import UploadController from '../../Common/components/ControlPanel/UploadController';
 import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
 import applyFontFamily from '../../assets/style/applyFontFamily';
+import FileUpload from '../../Common/components/ControlPanel/FileUpload';
 
 const { width: screenWidth } = Dimensions.get('window');
 const cardWidth = (screenWidth - 40) / 3;
@@ -716,19 +717,24 @@ const BusinessDocumentsScreen = () => {
                 {gstFiles.map((file, index) => (
                   <View key={index} style={financialDocsStyles.fileItem}>
                     <Text>{file.name}</Text>
-                    <TouchableOpacity onPress={() => handleDeleteGSTFile(index)}>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteGSTFile(index)}>
                       <Text style={financialDocsStyles.deleteText}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 ))}
                 <FileUpload onFileSelect={handleAddGSTFile} />
               </View>
-              <ButtonComponent
-                title="Add Another GSTIN"
-                onPress={handleAddAnotherGSTIN}
-              />
+              <View style={{marginTop:16}}>
+                <ButtonComponent
+                  title="Add Another GSTIN"
+                  onPress={handleAddAnotherGSTIN}
+                />
+              </View>
               <TouchableOpacity onPress={() => setUseGSTManualUpload(false)}>
-                <Text style={financialDocsStyles.switchText}>Switch to GST OTP Authentication</Text>
+                <Text style={financialDocsStyles.switchText}>
+                  Switch to GST OTP Authentication
+                </Text>
               </TouchableOpacity>
             </View>
           );
@@ -909,27 +915,13 @@ const BusinessDocumentsScreen = () => {
               <FileUpload
                 onFileSelect={(file) => console.log("ITR file selected:", file)}
               />
-              <View style={financialDocsStyles.switchContainer}>
-                <Text>Password Protection</Text>
-                <Switch
-                  value={itrPasswordProtected}
-                  onValueChange={setItrPasswordProtected}
+              <View style={{ marginTop: 15 }}>
+                <ButtonComponent
+                  title="Add ITR"
+                  onPress={handleAddITR}
+                  disabled={!selectedITRType || !selectedItrFinancialYear}
                 />
               </View>
-              {itrPasswordProtected && (
-                <TextInput
-                  style={financialDocsStyles.input}
-                  placeholder="Enter Password"
-                  value={itrPassword}
-                  onChangeText={setItrPassword}
-                  secureTextEntry
-                />
-              )}
-              <ButtonComponent
-                title="Add ITR"
-                onPress={handleAddITR}
-                disabled={!selectedITRType || !selectedItrFinancialYear}
-              />
               <TouchableOpacity onPress={() => setUseITRManualUpload(false)}>
                 <Text style={financialDocsStyles.switchText}>
                   Switch to ITR Authentication
