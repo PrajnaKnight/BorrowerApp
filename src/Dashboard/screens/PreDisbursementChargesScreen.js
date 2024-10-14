@@ -88,11 +88,11 @@ const PreDisbursementChargesScreen = () => {
         </View>
         <ScrollView style={styles.content}>
           <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderText}>Charge {"\n"} Type</Text>
-            <Text style={styles.tableHeaderText}>Amount {"\n"} (₹)</Text>
-            <Text style={styles.tableHeaderText}>Payment {"\n"} Type</Text>
+            <Text style={styles.tableHeaderText}>Charge{"\n"}Type</Text>
+            <Text style={styles.tableHeaderText}>Amount{"\n"}(₹)</Text>
+            <Text style={styles.tableHeaderText}>Payment{"\n"}Type</Text>
             <Text style={[styles.tableHeaderText, styles.noBorderRight]}>
-              Payment {"\n"} Statuss
+              Payment{"\n"}Statuss
             </Text>
           </View>
           {charges.map((charge, index) => (
@@ -197,7 +197,7 @@ const styles = applyFontFamily({
     borderBottomColor: '#e0e0e0',
   },
   evenRow: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f7f9ff',
   },
   oddRow: {
     backgroundColor: '#f7f9ff',

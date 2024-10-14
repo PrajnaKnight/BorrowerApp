@@ -17,7 +17,7 @@ const RequestDocuments = ({ navigation }) => {
     { name: 'SOA', status: 'Generate', statusColor: '#758BFD' },
     { name: 'Loan Agreement', status: 'Generate', statusColor: '#758BFD' },
     { name: 'Sanction Letter', status: 'Generate', statusColor: '#758BFD' },
-    { name: 'Insurance Policy Document', status: 'Ready for Download', statusColor: '#ff8500' },
+    // { name: 'Insurance Policy Document', status: 'Ready for Download', statusColor: '#ff8500' },
     { name: 'NOC', status: isClosed ? 'Ready for Download' : 'Raise Request', statusColor: isClosed ? '#ff8500' : '#d3d3d3' },
     { name: 'Foreclosure/Closure Letter', status: 'Raise Request', statusColor: '#d3d3d3', note: '(Applicable in Foreclosure Cases)' },
     { name: 'Closure Letter', status: isClosed ? 'Ready for Download' : 'Raise Request', statusColor: isClosed ? '#ff8500' : '#d3d3d3', note: '(Applicable in closure cases)' },

@@ -1,9 +1,7 @@
+import { BASE_URL, STATUS, API_RESPONSE_STATUS, GetHeader } from "../../../Common/Utils/Constant"
+
 import { GetStoreAuthToken } from "../LOCAL/AsyncStroage"
 
-
-const BASE_URL = "https://bankofproductlosapi.azurewebsites.net"
-// https://demolosapi-qa.azurewebsites.net
-// https://bankofproductlosapi.azurewebsites.net
 export const CREATE_BORROWER_LEAD = `${BASE_URL}/CreateBorrowerLead`
 export const GET_LEADS_DATA = `${BASE_URL}/GetleadsData`
 
@@ -109,29 +107,5 @@ export const GET_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/GetBorrowerPerson
 export const DELETE_USER = `${BASE_URL}/DeleteLeadPhone`
 
 export const RedirectUrl =  "www.knightfintech.com"
-export const STATUS  = {
-    SUCCESS : "SUCCESS",
-    ERROR : "ERROR",
-}
 
-
-export const API_RESPONSE_STATUS = (status, data, message) => {
-    console.log('status = ', status)
-    console.log('data = ', data)
-    console.log('message = ', message)
-    return {
-        status : status,
-        data : data,
-        message : message,
-    }
-}
-
-export const GetHeader = async () => {
-
-    const Auth_TOKEN = await GetStoreAuthToken()
-    return {
-        'AUTHTOKEN': Auth_TOKEN,
-        'Content-Type': 'application/json'
-      };
-}
-
+export { STATUS, API_RESPONSE_STATUS, GetHeader };

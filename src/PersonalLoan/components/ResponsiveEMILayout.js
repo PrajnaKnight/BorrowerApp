@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: Math.max(12, screenWidth * 0.03),
     marginBottom: 5,
+    fontWeight: '500',
     color: '#00194C',
     ...Platform.select({
       web: {

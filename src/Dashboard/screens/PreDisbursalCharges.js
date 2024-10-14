@@ -13,7 +13,7 @@ const PreDisbursalChargesScreen = () => {
 
   const charges = [
     {
-      type: 'Processing Fee',
+      type: 'Processing\nFee',
       amount: '11800.00',
       paymentType: 'Deduct from disbursal',
       status: 'Paid',
@@ -65,7 +65,7 @@ const PreDisbursalChargesScreen = () => {
       ]
     },
     {
-      type: 'Broken Period Interest',
+      type: 'Broken\nPeriod\nInterest',
       amount: '00.00',
       paymentType: 'Deduct from disbursal',
       status: 'Not applicable',
@@ -208,7 +208,7 @@ const styles = applyFontFamily({
     borderBottomColor: '#e0e0e0',
   },
   evenRow: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f7f9ff',
   },
   oddRow: {
     backgroundColor: '#f7f9ff',
