@@ -13,6 +13,7 @@ import BusinessOwnerDetails from '../screens/BusinessOwnerDetails';
 import BusinessOwnerAddress from '../screens/BusinessOwnerAddress';
 import PersonalDocumentsScreen from '../screens/PersonalDocuments';
 import BusinessDocumentsScreen from '../screens/BusinessDocuments';
+import MandateScreen from '../screens/MandateScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -43,6 +44,7 @@ function CommonNavigator() {
           <Stack.Screen name="BusinessOwnerAddress" component={BusinessOwnerAddress} />
           <Stack.Screen name="PersonalDocuments" component={PersonalDocumentsScreen} />
           <Stack.Screen name="BusinessDocuments" component={BusinessDocumentsScreen} />
+          <Stack.Screen name="MandateScreen" component={MandateScreen} />
         </Stack.Navigator>
       </ProgressBarProvider>
     </AppProvider>

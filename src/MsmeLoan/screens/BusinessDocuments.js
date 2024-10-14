@@ -4,13 +4,11 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions,
   TextInput,
   Switch,
   Modal,
   ActivityIndicator,
-  Alert,
+  Alert, Dimensions,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Layout from '../../Common/components/Layout';
@@ -23,9 +21,7 @@ import { styles } from '../../assets/style/msmeStyle';
 import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import UploadController from '../../Common/components/ControlPanel/UploadController';
 import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
-import FileUpload from '../../Common/components/ControlPanel/FileUpload';
 import applyFontFamily from '../../assets/style/applyFontFamily';
-import { colors } from 'react-native-swiper-flatlist/src/themes';
 
 const { width: screenWidth } = Dimensions.get('window');
 const cardWidth = (screenWidth - 40) / 3;
@@ -36,8 +32,10 @@ const BusinessDocumentsScreen = () => {
   const scrollViewRef = useRef(null);
 
   // General state
-  const [selectedDocType, setSelectedDocType] = useState('Financial Docs');
-  const [selectedIDType, setSelectedIDType] = useState('Bank Statement');
+  const [selectedDocType, setSelectedDocType] = useState('ID Proof');
+  const [selectedIDType, setSelectedIDType] = useState('gumasta_license');
+  const [selectedAddressType, setSelectedAddressType] = useState('electricity_bill');
+  const [selectedFinancialDocType, setSelectedFinancialDocType] = useState('Bank Statement');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [gstUserName, setgstUserName] = useState('');
@@ -102,15 +100,14 @@ const BusinessDocumentsScreen = () => {
     setSelectedBankAccount(value);
   };
 
+
   // Update GSTIN statement state
   const [GSTIN, setGSTIN] = useState([
     {label:'27AAHCK6791L1ZS', value:'27AAHCK6791L1ZS'},
     {label:'27AAHCK6791L1ZB', value:'27AAHCK6791L1ZB'},
     {label:'27AAHCK6791L1ZC', value:'27AAHCK6791L1ZC'},
   ]);
-
   const [selectedGSTIN, setselectedGSTIN] = useState(null);
-
   const handleGSTINSelect = (value) => {
     setselectedGSTIN(value);
   }
@@ -121,9 +118,7 @@ const BusinessDocumentsScreen = () => {
     { label: "GSTR3C", value: "GSTR3C" },
     { label: "GSTR3D", value: "GSTR3D" },
   ]);
-
   const [selectedReturnForm, setselectedReturnForm] = useState(null);
-
   const handleReturnFormSelect = (value) => {
     setselectedReturnForm(value);
   }
@@ -135,12 +130,12 @@ const BusinessDocumentsScreen = () => {
     { label: "Semi-Annually", value: "Semi-Annually" },
     { label: "Annually", value: "Annually" },
   ]);
-
   const [selectedFrequency, setselectedFrequency] = useState(null);
 
   const handleFrequencySelect = (value) => {
     setselectedFrequency(value);
   }
+
 
   // Update financial year statement state
   const [financialYear, setfinancialYear] = useState([ 
@@ -148,20 +143,20 @@ const BusinessDocumentsScreen = () => {
     { label: "2022-2023", value: "2022-2023" },
     { label: "2021-2022", value: "2021-2022" },
   ]);
-
   const [selectedFinancialYear, setselectedFinancialYear] = useState(null);
 
   const handleFinancialYearSelect = (value) => { 
     setselectedFinancialYear(value);
   }
    
+
   // Update ITR type statement state
   const [itrType, setitrType] = useState([
     { label: "ITR Type 1", value: "ITR-Type-1" },
     { label: "ITR Type 2", value: "ITR-Type-2" },
     { label: "ITR Type 3", value: "ITR-Type-3" },
   ]);
- 
+  
   const [selectedITRType, setselectedITRType] = useState(null);
  
   const handleITRTypeSelect = (value) => {
@@ -174,9 +169,9 @@ const BusinessDocumentsScreen = () => {
     { label: "2022-2023", value: "2022-2023" },
     { label: "2021-2022", value: "2021-2022" },
   ]);  
-
   const [selectedItrFinancialYear, setselectedItrFinancialYear] = useState(null);
 
+  
   const handleItrFinancialYearSelect = (value) => { 
     setselectedItrFinancialYear(value);
   }
@@ -204,6 +199,18 @@ const BusinessDocumentsScreen = () => {
     { label: 'ITR', icon: 'file-text-o' },
   ];
   
+  const idProofTypes = [
+    { label: 'Gumasta License', value: 'gumasta_license', icon: 'id-card' },
+    { label: 'Shop Act', value: 'shop_act', icon: 'shopping-bag' },
+    { label: 'GST', value: 'gst', icon: 'file-text-o' },
+  ];
+
+  const addressProofTypes = [
+    { label: 'Electricity Bill', value: 'electricity_bill', icon: 'bolt' },
+    { label: 'Rent Agreement', value: 'rent_agreement', icon: 'file-text-o' },
+    { label: 'Property Tax Agreement', value: 'property_tax', icon: 'home' },
+  ];
+
   useEffect(() => {
     // Update button disabled state based on conditions
     setIsButtonDisabled(!bankStatements.length && !gstDetails && !itrDetails && !idProofFile && !addressProofFile);
@@ -226,16 +233,194 @@ const BusinessDocumentsScreen = () => {
   };
 
   const handleAddAnotherGSTIN = () => {
-    // Implement the logic to add another GSTIN
-    // This might involve clearing the current GST form and allowing the user to enter new details
     setSelectedGSTIN(null);
     setSelectedReturnForm(null);
     setSelectedFrequency(null);
     setSelectedFinancialYear(null);
     setGstFiles([]);
   };
-  
-  
+
+  const handleDocTypeSelect = (docType) => {
+    setSelectedDocType(docType);
+    setActiveIndex(0);
+    switch (docType) {
+      case 'ID Proof':
+        setSelectedIDType(idProofTypes[0].value);
+        break;
+      case 'Address Proof':
+        setSelectedAddressType(addressProofTypes[0].value);
+        break;
+      case 'Financial Docs':
+        setSelectedFinancialDocType(financialDocTypes[0].label);
+        break;
+    }
+  };
+
+  const renderDocumentTypeSelector = () => {
+    return (
+      <View style={styles.PDtabContainer}>
+        {documentTypes.map((docType) => (
+          <TouchableOpacity
+            key={docType}
+            style={[
+              styles.PDtab,
+              selectedDocType === docType && styles.PDselectedTab,
+            ]}
+            onPress={() => handleDocTypeSelect(docType)}>
+            <Text
+              style={[
+                styles.PDtabText,
+                selectedDocType === docType && styles.PDselectedTabText,
+              ]}>
+              {docType}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
+  const renderIDTypeSelector = () => {
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>Select ID Type</Text>
+        <View style={styles.carouselContainer}>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"
+            snapToInterval={cardWidth}
+            snapToAlignment="start"
+            contentContainerStyle={styles.carouselContent}
+            onMomentumScrollEnd={(event) => {
+              const index = Math.round(
+                event.nativeEvent.contentOffset.x / cardWidth
+              );
+              setActiveIndex(index);
+              setSelectedIDType(idProofTypes[index].value);
+            }}>
+            {idProofTypes.map((item, index) => (
+              <TouchableOpacity
+                key={item.value}
+                style={[
+                  styles.carouselItem,
+                  selectedIDType === item.value && styles.activeCarouselItem,
+                ]}
+                onPress={() => {
+                  setSelectedIDType(item.value);
+                  setActiveIndex(index);
+                  scrollViewRef.current?.scrollTo({ x: index * cardWidth, animated: true });
+                }}>
+                <Icon
+                  name={item.icon}
+                  size={24}
+                  color={selectedIDType === item.value ? "#FFFFFF" : "#00194c"}
+                />
+                <Text
+                  style={[
+                    styles.carouselItemText,
+                    selectedIDType === item.value && styles.activeCarouselItemText,
+                  ]}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <View style={styles.paginationContainer}>
+            {idProofTypes.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.paginationDot,
+                  activeIndex === index && styles.activePaginationDot,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+
+  const renderAddressTypeSelector = () => {
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>Select Address Proof Type</Text>
+        <View style={styles.carouselContainer}>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"
+            snapToInterval={cardWidth}
+            snapToAlignment="start"
+            contentContainerStyle={styles.carouselContent}
+            onMomentumScrollEnd={(event) => {
+              const index = Math.round(
+                event.nativeEvent.contentOffset.x / cardWidth
+              );
+              setActiveIndex(index);
+              setSelectedAddressType(addressProofTypes[index].value);
+            }}>
+            {addressProofTypes.map((item, index) => (
+              <TouchableOpacity
+                key={item.value}
+                style={[
+                  styles.carouselItem,
+                  selectedAddressType === item.value && styles.activeCarouselItem,
+                ]}
+                onPress={() => {
+                  setSelectedAddressType(item.value);
+                  setActiveIndex(index);
+                  scrollViewRef.current?.scrollTo({ x: index * cardWidth, animated: true });
+                }}>
+                <Icon
+                  name={item.icon}
+                  size={24}
+                  color={selectedAddressType === item.value ? "#FFFFFF" : "#00194c"}
+                />
+                <Text
+                  style={[
+                    styles.carouselItemText,
+                    selectedAddressType === item.value && styles.activeCarouselItemText,
+                  ]}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <View style={styles.paginationContainer}>
+            {addressProofTypes.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.paginationDot,
+                  activeIndex === index && styles.activePaginationDot,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderFileUpload = (fileType) => {
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>File Upload OR Take Photo</Text>
+        <UploadController
+          title={selectedIDType}
+          inputPlaceholder={`Enter ${selectedIDType} Number`}
+          required={true}
+          passwordProtected={true}
+          inputEnabled={false}
+        />
+      </View>
+    );
+  };
 
   const renderBankStatementUpload = () => {
     return (
@@ -809,7 +994,6 @@ const BusinessDocumentsScreen = () => {
       const renderIDProof = () => {
         return (
           <View style={financialDocsStyles.uploadOptionsContainer}>
-            <Text style={financialDocsStyles.sectionTitle}>ID Proof</Text>
             <CustomDropdown
               value={idProofType}
               setValue={setIdProofType}
@@ -850,7 +1034,6 @@ const BusinessDocumentsScreen = () => {
       const renderAddressProof = () => {
         return (
           <View style={financialDocsStyles.uploadOptionsContainer}>
-            <Text style={financialDocsStyles.sectionTitle}>Address Proof</Text>
             <CustomDropdown
               value={addressProofType}
               setValue={setAddressProofType}
@@ -887,23 +1070,113 @@ const BusinessDocumentsScreen = () => {
           </View>
         );
       };
-    
-      const renderFinancialDocsContent = () => {
-        if (selectedDocType === 'Financial Docs') {
-          if (selectedIDType === 'Bank Statement' && bankStatementEnabled) {
-            return renderBankStatementUpload();
-          } else if (selectedIDType === 'GST') {
-            return renderGSTUpload();
-          } else if (selectedIDType === 'ITR') {
-            return renderITRUpload();
-          }
-        } else if (selectedDocType === 'ID Proof') {
-          return renderIDProof();
-        } else if (selectedDocType === 'Address Proof') {
-          return renderAddressProof();
-        }
-        return null;
+
+      const renderFinancialDocTypeSelector = () => {
+        return (
+          <View>
+            <Text style={styles.sectionTitle}>Select Document Type</Text>
+            <View style={styles.carouselContainer}>
+              <ScrollView
+                ref={scrollViewRef}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                decelerationRate="fast"
+                snapToInterval={cardWidth}
+                snapToAlignment="start"
+                contentContainerStyle={styles.carouselContent}
+                onMomentumScrollEnd={(event) => {
+                  const index = Math.round(
+                    event.nativeEvent.contentOffset.x / cardWidth
+                  );
+                  setActiveIndex(index);
+                  setSelectedFinancialDocType(financialDocTypes[index].label);
+                }}>
+                {financialDocTypes.map((item, index) => (
+                  <TouchableOpacity
+                    key={item.label}
+                    style={[
+                      styles.carouselItem,
+                      selectedFinancialDocType === item.label && styles.activeCarouselItem,
+                    ]}
+                    onPress={() => {
+                      setSelectedFinancialDocType(item.label);
+                      setActiveIndex(index);
+                      scrollViewRef.current?.scrollTo({ x: index * cardWidth, animated: true });
+                    }}>
+                    <Icon
+                      name={item.icon}
+                      size={24}
+                      color={selectedFinancialDocType === item.label ? "#FFFFFF" : "#00194c"}
+                    />
+                    <Text
+                      style={[
+                        styles.carouselItemText,
+                        selectedFinancialDocType === item.label && styles.activeCarouselItemText,
+                      ]}>
+                      {item.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <View style={styles.paginationContainer}>
+                {financialDocTypes.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.paginationDot,
+                      activeIndex === index && styles.activePaginationDot,
+                    ]}
+                  />
+                ))}
+              </View>
+            </View>
+          </View>
+        );
       };
+    
+      
+  const renderFinancialDocsContent = () => {
+    switch (selectedFinancialDocType) {
+      case 'Bank Statement':
+        return renderBankStatementUpload();
+      case 'GST':
+        return renderGSTUpload();
+      case 'ITR':
+        return renderITRUpload();
+      default:
+        return null;
+    }
+  };
+
+      const renderContent = () => {
+        switch (selectedDocType) {
+          case 'ID Proof':
+            return (
+              <>
+                {renderIDTypeSelector()}
+                {renderFileUpload('idProof')}
+              </>
+            );
+          case 'Address Proof':
+            return (
+              <>
+                {renderAddressTypeSelector()}
+                {renderFileUpload('addressProof')}
+              </>
+            );
+          case 'Financial Docs':
+            return (
+              <>
+                {renderFinancialDocTypeSelector()}
+                {renderFinancialDocsContent()}
+              </>
+            );
+          default:
+            return null;
+        }
+      };
+    
+     
     
       const handleProceed = () => {
         if (isButtonDisabled) {
@@ -914,7 +1187,7 @@ const BusinessDocumentsScreen = () => {
         // Simulate API call
         setTimeout(() => {
           setIsLoading(false);
-          navigation.navigate("BusinessLoanEligibility");
+          navigation.navigate("MandateScreen");
         }, 2000);
       };
     
@@ -933,88 +1206,10 @@ const BusinessDocumentsScreen = () => {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
-              <View style={styles.PDtabContainer}>
-                {documentTypes.map((docType) => (
-                  <TouchableOpacity
-                    key={docType}
-                    style={[
-                      styles.PDtab,
-                      selectedDocType === docType && styles.PDselectedTab,
-                    ]}
-                    onPress={() => setSelectedDocType(docType)}>
-                    <Text
-                      style={[
-                        styles.PDtabText,
-                        selectedDocType === docType && styles.PDselectedTabText,
-                      ]}>
-                      {docType}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              {renderDocumentTypeSelector()}
             </ScrollView>
           </View>
-          <ScrollView style={styles.container}>
-            {selectedDocType === "Financial Docs" && (
-              <>
-                <Text style={styles.sectionTitle}>Select Document Type</Text>
-                <View style={styles.carouselContainer}>
-                  <ScrollView
-                    ref={scrollViewRef}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    decelerationRate="fast"
-                    snapToInterval={cardWidth}
-                    snapToAlignment="start"
-                    contentContainerStyle={styles.carouselContent}
-                    onMomentumScrollEnd={(event) => {
-                      const index = Math.round(
-                        event.nativeEvent.contentOffset.x / cardWidth
-                      );
-                      setActiveIndex(index);
-                      setSelectedIDType(financialDocTypes[index].label);
-                    }}>
-                    {financialDocTypes.map((item, index) => (
-                      <TouchableOpacity
-                        key={item.label}
-                        style={[
-                          styles.carouselItem,
-                          activeIndex === index && styles.activeCarouselItem,
-                        ]}
-                        onPress={() => handleIDTypeSelect(index)}>
-                        <Icon
-                          name={item.icon}
-                          size={24}
-                          color={activeIndex === index ? "#FFFFFF" : "#00194c"}
-                        />
-                        <Text
-                          style={[
-                            styles.carouselItemText,
-                            activeIndex === index &&
-                              styles.activeCarouselItemText,
-                          ]}>
-                          {item.label}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                  <View style={styles.paginationContainer}>
-                    {financialDocTypes.map((_, index) => (
-                      <View
-                        key={index}
-                        style={[
-                          styles.paginationDot,
-                          activeIndex === index && styles.activePaginationDot,
-                        ]}
-                      />
-                    ))}
-                  </View>
-                </View>
-              </>
-            )}
-
-            {renderFinancialDocsContent()}
-          </ScrollView>
+          <ScrollView style={styles.container}>{renderContent()}</ScrollView>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity

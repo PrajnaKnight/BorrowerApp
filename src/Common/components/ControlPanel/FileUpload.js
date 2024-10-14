@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
 
-export default function FileUpload() {
+export default function FileUpload({ placeholder, showLabel = true }) {
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [placeholderText, setPlaceholderText] = useState(placeholder || 'Select a file');
+
+  useEffect(() => {
+    setPlaceholderText(placeholder || 'Select a file');
+  }, [placeholder]);
 
   const handleFilePick = () => {
     // Simulating file pick. In a real app, you'd use DocumentPicker here
@@ -30,7 +35,7 @@ export default function FileUpload() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Upload File</Text>
+      {showLabel && <Text style={styles.label}>Upload File</Text>}
       <View style={styles.uploadContainer}>
         <View style={[styles.fileInfoContainer, file && styles.fileInfoContainerActive]}>
           {file ? (
@@ -41,7 +46,9 @@ export default function FileUpload() {
               </TouchableOpacity>
             </>
           ) : (
-            <Text style={styles.placeholder}>e.g. GST.pdf</Text>
+            <Text style={styles.placeholder}>
+              {placeholderText}
+            </Text>
           )}
         </View>
         <TouchableOpacity style={styles.uploadButton} onPress={handleFilePick}>
@@ -109,14 +116,6 @@ const styles = applyFontFamily({
     height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  switchLink: {
-    marginTop: 8,
-  },
-  switchText: {
-    fontSize: 12,
-    color: '#3B82F6',
-    textDecorationLine: 'underline',
   },
   progressContainer: {
     marginTop: 8,

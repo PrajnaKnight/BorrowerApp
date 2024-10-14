@@ -11,6 +11,7 @@ import { useProgressBar } from '../../Common/components/ControlPanel/progressCon
 import ProgressBar from '../../Common/components/ControlPanel/progressBar';
 import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
 import { Ionicons } from '@expo/vector-icons';
+import applyFontFamily from '../../assets/style/applyFontFamily';
 
 const BusinessOwnerDetails = () => {
   const navigation = useNavigation();
@@ -274,7 +275,7 @@ const BusinessOwnerDetails = () => {
   );
 };
 
-const cardStyles = StyleSheet.create({
+const cardStyles = applyFontFamily({
   cardContainer: {
     flexDirection: "row",
     paddingVertical: 10,

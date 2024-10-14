@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Platform, Dimensions,Image } from 'react-native';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
+import { Icon } from 'lucide-react';
 
 const CustomDropdown = ({
   value,
@@ -21,6 +22,7 @@ const CustomDropdown = ({
   label,
   onOpen,
   onClose,
+  icon
 }) => {
   const [open, setOpen] = useState(false);
   const [dropdownHeight, setDropdownHeight] = useState(300);
@@ -38,7 +40,7 @@ const CustomDropdown = ({
 
   const styles = applyFontFamily({
     container: {
-      marginBottom: 15,
+      marginBottom: 10,
     },
     label: {
       fontSize: 14,
@@ -78,8 +80,18 @@ const CustomDropdown = ({
       fontSize: 14,
       marginTop: 5,
     },
+    itemContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      width: 24,
+      height: 24,
+      marginRight: 10,
+    },
   });
 
+  
   return (
     <View style={[styles.container, { zIndex }]}>
       {label && <Text style={styles.label}>{label}</Text>}

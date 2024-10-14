@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import applyFontFamily from '../../../assets/style/applyFontFamily';
 
 const MultiSelectDropdown = ({ 
   label, 
@@ -90,7 +91,7 @@ const MultiSelectDropdown = ({
 };
 
 
-const styles = StyleSheet.create({
+const styles = applyFontFamily({
   container: {
     marginBottom: 16,
   },
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chipText: {
-    fontSize: 12,
+    fontSize: 14,
     color: 'white',
   },
   chipRemove: {
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     padding: 12,
-    fontSize: 14,
+    fontSize: 15,
     color: '#333',
   },
   searchIcon: {

@@ -890,4 +890,31 @@ export const styles = applyFontFamily({
     fontSize: 15,
     color: '#1F2937',
   },
+  //mandate styles starts
+  mandateOptionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 24,
+  },
+  mandateOption: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  selectedMandateOption: {
+    backgroundColor: "#002777",
+  },
+  mandateOptionText: {
+    color: "#00194C",
+    fontSize: 12,
+    fontWeight: "500",
+  },
+  selectedMandateOptionText: {
+    color: "#FFFFFF",
+  },
+  //mandate styles ends
 });

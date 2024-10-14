@@ -46,7 +46,7 @@ const LoanDetailsScreen = () => {
   const dynamicFontSize = (size) => size + fontSize;
 
   const handleProceed = () => {
-    navigation.navigate("BusinessDocuments");
+    navigation.navigate("BusinessInfo");
     console.log('Proceed button clicked');
   };
   
@@ -88,7 +88,6 @@ const LoanDetailsScreen = () => {
               setValue={setSelectedLoanType} // Update the selected loan type state
               items={LoanTypes}
               placeholder="Select Loan Type"
-              containerStyle={{ marginBottom: 20 }}
               zIndex={9000}
             />
           </View>
@@ -154,7 +153,6 @@ const LoanDetailsScreen = () => {
             setItems={setPurposeItems}
             placeholder="Select purpose"
             searchable={true}
-            containerStyle={{ marginBottom: 20 }}
             zIndex={9000}
           />
         </ScrollView>
