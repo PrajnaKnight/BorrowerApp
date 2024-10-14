@@ -559,6 +559,7 @@ const DocumentUploadScreen = ({ navigation }) => {
   )
 
 
+
   const renderChildType = () => {
     const filteredKeys = getFilteredKeys();
     if (filteredKeys.length === 0) return null;
@@ -795,10 +796,13 @@ const DocumentUploadScreen = ({ navigation }) => {
 
 
 
-  const RenderPasswordInput = (selectedFile) => (
+  const RenderPasswordInput = (selectedFile) =>{
 
 
-    selectedFile && <View style={styles.passwordContainer}>
+    if(uploadDocumentSlices.data.selectedDoc.child != "Aadhaar Card" && uploadDocumentSlices.data.selectedDoc.child != "Bank Statement"){
+      return <></>
+    }
+    return selectedFile && <View style={styles.passwordContainer}>
       <View style={styles.passwordLabelContainer}>
         <Text style={styles.passwordLabel}>Is password protected ?</Text>
 
@@ -902,7 +906,7 @@ const DocumentUploadScreen = ({ navigation }) => {
                    }
          </View>
       }
-    </View>)
+    </View>}
 
   const { width, height } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
