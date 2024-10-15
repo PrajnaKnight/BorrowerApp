@@ -235,6 +235,7 @@ const EMICalculator = ({ navigation }) => {
               min={0}
               max={50}
               step={1}
+              placeholder={"0"}
               onValueChange={(value) => {
                 setInterestError(null);
                 handleSliderChange("InterestRate", value);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Slider from '@react-native-community/slider';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
@@ -20,10 +20,18 @@ const LoanTenureSlider = ({
     setSliderValue(index / (labelValues.length - 1));
   }, [value, labelValues]);
 
+  const handleTextChange = (text) => {
+    
+      const numericValue = text.replace(/[^0-9]/g, '');
+      onValueChange(Number(numericValue));
+     
+    
+  };
+
   const findClosestLabelIndex = (val) => {
     return labelValues.reduce((closestIndex, currentValue, currentIndex, array) => {
-      return Math.abs(currentValue - val) < Math.abs(array[closestIndex] - val) 
-        ? currentIndex 
+      return Math.abs(currentValue - val) < Math.abs(array[closestIndex] - val)
+        ? currentIndex
         : closestIndex;
     }, 0);
   };
@@ -76,32 +84,42 @@ const LoanTenureSlider = ({
           <Text style={styles.label}>{label}</Text>
           <View style={styles.toggleAndValueContainer}>
             {renderToggleButtons()}
-            <View style={styles.valueContainer}>
-              <Text style={styles.valueText}>{value}</Text>
-            </View>
+            <TextInput
+              style={styles.valueContainer}
+              value={value?.toString()}
+              keyboardType="numeric"
+              onChangeText={handleTextChange}
+
+            />
           </View>
         </View>
       )}
-      
+
       {layout === 'compact' && (
         <>
           <View style={styles.compactHeader}>
             <Text style={styles.label}>{label}</Text>
             {renderToggleButtons()}
           </View>
-          <View style={styles.valueContainer}>
-            <Text style={styles.valueText}>{value}</Text>
-          </View>
+
+
+          <TextInput
+            value={value?.toString()}
+            style={styles.valueContainer}
+            keyboardType="numeric"
+            onChangeText={handleTextChange}
+
+          />
         </>
       )}
-      
+
       <View style={styles.sliderContainer}>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={1}
           step={1 / (labelValues.length - 1)}
-          value={sliderValue}
+          value={sliderValue || 0}
           onValueChange={handleSliderChange}
           minimumTrackTintColor="#0010AC"
           maximumTrackTintColor="#758BFD"
@@ -178,6 +196,7 @@ const styles = applyFontFamily({
     paddingVertical: 5,
     borderRadius: 5,
     alignSelf: 'flex-end',
+    textAlign: 'center',
   },
   valueText: {
     color: '#00194C',
