@@ -33,6 +33,9 @@ const RepaymentSchedule = ({ navigation, route }) => {
       setChart(response.data.ScheduleByYear)
     })
   }, [startDate])
+  useEffect(()=>{
+    setStartDate(formData.StartDate)
+  },[formData.StartDate])
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
     setShowDatePicker(Platform.OS === 'ios');
