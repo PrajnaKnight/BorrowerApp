@@ -24,7 +24,7 @@ const formatCrLFormat = (value) => {
   }
 };
 
-const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, suffix }) => {
+const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, suffix, placeholder , isROI}) => {
   const formatDisplayValue = (val) => {
     if (isCurrency) {
       return `₹ ${formatIndianCurrency(val)}`;
@@ -40,8 +40,14 @@ const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, 
   };
 
   const handleTextChange = (text) => {
-    const numericValue = text.replace(/[^0-9]/g, '');
-    onValueChange(Number(numericValue));
+    if(isROI){
+      const numericValue = text;
+      onValueChange(numericValue);
+    }
+    else{
+      const numericValue = text.replace(/[^0-9]/g, '');
+      onValueChange(Number(numericValue));
+    }
   };
 
   return (
@@ -54,6 +60,8 @@ const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, 
             value={formatDisplayValue(value)}
             keyboardType="numeric"
             onChangeText={handleTextChange}
+            placeholder={placeholder}
+            placeholderTextColor={"black"}
           />
           {suffix && <Text style={styles.suffix}>{suffix}</Text>}
         </View>
@@ -64,7 +72,7 @@ const InputSlider = ({ label, value, min, max, step, onValueChange, isCurrency, 
           minimumValue={min}
           maximumValue={max}
           step={step}
-          value={value}
+          value={value ? parseFloat(value) : 0}
           onValueChange={onValueChange}
           minimumTrackTintColor="#0010AC"
           maximumTrackTintColor="#758BFD"
