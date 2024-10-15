@@ -1,41 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import applyFontFamily from '../../../assets/style/applyFontFamily';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import applyFontFamily from "../../../assets/style/applyFontFamily";
 
-const MultiSelectDropdown = ({ 
-  label, 
-  items, 
-  selectedItems, 
+const MultiSelectDropdown = ({
+  label,
+  items,
+  selectedItems,
   onItemsChange,
   placeholder = "Search...",
-  chipLabel = (item) => item.split('-')[0] + '-...',
+  chipLabel = (item) => item,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(items);
 
   useEffect(() => {
-    setFilteredItems(items.filter(item => 
-      item.label.toLowerCase().includes(search.toLowerCase())
-    ));
+    setFilteredItems(
+      items.filter((item) =>
+        item.label.toLowerCase().includes(search.toLowerCase())
+      )
+    );
   }, [search, items]);
 
-  const handleToggleItem = (value) => {
-    const updatedItems = selectedItems.includes(value)
-      ? selectedItems.filter(item => item !== value)
-      : [...selectedItems, value];
+  const handleToggleItem = (label) => {
+    const updatedItems = selectedItems.includes(label)
+      ? selectedItems.filter((item) => item !== label)
+      : [...selectedItems, label];
     onItemsChange(updatedItems);
   };
 
   const handleRemoveItem = (value) => {
-    onItemsChange(selectedItems.filter(item => item !== value));
+    onItemsChange(selectedItems.filter((item) => item !== value));
   };
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
     if (isOpen) {
-      setSearch('');  // Clear search when closing dropdown
+      setSearch(""); // Clear search when closing dropdown
     }
   };
 
@@ -45,14 +54,15 @@ const MultiSelectDropdown = ({
       <View style={styles.dropdownContainer}>
         {selectedItems.length > 0 && (
           <View style={styles.chipsContainer}>
-            {selectedItems.map((item) => (
-              <View key={item} style={styles.chip}>
-                <Text style={styles.chipText}>{chipLabel(item)}</Text>
-                <TouchableOpacity onPress={() => handleRemoveItem(item)}>
-                  <Text style={styles.chipRemove}>×</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+            {selectedItems.map((item) =>(
+                <View key={item} style={styles.chip}>
+                  <Text style={styles.chipText}>{chipLabel(item)}</Text>
+                  <TouchableOpacity onPress={() => handleRemoveItem(item)}>
+                    <Text style={styles.chipRemove}>×</Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            )}
           </View>
         )}
         <View style={styles.inputContainer}>
@@ -64,7 +74,11 @@ const MultiSelectDropdown = ({
             onFocus={() => !isOpen && setIsOpen(true)}
           />
           <TouchableOpacity onPress={toggleDropdown} style={styles.searchIcon}>
-            <Icon name={isOpen ? "chevron-up-outline" : "search-outline"} size={20} color="#999" />
+            <Icon
+              name={isOpen ? "chevron-up-outline" : "search-outline"}
+              size={20}
+              color="#999"
+            />
           </TouchableOpacity>
         </View>
         {isOpen && (
@@ -73,12 +87,14 @@ const MultiSelectDropdown = ({
               <TouchableOpacity
                 key={item.value}
                 style={styles.item}
-                onPress={() => handleToggleItem(item.value)}
+                onPress={() => handleToggleItem(item.label)}
               >
                 <View style={styles.checkbox}>
-                  {selectedItems.includes(item.value) && <View style={styles.checkboxInner}>
-                    <Icon name="checkmark-outline" size={12} color="#fff" />
-                    </View>}
+                  {selectedItems.includes(item.label) && (
+                    <View style={styles.checkboxInner}>
+                      <Icon name="checkmark-outline" size={12} color="#fff" />
+                    </View>
+                  )}
                 </View>
                 <Text style={styles.itemText}>{item.label}</Text>
               </TouchableOpacity>
@@ -89,7 +105,6 @@ const MultiSelectDropdown = ({
     </View>
   );
 };
-
 
 const styles = applyFontFamily({
   container: {
@@ -103,47 +118,47 @@ const styles = applyFontFamily({
   },
   dropdownContainer: {
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 8,
-    backgroundColor: '#FFF',
-    overflow: 'hidden',
+    backgroundColor: "#FFF",
+    overflow: "hidden",
   },
   chipsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: 8,
   },
   chip: {
-    backgroundColor: '#758BFD',
+    backgroundColor: "#758BFD",
     borderRadius: 16,
     paddingHorizontal: 8,
     paddingVertical: 4,
     marginRight: 8,
     marginBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   chipText: {
     fontSize: 14,
-    color: 'white',
+    color: "white",
   },
   chipRemove: {
     marginLeft: 4,
     fontSize: 16,
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: "#E0E0E0",
   },
   input: {
     flex: 1,
     padding: 12,
     fontSize: 15,
-    color: '#333',
+    color: "#333",
   },
   searchIcon: {
     padding: 12,
@@ -151,34 +166,34 @@ const styles = applyFontFamily({
   dropdown: {
     maxHeight: 200,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: "#E0E0E0",
   },
   item: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: "#E0E0E0",
   },
   checkbox: {
     width: 20,
     height: 20,
     borderWidth: 2,
-    borderColor: '#ff8500',
+    borderColor: "#ff8500",
     borderRadius: 4,
     marginRight: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   checkboxInner: {
     width: 12,
     height: 12,
-    backgroundColor: '#ff8500',
+    backgroundColor: "#ff8500",
     borderRadius: 2,
   },
   itemText: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
 });
 

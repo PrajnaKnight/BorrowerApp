@@ -1,41 +1,49 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import CustomInput from '../../Common/components/ControlPanel/input';
-import CustomDropdown from '../../Common/components/ControlPanel/dropdownPicker';
-import Layout from '../../Common/components/Layout';
-import { styles } from '../../assets/style/msmeStyle';
-import ButtonComponent from '../../Common/components/ControlPanel/button';
-import RadioButton from '../../Common/components/ControlPanel/radioButton';
-import { useNavigation } from '@react-navigation/native';
-import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
-import ProgressBar from '../../Common/components/ControlPanel/progressBar';
-import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
-import MultiSelectDropdown from '../../Common/components/ControlPanel/MultiSelectDropdown';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import CustomInput from "../../Common/components/ControlPanel/input";
+import CustomDropdown from "../../Common/components/ControlPanel/dropdownPicker";
+import Layout from "../../Common/components/Layout";
+import { styles } from "../../assets/style/msmeStyle";
+import ButtonComponent from "../../Common/components/ControlPanel/button";
+import RadioButton from "../../Common/components/ControlPanel/radioButton";
+import { useNavigation } from "@react-navigation/native";
+import { useProgressBar } from "../../Common/components/ControlPanel/progressContext";
+import ProgressBar from "../../Common/components/ControlPanel/progressBar";
+import { GoBack } from "../../PersonalLoan/services/Utils/ViewValidator";
+import MultiSelectDropdown from "../../Common/components/ControlPanel/MultiSelectDropdown";
 
 const BusinessProfileScreen = () => {
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isRegisteredWithGSTIN, setIsRegisteredWithGSTIN] = useState(true);
-  const [gstinNumbers, setGstinNumbers] = useState(['']);
+  const [gstinNumbers, setGstinNumbers] = useState([""]);
   const [formData, setFormData] = useState({
-    proprietorName: 'Leena Lalwani',
-    entityName: 'Leena Bakes',
-    natureOfBusiness: 'Customer Service',
-    businessMode: 'B2B',
-    companyType: 'Micro',
-    primaryIndustry: '10-Manufacture of Food Products',
+    proprietorName: "Leena Lalwani",
+    entityName: "Leena Bakes",
+    natureOfBusiness: "Customer Service",
+    businessMode: "B2B",
+    companyType: "Micro",
+    primaryIndustry: "10-Manufacture of Food Products",
     subSector: [],
     subClass: [],
   });
 
-  const [subSectorSearch, setSubSectorSearch] = useState('');
+  const [subSectorSearch, setSubSectorSearch] = useState("");
   const [filteredSubSectors, setFilteredSubSectors] = useState([]);
 
   useEffect(() => {
-    setFilteredSubSectors(dropdownItems.subSector.filter(item => 
-      item.label.toLowerCase().includes(subSectorSearch.toLowerCase())
-    ));
+    setFilteredSubSectors(
+      dropdownItems.subSector.filter((item) =>
+        item.label.toLowerCase().includes(subSectorSearch.toLowerCase())
+      )
+    );
   }, [subSectorSearch]);
 
   const [errors, setErrors] = useState({});
@@ -49,29 +57,35 @@ const BusinessProfileScreen = () => {
   // Dropdown items
   const dropdownItems = {
     natureOfBusiness: [
-      { label: 'Customer Service', value: 'Customer Service' },
-      { label: 'Manufacturing', value: 'Manufacturing' },
-      { label: 'Retail', value: 'Retail' },
+      { label: "Customer Service", value: "Customer Service" },
+      { label: "Manufacturing", value: "Manufacturing" },
+      { label: "Retail", value: "Retail" },
     ],
     companyType: [
-      { label: 'Micro', value: 'Micro' },
-      { label: 'Small', value: 'Small' },
-      { label: 'Medium', value: 'Medium' },
+      { label: "Micro", value: "Micro" },
+      { label: "Small", value: "Small" },
+      { label: "Medium", value: "Medium" },
     ],
     primaryIndustry: [
-      { label: '10-Manufacture of Food Products', value: '10-Manufacture of Food Products' },
-      { label: '11-Manufacture of Bakery Pro...', value: '11-Manufacture of Bakery Pro...' },
-      { label: '12-Manufacture of Bread', value: '12-Manufacture of Bread' },
+      {
+        label: "10-Manufacture of Food Products",
+        value: "10-Manufacture of Food Products",
+      },
+      {
+        label: "11-Manufacture of Bakery Pro...",
+        value: "11-Manufacture of Bakery Pro...",
+      },
+      { label: "12-Manufacture of Bread", value: "12-Manufacture of Bread" },
     ],
     subSector: [
-      { label: '1071-Manufacture of Bakery Products', value: '1071' },
-      { label: '1072-Manufacture of Sugar', value: '1072' },
-      { label: '1073-Manufacture of Coca, Chocolate', value: '1073' },
+      { label: "1071-Manufacture of Bakery Products", value: "1071" },
+      { label: "1072-Manufacture of Sugar", value: "1072" },
+      { label: "1073-Manufacture of Coca, Chocolate", value: "1073" },
     ],
     subClass: [
-      { label: '1071-Manufacture of Bakery Products', value: '1071' },
-      { label: '1072-Manufacture of Sugar', value: '1072' },
-      { label: '1073-Manufacture of Coca, Chocolate', value: '1073' },
+      { label: "1071-Manufacture of Bakery Products", value: "1071" },
+      { label: "1072-Manufacture of Sugar", value: "1072" },
+      { label: "1073-Manufacture of Coca, Chocolate", value: "1073" },
     ],
   };
 
@@ -80,37 +94,42 @@ const BusinessProfileScreen = () => {
   }, [formData]);
 
   const handleInputChange = (field, value) => {
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.proprietorName) newErrors.proprietorName = 'Proprietor Name is required';
-    if (!formData.entityName) newErrors.entityName = 'Business Name is required';
-    if (!formData.natureOfBusiness) newErrors.natureOfBusiness = 'Nature of Business is required';
-    if (!formData.businessMode) newErrors.businessMode = 'Business Mode is required';
-    if (!formData.companyType) newErrors.companyType = 'Company Type is required';
-    if (!formData.primaryIndustry) newErrors.primaryIndustry = 'Primary Industry is required';
-    if (formData.subSector.length === 0) newErrors.subSector = 'At least one Sub Sector is required';
-    if (formData.subClass.length === 0) newErrors.subClass = 'At least one Sub Class is required';
+    if (!formData.proprietorName)
+      newErrors.proprietorName = "Proprietor Name is required";
+    if (!formData.entityName)
+      newErrors.entityName = "Business Name is required";
+    if (!formData.natureOfBusiness)
+      newErrors.natureOfBusiness = "Nature of Business is required";
+    if (!formData.businessMode)
+      newErrors.businessMode = "Business Mode is required";
+    if (!formData.companyType)
+      newErrors.companyType = "Company Type is required";
+    if (!formData.primaryIndustry)
+      newErrors.primaryIndustry = "Primary Industry is required";
+    if (formData.subSector.length === 0)
+      newErrors.subSector = "At least one Sub Sector is required";
+    if (formData.subClass.length === 0)
+      newErrors.subClass = "At least one Sub Class is required";
     setErrors(newErrors);
     setIsButtonDisabled(Object.keys(newErrors).length > 0);
   };
 
   const handleProceed = () => {
     if (!isButtonDisabled) {
-      console.log('Form is valid. Proceeding...');
-      navigation.navigate('BusinessTypeDetails');
+      console.log("Form is valid. Proceeding...");
+      navigation.navigate("BusinessTypeDetails");
     } else {
-      console.log('Form has errors. Please correct them.');
+      console.log("Form has errors. Please correct them.");
     }
   };
-
-  
 
   const renderInputField = (label, field, placeholder, readOnly = false) => {
     return (
@@ -118,7 +137,7 @@ const BusinessProfileScreen = () => {
         <Text style={styles.label}>{label}</Text>
         <CustomInput
           placeholder={placeholder}
-          value={formData[field] || ''}
+          value={formData[field] || ""}
           onChangeText={(text) => handleInputChange(field, text)}
           error={errors[field]}
           readOnly={readOnly}
@@ -127,8 +146,12 @@ const BusinessProfileScreen = () => {
     );
   };
 
-
-  const renderDropdownField = (label, field, placeholder, multiSelect = false) => {
+  const renderDropdownField = (
+    label,
+    field,
+    placeholder,
+    multiSelect = false
+  ) => {
     return (
       <View style={styles.inputContainer}>
         <CustomDropdown
@@ -136,7 +159,9 @@ const BusinessProfileScreen = () => {
           value={formData[field]}
           setValue={(value) => handleInputChange(field, value)}
           items={dropdownItems[field]}
-          setItems={(items) => {/* Handle items update if needed */}}
+          setItems={(items) => {
+            /* Handle items update if needed */
+          }}
           placeholder={placeholder}
           error={errors[field]}
           searchable={multiSelect}
@@ -158,7 +183,7 @@ const BusinessProfileScreen = () => {
   };
 
   const addGSTINNumber = () => {
-    setGstinNumbers([...gstinNumbers, '']);
+    setGstinNumbers([...gstinNumbers, ""]);
   };
 
   const removeGSTINNumber = (index) => {
@@ -184,27 +209,40 @@ const BusinessProfileScreen = () => {
       {isRegisteredWithGSTIN && (
         <View>
           {gstinNumbers.map((gstin, index) => (
-            <View key={index} style={[styles.gstinInputContainer, index > 0 && styles.gstinInputContainerDelete]}>
-              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-              <Text style={styles.label}>GSTIN Number</Text>
-              {index > 0 && (
-                <TouchableOpacity
-                  style={styles.gstdeleteButton}
-                  onPress={() => removeGSTINNumber(index)}
-                >
-                  <Text style={styles.gstdeleteButtonText}>Delete</Text>
-                </TouchableOpacity>
-              )}
+            <View
+              key={index}
+              style={[
+                styles.gstinInputContainer,
+                index > 0 && styles.gstinInputContainerDelete,
+              ]}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.label}>GSTIN Number</Text>
+                {index > 0 && (
+                  <TouchableOpacity
+                    style={styles.gstdeleteButton}
+                    onPress={() => removeGSTINNumber(index)}
+                  >
+                    <Text style={styles.gstdeleteButtonText}>Delete</Text>
+                  </TouchableOpacity>
+                )}
               </View>
               <CustomInput
                 placeholder="Enter GSTIN Number"
                 value={gstin}
                 onChangeText={(text) => handleGSTINChange(index, text)}
               />
-            
             </View>
           ))}
-          <TouchableOpacity style={styles.addGSTINButton} onPress={addGSTINNumber}>
+          <TouchableOpacity
+            style={styles.addGSTINButton}
+            onPress={addGSTINNumber}
+          >
             <Text style={styles.addGSTINButtonText}>Add GSTIN Number</Text>
           </TouchableOpacity>
         </View>
@@ -227,7 +265,8 @@ const BusinessProfileScreen = () => {
         ref={scrollViewRef}
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         {renderInputField(
           "Proprietor Name",
           "proprietorName",
@@ -254,23 +293,23 @@ const BusinessProfileScreen = () => {
           </View>
           {renderGSTINSection()}
         </View>
-          {renderDropdownField(
-            "Company Type",
-            "companyType",
-            "Select Company Type"
-          )}
-          {renderDropdownField(
-            "Primary Industry",
-            "primaryIndustry",
-            "Search Primary Industry"
-          )}
+        {renderDropdownField(
+          "Company Type",
+          "companyType",
+          "Select Company Type"
+        )}
+        {renderDropdownField(
+          "Primary Industry",
+          "primaryIndustry",
+          "Search Primary Industry"
+        )}
         <MultiSelectDropdown
           label="Sub Sector"
           items={dropdownItems.subSector}
           selectedItems={formData.subSector}
           onItemsChange={(items) => handleInputChange("subSector", items)}
           placeholder="Search Sub Sector"
-          chipLabel={(item) => item.split("-")[0] + "-Manuf..."}
+          chipLabel={(item) => item}
         />
         <MultiSelectDropdown
           label="Sub Class"
@@ -283,7 +322,8 @@ const BusinessProfileScreen = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.cancelButton}
-          onPress={() => GoBack(navigation)}>
+          onPress={() => GoBack(navigation)}
+        >
           <Text style={[styles.cancelButtonText]}>Back</Text>
         </TouchableOpacity>
         <View style={styles.proceedButtonContainer}>

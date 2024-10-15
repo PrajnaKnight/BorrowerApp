@@ -44,6 +44,14 @@ export const styles = applyFontFamily({
     flexWrap: "wrap",
     marginBottom: 20,
   },
+  bankIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
   businessTypeButton: {
     borderWidth: 1,
     borderColor: "#E5ECFC",

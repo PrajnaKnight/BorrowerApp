@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import CustomInput from './input';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
 
-const UploadController = ({ title, inputPlaceholder, required, passwordProtected = false, inputEnabled = true }) => {
+const UploadController = ({ title, inputPlaceholder, required, passwordProtected = false, inputEnabled = true, isAadhaar = false }) => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [uploadError, setUploadError] = useState(null);
   const [inputValue, setInputValue] = useState('');
@@ -94,6 +94,57 @@ const UploadController = ({ title, inputPlaceholder, required, passwordProtected
             </TouchableOpacity>
           </View>
         </View>
+        {isAadhaar && (
+          <View style={styles.uploadContainer}>
+          <View
+            style={[
+              styles.previewContainer,
+              uploadError && styles.errorBorder,
+            ]}>
+            {uploadedFile ? (
+              <>
+                <Image source={{ uri: uploadedFile }} style={styles.preview} />
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={handleClosePreview}>
+                  <Icon name="times" size={20} color="#FF0000" />
+                </TouchableOpacity>
+              </>
+            ) : (
+              <View style={styles.placeholderPreview}>
+                <Text
+                  style={[
+                    uploadError
+                      ? styles.ErrorplaceholderText
+                      : styles.placeholderText,
+                  ]}>
+                  {uploadError ? uploadError : `Preview ${title}`}
+                </Text>
+                {uploadError && (
+                  <Icon
+                    name="exclamation-triangle"
+                    size={20}
+                    color="#FF0000"
+                    style={styles.errorIcon}
+                  />
+                )}
+              </View>
+            )}
+          </View>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={handleUpload}>
+              <Icon name="upload" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={handleCamera}>
+              <Icon name="camera" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        )}
         {inputEnabled && (
           <CustomInput
             title={title}

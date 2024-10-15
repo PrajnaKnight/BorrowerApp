@@ -434,7 +434,7 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
   const handlePress = () => {
     switch (title) {
       case 'Prepay':
-        navigation.navigate('Repayment');
+        navigation.navigate('MsmeLoan');
         break;
       case 'EMI Calculator':
         navigation.navigate('EMICalculator');

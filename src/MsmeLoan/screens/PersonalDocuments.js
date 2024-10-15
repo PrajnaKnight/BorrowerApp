@@ -1,23 +1,30 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import Layout from '../../Common/components/Layout';
-import ButtonComponent from '../../Common/components/ControlPanel/button';
-import { useProgressBar } from '../../Common/components/ControlPanel/progressContext';
-import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+import Layout from "../../Common/components/Layout";
+import ButtonComponent from "../../Common/components/ControlPanel/button";
+import { useProgressBar } from "../../Common/components/ControlPanel/progressContext";
+import { GoBack } from "../../PersonalLoan/services/Utils/ViewValidator";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useNavigation } from '@react-navigation/native';
-import { styles } from '../../assets/style/msmeStyle';
-import UploadController from '../../Common/components/ControlPanel/UploadController';
-import ProgressBar from '../../Common/components/ControlPanel/progressBar';
+import { useNavigation } from "@react-navigation/native";
+import { styles } from "../../assets/style/msmeStyle";
+import UploadController from "../../Common/components/ControlPanel/UploadController";
+import ProgressBar from "../../Common/components/ControlPanel/progressBar";
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 const cardWidth = (screenWidth - 40) / 3; // 3 cards with some margin
 
 const PersonalDocumentsScreen = () => {
   const navigation = useNavigation();
-  const [selectedApplicant, setSelectedApplicant] = useState('applicant');
-  const [selectedDocType, setSelectedDocType] = useState('ID Proof');
-  const [selectedIDType, setSelectedIDType] = useState('PAN Card');
+  const [selectedApplicant, setSelectedApplicant] = useState("applicant");
+  const [selectedDocType, setSelectedDocType] = useState("ID Proof");
+  const [selectedIDType, setSelectedIDType] = useState("PAN Card");
   const { setProgress } = useProgressBar();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -28,16 +35,16 @@ const PersonalDocumentsScreen = () => {
   }, []);
 
   const applicants = [
-    { id: 'applicant', name: 'Leela Lalwani' },
-    { id: 'co-applicant', name: 'Co-applicant' }
+    { id: "applicant", name: "Leela Lalwani" },
+    { id: "co-applicant", name: "Co-applicant" },
   ];
-  const documentTypes = ['ID Proof', 'Address Proof'];
+  const documentTypes = ["ID Proof", "Address Proof"];
   const idTypes = [
-    { label: 'PAN Card', icon: 'id-card' },
-    { label: 'Aadhaar Card', icon: 'id-badge' },
-    { label: 'Passport', icon: 'credit-card' },
-    { label: 'Voter ID', icon: 'address-card' },
-    { label: 'Driving License', icon: 'car' },
+    { label: "PAN Card", icon: "id-card" },
+    { label: "Aadhaar Card", icon: "id-badge" },
+    { label: "Passport", icon: "credit-card" },
+    { label: "Voter ID", icon: "address-card" },
+    { label: "Driving License", icon: "car" },
   ];
 
   const handleProceed = () => {
@@ -52,7 +59,9 @@ const PersonalDocumentsScreen = () => {
 
   return (
     <Layout>
-      <View style={{ padding: 16, backgroundColor: "#ffffff", paddingBottom: 0 }}>
+      <View
+        style={{ padding: 16, backgroundColor: "#ffffff", paddingBottom: 0 }}
+      >
         <ProgressBar progress={0.6} />
         <View style={styles.TOpTitleContainer}>
           <Text style={[styles.TitleText]}>Personal Documents</Text>
@@ -68,13 +77,15 @@ const PersonalDocumentsScreen = () => {
                 selectedApplicant === applicant.id &&
                   styles.selectedApplicantTab,
               ]}
-              onPress={() => setSelectedApplicant(applicant.id)}>
+              onPress={() => setSelectedApplicant(applicant.id)}
+            >
               <Text
                 style={[
                   styles.applicantTabText,
                   selectedApplicant === applicant.id &&
                     styles.selectedApplicantTabText,
-                ]}>
+                ]}
+              >
                 {applicant.name}
               </Text>
             </TouchableOpacity>
@@ -89,18 +100,20 @@ const PersonalDocumentsScreen = () => {
                 styles.PDtab,
                 selectedDocType === docType && styles.PDselectedTab,
               ]}
-              onPress={() => setSelectedDocType(docType)}>
+              onPress={() => setSelectedDocType(docType)}
+            >
               <Text
                 style={[
                   styles.PDtabText,
                   selectedDocType === docType && styles.PDselectedTabText,
-                ]}>
+                ]}
+              >
                 {docType}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
-          
+
         <Text style={styles.sectionTitle}>Select ID Type</Text>
         <View style={styles.carouselContainer}>
           <ScrollView
@@ -117,7 +130,8 @@ const PersonalDocumentsScreen = () => {
               );
               setActiveIndex(index);
               setSelectedIDType(idTypes[index].label);
-            }}>
+            }}
+          >
             {idTypes.map((item, index) => (
               <TouchableOpacity
                 key={item.label}
@@ -125,7 +139,8 @@ const PersonalDocumentsScreen = () => {
                   styles.carouselItem,
                   activeIndex === index && styles.activeCarouselItem,
                 ]}
-                onPress={() => handleIDTypeSelect(index)}>
+                onPress={() => handleIDTypeSelect(index)}
+              >
                 <Icon
                   name={item.icon}
                   size={24}
@@ -135,7 +150,8 @@ const PersonalDocumentsScreen = () => {
                   style={[
                     styles.carouselItemText,
                     activeIndex === index && styles.activeCarouselItemText,
-                  ]}>
+                  ]}
+                >
                   {item.label}
                 </Text>
               </TouchableOpacity>
@@ -162,6 +178,7 @@ const PersonalDocumentsScreen = () => {
             required={true}
             passwordProtected={true}
             inputEnabled={false}
+            isAadhaar={selectedIDType === "Aadhaar Card"}
           />
         </View>
       </ScrollView>
@@ -169,7 +186,8 @@ const PersonalDocumentsScreen = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.cancelButton}
-          onPress={() => GoBack(navigation)}>
+          onPress={() => GoBack(navigation)}
+        >
           <Text style={styles.cancelButtonText}>Back</Text>
         </TouchableOpacity>
         <View style={styles.proceedButtonContainer}>
@@ -190,6 +208,5 @@ const PersonalDocumentsScreen = () => {
     </Layout>
   );
 };
-
 
 export default PersonalDocumentsScreen;
