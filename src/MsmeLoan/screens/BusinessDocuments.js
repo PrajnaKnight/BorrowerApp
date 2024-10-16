@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Pressable,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Layout from "../../Common/components/Layout";
@@ -26,6 +27,7 @@ import CustomDropdown from "../../Common/components/ControlPanel/dropdownPicker"
 import applyFontFamily from "../../assets/style/applyFontFamily";
 import FileUpload from "../../Common/components/ControlPanel/FileUpload";
 import CustomBankDropdown from "../../Common/components/ControlPanel/CustomBankDropdown";
+
 
 const { width: screenWidth } = Dimensions.get("window");
 const cardWidth = (screenWidth - 40) / 3;
@@ -68,7 +70,7 @@ const BusinessDocumentsScreen = () => {
   const [useGSTManualUpload, setUseGSTManualUpload] = useState(false);
   const [gstNumber, setGstNumber] = useState("");
   const [gstOtp, setGstOtp] = useState("");
-  const [gstDetails, setGstDetails] = useState(null);
+  const [gstDetails, setGstDetails] = useState([{}]);
   const [otpTimer, setOtpTimer] = useState(120);
   const [isOtpSent, setIsOtpSent] = useState(false);
 
@@ -77,7 +79,7 @@ const BusinessDocumentsScreen = () => {
   const [useITRManualUpload, setUseITRManualUpload] = useState(false);
   const [panNumber, setPanNumber] = useState("");
   const [itrPassword, setItrPassword] = useState("");
-  const [itrDetails, setItrDetails] = useState(null);
+  const [itrDetails, setItrDetails] = useState([{}]);
   const [additr, setAddItr] = useState(false);
 
   // ID Proof state
@@ -242,12 +244,21 @@ const BusinessDocumentsScreen = () => {
     setGstFiles([...gstFiles, file]);
   };
 
+  //set GSTIN data to gstDetails state. 
   const handleAddAnotherGSTIN = () => {
-    setSelectedGSTIN(null);
-    setSelectedReturnForm(null);
-    setSelectedFrequency(null);
-    setSelectedFinancialYear(null);
-    setGstFiles([]);
+    if(selectedGSTIN){
+      const gstDetailsEntry = {
+        gstNumber: selectedGSTIN,
+        returnForm: selectedReturnForm,
+        frequency: selectedFrequency,
+        financialYear: selectedFinancialYear
+      }
+      setGstDetails((prev)=>[...prev,gstDetailsEntry]);
+      setselectedGSTIN('');
+      setselectedReturnForm('');
+      setselectedFrequency('');
+      setselectedFinancialYear('');
+    }
   };
 
   const handleDocTypeSelect = (docType) => {
@@ -663,6 +674,11 @@ const BusinessDocumentsScreen = () => {
     }
   };
 
+  const handleRemoveGstUpload = (index) => {
+    const updatedGstDetails = gstDetails.filter((item, i) => i !== index);
+    setGstDetails(updatedGstDetails);
+  }
+
   const renderGSTUpload = () => {
     return (
       <View style={financialDocsStyles.uploadOptionsContainer}>
@@ -711,32 +727,82 @@ const BusinessDocumentsScreen = () => {
                 Upload GST filing return as per frequency
               </Text>
             </TouchableOpacity>
+            {gstDetails.length>1 && (
+          <View>
+            <Text style={financialDocsStyles.sectionTitle}>
+              Uploaded GST Details
+            </Text>
+            {
+          gstDetails.map((detail, index) => (
+            detail.gstNumber && (
+              <View
+          key={index}
+          style={financialDocsStyles.submittedStatement}
+        >
+          <View style={financialDocsStyles.bankNameContainer}>
+            <View
+              style={[
+                styles.bankIcon,
+                { backgroundColor: "#666666" },
+              ]}
+            >
+              <Text style={styles.bankIconText}>B</Text>
+            </View>
+            <View>
+              <Text style={{ color: "#00194C" }}>
+                {detail.gstNumber}
+              </Text>
+              <Text style={{ color: "#AFBCD9" }}>
+                {detail.returnForm}
+              </Text>
+              <Text style={{ color: "#AFBCD9" }}>
+                {detail.financialYear} -{" "}
+                {detail.financialYear}
+              </Text>
+            </View>
+          </View>
+          <View style={financialDocsStyles.actionsContainer}>
+            <TouchableOpacity onPress={() => {}}>
+              <Icons name="download" size={20} color="#00194C" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleRemoveGstUpload(index)}
+            >
+              <Icons name="circle-xmark" size={20} color="#FB191C" />
+            </TouchableOpacity>
+          </View>
+        </View>
+            )
+          ))
+            }
+          </View>
+        )}
           </>
         ) : (
           renderGSTUploadDetails()
         )}
-        {gstDetails && (
-          <View style={financialDocsStyles.submittedGSTContainer}>
-            <Text style={financialDocsStyles.sectionTitle}>
-              Uploaded GST Details
-            </Text>
-            <Text>{gstDetails.gstNumber}</Text>
-            <TouchableOpacity onPress={() => setGstDetails(null)}>
-              <Text style={financialDocsStyles.removeText}>Remove</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+      
       </View>
     );
   };
 
   const renderGSTUploadDetails = () => {
     if (useGSTManualUpload) {
-      return (
+      return(
         <View>
+          {
+          gstDetails.map((detail, index) => (
+        <View key={index} backgroundColor={index>0 && '#FFFAF5'} marginTop={index>0 && 10} paddingTop={index>0 && 36} paddingHorizontal={15} paddingBottom={26}>
+          {
+            index>0 && (
+          <Pressable onPress={()=>handleRemoveGstUpload(index)} borderColor='red' borderWidth={1} borderRadius={5}>
+          <Text>Delete</Text>
+          </Pressable>
+            )
+          }
           <CustomDropdown
-            value={selectedGSTIN}
-            setValue={handleGSTINSelect}
+            value={detail?.gstNumber || selectedGSTIN}
+            setValue={handleGSTINSelect} 
             items={GSTIN}
             setItems={setGSTIN}
             placeholder="Select GSTIN Number"
@@ -744,7 +810,7 @@ const BusinessDocumentsScreen = () => {
             label="GSTIN Number"
           />
           <CustomDropdown
-            value={selectedReturnForm}
+            value={detail?.returnForm || selectedReturnForm}
             setValue={handleReturnFormSelect}
             items={returnForm}
             setItems={setreturnForm}
@@ -755,7 +821,7 @@ const BusinessDocumentsScreen = () => {
           <View style={financialDocsStyles.rowContainer}>
             <View style={financialDocsStyles.halfWidth}>
               <CustomDropdown
-                value={selectedFrequency}
+                value={detail?.frequency || selectedFrequency}
                 setValue={handleFrequencySelect}
                 items={frequency}
                 setItems={setfrequency}
@@ -766,7 +832,7 @@ const BusinessDocumentsScreen = () => {
             </View>
             <View style={financialDocsStyles.halfWidth}>
               <CustomDropdown
-                value={selectedFinancialYear}
+                value={detail?.financialYear || selectedFinancialYear}
                 setValue={handleFinancialYearSelect}
                 items={financialYear}
                 setItems={setfinancialYear}
@@ -787,6 +853,9 @@ const BusinessDocumentsScreen = () => {
             ))}
             <FileUpload onFileSelect={handleAddGSTFile} />
           </View>
+        </View> 
+            ))
+          }
           <View style={{ marginTop: 16 }}>
             <ButtonComponent
               title="Add Another GSTIN"
@@ -799,6 +868,7 @@ const BusinessDocumentsScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
       );
     } else {
       return (
@@ -934,20 +1004,55 @@ const BusinessDocumentsScreen = () => {
                 Upload ITR
               </Text>
             </TouchableOpacity>
-          </>
-        ) : (
-          renderITRUploadDetails()
-        )}
-        {itrDetails && (
+            {itrDetails.length>1 && (
           <View style={financialDocsStyles.submittedITRContainer}>
             <Text style={financialDocsStyles.sectionTitle}>
               Uploaded ITR Details
             </Text>
-            <Text>{itrDetails.panNumber}</Text>
-            <TouchableOpacity onPress={() => setItrDetails(null)}>
-              <Text style={financialDocsStyles.removeText}>Remove</Text>
-            </TouchableOpacity>
+            {
+              itrDetails.map((detail, index) => (
+                detail.itrType && (
+                  <View
+                  key={index}
+                  style={financialDocsStyles.submittedStatement}
+                >
+                  <View style={financialDocsStyles.bankNameContainer}>
+                    <View
+                      style={[
+                        styles.bankIcon,
+                        { backgroundColor: "#666666" },
+                      ]}
+                    >
+                      <Text style={styles.bankIconText}>B</Text>
+                    </View>
+                    <View>
+                      <Text style={{ color: "#00194C" }}>
+                        {detail.itrType}
+                      </Text>
+                      <Text style={{ color: "#AFBCD9" }}>
+                        {detail.financialYear}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={financialDocsStyles.actionsContainer}>
+                    <TouchableOpacity onPress={() => {}}>
+                      <Icons name="download" size={20} color="#00194C" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleRemoveItr(index)}
+                    >
+                      <Icons name="circle-xmark" size={20} color="#FB191C" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                )
+              ))
+            }
           </View>
+        )}
+          </>
+        ) : (
+          renderITRUploadDetails()
         )}
       </View>
     );
@@ -957,48 +1062,61 @@ const BusinessDocumentsScreen = () => {
     if (useITRManualUpload) {
       return (
         <View>
-          <View style={financialDocsStyles.rowContainer}>
-            <View style={financialDocsStyles.halfWidth}>
-              <CustomDropdown
-                value={selectedITRType}
-                setValue={handleITRTypeSelect}
-                items={itrType}
-                setItems={setitrType}
-                placeholder="ITR Type"
-                zIndex={9000}
-                label="ITR Type"
-              />
+          {
+            itrDetails.map((detail, index) => (
+              <View key={index} backgroundColor={index>0 && '#FFFAF5'} marginTop={index>0 && 10} paddingTop={index>0 && 36} paddingHorizontal={15} paddingBottom={26}>
+              <View style={financialDocsStyles.rowContainer}>
+                <View style={financialDocsStyles.halfWidth}>
+                  <CustomDropdown
+                    value={detail.itrType || selectedITRType}
+                    setValue={handleITRTypeSelect}
+                    items={itrType}
+                    setItems={setitrType}
+                    placeholder="ITR Type"
+                    zIndex={9000}
+                    label="ITR Type"
+                  />
+                </View>
+                <View style={financialDocsStyles.halfWidth}>
+                  <CustomDropdown
+                    value={detail.financialYear || selectedItrFinancialYear}
+                    setValue={handleItrFinancialYearSelect}
+                    items={ItrfinancialYear}
+                    setItems={setitrfinancialYear}
+                    placeholder="Financial Year"
+                    zIndex={9000}
+                    label="Financial Year"
+                  />
+                </View>
+              </View>
+              {/* <FileUpload
+                onFileSelect={(file) => console.log("ITR file selected:", file)}
+              /> */}
+              <UploadController
+                        title="Upload ITR"
+                        required={false}
+                        passwordProtected={true}
+                        inputEnabled={false}
+                        onFileSelect={(file) => console.log("File selected:", file)}
+                      />
             </View>
-            <View style={financialDocsStyles.halfWidth}>
-              <CustomDropdown
-                value={selectedItrFinancialYear}
-                setValue={handleItrFinancialYearSelect}
-                items={ItrfinancialYear}
-                setItems={setitrfinancialYear}
-                placeholder="Financial Year"
-                zIndex={9000}
-                label="Financial Year"
-              />
-            </View>
-          </View>
-          <FileUpload
-            onFileSelect={(file) => console.log("ITR file selected:", file)}
-          />
-          <View style={{ marginTop: 15 }}>
-            <ButtonComponent
-              title="Add ITR"
-              onPress={handleAddITR}
-              disabled={!selectedITRType || !selectedItrFinancialYear}
-            />
-          </View>
-          <TouchableOpacity onPress={() => setUseITRManualUpload(false)}>
-            <Text style={financialDocsStyles.switchText}>
-              Switch to ITR Authentication
-            </Text>
-          </TouchableOpacity>
-          <Text style={financialDocsStyles.noteText}>
-            Note: Upload ITR so as to avail more funds
-          </Text>
+            ))
+          }
+                        <View style={{ marginTop: 15 }}>
+                <ButtonComponent
+                  title="Add ITR"
+                  onPress={handleAddITR}
+                  disabled={!selectedITRType || !selectedItrFinancialYear}
+                />
+              </View>
+              <TouchableOpacity onPress={() => setUseITRManualUpload(false)}>
+                <Text style={financialDocsStyles.switchText}>
+                  Switch to ITR Authentication
+                </Text>
+              </TouchableOpacity>
+              <Text style={financialDocsStyles.noteText}>
+                Note: Upload ITR so as to avail more funds
+              </Text>
         </View>
       );
     } else {
@@ -1035,13 +1153,20 @@ const BusinessDocumentsScreen = () => {
   };
 
   const handleAddITR = () => {
-    setItrDetails({
+    const itrDetailsEntry = {
       itrType: selectedITRType,
       financialYear: selectedItrFinancialYear,
-    });
-    setShowITRUploadDetails(false);
+    }
+    setItrDetails((prev)=>[...prev,itrDetailsEntry])
+    setselectedITRType(null);
+    setselectedItrFinancialYear(null);
     setIsButtonDisabled(false);
   };
+
+  const handleRemoveItr = (index) => {
+    const updatedItrDetails = itrDetails.filter((item, i) => i !== index);
+    setItrDetails(updatedItrDetails);
+  }
 
   const handleITRSubmit = () => {
     setIsLoading(true);
@@ -1267,6 +1392,9 @@ const BusinessDocumentsScreen = () => {
     setTimeout(() => {
       setIsLoading(false);
       setShowBankStatementUploadDetails(false);
+      setShowGSTUploadDetails(false);
+      setUseGSTManualUpload(false);
+      setShowITRUploadDetails(false);
       navigation.navigate("MandateScreen");
     }, 2000);
   };
@@ -1312,7 +1440,6 @@ const BusinessDocumentsScreen = () => {
           />
         </View>
       </View>
-
       {isLoading && (
         <View style={financialDocsStyles.loadingOverlay}>
           <ActivityIndicator size="large" color="#00194c" />
@@ -1350,7 +1477,6 @@ const financialDocsStyles = applyFontFamily({
   uploadOptionsContainer: {
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    padding: 16,
     marginBottom: 16,
   },
   uploadOptionTextContainer: {
