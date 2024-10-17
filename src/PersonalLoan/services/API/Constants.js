@@ -1,4 +1,4 @@
-import { BASE_URL, STATUS, API_RESPONSE_STATUS, GetHeader } from "../../../Common/Utils/Constant"
+import { BASE_URL, STATUS, API_RESPONSE_STATUS, GetHeader, PAYMENT_BASE_URL } from "../../../Common/Utils/Constant"
 
 import { GetStoreAuthToken } from "../LOCAL/AsyncStroage"
 
@@ -104,7 +104,15 @@ export const SAVE_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/SaveBorrowerPers
 
 export const GET_BORROWER_PERSONAL_FINAL_DETAIL = `${BASE_URL}/GetBorrowerPersonalFinaDetail`
 
+export const MANDATE_INFO = `${BASE_URL}/GetMandateInfo`
+
+
 export const DELETE_USER = `${BASE_URL}/DeleteLeadPhone`
+
+export const DOWNLOAD_PHYSICAL_MANDATE_FORM = `${BASE_URL}/DownloadPhysicalMandateForm`
+
+
+export const CREATE_PHYSICAL_MANDATE = `${PAYMENT_BASE_URL}/api/CreatePhysicalEMandateForm`
 
 export const RedirectUrl =  "www.knightfintech.com"
 

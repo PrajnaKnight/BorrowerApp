@@ -4,6 +4,7 @@ export const BASE_URL = "https://bankofproductlosapi.azurewebsites.net"
 // https://demolosapi-qa.azurewebsites.net
 // https://bankofproductlosapi.azurewebsites.net
 
+export const PAYMENT_BASE_URL = "https://demo-payment-api.knightfintech.com"
 
 export const STATUS  = {
     SUCCESS : "SUCCESS",

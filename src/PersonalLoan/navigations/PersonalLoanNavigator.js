@@ -69,7 +69,7 @@ const PersonalLoanNavigator = ({ navigation }) => {
         </View>
         <ProgressBarProvider>
 
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName='eMandate' screenOptions={{ headerShown: false }}>
             <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
             <Stack.Screen name="welcome" component={SignInScreen} />
             <Stack.Screen name="otpverification" component={OtpVerification} />

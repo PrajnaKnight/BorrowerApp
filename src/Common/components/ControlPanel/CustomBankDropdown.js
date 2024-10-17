@@ -26,6 +26,9 @@ const CustomBankDropdown = ({
   const buttonRef = useRef(null);
 
   useEffect(() => {
+    if(!items){
+      return
+    }
     const windowHeight = Dimensions.get('window').height;
     const maxHeight = windowHeight * 0.4; // 40% of screen height
     setDropdownHeight(Math.min(items.length * 60, maxHeight));
@@ -66,7 +69,7 @@ const CustomBankDropdown = ({
     );
   };
 
-  const selectedItem = items.find(item => item.value === value);
+  const selectedItem = items?.find(item => item.value === value);
 
   const onLayout = () => {
     if (buttonRef.current) {
