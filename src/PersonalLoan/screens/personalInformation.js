@@ -535,6 +535,7 @@ const PersonalInformationScreen = ({ navigation }) => {
                       value={personalDetails.data.LeadMaritalStatus}
                       items={items}
                       setValue={(e) => {
+                        console.warn(e.label)
                         handleMaritalStatusChange(e.label);
                       }}
                       setItems={setItems}

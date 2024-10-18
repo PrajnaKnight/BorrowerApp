@@ -36,22 +36,24 @@ import { SendGeoLocation } from "../services/API/LocationApi";
 import { useDispatch } from "react-redux";
 import ScreenError, { useErrorEffect } from "./ScreenError";
 import LoadingOverlay from "../components/FullScreenLoader";
-import { CreateMandateModel, CreatePhysicalMandate, DownloadPhysicalMandateForm, GetMandateInfo } from "../services/API/Mandate";
+import { CreateMandateModel, CreatePhysicalMandate, CreateUPIMandate, CreateUpiMandateModel, DownloadPhysicalMandateForm, GetMandateInfo } from "../services/API/Mandate";
 import { GetApplicantId, GetLeadId } from "../services/LOCAL/AsyncStroage";
 import { Digio, DigioConfig, Environment, GatewayEvent } from '@digiotech/react-native';
-import DigioScreen from "../../Common/screens/digioScreen";
+import DigioScreen, { DigioStatusScreen } from "../../Common/screens/digioScreen";
 
 const MandateScreen = ({ navigation }) => {
 
   const stageMaintance = useJumpTo("eMandate", "loanAgreement", navigation);
 
   const [selectedAccount, setSelectedAccount] = useState(null);
+  const [selectedAccountError, setSelectedAccountError] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(true)
 
-  const [digiData, setDigiData] = useState({mandateId : null, phoneNumber : null, token : null})
+  const [digiData, setDigiData] = useState({ mandateId: null, phoneNumber: null, token: null })
   const [digioWebHook, startDigioWebHook] = useState(false)
-  const {mandateState, setMandateState} = DigioScreen({startWebHook : digioWebHook, payload : digiData})
+  const { mandateState, setMandateState } = DigioScreen({ startWebHook: digioWebHook, payload: digiData, setStartDigioWebHook: startDigioWebHook })
 
   const dispatch = useDispatch();
 
@@ -65,8 +67,9 @@ const MandateScreen = ({ navigation }) => {
 
 
   const [ifscCode, setIfscCode] = useState(null);
-  const [mandateType, setMandateType] = useState("");
+  const [mandateType, setMandateType] = useState("eMandate");
   const [vpa, setVpa] = useState("");
+  const [vpaError, setVpaError] = useState(null);
 
 
   const [createMandateModel, setCreateMandateModel] = useState({})
@@ -74,7 +77,7 @@ const MandateScreen = ({ navigation }) => {
   const [leadId, setLeadId] = useState(null)
 
 
-  
+
 
 
   const handleProceed = async () => {
@@ -105,7 +108,8 @@ const MandateScreen = ({ navigation }) => {
     onChange,
     placeholder,
     editable = true,
-    readOnly
+    readOnly,
+    error
   ) => (
     <View style={[styles.inputContainer, !editable && styles.disabledInput]}>
       <CustomInput
@@ -115,17 +119,24 @@ const MandateScreen = ({ navigation }) => {
         editable={editable}
         style={styles.input}
         readOnly={readOnly}
+        error={error}
       />
     </View>
   );
 
-  const renderMandateOptions = () => (
-    <View style={styles.mandateOptionsContainer}>
-      {[
-        { type: "eMandate", icon: EMandateIcon },
-        { type: "Physical NACH", icon: NACHIcon },
-        { type: "UPI Mandate", icon: UPIIcon },
-      ].map((option) => (
+  const renderMandateOptions = () => {
+
+    const listOfOption = [{ type: "eMandate", icon: EMandateIcon },
+    { type: "Physical NACH", icon: NACHIcon },]
+
+    if (createMandateModel.MaximumAmount <= 15000) {
+      listOfOption.push({ type: "UPI Mandate", icon: UPIIcon })
+    }
+    return <View style={styles.mandateOptionsContainer}>
+      {listOfOption.map((option) => (
+
+
+
         <TouchableOpacity
           key={option.type}
           style={[
@@ -152,7 +163,9 @@ const MandateScreen = ({ navigation }) => {
         </TouchableOpacity>
       ))}
     </View>
-  );
+  }
+
+
 
   const renderButton = (text, onPress, isPrimary = true, icon = null) => (
     <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
@@ -186,6 +199,7 @@ const MandateScreen = ({ navigation }) => {
     setNewErrorScreen(null);
     setLoading(true);
     GetLeadId().then((response) => {
+      console.warn(response)
       setLeadId(response)
     })
     GetMandateInfo().then((response) => {
@@ -197,14 +211,20 @@ const MandateScreen = ({ navigation }) => {
 
       let data = {
         ...response.data,
-        bankDetails: [
+      }
+
+
+      if (response?.data?.BankDetails) {
+
+        data.bankDetails = response?.data?.BankDetails?.map((item) => (
           {
-            label: response?.data?.mandate_data?.destination_bank_name,
-            value: response?.data?.mandate_data?.customer_account_number,
-            bankName: response?.data?.mandate_data?.destination_bank_name,
-            destination_bank_id: response?.data?.mandate_data?.destination_bank_id,
+            label: `${item.BankName} ${item.BankBranchName || ""}`,
+            value: item.AccountNumber,
+            bankName: item.BankName,
+            destination_bank_id: item.IFSC,
+            AccountType : item.AccountType
           }
-        ],
+        ))
 
       }
 
@@ -218,7 +238,7 @@ const MandateScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (selectedAccount) {
-
+      setSelectedAccountError(null)
       const selectedBank = mandateInfo?.bankDetails?.find(
         (account) => account.value === selectedAccount
       );
@@ -227,7 +247,16 @@ const MandateScreen = ({ navigation }) => {
       setIfscCode(selectedBank.destination_bank_id)
 
 
-      let mandateRole = { ...createMandateModel, MandateDetails: { ...createMandateModel.MandateDetails, DestinationBankId: selectedBank.destination_bank_id, DestinationBankName: selectedBank.bankName } }
+      let mandateRole = { 
+        ...createMandateModel,
+        MandateDetails: { 
+          ...createMandateModel.MandateDetails, 
+          DestinationBankId: selectedBank.destination_bank_id, 
+          DestinationBankName: selectedBank.bankName,
+          CustomerAccountNumber : selectedBank.value,
+          AccountType : selectedBank.AccountType
+        } 
+      }
 
 
       setCreateMandateModel(mandateRole)
@@ -236,6 +265,13 @@ const MandateScreen = ({ navigation }) => {
 
   }, [selectedAccount])
 
+  useEffect(() => {
+    if (vpa) {
+      setVpaError(null)
+    }
+  }, vpa)
+
+
 
 
   const openUrl = async (mandateId, token, phoneNumber, applicationId) => {
@@ -243,17 +279,17 @@ const MandateScreen = ({ navigation }) => {
 
     setDigiData(
       {
-        mandateId : mandateId,
+        mandateId: mandateId,
         token: token,
         phoneNumber: phoneNumber
       }
     )
 
-    
+
     startDigioWebHook(true)
-    
+
     // setStartWebSocket(true)
-  
+
     // const url = `https://ext.digio.in/#/gateway/login/${mandateId}/${applicationId}/${phoneNumber}?token_id=${token}`;
     // // Check if the URL can be opened
 
@@ -277,6 +313,10 @@ const MandateScreen = ({ navigation }) => {
 
   const HandleCreateMandate = async () => {
     setNewErrorScreen(null)
+    if (!selectedAccount) {
+      setSelectedAccountError("Please select the bank account")
+      return
+    }
 
     setLoading(true)
 
@@ -294,6 +334,52 @@ const MandateScreen = ({ navigation }) => {
     if (response?.data?.MandateId && response?.data?.TokenValue && mandateInfo?.mandate_data?.customer_mobile) {
       const applicationId = await GetApplicantId()
       openUrl(response?.data?.MandateId, response?.data?.TokenValue, mandateInfo?.mandate_data?.customer_mobile, applicationId)
+    }
+
+    console.log(response.data)
+
+  }
+
+
+  const HandleCreateUPIMandate = async () => {
+    setNewErrorScreen(null)
+
+    if (!selectedAccount) {
+      setSelectedAccountError("Please select the bank account")
+      return
+    }
+
+    if (!vpa) {
+      setSelectedAccountError("Please provide UPI ID")
+      return
+    }
+    else if (!new RegExp(/^[a-zA-Z0-9.-]{2, 256}@[a-zA-Z][a-zA-Z]{2, 64}$/).test(vpa)) {
+      setSelectedAccountError("Please provide valid UPI ID")
+      return
+    }
+
+
+    setLoading(true)
+
+
+
+    let mandateRole = CreateUpiMandateModel(createMandateModel, leadId, vpa)
+
+    console.log("========== create upi mandate =============")
+    console.log(mandateRole)
+
+    const response = await CreateUPIMandate(mandateRole)
+    setLoading(false)
+
+    if (response.status === STATUS.ERROR) {
+      setNewErrorScreen(response.message)
+      return
+    }
+
+
+    if (response?.data?.MandateId && response?.data?.AccessToken?.Id && mandateInfo?.mandate_data?.customer_mobile) {
+      const applicationId = await GetApplicantId()
+      openUrl(response?.data?.MandateId, response?.data?.AccessToken?.Id, mandateInfo?.mandate_data?.customer_mobile, applicationId)
     }
 
     console.log(response.data)
@@ -353,7 +439,7 @@ const MandateScreen = ({ navigation }) => {
             items={mandateInfo?.bankDetails || []}
             placeholder="Select Bank Account"
             label="Bank Account Number"
-            error={null}
+            error={selectedAccountError}
             zIndex={1000}
             selectedItemColor="#ffffff"
             arrowIconColor="#ff8500"
@@ -395,11 +481,11 @@ const MandateScreen = ({ navigation }) => {
               <Text style={styles.label}>
                 Your Virtual Payment Address (VPA)
               </Text>
-              {renderInput(vpa, setVpa, "Enter your VPA")}
+              {renderInput(vpa, setVpa, "Enter your VPA", true, false, vpaError)}
 
               <ButtonComponent
                 title="Sign UPI Mandate"
-                onPress={() => { }}
+                onPress={() => { HandleCreateUPIMandate() }}
                 style={{ button: styles.signButton }}
               />
               <Text style={styles.noteText}>
@@ -424,6 +510,17 @@ const MandateScreen = ({ navigation }) => {
             </>
           )}
         </View>
+
+        {
+          mandateState != null && (
+            <DigioStatusScreen
+              mandateState={mandateState}
+              onTryAgain={() => {
+                setMandateState(null)
+              }}
+            />
+          )
+        }
       </ScrollView>
       <View style={msmeStyle.buttonContainer}>
         <TouchableOpacity
@@ -432,6 +529,8 @@ const MandateScreen = ({ navigation }) => {
         >
           <Text style={[msmeStyle.cancelButtonText]}>Back</Text>
         </TouchableOpacity>
+
+
         <View style={msmeStyle.proceedButtonContainer}>
           <ButtonComponent
             title="PROCEED"
@@ -453,6 +552,7 @@ const MandateScreen = ({ navigation }) => {
           setNewErrorScreen={setNewErrorScreen}
         />
       )}
+
     </KeyboardAvoidingView>
   );
 };
