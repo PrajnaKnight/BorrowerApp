@@ -15,76 +15,72 @@ if (Platform.OS === 'android') {
 }
 
 const GetLocationModel = async (leadStage) => {
-    const LeadId = await GetLeadId()
 
-    let locationInfo = null
-    try {
-        locationInfo = await GetLocation()
-    }
-    catch {
-        return null
-    }
+    try{
+        const LeadId = await GetLeadId()
 
-    let ipAdderess = null
-    try {
-        ipAdderess = await publicIP()
+        let locationInfo = await GetLocation()
+        
+        let ipAdderess = await publicIP()
+        
+    
+        const deviceId = await DeviceInfo.getUniqueId();
+        console.log(deviceId)
+    
+        return {
+            LeadId: LeadId,
+            IP: `${ipAdderess}`,
+            Latitude: locationInfo?.coords?.latitude,
+            Longitude: locationInfo?.coords?.longitude,
+            CreateDate: null,
+            DeviceId: deviceId,
+            Altitude: locationInfo?.coords?.altitude,
+            Accuracy: locationInfo?.coords?.accuracy,
+            Speed: locationInfo?.coords?.speed,
+            LeadStage: leadStage
+        }
     }
-    catch {
-        return null
-    }
+    catch(e){
 
-    const deviceId = await DeviceInfo.getUniqueId();
-    console.log(deviceId)
-
-    return {
-        LeadId: LeadId,
-        IP: `${ipAdderess}`,
-        Latitude: locationInfo?.coords?.latitude,
-        Longitude: locationInfo?.coords?.longitude,
-        CreateDate: null,
-        DeviceId: deviceId,
-        Altitude: locationInfo?.coords?.altitude,
-        Accuracy: locationInfo?.coords?.accuracy,
-        Speed: locationInfo?.coords?.speed,
-        LeadStage: leadStage
     }
+    return {}
 }
 
 export const SendGeoLocation = async (leadStage) => {
-    let status, data, message;
-    console.log("============= Location Submitted =======================")
+    // let status, data, message;
+    // console.log("============= Location Submitted =======================")
 
-    try {
+    // try {
 
-        const header = await GetHeader()
-        const requestModel = await GetLocationModel(leadStage)
+    //     const header = await GetHeader()
+    //     const requestModel = await GetLocationModel(leadStage)
 
-        console.log(header)
-        console.log(requestModel)
-        let response = await axios.post(SUBMIT_LOCATION, requestModel, { headers: header })
+    //     console.log(header)
+    //     console.log(requestModel)
+    //     let response = await axios.post(SUBMIT_LOCATION, requestModel, { headers: header })
 
 
-        console.log(response.data)
+    //     console.log(response.data)
 
-    } catch (error) {
+    // } catch (error) {
 
-        const errorresponseData = error?.response?.data?.Message;
-        console.error('Error - SubmitGeoLocation  - response data : ', errorresponseData);
+    //     const errorresponseData = error?.response?.data?.Message;
+    //     console.error('Error - SubmitGeoLocation  - response data : ', errorresponseData);
 
-        status = STATUS.ERROR
-        let errorMessage = error.message
+    //     status = STATUS.ERROR
+    //     let errorMessage = error.message
 
-        if (errorMessage != Network_Error) {
-            errorMessage = errorresponseData || "Error : Facing Problem While Saving GeoLocation Info";
-        }
+    //     if (errorMessage != Network_Error) {
+    //         errorMessage = errorresponseData || "Error : Facing Problem While Saving GeoLocation Info";
+    //     }
 
-        message = errorMessage
-        data = null
+    //     message = errorMessage
+    //     data = null
 
-    }
-    console.log("============= Location Submitted =======================")
+    // }
+    // console.log("============= Location Submitted =======================")
 
-    return API_RESPONSE_STATUS(status, data, message)
+    // return API_RESPONSE_STATUS(status, data, message)
 
 }
 

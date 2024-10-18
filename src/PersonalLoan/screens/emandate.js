@@ -39,22 +39,26 @@ import LoadingOverlay from "../components/FullScreenLoader";
 import { CreateMandateModel, CreatePhysicalMandate, DownloadPhysicalMandateForm, GetMandateInfo } from "../services/API/Mandate";
 import { GetApplicantId, GetLeadId } from "../services/LOCAL/AsyncStroage";
 import { Digio, DigioConfig, Environment, GatewayEvent } from '@digiotech/react-native';
+import DigioScreen from "../../Common/screens/digioScreen";
 
 const MandateScreen = ({ navigation }) => {
 
   const stageMaintance = useJumpTo("eMandate", "loanAgreement", navigation);
-  const config = { environment: Environment.SANDBOX };
-  const digio = new Digio(config);
-
 
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(true)
+
+  const [digiData, setDigiData] = useState({mandateId : null, phoneNumber : null, token : null})
+  const [digioWebHook, startDigioWebHook] = useState(false)
+  const {mandateState, setMandateState} = DigioScreen({startWebHook : digioWebHook, payload : digiData})
+
   const dispatch = useDispatch();
 
 
   const onTryAgainClick = () => {
     setRefresh(true)
+    setMandateState(null)
   };
   const { errorScreen, setNewErrorScreen } = useErrorEffect(onTryAgainClick);
 
@@ -68,24 +72,9 @@ const MandateScreen = ({ navigation }) => {
   const [createMandateModel, setCreateMandateModel] = useState({})
   const [mandateInfo, setMandateInfo] = useState({})
   const [leadId, setLeadId] = useState(null)
-  const [startWebSocket, setStartWebSocket] = useState(false)
 
 
-  useEffect(() => {
-    if(!startWebSocket){
-      return
-    }
-    const gatewayEventListener = digio.addGatewayEventListener((event) => {
-      // Do some operation on the received events
-      console.log("============web socket ================")
-      console.log(event)
-    });
-
-    // Cleanup function
-    return () => {
-      gatewayEventListener.remove();
-    };
-  }, [startWebSocket]);
+  
 
 
   const handleProceed = async () => {
@@ -248,30 +237,42 @@ const MandateScreen = ({ navigation }) => {
   }, [selectedAccount])
 
 
+
   const openUrl = async (mandateId, token, phoneNumber, applicationId) => {
 
 
-    setStartWebSocket(true)
-    const documentId = mandateId;
-    const identifier = phoneNumber;
-    const tokenId = token;
-    const digioResponse = await digio.start(documentId, identifier, tokenId);
+    setDigiData(
+      {
+        mandateId : mandateId,
+        token: token,
+        phoneNumber: phoneNumber
+      }
+    )
 
+    
+    startDigioWebHook(true)
+    
+    // setStartWebSocket(true)
+  
+    // const url = `https://ext.digio.in/#/gateway/login/${mandateId}/${applicationId}/${phoneNumber}?token_id=${token}`;
+    // // Check if the URL can be opened
 
+    // if(Platform.OS != "web"){
+    //   navigation.navigate("DigioScreen", {documentId, identifier,tokenId,url})
+    //   return
+    // }
 
-    const url = `https://ext.digio.in/#/gateway/login/${mandateId}/${applicationId}/${phoneNumber}?token_id=${token}`;
-    // Check if the URL can be opened
-    console.log(url)
-    const supported = await Linking.canOpenURL(url);
+    // console.log(url)
+    // const supported = await Linking.canOpenURL(url);
 
-    if (supported) {
-      // Open the URL
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`Can't open this URL: ${url}`);
-      setStartWebSocket(false)
+    // if (supported) {
+    //   // Open the URL
+    //   await Linking.openURL(url);
+    // } else {
+    //   Alert.alert(`Can't open this URL: ${url}`);
+    //   setStartWebSocket(false)
 
-    }
+    // }
   };
 
   const HandleCreateMandate = async () => {

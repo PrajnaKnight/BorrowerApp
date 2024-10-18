@@ -37,6 +37,7 @@ import FAQScreen from '../screens/FAQScreen';
 
 import PersonalFinance from '../screens/personalFinance'
 import { decode, encode } from 'base-64'
+import DigioScreen from '../../Common/screens/digioScreen';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -69,7 +70,7 @@ const PersonalLoanNavigator = ({ navigation }) => {
         </View>
         <ProgressBarProvider>
 
-          <Stack.Navigator initialRouteName='eMandate' screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="eMandate" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="SplashScreen" component={SplashScreenComponent} />
             <Stack.Screen name="welcome" component={SignInScreen} />
             <Stack.Screen name="otpverification" component={OtpVerification} />
