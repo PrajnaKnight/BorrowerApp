@@ -69,6 +69,7 @@ const styles = applyFontFamily({
   container: {
     width: '100%',
     maxWidth: 400,
+    zIndex: -1,
   },
   label: {
     marginBottom: 8,

@@ -107,9 +107,9 @@ const BusinessTypeDetailsScreen = () => {
     </View>
   );
 
-  const renderDropdownField = (label, field, items, placeholder) => {
+  const renderDropdownField = (label, field, items, placeholder,zIndex) => {
     return (
-      <View>
+      <View style={{zIndex:zIndex }}>
         <Text style={styles.label}>{label}</Text>
         <CustomDropdown
           value={formData[field]}
@@ -117,7 +117,8 @@ const BusinessTypeDetailsScreen = () => {
           items={items}
           setItems={() => {}} // This is not needed if items are static
           placeholder={placeholder}
-          zIndex={3000 - Object.keys(formData).indexOf(field)} // Adjust zIndex based on field order
+          dropDownDirection='DOWN'
+          zIndex={zIndex}
           error={errors[field]}
         />
       </View>
@@ -149,39 +150,42 @@ const BusinessTypeDetailsScreen = () => {
           {renderInputField(
             "Sales Turnover",
             "salesTurnover",
-            "Enter Sales Turnover"
+            "₹"
           )}
           {renderInputField(
             "Operating Income",
             "operatingIncome",
-            "Enter Operating Income"
+            "₹"
           )}
           {renderInputField(
             "Business Turnover (Annual)",
             "businessTurnoverAnnual",
-            "Enter Business Turnover"
+            "₹"
           )}
           {renderDropdownField(
             "Business Premise",
             "businessPremise",
             businessPremiseItems,
-            "Select Business Premise"
+            "Select Business Premise",
+            4000,
           )}
 
-          <View style={{ zIndex: 1000 }}>
+  
             {renderDropdownField(
               "Office Tenure",
               "officeTenure",
               officeTenureItems,
-              "Select Office Tenure"
+              "Select Office Tenure",
+              3000
             )}
-          </View>
+            <View>
           {renderInputField(
             "Business Registered Address",
             "businessRegisteredAddress",
             "Enter Business Address",
             true
           )}
+          </View>
 
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}>

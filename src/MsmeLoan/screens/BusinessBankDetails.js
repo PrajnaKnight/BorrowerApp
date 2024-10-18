@@ -244,7 +244,7 @@ const BusinessBankDetails = ({ navigation }) => {
               />
 
               <Text style={styles.label}>
-                IFSC<Text style={styles.mandatoryStar}> *</Text>
+              Bank Branch IFSC<Text style={styles.mandatoryStar}> *</Text>
               </Text>
               <CustomInput
                 placeholder="Bank Branch IFSC Code"

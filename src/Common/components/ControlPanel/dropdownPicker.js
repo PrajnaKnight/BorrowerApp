@@ -22,6 +22,7 @@ const CustomDropdown = ({
   label,
   onOpen,
   onClose,
+  dropDownDirection = 'AUTO',
   icon
 }) => {
   const [open, setOpen] = useState(false);
@@ -104,6 +105,7 @@ const CustomDropdown = ({
         setItems={setItems}
         placeholder={placeholder}
         searchable={searchable}
+        dropDownDirection = {dropDownDirection}
         style={[
           styles.dropdownBorder,
           styles.dropdown,
