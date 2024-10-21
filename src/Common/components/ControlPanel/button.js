@@ -31,7 +31,7 @@ const ButtonComponent = ({
   ];
 
   return (
-    <View style={{width: '100%'}}>
+    <View style={{width: '100%',zIndex:-1}}>
       <LinearGradient
         colors={gradientColors}
         style={[

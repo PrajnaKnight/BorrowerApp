@@ -188,6 +188,7 @@ const UploadController = ({ title, inputPlaceholder, required, passwordProtected
 const styles = applyFontFamily({
   container: {
     marginBottom: 20,
+    zIndex: -1,
   },
   UploadContainerWrapper: {
     backgroundColor: '#FFFFFF',

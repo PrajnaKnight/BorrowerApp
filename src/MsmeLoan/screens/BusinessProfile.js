@@ -158,6 +158,7 @@ const BusinessProfileScreen = () => {
           label={label}
           value={formData[field]}
           setValue={(value) => handleInputChange(field, value)}
+          dropDownDirection = "DOWN"
           items={dropdownItems[field]}
           setItems={(items) => {
             /* Handle items update if needed */

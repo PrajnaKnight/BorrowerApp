@@ -806,7 +806,7 @@ const BusinessDocumentsScreen = () => {
             items={GSTIN}
             setItems={setGSTIN}
             placeholder="Select GSTIN Number"
-            zIndex={9000}
+            zIndex={2}
             label="GSTIN Number"
           />
           <CustomDropdown
@@ -815,7 +815,7 @@ const BusinessDocumentsScreen = () => {
             items={returnForm}
             setItems={setreturnForm}
             placeholder="Select Return Form"
-            zIndex={8000}
+            zIndex={1}
             label="Return Form"
           />
           <View style={financialDocsStyles.rowContainer}>
@@ -828,6 +828,7 @@ const BusinessDocumentsScreen = () => {
                 placeholder="Frequency"
                 zIndex={9000}
                 label="Frequency"
+                dropDownDirection="DOWN"
               />
             </View>
             <View style={financialDocsStyles.halfWidth}>
@@ -837,7 +838,7 @@ const BusinessDocumentsScreen = () => {
                 items={financialYear}
                 setItems={setfinancialYear}
                 placeholder="Financial Year"
-                zIndex={7000}
+                // zIndex={9000}
                 label="Financial Year"
               />
             </View>
