@@ -146,13 +146,24 @@ export const DownloadPhysicalMandateForm = async (requestModel) => {
 }
 
 
-export const UploadPhysicalMandateForm = async (requestModel) => {
+export const UploadPhysicalMandateForm = async (mandate, document) => {
     let status, data, message;
     try {
-        const authToken = await GetHeader()
-        console.log(authToken)
-        console.log(requestModel)
-        const response = await axios.post(`${SUBMIT_SCANNED_PHYSICAL_MANDATE}`, requestModel)
+
+        const header = await GetHeader()
+        const LeadId = await GetLeadId()
+        
+        const formData = new FormData();
+        formData.append('leadId', LeadId);
+        formData.append('UploadFile', document);
+        formData.append('MandateId', mandate)
+
+        const response = await axios.post(`${SUBMIT_SCANNED_PHYSICAL_MANDATE}`, formData, {
+            headers: {
+                ...header,
+                'Content-Type': 'multipart/form-data',
+            },
+        })
         data = response.data
         status = response.status == 200 ? STATUS.SUCCESS : STATUS.ERROR
 

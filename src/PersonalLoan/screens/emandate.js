@@ -8,7 +8,8 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Linking
+  Linking,
+  Alert
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import CustomDropdown from "../../Common/components/ControlPanel/dropdownPicker";
@@ -23,6 +24,8 @@ import { styles as msmeStyle } from "../../assets/style/msmeStyle";
 import FileUpload from "../../Common/components/ControlPanel/FileUpload";
 import applyFontFamily from "../../assets/style/applyFontFamily";
 import CustomBankDropdown from "../../Common/components/ControlPanel/CustomBankDropdown";
+import RNFS from 'react-native-fs';
+import FileViewer from 'react-native-file-viewer';
 
 import UPIIcon from "../../assets/images/upiLogo.png";
 import EMandateIcon from "../../assets/images/eNachLogo.png";
@@ -234,6 +237,28 @@ const MandateScreen = ({ navigation }) => {
 
 
 
+  const openFile = async (path) => {
+    const filePath = path;
+
+    try {
+        // Check if the file exists
+        const fileExists = await RNFS.exists(filePath);
+        if (fileExists) {
+            // Open the file using FileViewer
+            FileViewer.open(filePath)
+                .then(() => {
+                    console.log('File opened successfully');
+                })
+                .catch(error => {
+                    console.error('Error opening file:', error);
+                });
+        } else {
+            Alert.alert('File not found', 'The file does not exist.');
+        }
+    } catch (error) {
+        console.error('Error checking file existence:', error);
+    }
+};
 
 
   const openUrl = async (mandateId, token, phoneNumber, applicationId) => {
