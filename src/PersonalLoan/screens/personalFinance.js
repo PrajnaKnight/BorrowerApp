@@ -447,6 +447,8 @@ const PersonalFinance = ({navigation}) => {
                       </View>
                     </View>
 
+                    <View style={{height:15}}/>
+
                     {personalLoanDetailSlice?.data?.IsLoanAvailable &&
                       personalLoanDetailSlice.data.BorrowerExistingLoanDetails.map(
                         (element, index) => (
