@@ -1,3 +1,5 @@
-import { BASE_URL, STATUS, API_RESPONSE_STATUS, GetHeader } from "../../../Common/Utils/Constant"
+import { BASE_URL, BASE_LMS_URL } from "../../../Common/Utils/Constant"
 
 export const REPAYMENT_SCHEDULE = `${BASE_URL}/CalculateEMI`
+
+export const ORG_INFO = `${BASE_LMS_URL}/GetAboutUs`

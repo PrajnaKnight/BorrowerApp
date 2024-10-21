@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Linking, SafeAreaView, ImageBackground,Alert, Switch, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Linking, SafeAreaView, ImageBackground, Alert, Switch, ScrollView, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import applyFontFamily from '../../assets/style/applyFontFamily';
@@ -9,33 +9,45 @@ import Layout from './Layout';
 import { DeleteUser } from '../../PersonalLoan/services/API/CreateBorrowerLead';
 import { STATUS } from '../../PersonalLoan/services/API/Constants';
 import { StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
+import { GetOrganization } from '../services/API/OrganizationInfo';
 
-const SideMenu = ({navigation}) => {
+const SideMenu = ({ navigation }) => {
   const [isWhatsAppEnabled, setIsWhatsAppEnabled] = useState(false);
+  const [organizationInfo, setOrganzationInfo] = useState({})
+  const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    setLoading(true)
+    GetOrganization().then((response) => {    
 
+      setLoading(false)
+      if (response.status == STATUS.SUCCESS) {
+        setOrganzationInfo(response.data)
+      }
+    })
+  }, [])
   const handleSocialMediaPress = (url) => {
     Linking.openURL(url);
   };
 
-  const HandleLogOut = async() =>{
-      const deleteStatus = await DeleteUser()
-      
+  const HandleLogOut = async () => {
+    const deleteStatus = await DeleteUser()
 
-      await StoreLeadId(null);
-        await StoreApplicantId(null)
-        await StoreTokenValidity(null)
-        await StoreBorrowerPhoneNumber(null)
-        await StoreUserPan(null)
-        await StoreUserAadhaar(null)
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0, // The index of the active route
-          routes: [
-            { name: 'Common' }, // Name of the screen you want to navigate to
-          ],
-        })
-      );
+
+    await StoreLeadId(null);
+    await StoreApplicantId(null)
+    await StoreTokenValidity(null)
+    await StoreBorrowerPhoneNumber(null)
+    await StoreUserPan(null)
+    await StoreUserAadhaar(null)
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0, // The index of the active route
+        routes: [
+          { name: 'Common' }, // Name of the screen you want to navigate to
+        ],
+      })
+    );
   }
 
   const handleLogout = () => {
@@ -47,13 +59,13 @@ const SideMenu = ({navigation}) => {
           text: "Cancel",
           style: "cancel"
         },
-        { 
-          text: "OK", 
+        {
+          text: "OK",
           onPress: () => {
             HandleLogOut()
             // Implement logout logic here
             console.log("User logged out");
-            
+
             // Navigate to login screen or perform other logout actions
             // navigation.navigate('Login');
           }
@@ -71,7 +83,7 @@ const SideMenu = ({navigation}) => {
   return (
     <Layout>
       <View style={styles.container}>
-      <ImageBackground
+        <ImageBackground
           source={require("../../assets/images/menuBg.png")}
           style={styles.background}
           resizeMode="cover">
@@ -81,68 +93,80 @@ const SideMenu = ({navigation}) => {
           </View>
         </ImageBackground>
 
-        <ScrollView>
-        <View style={styles.menuWrapper}>
-          <MenuItem
-            icon="account-outline"
-            label="Profile"
-            onPress={() => navigation.navigate("Profile")}
-          />
-          <MenuItem icon="bank" label="Bureau" onPress={() => {}} />
-          <MenuItem
-            icon="cog-outline"
-            label="General Setting"
-            onPress={() => navigation.navigate("GeneralSetting")}
-          />
-          <MenuItem
-            icon="information-outline"
-            label="About Us"
-            onPress={() => navigation.navigate("AboutUs")}
-          />
-          <MenuItem
-            icon="phone"
-            label="+91 8655748974"
-            onPress={() => Linking.openURL("tel:+918655748974")}
-          />
-          <MenuItem
-            icon="email-outline"
-            label="support@knightfintech.com"
-            onPress={() => Linking.openURL("mailto:support@knightfintech.com")}
-          />
-          <MenuItem
-            icon="whatsapp"
-            label="WhatsApp Notifications"
-            isToggle={true}
-            toggleValue={isWhatsAppEnabled}
-            onToggle={toggleWhatsApp}
-          />
-          <MenuItem icon="logout" label="Delete Number" onPress={handleLogout} />
-          
-        </View>
-        <View style={styles.socialMediaContainer}>
-          <SocialMediaIcon
-            icon="linkedin"
-            color="#0077B5"
-            onPress={() => handleSocialMediaPress("https://www.linkedin.com/company/knightfintech/")}
-          />
-          <SocialMediaIcon
-            icon="facebook"
-            color="#1877F2"
-            onPress={() => handleSocialMediaPress("https://www.facebook.com/KnightFinTech/")}
-          />
-          <FontAwesome6 name="square-x-twitter" style={styles.socialMediaIcon} 
-          size={30} color="#000000" onPress={() => handleSocialMediaPress("https://x.com/knightfintech?mx=2")} />
-          
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Powered by</Text>
-          <Image
-            source={require("../../assets/images/knightFintech.png")}
-            style={styles.footerLogo}
-          />
-        </View>
+        {loading ? <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
+
+          <ActivityIndicator size={"large"}/>
+
+        </View> : <ScrollView>
+
+          <View style={styles.menuWrapper}>
+
+            <View>
+              <MenuItem
+                icon="account-outline"
+                label="Profile"
+                onPress={() => navigation.navigate("Profile")}
+              />
+              <MenuItem icon="bank" label="Bureau" onPress={() => { }} />
+              <MenuItem
+                icon="cog-outline"
+                label="General Setting"
+                onPress={() => navigation.navigate("GeneralSetting")}
+              />
+              <MenuItem
+                icon="information-outline"
+                label="About Us"
+                onPress={() => { if (organizationInfo) { navigation.navigate("AboutUs", { data: organizationInfo }) } }}
+              />
+              <MenuItem
+                icon="phone"
+                label={organizationInfo?.PhoneNumber}
+                onPress={() => { if (organizationInfo?.PhoneNumber) { Linking.openURL(`tel:${organizationInfo?.PhoneNumber}`) } }}
+              />
+              <MenuItem
+                icon="email-outline"
+                label={organizationInfo?.Email}
+                onPress={() => { if (organizationInfo?.Email) { Linking.openURL(`mailto:${organizationInfo?.Email}`) } }}
+              />
+              <MenuItem
+                icon="whatsapp"
+                label="WhatsApp Notifications"
+                isToggle={true}
+                toggleValue={isWhatsAppEnabled}
+                onToggle={toggleWhatsApp}
+              />
+              <MenuItem
+                icon="logout"
+                label="Delete Number"
+                onPress={handleLogout}
+              />
+            </View>
+          </View>
+          <View style={styles.socialMediaContainer}>
+            <SocialMediaIcon
+              icon="linkedin"
+              color="#0077B5"
+              onPress={() => handleSocialMediaPress("https://www.linkedin.com/company/knightfintech/")}
+            />
+            <SocialMediaIcon
+              icon="facebook"
+              color="#1877F2"
+              onPress={() => handleSocialMediaPress("https://www.facebook.com/KnightFinTech/")}
+            />
+            <FontAwesome6 name="square-x-twitter" style={styles.socialMediaIcon}
+              size={30} color="#000000" onPress={() => handleSocialMediaPress("https://x.com/knightfintech?mx=2")} />
+
+          </View>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Powered by</Text>
+            <Image
+              source={require("../../assets/images/knightFintech.png")}
+              style={styles.footerLogo}
+            />
+          </View>
         </ScrollView>
-        
+        }
+
       </View>
     </Layout>
   );
@@ -174,7 +198,7 @@ const styles = applyFontFamily({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    flexDirection:"column"
+    flexDirection: "column"
   },
   linearGradient: {
     padding: 20,
@@ -182,7 +206,7 @@ const styles = applyFontFamily({
   profileSection: {
     alignItems: 'flex-start',
     paddingHorizontal: 20,
-    paddingVertical:30
+    paddingVertical: 30
   },
   profileName: {
     fontSize: 18,
@@ -197,13 +221,14 @@ const styles = applyFontFamily({
   },
   menuWrapper: {
     padding: 20,
-    
+    flex: 1
+
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    justifyContent: 'space-between', 
+    justifyContent: 'space-between',
   },
   menuIcon: {
     width: 30,
@@ -212,15 +237,15 @@ const styles = applyFontFamily({
     fontSize: 16,
     color: '#00194C',
     marginLeft: 10,
-    flex: 1, 
+    flex: 1,
   },
   toggleSwitch: {
-    
+
   },
   socialMediaContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom:20
+    marginBottom: 20
   },
   socialMediaIcon: {
     marginHorizontal: 10,
