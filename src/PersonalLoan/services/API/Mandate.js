@@ -1,6 +1,6 @@
 import axios from "axios";
 import { GetLeadId } from "../LOCAL/AsyncStroage";
-import { API_RESPONSE_STATUS, CREATE_PHYSICAL_MANDATE, CREATE_UPI_MANDATE, DOWNLOAD_PHYSICAL_MANDATE_FORM, GetHeader, MANDATE_INFO, STATUS } from "./Constants";
+import { API_RESPONSE_STATUS, CREATE_PHYSICAL_MANDATE, CREATE_UPI_MANDATE, DOWNLOAD_PHYSICAL_MANDATE_FORM, GetHeader, MANDATE_INFO,SUBMIT_SCANNED_PHYSICAL_MANDATE, STATUS } from "./Constants";
 import { Network_Error } from "../Utils/Constants";
 
 export const GetMandateInfo = async () => {
@@ -145,6 +145,41 @@ export const DownloadPhysicalMandateForm = async (requestModel) => {
 
 }
 
+
+export const UploadPhysicalMandateForm = async (requestModel) => {
+    let status, data, message;
+    try {
+        const authToken = await GetHeader()
+        console.log(authToken)
+        console.log(requestModel)
+        const response = await axios.post(`${SUBMIT_SCANNED_PHYSICAL_MANDATE}`, requestModel)
+        data = response.data
+        status = response.status == 200 ? STATUS.SUCCESS : STATUS.ERROR
+
+    }
+    catch (error) {
+
+        const errorresponseData = error?.response?.data?.Message;
+
+        status = STATUS.ERROR
+        let errorMessage = error.message
+
+        if (errorMessage != Network_Error) {
+            //    errorMessage = errorresponseData
+            errorMessage = errorresponseData || "Error : Facing Problem While Fetching Mandate Info"
+        }
+
+
+        message = errorMessage
+        data = null
+
+    }
+
+    return API_RESPONSE_STATUS(status, data, message)
+
+
+}
+
 export const CreateMandateModel = (mandateInfo, leadID) => {
     const mandateDetails = {
         "MandateDetails": {
@@ -185,7 +220,11 @@ export const CreateMandateModel = (mandateInfo, leadID) => {
             "CustomerIdentifier": mandateInfo?.mandate_data?.customer_mobile,
             "CustomerVpa": "",
             "ExpireInDays": 0,
-            "GenerateAccessToken": mandateInfo?.generate_access_token
+            "GenerateAccessToken": mandateInfo?.generate_access_token,
+
+            "CustomerAccountNumberError": null,
+            "DestinationBankIdError": null,
+            "CustomerVpaError": null
         },
         "LeadId": leadID
     }
@@ -207,6 +246,26 @@ export const CreateUpiMandateModel = (createMandateModel, leadID, customerVpa) =
         }, LeadId: leadID
     }
 
+
+    return createUpiMandateModel
+
+
+}
+
+
+
+export const CreatePhysicalFormMandate = (createMandateModel, leadID) => {
+
+
+    let createUpiMandateModel = {
+        ...createMandateModel,
+        MandateDetails:
+        {
+            ...createMandateModel.MandateDetails,
+            MandateMode : "physical",
+
+        }, LeadId: leadID
+    }
 
     return createUpiMandateModel
 

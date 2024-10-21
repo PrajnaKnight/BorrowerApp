@@ -36,7 +36,7 @@ import { SendGeoLocation } from "../services/API/LocationApi";
 import { useDispatch } from "react-redux";
 import ScreenError, { useErrorEffect } from "./ScreenError";
 import LoadingOverlay from "../components/FullScreenLoader";
-import { CreateMandateModel, CreatePhysicalMandate, CreateUPIMandate, CreateUpiMandateModel, DownloadPhysicalMandateForm, GetMandateInfo } from "../services/API/Mandate";
+import { CreateMandateModel, CreatePhysicalFormMandate, CreatePhysicalMandate, CreateUPIMandate, CreateUpiMandateModel, DownloadPhysicalMandateForm, GetMandateInfo } from "../services/API/Mandate";
 import { GetApplicantId, GetLeadId } from "../services/LOCAL/AsyncStroage";
 import { Digio, DigioConfig, Environment, GatewayEvent } from '@digiotech/react-native';
 import DigioScreen, { DigioStatusScreen } from "../../Common/screens/digioScreen";
@@ -45,7 +45,6 @@ const MandateScreen = ({ navigation }) => {
 
   const stageMaintance = useJumpTo("eMandate", "loanAgreement", navigation);
 
-  const [selectedAccount, setSelectedAccount] = useState(null);
   const [selectedAccountError, setSelectedAccountError] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -66,10 +65,8 @@ const MandateScreen = ({ navigation }) => {
 
 
 
-  const [ifscCode, setIfscCode] = useState(null);
   const [mandateType, setMandateType] = useState("eMandate");
-  const [vpa, setVpa] = useState("");
-  const [vpaError, setVpaError] = useState(null);
+
 
 
   const [createMandateModel, setCreateMandateModel] = useState({})
@@ -222,7 +219,7 @@ const MandateScreen = ({ navigation }) => {
             value: item.AccountNumber,
             bankName: item.BankName,
             destination_bank_id: item.IFSC,
-            AccountType : item.AccountType
+            AccountType: item.AccountType
           }
         ))
 
@@ -235,41 +232,6 @@ const MandateScreen = ({ navigation }) => {
 
   }, [refresh])
 
-
-  useEffect(() => {
-    if (selectedAccount) {
-      setSelectedAccountError(null)
-      const selectedBank = mandateInfo?.bankDetails?.find(
-        (account) => account.value === selectedAccount
-      );
-      console.log("selected " + JSON.stringify(selectedBank))
-
-      setIfscCode(selectedBank.destination_bank_id)
-
-
-      let mandateRole = { 
-        ...createMandateModel,
-        MandateDetails: { 
-          ...createMandateModel.MandateDetails, 
-          DestinationBankId: selectedBank.destination_bank_id, 
-          DestinationBankName: selectedBank.bankName,
-          CustomerAccountNumber : selectedBank.value,
-          AccountType : selectedBank.AccountType
-        } 
-      }
-
-
-      setCreateMandateModel(mandateRole)
-    }
-
-
-  }, [selectedAccount])
-
-  useEffect(() => {
-    if (vpa) {
-      setVpaError(null)
-    }
-  }, vpa)
 
 
 
@@ -313,8 +275,15 @@ const MandateScreen = ({ navigation }) => {
 
   const HandleCreateMandate = async () => {
     setNewErrorScreen(null)
-    if (!selectedAccount) {
-      setSelectedAccountError("Please select the bank account")
+    let currentDataSet = {
+      ...createMandateModel,
+    }
+    if (!createMandateModel?.MandateDetails?.CustomerAccountNumber) {
+      currentDataSet.MandateDetails = {
+        ...createMandateModel.MandateDetails,
+        CustomerAccountNumberError: "Please select the bank account",
+      }
+      setCreateMandateModel(currentDataSet)
       return
     }
 
@@ -344,17 +313,34 @@ const MandateScreen = ({ navigation }) => {
   const HandleCreateUPIMandate = async () => {
     setNewErrorScreen(null)
 
-    if (!selectedAccount) {
-      setSelectedAccountError("Please select the bank account")
+    let currentDataSet = {
+      ...createMandateModel,
+
+    }
+
+    if (!createMandateModel?.MandateDetails?.CustomerAccountNumber) {
+      currentDataSet.MandateDetails = {
+        ...createMandateModel.MandateDetails,
+        CustomerAccountNumberError: "Please select the bank account",
+      }
+      setCreateMandateModel(currentDataSet)
       return
     }
 
-    if (!vpa) {
-      setSelectedAccountError("Please provide UPI ID")
+    if (!createMandateModel?.MandateDetails?.CustomerVpa) {
+      currentDataSet.MandateDetails = {
+        ...createMandateModel.MandateDetails,
+        CustomerVpaError: "Please provide UPI ID",
+      }
+      setCreateMandateModel(currentDataSet)
       return
     }
-    else if (!new RegExp(/^[a-zA-Z0-9.-]{2, 256}@[a-zA-Z][a-zA-Z]{2, 64}$/).test(vpa)) {
-      setSelectedAccountError("Please provide valid UPI ID")
+    else if (!new RegExp(/^[a-zA-Z0-9.-]{2, 256}@[a-zA-Z][a-zA-Z]{2, 64}$/).test(createMandateModel?.MandateDetails?.CustomerVpa)) {
+      currentDataSet.MandateDetails = {
+        ...createMandateModel.MandateDetails,
+        CustomerVpaError: "Please provide valid UPI ID"
+      }
+      setCreateMandateModel(currentDataSet)
       return
     }
 
@@ -363,7 +349,7 @@ const MandateScreen = ({ navigation }) => {
 
 
 
-    let mandateRole = CreateUpiMandateModel(createMandateModel, leadId, vpa)
+    let mandateRole = CreateUpiMandateModel(createMandateModel, leadId, createMandateModel?.MandateDetails?.CustomerVpa)
 
     console.log("========== create upi mandate =============")
     console.log(mandateRole)
@@ -390,7 +376,10 @@ const MandateScreen = ({ navigation }) => {
     setNewErrorScreen(null)
     setLoading(true)
 
-    const createPhysicalMandateResponse = await CreatePhysicalMandate(createMandateModel)
+
+    const payload = CreatePhysicalFormMandate(createMandateModel, leadId)
+    console.log(payload)
+    const createPhysicalMandateResponse = await CreatePhysicalMandate(payload)
     if (createPhysicalMandateResponse.status === STATUS.ERROR) {
       setNewErrorScreen(createPhysicalMandateResponse.message)
       setLoading(false)
@@ -414,6 +403,56 @@ const MandateScreen = ({ navigation }) => {
 
   }
 
+  const UpdateDataset = (type, value) => {
+
+    let mandateRole = {
+      ...createMandateModel,
+
+    }
+
+
+
+    switch (type) {
+      case "AccountNumber":
+
+        const selectedBank = mandateInfo?.bankDetails?.find(
+          (account) => account.value === value
+        );
+        mandateRole.MandateDetails = {
+          ...createMandateModel.MandateDetails,
+          DestinationBankId: selectedBank.destination_bank_id,
+          DestinationBankName: selectedBank.bankName,
+          CustomerAccountNumber: selectedBank.value,
+          AccountType: selectedBank.AccountType,
+
+          DestinationBankIdError : null,
+          CustomerAccountNumberError : null,
+          
+        }
+        break;
+      case "IFSC":
+
+        mandateRole.MandateDetails = {
+          ...createMandateModel.MandateDetails,
+          DestinationBankId: value,
+          DestinationBankIdError : null
+
+        }
+        break;
+      case "UPI":
+        mandateRole.MandateDetails = {
+          ...createMandateModel.MandateDetails,
+          CustomerVpa: value,
+          CustomerVpaError : null
+        }
+        break;
+    }
+
+
+    setCreateMandateModel(mandateRole)
+
+  }
+
   return (
     <KeyboardAvoidingView
       style={[styles.rightCOntainer, { flex: 1 }]}
@@ -431,15 +470,14 @@ const MandateScreen = ({ navigation }) => {
         </View>
         <View style={styles.container}>
           <CustomBankDropdown
-            value={selectedAccount}
+            value={createMandateModel?.MandateDetails?.CustomerAccountNumber}
             setValue={(val) => {
-              console.log("Selected account in MandateScreen:", val);
-              setSelectedAccount(val);
+              UpdateDataset("AccountNumber", val);
             }}
             items={mandateInfo?.bankDetails || []}
             placeholder="Select Bank Account"
             label="Bank Account Number"
-            error={selectedAccountError}
+            error={createMandateModel?.MandateDetails?.CustomerAccountNumberError}
             zIndex={1000}
             selectedItemColor="#ffffff"
             arrowIconColor="#ff8500"
@@ -447,7 +485,9 @@ const MandateScreen = ({ navigation }) => {
           />
 
           <Text style={styles.label}>Bank Branch IFSC Code</Text>
-          {renderInput(ifscCode, setIfscCode, "Enter IFSC Code", false, true)}
+          {renderInput(createMandateModel?.MandateDetails?.DestinationBankId, ((value) => { UpdateDataset( "IFSC", value,) }), "Enter IFSC Code", false, true,
+            createMandateModel?.MandateDetails?.DestinationBankIdError
+          )}
 
           <Text style={styles.label}>Select anyone</Text>
           {renderMandateOptions()}
@@ -481,7 +521,7 @@ const MandateScreen = ({ navigation }) => {
               <Text style={styles.label}>
                 Your Virtual Payment Address (VPA)
               </Text>
-              {renderInput(vpa, setVpa, "Enter your VPA", true, false, vpaError)}
+              {renderInput(createMandateModel?.MandateDetails?.CustomerVpa, ((value) => { UpdateDataset("UPI", value) }), "Enter your VPA", true, false, createMandateModel?.MandateDetails.CustomerVpaError)}
 
               <ButtonComponent
                 title="Sign UPI Mandate"

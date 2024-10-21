@@ -112,6 +112,7 @@ export const DELETE_USER = `${BASE_URL}/DeleteLeadPhone`
 export const DOWNLOAD_PHYSICAL_MANDATE_FORM = `${BASE_URL}/DownloadPhysicalMandateForm`
 export const CREATE_PHYSICAL_MANDATE = `${PAYMENT_BASE_URL}/api/CreatePhysicalEMandateForm`
 export const CREATE_UPI_MANDATE = `${PAYMENT_BASE_URL}/api/CreateUpiMandateForm`
+export const SUBMIT_SCANNED_PHYSICAL_MANDATE = `${PAYMENT_BASE_URL}/api/SubmitScannedPhysicalMandateRequest`
 
 export const RedirectUrl =  "www.knightfintech.com"
 
