@@ -1,6 +1,8 @@
 import { GetStoreAuthToken } from "../../PersonalLoan/services/LOCAL/AsyncStroage"
 
-export const BASE_URL = "https://bankofproductlosapi.azurewebsites.net"
+export const BASE_URL = "https://demolosapi-qa.azurewebsites.net"
+export const BASE_LMS_URL = "https://demolmsapi-qa.azurewebsites.net"
+
 // https://demolosapi-qa.azurewebsites.net
 // https://bankofproductlosapi.azurewebsites.net
 
