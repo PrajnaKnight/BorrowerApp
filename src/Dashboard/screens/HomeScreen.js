@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, FlatList, Dimensions, Image, ImageBackground, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -8,52 +8,14 @@ import Layout from '../components/Layout';
 import { styles } from '../../assets/style/globalStyle';
 import { API_RESPONSE_STATUS, STATUS } from '../../PersonalLoan/services/API/Constants';
 import GetLookUp from '../../PersonalLoan/services/API/GetLookUp';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateBreStatus } from '../../PersonalLoan/services/Utils/Redux/ExtraSlices';
-import { updateJumpTo } from '../../PersonalLoan/services/Utils/Redux/LeadStageSlices';
-import { GetLeadId, StoreApplicantId, StoreLeadId } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
+import { fetchButtonConfig } from '../services/Redux/HomeScreenSlice';
+import { ActivityIndicator } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
 
-const data = [
-  {
-    id: '1',
-    title: 'Prepay',
-    offer: 'Special Offer 10% Off',
-    ImageSrc: require('../../assets/images/prepay.png'),
-    backgroundColor: '#E0F2FF',
-    backgroundImage: require('../../assets/images/prepayBg.png'),
-  },
-  {
-    id: '2',
-    title: 'EMI Calculator',
-    ImageSrc: require('../../assets/images/emicalc.png'),
-    backgroundColor: '#FFE9CF',
-    backgroundImage: require('../../assets/images/loanCalcBg.png'),
-  },
-  {
-    id: '3',
-    title: 'Credit Score',
-    ImageSrc: require('../../assets/images/creditscore.png'),
-    backgroundColor: '#E0F2FF',
-    backgroundImage: require('../../assets/images/creditscoreBg.png'),
-  },
-  {
-    id: '4',
-    title: 'Apply Loan',
-    ImageSrc: require('../../assets/images/ApplyLoan.png'),
-    backgroundColor: '#FFE9CF',
-    backgroundImage: require('../../assets/images/applyloanBg.png'),
-  },
-  {
-    id: '5',
-    title: 'Loan Eligibility',
-    ImageSrc: require('../../assets/images/LoanEligibility.png'),
-    backgroundColor: '#E0F2FF',
-    backgroundImage: require('../../assets/images/loanEligibilityBg.png'),
-  },
-];
 
 const loanData = [
   {
@@ -202,7 +164,7 @@ const LoanSliderItem = ({ item, navigation }) => {
         return null;
     }
   };
- 
+
   const handlePress = () => {
     navigation.navigate('Loans', {
       screen: 'IndividualLoanDetails',
@@ -279,7 +241,7 @@ const LoanSliderItem = ({ item, navigation }) => {
           marginBottom: 16,
         }}>
         <View style={styles.boxShadow}>
-          <View style={{flexDirection:'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.offerWrapper}>
               <Text style={styles.SpecialofferBadge}>{item.offerBadge}</Text>
               <Text style={styles.Offertitle}>{item.title}</Text>
@@ -448,9 +410,9 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       case 'Loan Eligibility':
         navigation.navigate('LoanEligibilityCalculator');
         break;
-        case 'Pre Disbursement':
-          navigation.navigate('PreDisbursementScreen');
-          break;
+      case 'Pre Disbursement':
+        navigation.navigate('PreDisbursementScreen');
+        break;
       default:
         break;
     }
@@ -461,25 +423,25 @@ const Card = ({ title, offer, ImageSrc, backgroundImage, backgroundColor, naviga
       onPress={handlePress}
       style={[
         styles.cardContainer,
-        { 
-          width: itemWidth, 
+        {
+          width: itemWidth,
           borderColor: borderColor,
           shadowColor: shadowColor,
         },
         Platform.OS === "ios"
           ? {
-              shadowColor: shadowColor,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.35,
-              shadowRadius: 5,
-            }
+            shadowColor: shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.35,
+            shadowRadius: 5,
+          }
           : {
-              elevation: 5,
-                shadowColor: shadowColor,
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.25,
-                shadowRadius: 3,
-            },
+            elevation: 5,
+            shadowColor: shadowColor,
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3,
+          },
       ]}
     >
       <ImageBackground
@@ -514,7 +476,7 @@ const BannerItem = ({ item }) => (
   <View style={[{
     width: width * 0.92,
     marginRight: width * 0.03,
-  },styles.bannerContainer]}>
+  }, styles.bannerContainer]}>
     <ImageBackground source={item.imageSource} style={styles.bannerImage} resizeMode="contain">
       <View style={styles.bannerContent}>
         <TouchableOpacity style={styles.applyNowButton}>
@@ -526,7 +488,15 @@ const BannerItem = ({ item }) => (
 );
 
 
+
 const HomeScreen = ({ navigation }) => {
+
+
+  const dispatch = useDispatch()
+  const buttonConfig = useSelector((state) => state.homeScreenSlices.ButtonConfig)
+  const [refresh, setRefresh] = useState(true)
+  const [buttonConfigList, setButtonConfigList] = useState([])
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const onViewRef = React.useRef(({ viewableItems }) => {
@@ -537,20 +507,99 @@ const HomeScreen = ({ navigation }) => {
 
   const viewConfigRef = React.useRef({ viewAreaCoveragePercentThreshold: 50 });
 
+  useEffect(() => {
+    if (!refresh) {
+      return
+    }
+
+    dispatch(fetchButtonConfig())
+    setRefresh(false)
+  }, [refresh])
+
+
+  useEffect(() => {
+
+    if (!buttonConfig.data || !buttonConfig.data.Data) {
+      return
+    }
+
+    let listOfButton = []
+
+    if (buttonConfig.data.Data.IsPrepayEnable) {
+      listOfButton.push({
+        id: '1',
+        title: 'Prepay',
+        offer: 'Special Offer 10% Off',
+        ImageSrc: require('../../assets/images/prepay.png'),
+        backgroundColor: '#E0F2FF',
+        backgroundImage: require('../../assets/images/prepayBg.png'),
+      },)
+    }
+
+    if (buttonConfig.data.Data.IsEMICalculatorEnable) {
+      listOfButton.push({
+        id: '2',
+        title: 'EMI Calculator',
+        ImageSrc: require('../../assets/images/emicalc.png'),
+        backgroundColor: '#FFE9CF',
+        backgroundImage: require('../../assets/images/loanCalcBg.png'),
+      },)
+    }
+
+
+
+
+    if (buttonConfig.data.Data.IsCreditScoreEnable) {
+      listOfButton.push({
+        id: '3',
+        title: 'Credit Score',
+        ImageSrc: require('../../assets/images/creditscore.png'),
+        backgroundColor: '#E0F2FF',
+        backgroundImage: require('../../assets/images/creditscoreBg.png'),
+      },)
+    }
+
+    if (buttonConfig.data.Data.IsApplySection) {
+      listOfButton.push({
+        id: '4',
+        title: 'Apply Loan',
+        ImageSrc: require('../../assets/images/ApplyLoan.png'),
+        backgroundColor: '#FFE9CF',
+        backgroundImage: require('../../assets/images/applyloanBg.png'),
+      })
+    }
+    if (buttonConfig.data.Data.IsloanEligibilityEnable) {
+      listOfButton.push({
+        id: '5',
+        title: 'Loan Eligibility',
+        ImageSrc: require('../../assets/images/LoanEligibility.png'),
+        backgroundColor: '#E0F2FF',
+        backgroundImage: require('../../assets/images/loanEligibilityBg.png'),
+      })
+    }
+
+    setButtonConfigList(listOfButton)
+  }, [buttonConfig.data])
+  useEffect(() => {
+    console.log("============= Butto config ============")
+    console.log(buttonConfig)
+  }, [buttonConfig])
+
+
   return (
     <Layout>
       <View style={styles.header}>
-          <View style={styles.userInfo}>
-            <Text style={styles.welcome}>Welcome,</Text>
-            <Text style={styles.username}>Satat Mishra</Text>
-          </View>
-          <View style={styles.cibilScore}>
-            <Text style={styles.cibilScoreText}>790</Text>
-            <Text style={styles.cibilLabel}>Score</Text>
-          </View>
+        <View style={styles.userInfo}>
+          <Text style={styles.welcome}>Welcome,</Text>
+          <Text style={styles.username}>Satat Mishra</Text>
         </View>
+        <View style={styles.cibilScore}>
+          <Text style={styles.cibilScoreText}>790</Text>
+          <Text style={styles.cibilLabel}>Score</Text>
+        </View>
+      </View>
       <ScrollView style={styles.container}>
-        
+
 
         <View>
           <FlatList
@@ -562,7 +611,7 @@ const HomeScreen = ({ navigation }) => {
               <LoanSliderItem item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item.key}
-            onScrollToIndexFailed={() => {}} // This function can be used to handle errors if scrollToIndex fails
+            onScrollToIndexFailed={() => { }} // This function can be used to handle errors if scrollToIndex fails
             onViewableItemsChanged={onViewRef.current}
             viewabilityConfig={viewConfigRef.current}
           />
@@ -570,27 +619,36 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.features}>
-          <FlatList
-            horizontal
-            data={data}
-            renderItem={({ item, index }) => (
-              <Card
-                title={item.title}
-                offer={item.offer}
-                ImageSrc={item.ImageSrc}
-                backgroundImage={item.backgroundImage}
-                backgroundColor={item.backgroundColor}
-                navigation={navigation} // pass navigation prop
-                totalItems={data.length} // pass total items count
-                index={index}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.featureListContainer}
-            showsHorizontalScrollIndicator={false}
-          />
+
+          {buttonConfig.loading ? <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+
+            <ActivityIndicator size={"large"} />
+
+          </View> :
+            <FlatList
+              horizontal
+              data={buttonConfigList}
+              renderItem={({ item, index }) => (
+                <Card
+                  title={item.title}
+                  offer={item.offer}
+                  ImageSrc={item.ImageSrc}
+                  backgroundImage={item.backgroundImage}
+                  backgroundColor={item.backgroundColor}
+                  navigation={navigation} // pass navigation prop
+                  totalItems={buttonConfigList.length} // pass total items count
+                  index={index}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.featureListContainer}
+              showsHorizontalScrollIndicator={false}
+            />
+          }
+
+
         </View>
-        <View style={{marginHorizontal:16}}>
+        <View style={{ marginHorizontal: 16 }}>
           <FlatList
             horizontal
             pagingEnabled
