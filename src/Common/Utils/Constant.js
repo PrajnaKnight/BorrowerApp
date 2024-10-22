@@ -1,7 +1,7 @@
 import { GetStoreAuthToken } from "../../PersonalLoan/services/LOCAL/AsyncStroage"
 
 export const BASE_URL = "https://demolosapi-qa.azurewebsites.net"
-export const BASE_LMS_URL = "https://demolmsapi-qa.azurewebsites.net"
+export const BASE_LMS_URL = "https://borrower-dashboard-api.azurewebsites.net"
 
 // https://demolosapi-qa.azurewebsites.net
 // https://bankofproductlosapi.azurewebsites.net
@@ -10,6 +10,12 @@ export const BASE_LMS_URL = "https://demolmsapi-qa.azurewebsites.net"
 export const STATUS  = {
     SUCCESS : "SUCCESS",
     ERROR : "ERROR",
+}
+
+export const API_STATE  = {
+    IDLE : "IDLE",
+    STOP : "STOP",
+    LOADING : "LOADING"
 }
 
 

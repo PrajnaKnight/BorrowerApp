@@ -38,6 +38,11 @@ import ClosedLoanRPS from '../screens/ClosedLoanRPS';
 import ClosedPreDisbursalChargesScreen from '../screens/ClosedPreDisbursalCharges';
 import PreDisbursementScreen from '../screens/PreDisbursementChargesScreen';
 import { TabProvider } from '../components/TabContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProfileInfo } from '../services/Redux/ProfileInfoSlice';
+import LoadingOverlay from '../../PersonalLoan/components/FullScreenLoader';
+import { API_STATE } from '../../Common/Utils/Constant';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -88,20 +93,26 @@ const TabNavigator = () => (
   </Tab.Navigator>
 );
 
-function DashboardNavigator() {
+const DashboardNavigator = ()=> {
  
 
   const [showEMINotification, setShowEMINotification] = useState(true);
 
   
 
- 
+  const dispatch = useDispatch()
+  const userProfileInfo = useSelector((state)=>state.profileInfoSlices)
 
+  useFocusEffect(
+    useCallback(() => {
+    dispatch(fetchProfileInfo())
+  },[]))
 
   return (
     <TabProvider>
       <View style={styles.container}>
-        {showEMINotification && (
+        { userProfileInfo?.state == API_STATE.LOADING &&  <LoadingOverlay visible={true}/>}
+        {showEMINotification && userProfileInfo?.state == API_STATE.STOP && (
           <EMINotification
             status="due"
             loanDetails={{

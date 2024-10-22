@@ -2,8 +2,13 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Layout from '../components/Layout';
 import { styles } from '../../assets/style/globalStyle';
+import { useSelector } from 'react-redux';
 
 const ProfileScreen = () => {
+
+
+  const userProfileInfo = useSelector((state)=>state.profileInfoSlices)
+
   return (
     <Layout>
       <ScrollView style={styles.container}>
@@ -12,19 +17,19 @@ const ProfileScreen = () => {
             <Text style={styles.Personaltitle}>Personal Information</Text>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>Full Name</Text>
-              <Text style={styles.Personalvalue}>Satat Mishra</Text>
+              <Text style={styles.Personalvalue}>{userProfileInfo?.data?.LeadName || ""}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>Email</Text>
-              <Text style={styles.Personalvalue}>loremipsum@gmail.com</Text>
+              <Text style={styles.Personalvalue}>{userProfileInfo?.data?.LeadEmail || ""}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>Gender</Text>
-              <Text style={styles.Personalvalue}>Male</Text>
+              <Text style={styles.Personalvalue}>{userProfileInfo?.data?.LeadGender || ""}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>DOB</Text>
-              <Text style={styles.Personalvalue}>31/12/1993</Text>
+              <Text style={styles.Personalvalue}>{userProfileInfo?.data?.LeadDOB || ""}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>Nationality</Text>
@@ -32,11 +37,11 @@ const ProfileScreen = () => {
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>Registered Mobile No.</Text>
-              <Text style={styles.Personalvalue}>+91 9938391919</Text>
+              <Text style={styles.Personalvalue}>{userProfileInfo?.data?.LeadPhone || ""}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.Personallabel}>Alternate Mobile No.</Text>
-              <Text style={styles.Personalvalue}>+91 8421757814</Text>
+              <Text style={styles.Personalvalue}>{userProfileInfo?.data?.LeadPhone || ""}</Text>
             </View>
           </View>
         </View>
