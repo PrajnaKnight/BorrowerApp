@@ -493,6 +493,8 @@ const HomeScreen = ({ navigation }) => {
 
 
   const dispatch = useDispatch()
+  const userProfileInfo = useSelector((state)=>state.profileInfoSlices)
+
   const buttonConfig = useSelector((state) => state.homeScreenSlices.ButtonConfig)
   const [refresh, setRefresh] = useState(true)
   const [buttonConfigList, setButtonConfigList] = useState([])
@@ -519,13 +521,13 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
 
-    if (!buttonConfig.data || !buttonConfig.data.Data) {
+    if (!buttonConfig.data || !buttonConfig.data.Value) {
       return
     }
 
     let listOfButton = []
 
-    if (buttonConfig.data.Data.IsPrepayEnable) {
+    if (buttonConfig.data.Value.IsPrepayEnable) {
       listOfButton.push({
         id: '1',
         title: 'Prepay',
@@ -536,7 +538,7 @@ const HomeScreen = ({ navigation }) => {
       },)
     }
 
-    if (buttonConfig.data.Data.IsEMICalculatorEnable) {
+    if (buttonConfig.data.Value.IsEMICalculatorEnable) {
       listOfButton.push({
         id: '2',
         title: 'EMI Calculator',
@@ -549,7 +551,7 @@ const HomeScreen = ({ navigation }) => {
 
 
 
-    if (buttonConfig.data.Data.IsCreditScoreEnable) {
+    if (buttonConfig.data.Value.IsCreditScoreEnable) {
       listOfButton.push({
         id: '3',
         title: 'Credit Score',
@@ -559,7 +561,7 @@ const HomeScreen = ({ navigation }) => {
       },)
     }
 
-    if (buttonConfig.data.Data.IsApplySection) {
+    if (buttonConfig.data.Value.IsApplySection) {
       listOfButton.push({
         id: '4',
         title: 'Apply Loan',
@@ -568,7 +570,7 @@ const HomeScreen = ({ navigation }) => {
         backgroundImage: require('../../assets/images/applyloanBg.png'),
       })
     }
-    if (buttonConfig.data.Data.IsloanEligibilityEnable) {
+    if (buttonConfig.data.Value.IsloanEligibilityEnable) {
       listOfButton.push({
         id: '5',
         title: 'Loan Eligibility',
@@ -586,12 +588,13 @@ const HomeScreen = ({ navigation }) => {
   }, [buttonConfig])
 
 
+
   return (
     <Layout>
       <View style={styles.header}>
         <View style={styles.userInfo}>
           <Text style={styles.welcome}>Welcome,</Text>
-          <Text style={styles.username}>Satat Mishra</Text>
+          <Text style={styles.username}>{userProfileInfo?.data?.LeadName || ""}</Text>
         </View>
         <View style={styles.cibilScore}>
           <Text style={styles.cibilScoreText}>790</Text>

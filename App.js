@@ -26,6 +26,7 @@ import UploadDocumentSlices, { sagaFetchFileRunner, sagaSubmitFileRunner } from 
 import UploadOtherFileSlice, { sagaFetchOtherFileRunner, sagaDeleteFileRunner } from "./src/PersonalLoan/services/Utils/Redux/OtherUploadDocumentSlices"
 
 import HomeScreenSlices from './src/Dashboard/services/Redux/HomeScreenSlice'
+import ProfileInfoSlices from './src/Dashboard/services/Redux/ProfileInfoSlice'
 
 import { all } from 'redux-saga/effects';
 import { configureStore } from '@reduxjs/toolkit';
@@ -50,7 +51,8 @@ const store = configureStore({
     otherDocumentSlices : UploadOtherFileSlice,
     extraStageSlice : ExtraStageSlice,
     personalLoanDetailSlice : PersonalLoanDetailSlice,
-    homeScreenSlices : HomeScreenSlices
+    homeScreenSlices : HomeScreenSlices,
+    profileInfoSlices : ProfileInfoSlices
   },
 
   middleware: (getDefaultMiddleware) =>  getDefaultMiddleware().concat([sagaMiddleware]), 

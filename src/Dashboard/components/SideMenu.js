@@ -10,19 +10,20 @@ import { DeleteUser } from '../../PersonalLoan/services/API/CreateBorrowerLead';
 import { STATUS } from '../../PersonalLoan/services/API/Constants';
 import { StoreApplicantId, StoreBorrowerPhoneNumber, StoreLeadId, StoreTokenValidity, StoreUserAadhaar, StoreUserPan } from '../../PersonalLoan/services/LOCAL/AsyncStroage';
 import { GetOrganization } from '../services/API/OrganizationInfo';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SideMenu = ({ navigation }) => {
   const [isWhatsAppEnabled, setIsWhatsAppEnabled] = useState(false);
   const [organizationInfo, setOrganzationInfo] = useState({})
   const [loading, setLoading] = useState(false)
-
+  const userProfileInfo = useSelector((state)=>state.profileInfoSlices)
   useEffect(() => {
     setLoading(true)
     GetOrganization().then((response) => {    
 
       setLoading(false)
       if (response.status == STATUS.SUCCESS) {
-        setOrganzationInfo(response.data)
+        setOrganzationInfo(response.data?.Value)
       }
     })
   }, [])
@@ -88,8 +89,8 @@ const SideMenu = ({ navigation }) => {
           style={styles.background}
           resizeMode="cover">
           <View style={styles.profileSection}>
-            <Text style={styles.profileName}>Satat Mishra</Text>
-            <Text style={styles.profilePhone}>+91 9938391919</Text>
+            <Text style={styles.profileName}>{userProfileInfo?.data?.LeadName || ""}</Text>
+            <Text style={styles.profilePhone}>{userProfileInfo?.data?.LeadPhone || ""}</Text>
           </View>
         </ImageBackground>
 
