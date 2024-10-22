@@ -5,7 +5,7 @@ import { styles } from '../../assets/style/personalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomDropdown from './customDropdown';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { GoBack } from '../../PersonalLoan/services/Utils/ViewValidator';
 
 const Header = ({ navigate, isOnFAQScreen }) => {
@@ -49,10 +49,24 @@ const Header = ({ navigate, isOnFAQScreen }) => {
             />
           </TouchableOpacity>
         )}
-        <Image
+        <TouchableOpacity onPress={
+          ()=>{
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0, // The index of the active route
+                routes: [
+                  { name: 'Dashboard' }, // Name of the screen you want to navigate to
+                ],
+              })
+            );
+          }
+        }>
+ <Image
           source={require("../../assets/images/your-logo.png")}
           style={styles.logo}
         />
+        </TouchableOpacity>
+       
       </View>
       <View style={styles.iconRow}>
         <TouchableOpacity

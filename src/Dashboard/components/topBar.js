@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import FAQModal from './FAQModal';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
@@ -30,10 +30,25 @@ const TopBar = () => {
               <MaterialIcons name="chevron-left" size={15} color="#00194c" style={{fontWeight:'bold'}} />
           </TouchableOpacity>
         )}
-        <Image
+
+        <TouchableOpacity onPress={()=>{
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0, // The index of the active route
+              routes: [
+                { name: 'Dashboard' }, // Name of the screen you want to navigate to
+              ],
+            })
+          );
+        }}>
+
+<Image 
           source={require("../../assets/images/your-logo.png")}
           style={styles.logo}
         />
+        
+        </TouchableOpacity>
+        
       </View>
       <View style={styles.iconsContainer}>
       {showNotificationIcon && (
