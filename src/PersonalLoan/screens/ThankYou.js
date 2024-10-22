@@ -155,34 +155,10 @@ const ThankYou = ({ navigation }) => {
   };
 
   const steps = [
-    {
-      id: 1,
-      title: "Primary Information",
-      subtitle: "प्राथमिक जानकारी",
-      icon: CheckCircle2,
-      status: "current",
-    },
-    {
-      id: 2,
-      title: "Personal Information",
-      subtitle: "व्यक्तिगत जानकारी",
-      icon: MapPin,
-      status: "disabled",
-    },
-    {
-      id: 3,
-      title: "eKYC OTP Verification",
-      subtitle: "ईकेवाईसी ओटीपी सत्यापन",
-      icon: Lock,
-      status: "disabled",
-    },
-    {
-      id: 4,
-      title: "Address Details",
-      subtitle: "पते का विवरण",
-      icon: Building2,
-      status: "disabled",
-    },
+    { id: 1, title: 'Document Upload', subtitle: 'दस्तावेज़ अपलोड करें', icon: Building2, status: 'done' },
+    { id: 2, title: 'Loan Agreement', subtitle: 'ऋण समझौता', icon: Lock, status: 'done' },
+    { id: 3, title: 'Agreement OTP Verification', subtitle: 'अनुबंध ओटीपी सत्यापन', icon: Lock, status: 'done' },
+    { id: 4, title: 'Initiate Disbursal', subtitle: 'संवितरण आरंभ करें', icon: Lock, status: 'current' },
   ];
 
   return (
@@ -210,7 +186,7 @@ const ThankYou = ({ navigation }) => {
                       <step.icon
                         size={24}
                         color={
-                          step.status === "disabled" ? "#A0AEC0" : "#FFFFFF"
+                          step.status === "disabled" ? "#A0AEC0" : (step.status === "done" ? "#48BB78" : "#FFFFFF")
                         }
                       />
                     </View>
