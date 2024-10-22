@@ -51,14 +51,7 @@ const Header = ({ navigate, isOnFAQScreen }) => {
         )}
         <TouchableOpacity onPress={
           ()=>{
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0, // The index of the active route
-                routes: [
-                  { name: 'Dashboard' }, // Name of the screen you want to navigate to
-                ],
-              })
-            );
+            navigation.navigate("Home")
           }
         }>
  <Image
