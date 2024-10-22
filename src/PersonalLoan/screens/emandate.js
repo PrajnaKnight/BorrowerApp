@@ -33,22 +33,23 @@ import NACHIcon from "../../assets/images/nachLogo.png";
 import { LineChart } from "lucide-react";
 import useJumpTo from "../components/StageComponent";
 import SaveLeadStage from "../services/API/SaveLeadStage";
-import { STATUS } from "../services/API/Constants";
+import { GetHeader, STATUS } from "../services/API/Constants";
 import { updateJumpTo } from "../services/Utils/Redux/LeadStageSlices";
 import { SendGeoLocation } from "../services/API/LocationApi";
 import { useDispatch } from "react-redux";
 import ScreenError, { useErrorEffect } from "./ScreenError";
 import LoadingOverlay from "../components/FullScreenLoader";
-import { CreateMandateModel, CreatePhysicalFormMandate, CreatePhysicalMandate, CreateUPIMandate, CreateUpiMandateModel, DownloadPhysicalMandateForm, GetMandateInfo } from "../services/API/Mandate";
+import { CreateMandateModel, CreatePhysicalFormMandate, CreatePhysicalMandate, CreateUPIMandate, CreateUpiMandateModel, DownloadPhysicalMandateForm, GetMandateInfo, UploadPhysicalMandateForm } from "../services/API/Mandate";
 import { GetApplicantId, GetLeadId } from "../services/LOCAL/AsyncStroage";
 import { Digio, DigioConfig, Environment, GatewayEvent } from '@digiotech/react-native';
 import DigioScreen, { DigioStatusScreen } from "../../Common/screens/digioScreen";
+import { DownloadMyFile } from "../services/Utils/FieldVerifier";
+import { checkImagePermission } from "./PermissionScreen";
 
 const MandateScreen = ({ navigation }) => {
 
   const stageMaintance = useJumpTo("eMandate", "loanAgreement", navigation);
 
-  const [selectedAccountError, setSelectedAccountError] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(true)
@@ -56,7 +57,7 @@ const MandateScreen = ({ navigation }) => {
   const [digiData, setDigiData] = useState({ mandateId: null, phoneNumber: null, token: null })
   const [digioWebHook, startDigioWebHook] = useState(false)
   const { mandateState, setMandateState } = DigioScreen({ startWebHook: digioWebHook, payload: digiData, setStartDigioWebHook: startDigioWebHook })
-
+  const [fileContent, setFileContent] = useState(null)
   const dispatch = useDispatch();
 
 
@@ -197,6 +198,7 @@ const MandateScreen = ({ navigation }) => {
       return
     }
     setNewErrorScreen(null);
+    setFileContent(null)
     setLoading(true);
     GetLeadId().then((response) => {
       console.warn(response)
@@ -241,24 +243,13 @@ const MandateScreen = ({ navigation }) => {
     const filePath = path;
 
     try {
-        // Check if the file exists
-        const fileExists = await RNFS.exists(filePath);
-        if (fileExists) {
-            // Open the file using FileViewer
-            FileViewer.open(filePath)
-                .then(() => {
-                    console.log('File opened successfully');
-                })
-                .catch(error => {
-                    console.error('Error opening file:', error);
-                });
-        } else {
-            Alert.alert('File not found', 'The file does not exist.');
-        }
+      // Check if the file exists
+      const header = await GetHeader()
+      await DownloadMyFile(header, path, "NACH_FORM.pdf")
     } catch (error) {
-        console.error('Error checking file existence:', error);
+      console.error('Error checking file existence:', error);
     }
-};
+  };
 
 
   const openUrl = async (mandateId, token, phoneNumber, applicationId) => {
@@ -399,10 +390,32 @@ const MandateScreen = ({ navigation }) => {
 
   const DownloadNACHForm = async () => {
     setNewErrorScreen(null)
+
+
+    if(await checkImagePermission() == false){
+      navigation.navigate("PermissionsScreen", {permissionStatus : "denied", permissionType : 'files'})
+      return
+    }
+
+    let currentDataSet = {
+      ...createMandateModel,
+
+    }
+
+    if (!createMandateModel?.MandateDetails?.CustomerAccountNumber) {
+      currentDataSet.MandateDetails = {
+        ...createMandateModel.MandateDetails,
+        CustomerAccountNumberError: "Please select the bank account",
+      }
+      setCreateMandateModel(currentDataSet)
+      return
+    }
     setLoading(true)
 
 
     const payload = CreatePhysicalFormMandate(createMandateModel, leadId)
+    console.log("physical mandate")
+
     console.log(payload)
     const createPhysicalMandateResponse = await CreatePhysicalMandate(payload)
     if (createPhysicalMandateResponse.status === STATUS.ERROR) {
@@ -423,7 +436,10 @@ const MandateScreen = ({ navigation }) => {
       return
     }
 
-    console.log(downloadPhysicalMandateFormResponse.data)
+    if(downloadPhysicalMandateFormResponse.data?.FileUrl){
+      openFile(downloadPhysicalMandateFormResponse.data.FileUrl)
+    }
+
     setLoading(false)
 
   }
@@ -450,9 +466,9 @@ const MandateScreen = ({ navigation }) => {
           CustomerAccountNumber: selectedBank.value,
           AccountType: selectedBank.AccountType,
 
-          DestinationBankIdError : null,
-          CustomerAccountNumberError : null,
-          
+          DestinationBankIdError: null,
+          CustomerAccountNumberError: null,
+
         }
         break;
       case "IFSC":
@@ -460,7 +476,7 @@ const MandateScreen = ({ navigation }) => {
         mandateRole.MandateDetails = {
           ...createMandateModel.MandateDetails,
           DestinationBankId: value,
-          DestinationBankIdError : null
+          DestinationBankIdError: null
 
         }
         break;
@@ -468,7 +484,7 @@ const MandateScreen = ({ navigation }) => {
         mandateRole.MandateDetails = {
           ...createMandateModel.MandateDetails,
           CustomerVpa: value,
-          CustomerVpaError : null
+          CustomerVpaError: null
         }
         break;
     }
@@ -476,6 +492,22 @@ const MandateScreen = ({ navigation }) => {
 
     setCreateMandateModel(mandateRole)
 
+  }
+
+
+  const UploadScannedPhysicalMandate = (file) =>{
+    
+    setNewErrorScreen(null)
+    setLoading(true)
+    UploadPhysicalMandateForm({ uri: file.base64, name: file.name, type: file.type }).then((response)=>{
+      setLoading(false)
+      if(response.status == STATUS.ERROR){
+        setNewErrorScreen(response.message)
+        return
+      }
+
+      
+    })
   }
 
   return (
@@ -510,7 +542,7 @@ const MandateScreen = ({ navigation }) => {
           />
 
           <Text style={styles.label}>Bank Branch IFSC Code</Text>
-          {renderInput(createMandateModel?.MandateDetails?.DestinationBankId, ((value) => { UpdateDataset( "IFSC", value,) }), "Enter IFSC Code", false, true,
+          {renderInput(createMandateModel?.MandateDetails?.DestinationBankId, ((value) => { UpdateDataset("IFSC", value,) }), "Enter IFSC Code", false, true,
             createMandateModel?.MandateDetails?.DestinationBankIdError
           )}
 
@@ -529,6 +561,11 @@ const MandateScreen = ({ navigation }) => {
               <FileUpload
                 placeholder="Upload Scanned Signed Form"
                 showLabel={false}
+                file={fileContent}
+                setFile={(e)=>{
+                  setFileContent(e)
+                  UploadScannedPhysicalMandate(e)
+                }}
               />
               <Text style={[styles.noteText, { marginTop: 30, flex: 1 }]}>
                 <Text style={{ color: "#FF8500" }}>Note:-</Text>

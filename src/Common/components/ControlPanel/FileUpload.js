@@ -1,36 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import applyFontFamily from '../../../assets/style/applyFontFamily';
+import DocumentPicker from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
 
-export default function FileUpload({ placeholder, showLabel = true }) {
-  const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+export default function FileUpload({ placeholder, showLabel = true, file,  setFile}) {
   const [placeholderText, setPlaceholderText] = useState(placeholder || 'Select a file');
 
   useEffect(() => {
     setPlaceholderText(placeholder || 'Select a file');
   }, [placeholder]);
 
-  const handleFilePick = () => {
-    // Simulating file pick. In a real app, you'd use DocumentPicker here
-    setFile({ name: "Report-24-23.pdf" });
-    // Simulate upload progress
-    setUploadProgress(0);
-    const interval = setInterval(() => {
-      setUploadProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prevProgress + 10;
+  const handleFilePick = async() => {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles], // Specify file types here
       });
-    }, 500);
+
+      const fileSelected = res[0]
+
+      console.log('Selected document:', fileSelected);
+
+      const base64Data = await RNFS.readFile(fileSelected.uri, 'base64');
+
+      setFile({...fileSelected, base64 : base64Data})
+      
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User canceled the picker');
+      } else {
+        console.error('Document Picker Error:', err);
+      }
+    }
   };
 
   const handleRemoveFile = () => {
     setFile(null);
-    setUploadProgress(0);
   };
 
   return (
@@ -55,12 +61,7 @@ export default function FileUpload({ placeholder, showLabel = true }) {
           <Icon name="upload" size={20} color="#ffffff" />
         </TouchableOpacity>
       </View>
-      {file && (
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { width: `${uploadProgress}%` }]} />
-          <Text style={styles.progressText}>{uploadProgress}%</Text>
-        </View>
-      )}
+      
     </View>
   );
 }
