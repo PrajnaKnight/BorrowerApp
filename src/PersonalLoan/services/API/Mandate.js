@@ -273,7 +273,6 @@ export const CreatePhysicalFormMandate = (createMandateModel, leadID) => {
         MandateDetails:
         {
             ...createMandateModel.MandateDetails,
-            MandateMode : "physical",
 
         }, LeadId: leadID
     }
