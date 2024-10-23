@@ -14,7 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useAppContext } from "../components/useContext";
 import { useRoute } from "@react-navigation/native";
 import { styles } from "../services/style/gloablStyle";
-import { checkImagePermission } from "./PermissionScreen";
+import { checkImagePermission } from "../../Common/screens/PermissionScreen";
 import { ALL_SCREEN, Something_Went_Wrong } from "../services/Utils/Constants";
 import { useDispatch, useSelector } from "react-redux";
 import SaveLeadStage from "../services/API/SaveLeadStage";

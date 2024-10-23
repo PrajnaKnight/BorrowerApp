@@ -22,7 +22,7 @@ import { updateCurrentStage, updateJumpTo } from '../services/Utils/Redux/LeadSt
 import { fetchPersonalDetails, updateCurrentPersonalData } from '../services/Utils/Redux/PersonalDataSlices';
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from "../components/StageComponent";
 import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';

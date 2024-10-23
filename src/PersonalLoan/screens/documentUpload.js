@@ -14,7 +14,7 @@ import ScreenError, { useErrorEffect } from './ScreenError';
 import { base64ToFile, DownloadMyFile, DownloadMyFileWithBase64, generateUniqueAddress, getBase64MimeType, isImage } from '../services/Utils/FieldVerifier';
 import { SendGeoLocation } from '../services/API/LocationApi';
 import * as DocumentPicker from 'expo-document-picker';
-import { checkCameraPermission, checkImagePermission, checkLocationPermission } from './PermissionScreen';
+import { checkCameraPermission, checkImagePermission, checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateOtherFile, sagaFetchOtherFileRequest, sagaDeleteFileRequest, updateMasterSelected, updateLastDocs, updateChildSelected, updateCleanAll } from '../services/Utils/Redux/OtherUploadDocumentSlices';
 import { LinearGradient } from 'expo-linear-gradient';

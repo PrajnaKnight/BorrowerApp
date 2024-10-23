@@ -30,7 +30,6 @@ import FullScreenWebViewForAadhaarSigning from '../screens/FullScreenWebViewForA
 import ThankYou from '../screens/ThankYou';
 import Preview from '../screens/Preview';
 import DisbursementAcceptedScreen from '../screens/DisbursalAcceptedScreen';
-import PermissionsScreen from '../screens/PermissionScreen';
 import InitiateDisbursalScreen from '../screens/InitiateDisbursalScreen';
 import WebCameraScreen from '../screens/WebCameraScreen';
 import FAQScreen from '../screens/FAQScreen';
@@ -98,7 +97,6 @@ const PersonalLoanNavigator = ({ navigation }) => {
             <Stack.Screen name="Disbursement" component={Disbursement} />
             <Stack.Screen name="DisbursalAcceptedScreen" component={DisbursementAcceptedScreen} />
             <Stack.Screen name="Preview" component={Preview} />
-            <Stack.Screen name="PermissionsScreen" component={PermissionsScreen} />
             <Stack.Screen name="WebCameraScreen" component={WebCameraScreen} />
             <Stack.Screen name="FAQScreen" component={FAQScreen} />
 

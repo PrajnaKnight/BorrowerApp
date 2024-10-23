@@ -44,7 +44,7 @@ import {
 import { clearAadhaarCkyc, executePanCkyc, updatePanError } from '../services/Utils/Redux/DocumentVerificationSlices';
 import MaskInput from 'react-native-mask-input';
 import * as DocumentPicker from 'expo-document-picker';
-import { checkCameraPermission, checkImagePermission, checkLocationPermission } from './PermissionScreen';
+import { checkCameraPermission, checkImagePermission, checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import DownloadPopup from '../components/DownloadPopup';
 

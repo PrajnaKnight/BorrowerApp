@@ -20,7 +20,7 @@ import { ALL_SCREEN, Network_Error } from '../services/Utils/Constants';
 import { compareTwoStrings } from 'string-similarity';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import { SendGeoLocation } from '../services/API/LocationApi';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';

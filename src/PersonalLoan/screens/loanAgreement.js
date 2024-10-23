@@ -19,7 +19,7 @@ import { GoBack } from '../services/Utils/ViewValidator';
 import useJumpTo from "../components/StageComponent";
 
 import * as FileSystem from 'expo-file-system';
-import { checkImagePermission, checkLocationPermission } from './PermissionScreen';
+import { checkImagePermission, checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import SaveLeadStage from '../services/API/SaveLeadStage';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { useDispatch, useSelector } from 'react-redux';

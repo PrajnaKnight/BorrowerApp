@@ -27,7 +27,7 @@ import {
   startOtpListener,
   useOtpVerify,
 } from 'react-native-otp-verify';
-import { checkSMSPermission } from './PermissionScreen';
+import { checkSMSPermission } from '../../Common/screens/PermissionScreen';
 
 const OTPVerificationScreen = ({ navigation, route }) => {
 

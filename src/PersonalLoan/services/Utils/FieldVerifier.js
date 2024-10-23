@@ -431,6 +431,7 @@ export const DownloadMyFileWithBase64 = async (base64, name) => {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            return "successfull"
         } catch (e) {
             console.log(e);
         }

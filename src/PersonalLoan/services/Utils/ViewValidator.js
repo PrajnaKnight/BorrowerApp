@@ -2,7 +2,7 @@
 import { BackHandler } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { ALL_SCREEN } from './Constants';
-import { checkCameraPermission, checkImagePermission, checkLocationPermission } from '../../screens/PermissionScreen';
+import { checkCameraPermission, checkImagePermission, checkLocationPermission } from '../../../Common/screens/PermissionScreen';
 
 export const GoBack = (navigation) => {
   if (navigation.canGoBack()) {
@@ -60,25 +60,19 @@ export const resetNavigationStack = async (navigation, to) => {
   if (!isAllPermissionGiven) {
 
 
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{
-          name: 'PermissionsScreen', params: {
-            launchTimeAsk: true,
-            onGoBack: () => {
+    navigation.replace('PermissionsScreen', {
+      launchTimeAsk: true,
+      onGoBack: () => {
 
-              navigation.dispatch(
-                CommonActions.reset({
-                  routes: actions,
-                })
-              );
+        if (navigation.canGoBack()) {
+          navigation.goBack()
+        }
+        else {
+          BackHandler.exitApp();
 
-
-            },
-          }
-        }],
-      })
+        }
+      },
+    }
     );
     return
   }

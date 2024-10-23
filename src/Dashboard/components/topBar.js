@@ -7,7 +7,7 @@ import { CommonActions, useNavigation, useRoute } from '@react-navigation/native
 import FAQModal from './FAQModal';
 import applyFontFamily from '../../assets/style/applyFontFamily';
 
-const TopBar = () => {
+const TopBar = ({visibleNotificationIcon = true}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [notifications, setNotifications] = useState([
@@ -51,7 +51,7 @@ const TopBar = () => {
         
       </View>
       <View style={styles.iconsContainer}>
-      {showNotificationIcon && (
+      {showNotificationIcon && visibleNotificationIcon && (
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => navigation.navigate('Notifications')}>
