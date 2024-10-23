@@ -492,7 +492,7 @@ function LoginScreen({ navigation }) {
         </View>
       </ScrollView>
     </View>
-  );
+  );  
 
   const carouselData = [
     {
