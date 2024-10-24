@@ -33,7 +33,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { ALL_SCREEN, Network_Error } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { updateBreStatus } from '../services/Utils/Redux/ExtraSlices';
 import GetLookUp from '../services/API/GetLookUp';
 import CustomProgressChart from '../components/CustomProgressChart';

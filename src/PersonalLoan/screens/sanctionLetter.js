@@ -15,7 +15,7 @@ import * as FileSystem from 'expo-file-system';
 import { decode } from 'base-64';
 import { Linking } from 'react-native';
 import { generateUniqueAddress } from '../services/Utils/FieldVerifier';
-import { checkImagePermission, checkLocationPermission } from './PermissionScreen';
+import { checkImagePermission, checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { GetApplicantId } from '../services/LOCAL/AsyncStroage';
 import SaveLeadStage from '../services/API/SaveLeadStage';
 import { useDispatch, useSelector } from 'react-redux';

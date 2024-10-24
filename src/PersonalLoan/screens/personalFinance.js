@@ -18,7 +18,7 @@ import { ALL_SCREEN } from '../services/Utils/Constants';
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from '../components/StageComponent';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
 
 

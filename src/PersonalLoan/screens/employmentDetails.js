@@ -24,7 +24,7 @@ import { cleanPreviousData, fetchGetEmploymentDetails, loadDataSet, updateEmploy
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
 import CustomSlider from '../components/CustomSlider';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import useJumpTo from "../components/StageComponent";
 import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';

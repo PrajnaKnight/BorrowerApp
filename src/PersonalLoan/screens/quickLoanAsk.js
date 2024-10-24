@@ -41,7 +41,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native";
 import Slider from "@react-native-community/slider";
 import CustomSlider from "../components/CustomSlider";
-import { checkLocationPermission } from "./PermissionScreen";
+import { checkLocationPermission } from "../../Common/screens/PermissionScreen";
 import { useProgressBar } from "../components/progressContext";
 import ProgressBar from "../components/progressBar";
 import { useFocusEffect } from '@react-navigation/native';
@@ -146,7 +146,7 @@ function QuickLoanAsk({ navigation }) {
     setTenureError(null);
   };
 
-  const { fontSize } = useAppContext();
+  const { fontSize,  } = useAppContext();
   const dynamicFontSize = (size) => size + fontSize;
 
   const handleProceed = async () => {

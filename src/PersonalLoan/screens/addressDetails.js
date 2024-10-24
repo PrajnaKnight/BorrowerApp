@@ -18,7 +18,7 @@ import { fetchGetBorrowerAddress, updateCurrentAddress, updateMailingAddress, up
 import { updateJumpTo } from '../services/Utils/Redux/LeadStageSlices';
 import { ALL_SCREEN, Network_Error, Something_Went_Wrong } from '../services/Utils/Constants';
 import ScreenError, { useErrorEffect } from './ScreenError';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useJumpTo from "../components/StageComponent";

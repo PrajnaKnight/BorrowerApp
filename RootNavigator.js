@@ -5,6 +5,7 @@ import CommonNavigator from './src/Common/navigations/CommonNavigator';
 import PersonalLoanNavigator from './src/PersonalLoan/navigations/PersonalLoanNavigator';
 import DashboardNavigator from './src/Dashboard/navigations/DashboardNavigator';
 import MsmeLoanNavigator from './src/MsmeLoan/navigations/MsmeNavigator';
+import PermissionsScreen from './src/Common/screens/PermissionScreen';
 
 const RootStack = createNativeStackNavigator();
 
@@ -117,6 +118,8 @@ function RootNavigator({initialRouteName}) {
         <RootStack.Screen name="PersonalLoan" component={PersonalLoanNavigator} />
         <RootStack.Screen name="Dashboard" component={DashboardNavigator} />
         <RootStack.Screen name="MsmeLoan" component={MsmeLoanNavigator} />
+        <RootStack.Screen name="PermissionsScreen" component={PermissionsScreen} />
+
       </RootStack.Navigator>
     </NavigationContainer>
   );

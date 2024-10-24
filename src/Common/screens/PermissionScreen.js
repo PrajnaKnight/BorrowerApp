@@ -15,17 +15,17 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import ProgressBar from '../components/progressBar';
-import { useProgressBar } from '../components/progressContext';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
-import { useAppContext } from '../components/useContext';
+import ProgressBar from '../../PersonalLoan/components/progressBar';
+import { useProgressBar } from '../../PersonalLoan/components/progressContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { styles } from '../services/style/gloablStyle';
-import { RequestLocationPermission, fetchCameraFromWeb } from '../services/API/LocationApi';
-import { IntentLauncherAndroid } from 'react-native';
-import { PermissionPopup } from '../components/DownloadPopup';
-import useJumpTo from "../components/StageComponent";
+import { styles } from '../../PersonalLoan/services/style/gloablStyle';
+
+import { RequestLocationPermission, fetchCameraFromWeb } from '../../PersonalLoan/services/API/LocationApi';
 import { CheckCircle2, MapPin, Lock, Building2 } from 'lucide-react';
+import { PermissionPopup } from '../../PersonalLoan/components/DownloadPopup';
+import { TabProvider } from '../../Dashboard/components/TabContext';
+import Layout from '../../Dashboard/components/Layout';
+import TopBar from '../../Dashboard/components/topBar';
 
 let PermissionsAndroid;
 if (Platform.OS === 'android') {
@@ -97,11 +97,9 @@ export const checkImagePermission = async () => {
 }
 
 const PermissionsScreen = ({ navigation, route }) => {
-    const { setProgress } = useProgressBar();
 
     useEffect(() => {
         renderPermissionRequestView(route.params.permissionType)
-        setProgress(0.1);
     }, []);
 
 
@@ -119,10 +117,6 @@ const PermissionsScreen = ({ navigation, route }) => {
 
     // const [currentPermission, setCurrentPermission] = useState('');
 
-
-
-    const { fontSize } = useAppContext();
-    const dynamicFontSize = (size) => size + fontSize;
 
     const { width, height } = useWindowDimensions();
     const isWeb = Platform.OS === 'web';
@@ -168,7 +162,7 @@ const PermissionsScreen = ({ navigation, route }) => {
     }
 
     const handleNextPress = async () => {
-        const { GoBack } = require('../services/Utils/ViewValidator');
+        const { GoBack } = require('../../PersonalLoan/services/Utils/ViewValidator');
 
         if (route.params.launchTimeAsk) {
 
@@ -254,7 +248,7 @@ const PermissionsScreen = ({ navigation, route }) => {
             </View>
             <LinearGradient colors={['#002777', '#00194C']} style={styles.Gotobutton}>
                 <TouchableOpacity onPress={() => { }}>
-                    <Text style={[styles.buttonText, { fontSize: dynamicFontSize(styles.buttonText.fontSize) }]}>
+                    <Text style={[styles.buttonText]}>
                         GO TO SETTINGS
                     </Text>
                 </TouchableOpacity>
@@ -459,7 +453,9 @@ const PermissionsScreen = ({ navigation, route }) => {
     
 
     return (
+      
       <View style={styles.mainContainer}>
+        <TopBar visibleNotificationIcon={false}/>
         <View style={{ flex: 1, flexDirection: isWeb ? "row" : "column" }}>
           {isWeb && (isDesktop || (isTablet && width > height)) && (
             <View style={[styles.leftContainer, imageContainerStyle]}>
@@ -543,7 +539,7 @@ const PermissionsScreen = ({ navigation, route }) => {
                   <Text
                     style={[
                       styles.headerText,
-                      { fontSize: dynamicFontSize(styles.headerText.fontSize) },
+                      
                     ]}>
                     Permissions
                   </Text>
@@ -567,9 +563,7 @@ const PermissionsScreen = ({ navigation, route }) => {
                     <Text
                       style={[
                         styles.buttonText,
-                        {
-                          fontSize: dynamicFontSize(styles.buttonText.fontSize),
-                        },
+                       
                       ]}>
                       {route.params.launchTimeAsk ? "NEXT" : "BACK"}
                     </Text>
@@ -584,7 +578,7 @@ const PermissionsScreen = ({ navigation, route }) => {
                   setShowPerimissionPopup(false);
                 }}
                 onExitApp={() => {
-                  const { GoBack } = require("../services/Utils/ViewValidator");
+                  const { GoBack } = require("../../PersonalLoan/services/Utils/ViewValidator");
                   GoBack(navigation);
                 }}
               />
@@ -592,6 +586,7 @@ const PermissionsScreen = ({ navigation, route }) => {
           </KeyboardAvoidingView>
         </View>
       </View>
+      
     );
 };
 

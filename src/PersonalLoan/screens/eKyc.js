@@ -21,7 +21,7 @@ import { clearAadhaarCkyc, executeAadhaarEkyc, updateAadhaarEkyc, updateAadhaarE
 import { SubmitAddressFromDocuments } from '../services/API/AddressDetails';
 import { fetchGetBorrowerAddress } from '../services/Utils/Redux/AddressDetailSlices';
 import ScreenError, { useErrorEffect } from './ScreenError';
-import { checkLocationPermission } from './PermissionScreen';
+import { checkLocationPermission } from '../../Common/screens/PermissionScreen';
 import useJumpTo from "../components/StageComponent";
 
 const EKycVerificationScreen = ({ navigation, route }) => {
