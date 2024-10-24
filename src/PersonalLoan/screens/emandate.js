@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -45,6 +45,7 @@ import { Digio, DigioConfig, Environment, GatewayEvent } from '@digiotech/react-
 import DigioScreen, { DigioStatusScreen } from "../../Common/screens/digioScreen";
 import { DownloadMyFile } from "../services/Utils/FieldVerifier";
 import { checkImagePermission } from "./PermissionScreen";
+import { useFocusEffect } from "@react-navigation/native";
 
 const MandateScreen = ({ navigation }) => {
 
@@ -53,12 +54,15 @@ const MandateScreen = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(true)
-
   const [digiData, setDigiData] = useState({ mandateId: null, phoneNumber: null, token: null })
   const [digioWebHook, startDigioWebHook] = useState(false)
   const { mandateState, setMandateState } = DigioScreen({ startWebHook: digioWebHook, payload: digiData, setStartDigioWebHook: startDigioWebHook })
   const [fileContent, setFileContent] = useState(null)
+  const [mandateId, setMandateId] = useState(null)
+  
+
   const dispatch = useDispatch();
+
 
 
   const onTryAgainClick = () => {
@@ -82,6 +86,12 @@ const MandateScreen = ({ navigation }) => {
 
 
   const handleProceed = async () => {
+
+    if(mandateState == null || mandateState.status != STATUS.SUCCESS){
+      setNewErrorScreen("Please complete your mandate")
+      return
+    }
+
     setLoading(true)
     setNewErrorScreen(null)
 
@@ -167,38 +177,18 @@ const MandateScreen = ({ navigation }) => {
   }
 
 
+  useFocusEffect(
+    useCallback(() => {
 
-  const renderButton = (text, onPress, isPrimary = true, icon = null) => (
-    <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
-      <LinearGradient
-        colors={isPrimary ? ["#002777", "#00194C"] : ["#FFFFFF", "#FFFFFF"]}
-        style={[styles.button, !isPrimary && styles.secondaryButton]}
-      >
-        <Text
-          style={[styles.buttonText, !isPrimary && styles.secondaryButtonText]}
-        >
-          {text}
-        </Text>
-        {icon && (
-          <Icon
-            name={icon}
-            size={16}
-            color={isPrimary ? "#FFFFFF" : "#002777"}
-            style={styles.buttonIcon}
-          />
-        )}
-      </LinearGradient>
-    </TouchableOpacity>
-  );
-
-
-  useEffect(() => {
 
     if (!refresh) {
       return
     }
+
+
     setNewErrorScreen(null);
     setFileContent(null)
+    setMandateId(null)
     setLoading(true);
     GetLeadId().then((response) => {
       console.warn(response)
@@ -235,7 +225,7 @@ const MandateScreen = ({ navigation }) => {
     })
     setRefresh(false)
 
-  }, [refresh])
+  }, [refresh]))
 
 
 
@@ -252,7 +242,7 @@ const MandateScreen = ({ navigation }) => {
   };
 
 
-  const openUrl = async (mandateId, token, phoneNumber, applicationId) => {
+  const openUrl = async (mandateId, token, phoneNumber) => {
 
 
     setDigiData(
@@ -318,7 +308,7 @@ const MandateScreen = ({ navigation }) => {
 
     if (response?.data?.MandateId && response?.data?.TokenValue && mandateInfo?.mandate_data?.customer_mobile) {
       const applicationId = await GetApplicantId()
-      openUrl(response?.data?.MandateId, response?.data?.TokenValue, mandateInfo?.mandate_data?.customer_mobile, applicationId)
+      openUrl(response?.data?.MandateId, response?.data?.TokenValue, mandateInfo?.mandate_data?.customer_mobile)
     }
 
     console.log(response.data)
@@ -351,7 +341,8 @@ const MandateScreen = ({ navigation }) => {
       setCreateMandateModel(currentDataSet)
       return
     }
-    else if (!new RegExp(/^[a-zA-Z0-9.-]{2, 256}@[a-zA-Z][a-zA-Z]{2, 64}$/).test(createMandateModel?.MandateDetails?.CustomerVpa)) {
+
+    else if (!createMandateModel?.MandateDetails?.CustomerVpa.includes("@")) {
       currentDataSet.MandateDetails = {
         ...createMandateModel.MandateDetails,
         CustomerVpaError: "Please provide valid UPI ID"
@@ -381,7 +372,7 @@ const MandateScreen = ({ navigation }) => {
 
     if (response?.data?.MandateId && response?.data?.AccessToken?.Id && mandateInfo?.mandate_data?.customer_mobile) {
       const applicationId = await GetApplicantId()
-      openUrl(response?.data?.MandateId, response?.data?.AccessToken?.Id, mandateInfo?.mandate_data?.customer_mobile, applicationId)
+      openUrl(response?.data?.MandateId, response?.data?.AccessToken?.Id, mandateInfo?.mandate_data?.customer_mobile)
     }
 
     console.log(response.data)
@@ -429,6 +420,8 @@ const MandateScreen = ({ navigation }) => {
       LeadId: leadId,
       MandateId: createPhysicalMandateResponse?.data?.MandateId
     }
+
+    setMandateId(createPhysicalMandateResponse?.data?.MandateId)
     const downloadPhysicalMandateFormResponse = await DownloadPhysicalMandateForm(reqquestModel)
     if (downloadPhysicalMandateFormResponse.status === STATUS.ERROR) {
       setNewErrorScreen(downloadPhysicalMandateFormResponse.message)
@@ -497,16 +490,24 @@ const MandateScreen = ({ navigation }) => {
 
   const UploadScannedPhysicalMandate = (file) =>{
     
+    if(!file){
+      return
+    }
     setNewErrorScreen(null)
+
+    
     setLoading(true)
-    UploadPhysicalMandateForm({ uri: file.base64, name: file.name, type: file.type }).then((response)=>{
+
+    UploadPhysicalMandateForm(mandateId, { uri: file.uri, name: file.name, type: file.type }).then((response)=>{
       setLoading(false)
       if(response.status == STATUS.ERROR){
         setNewErrorScreen(response.message)
         return
       }
 
-      
+      console.log(JSON.stringify(response))
+      openUrl(mandateId, null, mandateInfo?.mandate_data?.customer_mobile)
+
     })
   }
 
@@ -562,9 +563,13 @@ const MandateScreen = ({ navigation }) => {
                 placeholder="Upload Scanned Signed Form"
                 showLabel={false}
                 file={fileContent}
+                isDisable={!mandateId}
                 setFile={(e)=>{
-                  setFileContent(e)
-                  UploadScannedPhysicalMandate(e)
+                  if(mandateId){
+                    setFileContent(e)
+                    UploadScannedPhysicalMandate(e)
+                  }
+                  
                 }}
               />
               <Text style={[styles.noteText, { marginTop: 30, flex: 1 }]}>

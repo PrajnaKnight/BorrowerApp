@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GetLeadId } from "../LOCAL/AsyncStroage";
 import { API_RESPONSE_STATUS, CREATE_PHYSICAL_MANDATE, CREATE_UPI_MANDATE, DOWNLOAD_PHYSICAL_MANDATE_FORM, GetHeader, MANDATE_INFO,SUBMIT_SCANNED_PHYSICAL_MANDATE, STATUS } from "./Constants";
-import { Network_Error } from "../Utils/Constants";
+import { Network_Error, Something_Went_Wrong } from "../Utils/Constants";
 
 export const GetMandateInfo = async () => {
     let status, data, message;
@@ -51,8 +51,11 @@ export const CreatePhysicalMandate = async (requestModel) => {
         const response = await axios.post(`${CREATE_PHYSICAL_MANDATE}`, requestModel)
 
         data = response.data
-        status = response.status == 200 ? STATUS.SUCCESS : STATUS.ERROR
+        status = response.status == 200 && !data.Error ? STATUS.SUCCESS : STATUS.ERROR
 
+        if(status == STATUS.ERROR){
+            message = data.ErrorResponse?.Message || "Error : Facing Problem While Fetching Mandate Info"
+        }
     }
     catch (error) {
 
@@ -150,12 +153,13 @@ export const UploadPhysicalMandateForm = async (mandate, document) => {
     let status, data, message;
     try {
 
+        
         const header = await GetHeader()
         const LeadId = await GetLeadId()
         
         const formData = new FormData();
-        formData.append('leadId', LeadId);
-        formData.append('UploadFile', document);
+        formData.append('leadId', parseInt(LeadId));
+        formData.append('Upload', document);
         formData.append('MandateId', mandate)
 
         const response = await axios.post(`${SUBMIT_SCANNED_PHYSICAL_MANDATE}`, formData, {
@@ -165,8 +169,10 @@ export const UploadPhysicalMandateForm = async (mandate, document) => {
             },
         })
         data = response.data
-        status = response.status == 200 ? STATUS.SUCCESS : STATUS.ERROR
-
+        status = response.status == 200 && !data.Error? STATUS.SUCCESS : STATUS.ERROR
+        if(status == STATUS.ERROR){
+            message = data.ErrorResponse?.Message
+        }
     }
     catch (error) {
 
@@ -273,7 +279,7 @@ export const CreatePhysicalFormMandate = (createMandateModel, leadID) => {
         MandateDetails:
         {
             ...createMandateModel.MandateDetails,
-
+            MandateAuthMode: "physical"
         }, LeadId: leadID
     }
 

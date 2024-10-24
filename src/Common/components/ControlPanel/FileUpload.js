@@ -5,7 +5,7 @@ import applyFontFamily from '../../../assets/style/applyFontFamily';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 
-export default function FileUpload({ placeholder, showLabel = true, file,  setFile}) {
+export default function FileUpload({ placeholder, showLabel = true, file,  setFile, isDisable = false}) {
   const [placeholderText, setPlaceholderText] = useState(placeholder || 'Select a file');
 
   useEffect(() => {
@@ -13,6 +13,10 @@ export default function FileUpload({ placeholder, showLabel = true, file,  setFi
   }, [placeholder]);
 
   const handleFilePick = async() => {
+
+    if(isDisable){
+      return
+    }
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles], // Specify file types here
@@ -24,7 +28,7 @@ export default function FileUpload({ placeholder, showLabel = true, file,  setFi
 
       const base64Data = await RNFS.readFile(fileSelected.uri, 'base64');
 
-      setFile({...fileSelected, base64 : base64Data})
+      setFile({...fileSelected, uri : fileSelected.uri})
       
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {

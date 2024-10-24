@@ -2,6 +2,8 @@ import { Digio, DigioConfig, Environment, GatewayEvent } from '@digiotech/react-
 import { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View, Button } from 'react-native';
 import WebView from 'react-native-webview';
+import { STATUS } from '../Utils/Constant';
+import { Something_Went_Wrong } from '../../PersonalLoan/services/Utils/Constants';
 
 
 const DigioScreen = ({ startWebHook, payload, setStartDigioWebHook }) => {
@@ -19,11 +21,21 @@ const DigioScreen = ({ startWebHook, payload, setStartDigioWebHook }) => {
     }
 
     useEffect(() => {
-        
+
         const gatewayEventListener = digio.addGatewayEventListener((event) => {
-            console.log(event)
-            if(event.event != "nach.initiated"){
-                setMandateState(event)
+            if (!ignoreWhileMandate.includes(event.event)) {
+
+                let status = STATUS.ERROR, message = Something_Went_Wrong
+                if(successWhileMandate.includes(event.event)){
+                    status = STATUS.SUCCESS
+                    message = "Mandate Successfull"
+                }
+                else if(errorWhileMandate.includes(event.event)){
+                    status = STATUS.ERROR
+                    message = event?.payload?.error?.message || "Mandate Failed"
+                }
+                 
+                setMandateState({status, message})
             }
             setStartDigioWebHook(false)
         });
@@ -49,12 +61,36 @@ const DigioScreen = ({ startWebHook, payload, setStartDigioWebHook }) => {
 }
 
 
+const ignoreWhileMandate = [
+    "nach.initiated"
+]
+
+const successWhileMandate = [
+    "nach.physical_mandate.already_signed",
+    "nach.physical_mandate.signed",
+    "nach.api_mandate.authenticated",
+    "nach.api_mandate.already_authenticated",
+    "nach.upi_mandate.vpa_verified",
+    "nach.upi_mandate.authenticated",
+    "nach.upi_mandate.already_authenticated"
+]
+
+const errorWhileMandate = [    
+    "nach.physical_mandate.failed",
+    "nach.api_mandate.cancelled_by_user",
+    "nach.api_mandate.failed",
+    "nach.upi_mandate.rejected",
+    "nach.upi_mandate.failed",
+    "nach.upi_mandate.cancelled_by_user"
+]
+
 
 export const DigioStatusScreen = ({ mandateState, onTryAgain }) => {
 
+  
     return (
         <View style={screenStyles.overlay}>
-            {mandateState.event == "nach.api_mandate.authenticated" ||  mandateState.event == "nach.upi_mandate.authenticated"?
+            {mandateState.status == STATUS.SUCCESS ?
 
                 <View style={screenStyles.overLayChild}>
                     <Image
@@ -74,10 +110,10 @@ export const DigioStatusScreen = ({ mandateState, onTryAgain }) => {
                         style={{ width: 200, height: 200 }}
                     />
                     <View style={{ height: 40 }} />
-                    <Text style={{ width: "100%", textAlign: "center" }}>{mandateState?.payload?.error?.message || "Mandate Failed"}</Text>
+                    <Text style={{ width: "100%", textAlign: "center" }}>{mandateState?.message || "Mandate Failed"}</Text>
                     <View style={{ height: 40 }} />
-                    <View style={{width:"100%", justifyContent:"center", alignItems:"center"}}>
-                    <Button onPress={() => { if (onTryAgain) { onTryAgain() } }} title='Retry'></Button>
+                    <View style={{ width: "100%", justifyContent: "center", alignItems: "center" }}>
+                        <Button onPress={() => { if (onTryAgain) { onTryAgain() } }} title='Retry'></Button>
 
                     </View>
                 </View>

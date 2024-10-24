@@ -4,7 +4,7 @@ import * as FileSystem from 'expo-file-system';
 
 
 export const isValidEmail = (value, title = "Email") => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (value == null || value == '') {
         return `Please Provide ${title}`
