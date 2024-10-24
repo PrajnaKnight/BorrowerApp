@@ -2,6 +2,7 @@ import axios from "axios";
 import { DOCUMENT_DOWNLOAD } from "./Constant";
 import { GetLeadId } from "../../../PersonalLoan/services/LOCAL/AsyncStroage";
 import { API_RESPONSE_STATUS, STATUS } from "../../../Common/Utils/Constant";
+import { Network_Error } from "../../../PersonalLoan/services/Utils/Constants";
 
 const GetDocumentDownload = async() =>{
 
